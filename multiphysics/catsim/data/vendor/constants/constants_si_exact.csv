@@ -1,0 +1,4 @@
+name,symbol,value_si,unit,notes
+speed_of_light,c,299792458,m/s,exact by SI definition
+planck_constant,h,6.62607015e-34,J*s,exact by SI definition
+boltzmann_constant,k_B,1.380649e-23,J/K,exact by SI definition

@@ -1,0 +1,4 @@
+Calibration on S500fs: std gamma=5.843e+12  cat lambda=6.678e+12 (1/s)
+RMSE calibration: std=0.6453 cat=0.6461
+Prediction on S800fs using same rates:
+RMSE prediction: std=0.9359 cat=0.9342

@@ -1,0 +1,3 @@
+# metric_check
+
+PASS

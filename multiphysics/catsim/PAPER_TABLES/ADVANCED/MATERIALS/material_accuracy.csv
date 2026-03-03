@@ -1,0 +1,2 @@
+material,mode,source,enz_target_THz,enz_est_THz,enz_method,enz_delta_THz,enz_tolerance_THz,enz_gate,eps_re_at_target,eps_im_at_target
+ITO,drude,"drude:eps_inf=3.9,omega_p=2816683366100322.0,gamma=100000000000000.0",227.0,226.44137862315773,sign-change,0.5586213768422681,5.0,PASS,0.02038791052224509,0.27196241559933965

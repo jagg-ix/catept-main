@@ -1,0 +1,33 @@
+{
+  "target8_time_domain": {
+    "n_exp_points": 100,
+    "t_range_fs": [
+      -3399.9999999969,
+      3199.99999999708
+    ],
+    "pearson_r_std": -0.037703326260069676,
+    "pearson_r_cat": -0.037703326260069676,
+    "rmse_std": 0.3700809865549653,
+    "rmse_cat": 0.3700809865549653
+  },
+  "target9_visibility_decay": {
+    "n_separations": 13,
+    "exp_fit_A": 1.002195047375093,
+    "exp_fit_lambda_inv_s": -496845894.5028444,
+    "exp_fit_lambda_inv_fs": -4.968458945028445e-07,
+    "exp_fit_residual_rmse": 0.0006937168099142863,
+    "model_gamma_std": 5840000000000.0,
+    "model_lambda_cat": 6680000000000.0,
+    "V_exp_at_S800": 1.0017047453480359,
+    "V_std_at_S800": 0.09671372043303547,
+    "V_cat_at_S800": 0.06911385927088082
+  },
+  "target10_second_peak": {
+    "peak1_amplitude": 0.24564139707700586,
+    "peak2_amplitude": 0.3037392148041424,
+    "sim_ratio_percent": 123.65147667228236,
+    "paper_ratio_percent": 0.93,
+    "delta_percent": 122.72147667228235,
+    "note": "The default model has equal slit amplitudes (A=B=1). The 0.93% second peak requires setting B/A explicitly. This target checks whether the model CAN reproduce this via config."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "figure": "Fig_2f",
+  "visibility_col": "visibility_paper",
+  "V0": 1.0,
+  "deltaI_mode": "auto",
+  "gkls_window": "S",
+  "lambda_phase5_inv_s": 370370370370.3703,
+  "rows": 27,
+  "pass": 27,
+  "pass_rate": 1.0,
+  "status": "PASS",
+  "mae_residual_D": NaN,
+  "mae_residual_beta": 0.9583785347240499,
+  "mae_residual_gkls": 1.815863063502193,
+  "note": "ADVANCED: DeltaI is reported from D proxy, collision-rate proxy, and GKLS-rate proxy (Phase 5 lambda_ent). Compare residuals in info_visibility_bound_compare.csv.",
+  "run_id": "7b199dfb9731"
+}

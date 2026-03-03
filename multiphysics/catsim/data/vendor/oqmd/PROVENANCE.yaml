@@ -1,0 +1,7 @@
+source_key: oqmd
+upstream: "(see src/catsim_core/data_sources/registry.py)"
+subset: "No bulk data vendored. Placeholders only."
+how_generated: "Empty placeholder directory shipped for reproducible structure. Use corresponding scripts/fetch_*.py to download your own subset."
+license: "See upstream"
+last_verified: "2026-01-20"
+files: []

@@ -1,0 +1,66 @@
+{
+  "target5_interferogram": {
+    "n_separations": 27,
+    "n_frequencies": 640,
+    "correlation_2d_std": 0.20402922456225933,
+    "correlation_2d_cat": 0.20222662016008344,
+    "rmse_2d_std": 0.4751819343452169,
+    "rmse_2d_cat": 0.4738294277679692,
+    "separation_range_fs": [
+      -1299.99999999995,
+      1299.99999999995
+    ]
+  },
+  "target6_asymmetry": {
+    "experiment": {
+      "extent_red_THz": 7.738301563381981,
+      "extent_blue_THz": -0.7242374144759935,
+      "asymmetry_fraction": 1.2065100629537173,
+      "paper_red_THz": 10.0,
+      "paper_blue_THz": 4.0
+    },
+    "standard_sim": {
+      "extent_red_THz": 15.0,
+      "extent_blue_THz": 15.0,
+      "asymmetry_fraction": 0.0
+    },
+    "cat_ept_sim": {
+      "extent_red_THz": 15.0,
+      "extent_blue_THz": 15.0,
+      "asymmetry_fraction": 0.0
+    },
+    "note": "Analytic Gaussian model is symmetric by construction. Asymmetry in experiment is from material dispersion (ENZ physics)."
+  },
+  "target7_rise_time": {
+    "rise_3.6fs": {
+      "rise_time_fs": 3.6,
+      "rmse_std": 0.8760247397448436,
+      "rmse_cat": 0.8974572376098333,
+      "pearson_r_std": -0.04635560242880722,
+      "pearson_r_cat": -0.02365972463954497,
+      "V_std": 0.09671372043304398,
+      "V_cat": 0.06911385927088774,
+      "n_freq_points": 170
+    },
+    "rise_7.0fs": {
+      "rise_time_fs": 7.0,
+      "rmse_std": 0.8405697926425219,
+      "rmse_cat": 0.8611683142837108,
+      "pearson_r_std": 0.09813347622852919,
+      "pearson_r_cat": 0.15211035074599363,
+      "V_std": 0.09671372043304398,
+      "V_cat": 0.06911385927088774,
+      "n_freq_points": 170
+    },
+    "rise_17.0fs": {
+      "rise_time_fs": 17.0,
+      "rmse_std": 0.6744434948781395,
+      "rmse_cat": 0.6910749329887571,
+      "pearson_r_std": 0.3115071775083094,
+      "pearson_r_cat": 0.327257321895371,
+      "V_std": 0.09671372043304398,
+      "V_cat": 0.06911385927088774,
+      "n_freq_points": 170
+    }
+  }
+}

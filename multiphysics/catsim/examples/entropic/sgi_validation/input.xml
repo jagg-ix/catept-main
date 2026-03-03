@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation verbosity="medium">
+    <output prefix="sgi_validation">
+        <properties stride="10" filename="out">
+            [ step, time{picosecond}, potential{electronvolt}, 
+              kinetic{kelvin}, temperature{kelvin},
+              conserved{electronvolt} ]
+        </properties>
+        <trajectory stride="100" filename="pos" format="xyz">positions{angstrom}</trajectory>
+        <trajectory stride="100" filename="mom" format="xyz">momenta</trajectory>
+        
+        <!-- Entropic diagnostics -->
+        <properties stride="10" filename="entropic">
+            [ step, time{picosecond}, 
+              extras.tau_entropic, extras.S_I, extras.visibility,
+              extras.lambda_mean, extras.Pi_mean, extras.alpha_mean ]
+        </properties>
+    </output>
+
+    <total_steps>10000</total_steps>
+    
+    <prng>
+        <seed>12345</seed>
+    </prng>
+
+    <!-- System: Single Rb-87 atom -->
+    <ffsocket mode="unix" name="driver">
+        <address>sgi_driver</address>
+    </ffsocket>
+
+    <system>
+        <initialize nbeads="1">
+            <file mode="xyz"> init.xyz </file>
+            <velocities mode="thermal" units="kelvin"> 3e-7 </velocities>
+        </initialize>
+
+        <forces>
+            <force forcefield="driver"/>
+        </forces>
+
+        <!-- Motion: Entropic Langevin -->
+        <motion mode="entropic_langevin">
+            <timestep units="microsecond">1.0</timestep>
+            
+            <!-- Dissipation: SGI parameters from Table 1, page 8 -->
+            <dissipation>
+                <model>constant</model>
+                <rate units="hertz">5.3e3</rate>  <!-- λ_SGI = 5.3×10³ s⁻¹ -->
+            </dissipation>
+            
+            <!-- Effective temperature: atomic temperature -->
+            <effective_temperature units="kelvin">3e-7</effective_temperature>
+            
+            <!-- Flat spacetime (no GR corrections) -->
+            <lapse>
+                <model>flat</model>
+            </lapse>
+            
+            <!-- Track visibility for validation -->
+            <tracking>
+                <visibility>true</visibility>
+                <complex_charge>false</complex_charge>
+            </tracking>
+            
+            <!-- Base Langevin thermostat -->
+            <thermostat mode="langevin">
+                <tau units="microsecond">100.0</tau>
+                <temperature units="kelvin">3e-7</temperature>
+            </thermostat>
+        </motion>
+    </system>
+</simulation>

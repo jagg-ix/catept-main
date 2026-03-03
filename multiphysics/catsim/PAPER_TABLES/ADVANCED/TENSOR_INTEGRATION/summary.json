@@ -1,0 +1,26 @@
+{
+  "config_path": "configs/paper3_tensors.yaml",
+  "lambda_mode": "trace_adjusted",
+  "lambda_alpha": 0.25,
+  "tensors_entropic_time": false,
+  "lambda_const_s_inv": 1000000000000.0,
+  "schema_gate": {
+    "passed": true,
+    "fields": [
+      "Lambda_00",
+      "Lambda_11",
+      "S_00",
+      "S_11",
+      "dt_s",
+      "dtau_s",
+      "lambda_s_inv",
+      "n_reductions",
+      "passed_cfl",
+      "t_s",
+      "tau_ent_s"
+    ],
+    "has_time": true,
+    "has_tau": true,
+    "has_lambda": true
+  }
+}

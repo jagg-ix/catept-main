@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "gates": [
+    {
+      "name": "equilibrium_limit_grad_phi",
+      "passed": true,
+      "details": {
+        "grad_phi_norm": 0.0,
+        "tol": 1e-12
+      }
+    },
+    {
+      "name": "second_law_lambda_nonnegative",
+      "passed": true,
+      "details": {
+        "lambda_min": 0.0
+      }
+    },
+    {
+      "name": "causality_lambda_upper_bound",
+      "passed": true,
+      "details": {
+        "lambda_max": 1.0,
+        "c_over_lmin": 1e+43
+      }
+    }
+  ],
+  "notes": {
+    "sympy": "1.13.1",
+    "einsteinpy_present": false,
+    "einsteinpy_smoke": "skipped_or_failed: ModuleNotFoundError"
+  }
+}

@@ -1,0 +1,237 @@
+diff --git a/OGRePy/_core.py b/OGRePy/_core.py
+index 22c5cf3..b640817 100644
+--- a/OGRePy/_core.py
++++ b/OGRePy/_core.py
+@@ -72,9 +72,6 @@ from types import UnionType
+ from typing import Any, ClassVar, Literal, NoReturn, Self, cast, override
+ 
+ import sympy as s
+-from IPython.core.display import Markdown
+-from IPython.core.getipython import get_ipython
+-from IPython.display import display  # pyright: ignore [reportUnknownVariableType]
+ from sympy.core.function import AppliedUndef, UndefinedFunction
+ 
+ import __main__
+@@ -261,7 +258,9 @@ def doc(
+         except (ValueError, TypeError):
+             _handle_error(f"Could not find call signature for `{name if name != '' else 'this object'}`.")
+         # Print the object's name, then its signature, then the docstring itself. Types in the signature will be surrounded by single quotes, so we eliminate those before printing.
+-        _display_markdown('<div style="border: 1px solid; margin: auto; padding: 1em; width: 90%">\n\n`' + name + signature + "`\n\n" + docs + "\n\n</div>")
++        _display_markdown(f"{name}{signature}
++
++{docs}")
+     else:
+         _handle_error(f"Could not find documentation for `{name if name != '' else 'this object'}`.")
+ 
+@@ -383,53 +382,29 @@ def update_check(
+ 
+ 
+ def welcome() -> None:
++    """Print a simple welcome message for OGRePy.
++
++    This variant is designed for plain Python execution (e.g. a
++    terminal or a basic script) and does not rely on IPython or
++    Jupyter-specific rich display features.
+     """
+-    Print the welcome message.
+-    """
+-    ipynb_filename: str = ""
+-    pdf_filename: str = ""
+-    html_filename: str = ""
+-    if "pyodide" not in sys.modules:
+-        # The documentation files are bundled with the package so that they can be viewed offline. We make sure they exist and get their paths.
+-        with importlib.resources.as_file(importlib.resources.files().joinpath("docs/OGRePy_Documentation")) as file:
+-            ipynb_file: pathlib.Path = file.with_suffix(".ipynb")
+-            if ipynb_file.exists():
+-                ipynb_filename = ipynb_file.as_posix()
+-            pdf_file: pathlib.Path = file.with_suffix(".pdf")
+-            if pdf_file.exists():
+-                pdf_filename = pdf_file.as_posix()
+-            html_file: pathlib.Path = file.with_suffix(".html")
+-            if html_file.exists():
+-                html_filename = html_file.as_uri()
+-    else:
+-        # If we're running in a JupyterLite notebook, we will not be able to access the documentation files directly. However, if using OGRePyLive, the files should be available in the same folder as the notebook, so we check for that.
+-        file = pathlib.Path("./OGRePy_Documentation")
+-        ipynb_file: pathlib.Path = file.with_suffix(".ipynb")
+-        if ipynb_file.exists():
+-            ipynb_filename = ipynb_file.as_posix()
+-        pdf_file: pathlib.Path = file.with_suffix(".pdf")
+-        if pdf_file.exists():
+-            pdf_filename = pdf_file.as_posix()
+-        html_file: pathlib.Path = file.with_suffix(".html")
+-        if html_file.exists():
+-            html_filename = html_file.as_posix()
+-    ipynb_link: str = f"""<a href="{ipynb_filename if ipynb_filename != "" else "https://github.com/bshoshany/OGRePy/blob/master/OGRePy/docs/OGRePy_Documentation.ipynb"}">.ipynb</a>"""
+-    pdf_link: str = f"""<a href="{pdf_filename if pdf_filename != "" else "https://github.com/bshoshany/OGRePy/blob/master/OGRePy/docs/OGRePy_Documentation.pdf"}">.pdf</a>"""
+-    html_url: str = html_filename if html_filename != "" else "https://raw.githack.com/bshoshany/OGRePy/master/OGRePy/docs/OGRePy_Documentation.html"
+-    html_link: str = f"""<a href="#" onclick="window.open('{html_url}', '_blank')">.html</a>""" if "pyodide" not in sys.modules else f"""<a href="{html_url}">.html</a>"""
+-    # Display the welcome message.
+-    _display_markdown(
+-        inspect.cleandoc(rf"""
+-        **OGRePy: An <u>O</u>bject-Oriented <u>G</u>eneral <u>Re</u>lativity Package for <u>Py</u>thon\
+-        By [Barak Shoshany](https://github.com/bshoshany) ([baraksh@gmail.com](mailto:baraksh@gmail.com)) ([baraksh.com](https://baraksh.com/))\
+-        v{__version__} ({release_date})\
+-        GitHub repository: <https://github.com/bshoshany/OGRePy>\
+-        Documentation: {ipynb_link}, {pdf_link}, {html_link}**
+-        """),
++    message = inspect.cleandoc(
++        f"""
++        OGRePy: An Object-Oriented General Relativity Package for Python
++        v{__version__} ({release_date})
++
++        This build is configured for standard Python environments
++        and will print all output as plain text.
++
++        GitHub repository:
++          https://github.com/bshoshany/OGRePy
++
++        Documentation:
++          - Source and notebooks:
++              https://github.com/bshoshany/OGRePy/tree/master/OGRePy/docs
++        """
+     )
+-    # If we're not in a notebook, warn that the package should be used inside a notebook.
+-    if not _in_notebook:
+-        _display_markdown("WARNING: No notebook interface detected! This package was designed to be used inside a Jupyter notebook in Visual Studio Code or JupyterLab.")
++    _display_markdown(message)
+ 
+ 
+ ##################
+@@ -495,18 +470,7 @@ class Coordinates:
+         """
+         self.info()
+ 
+-    def _repr_markdown_(
+-        self: Self,
+-    ) -> str:
+-        """
+-        Overloaded method to print the components of this coordinate system to a notebook cell.
+-        #### Returns:
+-        The Markdown text to display in the notebook.
+-        """
+-        text: str = f"$${_to_tex(self._components)}$$"
+-        return _format_with_css(text)
+-
+-    # ============== #
++# ============== #
+     # Public methods #
+     # ============== #
+ 
+@@ -1342,18 +1306,7 @@ class Tensor:
+         """
+         return self.__add__(-other)
+ 
+-    def _repr_markdown_(
+-        self: Self,
+-    ) -> str:
+-        """
+-        Overloaded method to print this tensor in Markdown format to a notebook cell. Will reproduce the same output as calling the `show()` method with no arguments.
+-        #### Returns:
+-        The Markdown text to display in the notebook.
+-        """
+-        text: str = f"$${self.tex_show()}$$"
+-        return _format_with_css(text)
+-
+-    # ========== #
++# ========== #
+     # Properties #
+     # ========== #
+ 
+@@ -1789,7 +1742,7 @@ class Tensor:
+         # Scalars are stored as an array with a single element for consistency with tensors of other ranks. If the tensor is a scalar, display only the single element, not the array itself.
+         tex += _to_tex(components[0] if len(use_indices) == 0 else components)
+         # Return the generated TeX code.
+-        return tex
++        return text
+ 
+     # =============== #
+     # Private methods #
+@@ -1972,7 +1925,7 @@ class Tensor:
+         for i in placeholders:
+             tex = tex.replace(f"[:{i}]", "{}_{" + unused_letters[i] + "}")
+             tex = tex.replace(f"[{i}:]", "{}^{" + unused_letters[i] + "}")
+-        return tex
++        return text
+ 
+     def _trace(
+         self: Self,
+@@ -3335,29 +3288,21 @@ def _contract(
+ def _display_markdown(
+     text: str,
+ ) -> None:
+-    """
+-    Display Markdown code in the notebook, or fall back to `print()` if not running in a notebook.
+-    #### Parameters:
+-    * `text`: The Markdown code to print.
+-    """
+-    if _in_notebook:
+-        _ = display(Markdown(_format_with_css(text)))
+-    else:
+-        print(text)  # noqa: T201
+-
++    """Display plain text in the terminal.
+ 
++    This variant does not rely on IPython or rich notebook
++    rendering. It simply prints the given string.
++    """
++    print(text)  # noqa: T201
+ def _display_tex(
+     tex: str,
+ ) -> None:
+-    """
+-    Display TeX code in the notebook.
+-    #### Parameters:
+-    * `text`: The TeX code to print. No need to enclose in dollar signs.
+-    """
+-    # Output the TeX code enclosed in double dollar signs, so it gets rendered as a display-style formula in the notebook. We don't use `IPython.display.Math` or `IPython.display.Latex` because we want the custom CSS style to be applied.
+-    _display_markdown(f"$${tex}$$")
+-
++    """Display a TeX string in the terminal.
+ 
++    The TeX code is printed verbatim, without any surrounding
++    dollar signs or rich rendering.
++    """
++    print(tex)  # noqa: T201
+ def _filter_classes(
+     dictionary: dict[str, Any],
+     cls: list[Any],
+@@ -3376,15 +3321,12 @@ def _filter_classes(
+ def _format_with_css(
+     text: str,
+ ) -> str:
++    """Return text unchanged.
++
++    This helper is kept for backwards compatibility with the
++    original OGRePy API, but in this non-notebook variant it
++    performs no CSS or HTML wrapping.
+     """
+-    Format the given text using the custom CSS style, if defined.
+-    #### Parameters:
+-    * `text`: The text to format.
+-    #### Returns:
+-    The formatted text.
+-    """
+-    if options.css_style != "":
+-        return f'<div style="{options.css_style}">\n\n{text}\n\n</div>'
+     return text
+ 
+ 
+@@ -3454,7 +3396,7 @@ def _list_references(
+             if len(using) > 0:
+                 text += f", used by: `{'`, `'.join(using)}`"
+         text += "\n"
+-    return text
++    return textt
+ 
+ 
+ def _lookup_names(
+@@ -4042,7 +3984,7 @@ _curve_parameter_placeholder: s.Symbol = sym("[curve]")
+ # * `TerminalInteractiveShell` if using IPython in the terminal.
+ # * `ZMQInteractiveShell` if using IPython in a notebook interface, which means we can display Markdown; in the previous two cases, `_display_markdown` will just display the output `<IPython.core.display.Markdown object>`, so we must use `print()` instead.
+ # * `Interpreter` if using JupyterLite / Pyodide, which also allows Markdown.
+-_in_notebook: bool = get_ipython().__class__.__name__ in ["ZMQInteractiveShell", "Interpreter"]
++_in_notebook: bool = False
+ 
+ 
+ ########################

@@ -1,0 +1,9 @@
+{
+  "phase": "6.18",
+  "model": "paper3_v1",
+  "metric": "minkowski",
+  "phi_expr": "0",
+  "tol": 1e-10,
+  "max_residual": 0.0,
+  "pass": true
+}

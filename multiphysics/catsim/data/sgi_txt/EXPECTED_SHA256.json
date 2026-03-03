@@ -1,0 +1,14 @@
+{
+  "note": "SHA256 for SGI paper-extracted TXT tables. Update only if re-extracting from source. Inputs are CSV-formatted text.",
+  "generated_at": "2026-01-22T00:26:16.916613",
+  "files": {
+    "page1.txt": "f4b75c30f27161535eafbbcea13f58d4082419603102d949f5bd7a9ff4fa50eb",
+    "master-params.txt": "4c4574cbee7d49b45f733f54fdea73f3ee8aa78686ff8a91905238c7bd13ae91",
+    "fig3.txt": "1273c7cab8ecb758b8fd9c0d00245bafbdd8b0f3183bc0ef0a05cb3e68cad35b",
+    "fig4.txt": "9f4cd3d425b854b61a711403c45c6e803ec03c7c268bb2daf97ce94ab328cfb3",
+    "fig5.txt": "83c2b684343b2840f8b7adca117c8b83bad0d509a13afa4d91df41b279a345bb",
+    "fig6A.txt": "d341624c0983b2393ed61408208703a3d3a8cab4c373ee8b624201e043e16523",
+    "fig6B.txt": "f73e11ade8d49e58dfd5ca04eb8f0bbb4481782a4c38fc516d18c13fd3f45edd",
+    "fig8.txt": "a7cba0a0b3ae7dcb7a9c5d01150fa3e16a71e3d274ff12f490fba030cefa61d3"
+  }
+}

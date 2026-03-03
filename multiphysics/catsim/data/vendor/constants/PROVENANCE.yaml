@@ -1,0 +1,8 @@
+source_key: codata_constants
+upstream: https://physics.nist.gov/cuu/Constants/
+subset: "Minimal SI-exact constants used across the repo"
+how_generated: "Hand-curated from SI definitions (exact values)"
+license: "Public domain (NIST / SI definitions)"
+last_verified: "2026-01-20"
+files:
+  - constants_si_exact.csv

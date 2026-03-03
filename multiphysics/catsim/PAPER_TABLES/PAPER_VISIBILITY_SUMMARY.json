@@ -1,0 +1,37 @@
+{
+  "calibration": {
+    "S_fs": 500.0,
+    "std_fit": {
+      "mode": "standard",
+      "rate_name": "gamma_s_inv",
+      "rate_value": 5843071786310.518,
+      "visibility0": 1.0,
+      "scale": 1.0,
+      "offset": 0.0,
+      "sse": 212.38945712277624,
+      "predicted_visibility": 0.2320579981395888
+    },
+    "cat_fit": {
+      "mode": "entropic",
+      "rate_name": "lambda_ent_s_inv",
+      "rate_value": 6677796327212.0205,
+      "visibility0": 1.0,
+      "scale": 1.0,
+      "offset": 0.0,
+      "sse": 212.9109823712287,
+      "predicted_visibility": 0.1883508029454993
+    },
+    "rmse_std": 0.6453293081264885,
+    "rmse_cat": 0.6461211298614136
+  },
+  "prediction": {
+    "S_fs": 800.0,
+    "rmse_std": 0.9358987079645295,
+    "rmse_cat": 0.9342364018219692
+  },
+  "constants": {
+    "probe_carrier_THz": 230.2,
+    "slit_rise_fs_used": 7.0,
+    "lambda0_s_inv": 1000000000000000.0
+  }
+}

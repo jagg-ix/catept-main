@@ -1,0 +1,24 @@
+# Phase 6.12b: PyNE -> quantum bridge configuration
+
+# Coordinate-time grid
+t0_s: 0.0
+t1_s: 1.0e-3
+n_steps: 400
+
+# PyNE decay probe (used even if PyNE not installed)
+nuclide: "X"
+half_life_s: 1.0e-3
+n0: 1.0
+
+# Numerical knobs
+hbar: 1.0
+qutip_normalize: false
+
+# PySCF defaults
+pyscf_molecule: "H 0 0 0; H 0 0 0.74"
+pyscf_basis: "sto-3g"
+
+# Optional spacetime coupling
+spacetime:
+  enabled: false
+  efe_gain: 0.0

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation verbosity="high">
+    <output prefix="bh_ringdown">
+        <properties stride="10" filename="out">
+            [ step, time{picosecond}, potential{electronvolt}, 
+              kinetic{electronvolt}, temperature{kelvin},
+              conserved{electronvolt} ]
+        </properties>
+        <trajectory stride="50" filename="pos" format="xyz">positions{meter}</trajectory>
+        <trajectory stride="50" filename="vel" format="xyz">velocities</trajectory>
+        
+        <!-- Entropic diagnostics -->
+        <properties stride="10" filename="entropic">
+            [ step, time{picosecond}, 
+              extras.tau_entropic, extras.S_I, extras.visibility,
+              extras.lambda_mean, extras.Pi_mean, extras.alpha_mean ]
+        </properties>
+        
+        <!-- Complex charge tracking -->
+        <properties stride="10" filename="complex_charge">
+            [ step, time{picosecond}, 
+              extras.Q_real{electronvolt}, extras.Q_imag ]
+        </properties>
+    </output>
+
+    <total_steps>50000</total_steps>
+    
+    <prng>
+        <seed>42</seed>
+    </prng>
+
+    <!-- Force field socket -->
+    <ffsocket mode="unix" name="bh_driver">
+        <address>bh_driver</address>
+    </ffsocket>
+
+    <system>
+        <!-- Single test particle at 10 Schwarzschild radii -->
+        <initialize nbeads="1">
+            <file mode="xyz"> init_bh.xyz </file>
+            <velocities mode="thermal" units="kelvin"> 1e-8 </velocities>
+        </initialize>
+
+        <forces>
+            <force forcefield="bh_driver"/>
+        </forces>
+
+        <!-- Entropic Langevin with BH parameters -->
+        <motion mode="entropic_langevin">
+            <timestep units="microsecond">0.1</timestep>
+            
+            <!-- Horizon dissipation -->
+            <dissipation>
+                <model>horizon</model>
+                <mass units="solar_mass">1.0</mass>
+                <spin>0.0</spin>  <!-- Schwarzschild -->
+                <origin>[0.0, 0.0, 0.0]</origin>
+            </dissipation>
+            
+            <!-- Hawking temperature -->
+            <effective_temperature units="kelvin">6.17e-8</effective_temperature>
+            
+            <!-- Schwarzschild lapse -->
+            <lapse>
+                <model>schwarzschild</model>
+                <mass units="solar_mass">1.0</mass>
+                <origin>[0.0, 0.0, 0.0]</origin>
+            </lapse>
+            
+            <!-- Track all quantities -->
+            <tracking>
+                <visibility>true</visibility>
+                <complex_charge>true</complex_charge>
+            </tracking>
+            
+            <!-- Minimal thermostat (already dissipative) -->
+            <thermostat mode="langevin">
+                <tau units="second">1e-3</tau>
+                <temperature units="kelvin">1e-8</temperature>
+            </thermostat>
+        </motion>
+    </system>
+</simulation>

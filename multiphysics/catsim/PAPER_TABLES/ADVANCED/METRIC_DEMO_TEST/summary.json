@@ -1,0 +1,43 @@
+{
+  "M_kg": 5.972e+24,
+  "dt_s": 0.1,
+  "lambda_const": 0.0,
+  "n_steps": 5,
+  "r_m": 6371000.0,
+  "runs": {
+    "coord": {
+      "dt_s": 0.1,
+      "equilibrium_max_dev_Nent": 0.0,
+      "n_steps": 5,
+      "pass": true,
+      "t0_s": 0.0,
+      "t_final_s": 0.5
+    },
+    "entropic": {
+      "dt_s": 0.1,
+      "equilibrium_max_dev_Nent": 0.0,
+      "n_steps": 5,
+      "pass": true,
+      "t0_s": 0.0,
+      "t_final_s": 0.5
+    },
+    "metric_coord": {
+      "dt_s": 0.1,
+      "equilibrium_max_dev_Nent": 0.0,
+      "n_steps": 5,
+      "pass": true,
+      "t0_s": 0.0,
+      "t_final_s": 0.5
+    },
+    "metric_entropic": {
+      "dt_s": 0.1,
+      "equilibrium_max_dev_Nent": 0.0,
+      "n_steps": 5,
+      "pass": true,
+      "t0_s": 0.0,
+      "t_final_s": 0.5
+    }
+  },
+  "toggle_invariance_notes": [],
+  "toggle_invariance_pass": true
+}

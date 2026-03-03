@@ -1,0 +1,22 @@
+{
+  "calibration_S_fs": 499.999999999924,
+  "carrier_THz": 230.2,
+  "band_THz": 10.0,
+  "dt_fs": 0.2,
+  "t_window_ps": 6.0,
+  "rise_med_s": 0.0,
+  "decay_med_s": 0.0,
+  "phase_poly": {
+    "phi0": 0.22644636197273946,
+    "phi1_rad_per_s": 561442479162.8342,
+    "phi2_rad_per_s2": 2.508790927613186e+24,
+    "fit_loss": 0.003715454094929428
+  },
+  "cat": {
+    "lambda0_inv_s": 4749999999999999.0,
+    "lambda_ent_best_inv_s": 1525423728813.5593,
+    "lambda_fit_loss": 0.003715454094929426,
+    "lam_grid_max": 15000000000000.0,
+    "lam_grid_steps": 60
+  }
+}

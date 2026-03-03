@@ -1,0 +1,20 @@
+# ENZ / ITO dielectric model parameters for Phase 6.1 (ADVANCED diagnostics)
+#
+# Traceability:
+# - Experiment reports ENZ frequency ~227 THz (1320 nm): Tirole et al., arXiv:2206.04362v2.
+#
+# IMPORTANT:
+# - The Drude numbers below are defaults so the pipeline runs.
+# - To lock to the paper's supplementary/fit values, replace them with the exact numbers
+#   you use in your manuscript and note the source.
+
+material: ITO
+enz_frequency_THz: 227.0
+
+# Simple Drude: eps(ω) = eps_inf - omega_p^2 / (ω^2 + i*gamma*ω)
+# Units: omega_p, gamma in rad/s.
+
+# DEFAULT placeholders (replace with paper-locked values):
+eps_inf: 3.5
+omega_p: 2.5e15
+gamma: 1.0e14
