@@ -1,0 +1,46 @@
+{
+  "adapterBaseUrl": "http://127.0.0.1:8093",
+  "namespace": "catept",
+  "rootKey": "root",
+  "missionRootKey": "mission.views",
+  "channelsRootKey": "channels.all",
+  "pollMs": 4000,
+  "windowMs": 90000,
+  "missionViews": [
+    {
+      "key": "native-strict-matrix",
+      "name": "Native Strict Matrix",
+      "channelPrefixes": [
+        "validator.native_strict_all.",
+        "validator.wave5_native_strict_all.",
+        "validator.chrono_native_strict.",
+        "validator.openfoam_native_strict.",
+        "validator.meep_native_strict."
+      ]
+    },
+    {
+      "key": "chrono-operations",
+      "name": "Chrono Operations",
+      "channelPrefixes": [
+        "workflow.chrono-",
+        "validator.chrono_",
+        "validator.chrono."
+      ],
+      "explicitChannels": [
+        "validator.chrono_native_strict.status"
+      ]
+    },
+    {
+      "key": "anomaly-validation",
+      "name": "Anomaly Validation Timeline",
+      "channelPrefixes": [
+        "validator.arxiv2206_",
+        "validator.strict_quant_",
+        "validator.anomaly_"
+      ],
+      "explicitChannels": [
+        "validator.arxiv2206_anomaly_mcp_target_v2.weighted_chi2"
+      ]
+    }
+  ]
+}
