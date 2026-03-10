@@ -1,0 +1,38 @@
+name: pymapdl
+upstream_url: https://github.com/ansys/pymapdl.git
+upstream_ref: main
+pip_package: ansys-mapdl-core
+imported_at_utc: 2026-03-08T00:00:00Z
+import_method: external_clone
+catept_bridge: multiphysics/integration/pyansys_entropic_bridge.py
+catept_bridge_function: run_pyansys_mapdl_thermal
+catept_registry_id: pyansys_mapdl_thermal_entropic
+catept_ir_node: PyAnsysMAPDLThermalNode
+catept_scale: thermal_structural
+catept_ir_op: PyAnsysMAPDLThermal
+validator: tools/multiphysics/validate_pyansys_mapdl_native_strict.py
+backend_modes:
+  - stub
+  - analytical
+  - native
+  - native_strict
+env_vars:
+  - CATEPT_PYANSYS_MAPDL_HOST   # default: 127.0.0.1
+  - CATEPT_PYANSYS_MAPDL_PORT   # default: 50052
+  - CATEPT_PYANSYS_NATIVE_MOCK  # set to "1" to force fallback (test/CI use)
+  - CATEPT_PYANSYS_NATIVE_TIMEOUT  # gRPC timeout in seconds
+interop_keys:
+  - geant4       # dose_gy passthrough to Geant4/TOPAS geometry
+  - opentopas    # dose → thermal coupling
+  - qutip        # thermal excitation → open-system Hamiltonian
+  - fluent       # T_max_k → coolant CFD inlet
+  - pynucastro   # material isotopic composition reference
+physics_coupling: >
+  Geant4/OpenTOPAS dose_gy → MAPDL thermal solve → T(x,y,z), sigma_mpa →
+  PyFluent coolant CFD (heat removal) → PyAEDT Maxwell EM (B field map for beam optics).
+notes:
+  - CAT/EPT thermal-structural backend for radiation therapy and reactor physics workflows.
+  - PyMAPDL communicates with ANSYS MAPDL via gRPC (requires MAPDL license + server).
+  - Stub and analytical modes work without any ANSYS installation.
+  - Material library covers water, tissue, aluminum, steel, graphite, tungsten, beryllium.
+  - Apply pyansys_catept.patch for any local upstream modifications.

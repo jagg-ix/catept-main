@@ -1,0 +1,45 @@
+name: ansys-tools-visualization-interface
+upstream_url: https://github.com/ansys/ansys-tools-visualization-interface.git
+upstream_ref: main
+pip_package: ansys-tools-visualization-interface
+pip_extras: []
+imported_at_utc: 2026-03-08T00:00:00Z
+import_method: external_clone
+role: pyansys_ui
+catept_usage:
+  - Unified visualization interface called by PyMAPDL, PyFluent, and PyAEDT
+  - Provides .plot() on PyAnsys result objects backed by PyVista + trame
+  - Abstracts backend selection: pyvista (desktop), trame (web), pythreejs (notebook)
+  - Entry point for any custom CAT/EPT result visualization hooks
+pyansys_integration:
+  - PyMAPDL: mapdl.result.plot_nodal_solution() routes through this interface
+  - PyFluent: session.field_data.get_surface_data() + .plot() uses this layer
+  - PyAEDT: field_plot.export_field_plot() backend
+  - CAT/EPT: can wrap pyansys_entropic_bridge payloads for unified .plot() calls
+example_usage: |
+  from ansys.tools.visualization_interface import PlotterInterface
+  import pyvista as pv
+
+  # Wrap a CAT/EPT bridge result for PyAnsys-style visualization
+  from multiphysics.integration.pyansys_entropic_bridge import run_pyansys_mapdl_thermal
+
+  payload = run_pyansys_mapdl_thermal(
+      dose_gy=2.0, material='water', geometry_cm=5.0,
+      temperature_ambient_k=293.15, lambda_rate=1e-4,
+      tau_ent_0=0.0, dt=1.0, backend_mode='opensource',
+  )
+
+  pl = PlotterInterface(use_trame=False)  # pyvista desktop
+  mesh = pv.Sphere(radius=payload['geometry_cm'] * 0.01)
+  mesh['tau_ent_next'] = payload['tau_ent_next']
+  pl.pv_interface.add_mesh(mesh, scalars='tau_ent_next')
+  pl.show()
+backend_options:
+  - pyvista      # default desktop backend
+  - trame        # web / notebook backend
+  - pythreejs    # Jupyter widget backend
+notes:
+  - Official abstraction layer that all modern PyAnsys packages use for visualization.
+  - Works entirely without ANSYS licenses (pure Python + PyVista).
+  - Version-locked with the PyAnsys ecosystem release schedule.
+  - Most stable entry point for custom CAT/EPT result visualization hooks into PyAnsys.

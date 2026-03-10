@@ -1,0 +1,217 @@
+name: gunns
+upstream_url: https://github.com/nasa/gunns.git
+upstream_ref: main
+pip_package: null                # C++/Python; no pip package — source build required
+imported_at_utc: 2026-03-09T00:00:00Z
+import_method: external_clone
+role: network_solver              # nodal admittance-matrix solver for spacecraft systems
+license: NASA Open Source Agreement v1.3 (NOSA-1.3)
+version_stable: "2023-09"        # latest stable tagged release
+stars: ~80
+language: C++17 / Python 3 (ICG bindings)
+key_dependencies:
+  - python3                       # ICG-generated Python bindings
+  - swig (optional)               # alternative binding generator
+  - gcc / clang                   # C++17 compiler
+
+overview: |
+  NASA GMSEC General-Use Nodal Network Solver.
+  Solves multi-domain nodal admittance-matrix systems G·x = b for:
+    - Fluid networks     (pressure potentials, mass-flow through-variables)
+    - Thermal networks   (temperature potentials, heat-flow through-variables)
+    - Electrical networks (voltage potentials, current through-variables)
+
+  Each network is built as a collection of Node + Link objects.
+  Links define conductance (and optionally capacitance/inductance).
+  The solver assembles the system matrix and inverts it (direct or iterative).
+
+  Key capability for CAT/EPT: the total dissipation P = Σ G_i·ΔX_i² across
+  all network edges accumulates as irreversible entropy production, coupling
+  directly to the tau_ent/delta_s_i framework via:
+    lambda_eff  = lambda_rate · (1 + log(1 + P / P_ref))
+    delta_s_i   = lambda_eff · dt · (1 + 0.05·(N - 2))
+  where N is node_count and P_ref = supply_pressure × demand_flow.
+
+architecture_summary:
+  network_domains:
+    FluidNetwork:      "Pressure potentials; mass-flow through-vars; compressible or incompressible"
+    ThermalNetwork:    "Temperature potentials; heat-flow through-vars; radiation + conduction"
+    ElectricalNetwork: "Voltage potentials; current through-vars; DC + AC"
+    HybridNetwork:     "Multi-domain coupling (thermal-hydraulic, thermal-electrical)"
+
+  solver_types:
+    Direct:    "LU factorization (small/medium networks)"
+    Iterative: "GMRES/Jacobi (large sparse networks)"
+    Adaptive:  "Switches direct↔iterative based on condition number"
+
+  link_types:
+    BasicLink:           "Linear resistor/conductor"
+    CapacitorLink:       "Capacitance (energy storage)"
+    InductorLink:        "Inductance (momentum storage)"
+    ValveLink:           "Variable conductance (flow control)"
+    PumpLink:            "Source with pressure/flow curve"
+    HeatExchangerLink:   "Coupled fluid-thermal link"
+    RegulatorLink:       "Pressure/voltage regulator"
+
+  python_bindings:
+    ICG:  "NASA Interface Control Generator — auto-generates Python wrappers from C++ headers"
+    swig: "SWIG 4.x alternative"
+
+dtl_integration_plan:
+
+  # ── Phase 1: Bridge + native backend ──────────────────────────────────────
+  phase1_bridge_native:
+    effort_weeks: 1-2
+    risk: low
+    status: complete
+    description: |
+      DONE: multiphysics/integration/gunns_entropic_bridge.py
+        - run_gunns_entropic_solve() with admittance-matrix stub
+        - _nodal_admittance_solve(): symmetric ladder-network analytical stub
+        - Entropic coupling: lambda_eff, delta_s_i from dissipation P
+        - QTM profile: scale_id=systems_network, ir_op=GUNNS_NETWORK
+        - Interop hints: openfoam, condor, trick, mrmustard
+
+      DONE: multiphysics/core/gunns_native_backend.py
+        - NativeGUNNSUnavailable exception
+        - ENV_NATIVE_RUNNER = "CATEPT_GUNNS_NATIVE_RUNNER"
+        - Subprocess runner contract: op=gunns_network_step JSON stdin/stdout
+        - Mock mode: CATEPT_GUNNS_NATIVE_MOCK=1
+        - gunns_native_capabilities() discovery
+
+  # ── Phase 2: Registry + validator + tests ─────────────────────────────────
+  phase2_registry_validator_tests:
+    effort_weeks: 1
+    risk: low
+    status: complete
+    description: |
+      DONE: multiphysics/integration/registry.py
+        - gunns_entropic_solve   (scale_id=systems_network)
+        - gunns_thermal_network  (scale_id=thermal_hydraulic_network)
+        - gunns_electrical_network (scale_id=electrical_network)
+
+      DONE: tools/multiphysics/validate_gunns_native_strict.py
+      DONE: multiphysics/tests/test_validate_gunns_native_strict.py (6 tests)
+
+  # ── Phase 3: GUNNS-native solver (C++ process) ─────────────────────────────
+  phase3_native_solver:
+    effort_weeks: 3-4
+    risk: medium
+    status: complete
+    description: |
+      DONE: tools/native/gunns_catept_runner.cpp
+        Self-contained C++17 binary implementing the GUNNS ladder-network solve:
+          1. Reads flat JSON from stdin (contract_version 1, op=gunns_network_step)
+          2. Runs symmetric ladder-network admittance solve (Gauss-Seidel)
+             G_edge = conductance_s/(N-1); uniform potential drop; iterative refinement
+          3. Computes total dissipation P = Σ G·ΔP² across all edges
+          4. Computes entropic coupling: lambda_eff = lambda_rate*(1 + log1p(P/P_ref))
+          5. Writes JSON to stdout with tau_ent_next, delta_s_i, potentials, flows
+          6. No external dependencies — pure C++17 stdlib
+
+      DONE: tools/native/CMakeLists.txt
+        CMake 3.16+ build; no FetchContent needed; single-file executable.
+        cmake -B build && cmake --build build -j4
+        Smoke test: cmake --build build --target smoke_test_gunns
+
+      DONE: multiphysics/core/gunns_native_backend.py
+        Fixed _native_request() to send flat JSON (not nested under "inputs").
+        Added native_hook_status to _normalize_native_payload.
+
+      DONE: multiphysics/tests/test_validate_gunns_native_strict.py
+        Added test_validate_gunns_phase3_cpp_runner_end_to_end (pytest.skip if not built).
+        Verifies: backend_used="gunns_catept_runner_cpp", native_hook_status="native_ok",
+          tau_ent_next > tau_ent_0, delta_s_i > 0, converged=True.
+
+      Build: cd tools/native && cmake -B build && cmake --build build
+      Runner ENV: CATEPT_GUNNS_NATIVE_RUNNER=tools/native/build/gunns_catept_runner
+      Provider ENV: CATEPT_GUNNS_NATIVE_PROVIDER=runner
+
+      Note: The runner implements the same analytical stub as the Python bridge.
+      To use the real GUNNS C++ library (GunnsFluidConductor/GunnsBasicNode),
+      link against multiphysics/external/gunns after cmake build and replace
+      the ladder-network stub with GUNNS network initialization.
+
+    target_files:
+      - tools/native/gunns_catept_runner.cpp  ✓ (complete)
+      - tools/native/CMakeLists.txt           ✓ (complete)
+
+  # ── Phase 4: Multi-domain coupling ─────────────────────────────────────────
+  phase4_multidomain:
+    effort_weeks: 4-6
+    risk: medium-high
+    status: complete
+    description: |
+      DONE: multiphysics/integration/gunns_hybrid_network_bridge.py
+        Iterative coupled thermal-hydraulic solve:
+          - _ladder_solve(): Gauss-Seidel on N-node tridiagonal admittance matrix (reused for both domains)
+          - _coupled_solve(): alternates fluid + thermal solves; cross-domain coupling via forced convection
+              G_thermal_eff = G_thermal_base + convection_coefficient * avg(|Q_fluid_ij|)
+          - Convergence: ||φ_t_new - φ_t_old|| < tolerance·N
+          - Outputs: fluid_potentials, fluid_flows, thermal_temperatures_k, heat_exchange_w
+          - Multi-domain dissipation: P_total = P_fluid + P_thermal
+          - Entropic coupling: lambda_eff = lambda_rate·(1 + log1p(P_total/P_ref))
+          - Interop hints: openfoam (fluid_residual), trick (thermal_power), networkx (total conductance)
+
+      DONE: GUNNSHybridNetworkNode in ir.py
+        Fields: node_count, fluid_conductance_s, thermal_conductance_wk, supply_pressure_pa,
+          supply_temperature_k, ambient_temperature_k, demand_flow_kg_s, convection_coefficient,
+          fluid_type, coupling_max_iters, solver_max_iters, tolerance, lambda_rate, tau_ent_0, dt
+
+      DONE: GUNNS_HYBRID_NETWORK in CommandType; builder + compiler dispatch
+
+      DONE: "gunns_hybrid_network" registry entry (scale_id=thermal_hydraulic_network)
+        invariants: mass_conservation_policy, energy_balance_policy, thermal_coupling_convergence_policy
+
+      DONE: tools/multiphysics/validate_gunns_hybrid_network.py
+      DONE: multiphysics/tests/test_validate_gunns_hybrid_network.py (7 tests: all pass)
+      DONE: multiphysics/qf_qutip_dsl/examples/gunns_hybrid_network_end_to_end_target.json
+        4-node radiator/coolant loop, 2.5S fluid + 8W/K thermal, 400K→250K, forced convection 0.08
+
+    target_files:
+      - multiphysics/integration/gunns_hybrid_network_bridge.py  ✓ (complete)
+      - multiphysics/qf_qutip_dsl/ir.py (GUNNSHybridNetworkNode)  ✓
+      - multiphysics/qf_qutip_dsl/compat.py (GUNNS_HYBRID_NETWORK)  ✓
+      - multiphysics/qf_qutip_dsl/compiler.py (compile_gunns_hybrid_network)  ✓
+      - multiphysics/integration/registry.py (gunns_hybrid_network)  ✓
+      - tools/multiphysics/validate_gunns_hybrid_network.py  ✓
+      - multiphysics/tests/test_validate_gunns_hybrid_network.py  ✓
+      - multiphysics/qf_qutip_dsl/examples/gunns_hybrid_network_end_to_end_target.json  ✓
+
+dtl_mapping:
+  gunns_to_dtl:
+    GunnsFluidNode.pressure:       { dtl_role: "potential (Pa)", ir_key: "supply_pressure_pa" }
+    GunnsFluidConductor.G:         { dtl_role: "conductance (kg/Pa/s)", ir_key: "conductance_s" }
+    network.massFlow:              { dtl_role: "through-variable", ir_key: "mass_flow_kg_s" }
+    network.totalDissipation:      { dtl_role: "S_R (real action)", ir_key: "total_dissipation_w" }
+    tau_ent_next:                  { formula: "tau_ent_0 + lambda_eff * dt" }
+    delta_s_i:                     { formula: "lambda_eff * dt * (1 + 0.05*(N-2))" }
+    lambda_eff:                    { formula: "lambda_rate * (1 + log(1 + P/P_ref))" }
+
+invariants:
+  mass_conservation_policy: "Σ flows_in == Σ flows_out at each internal node (KFL)"
+  kcl_policy:               "Σ currents at each node == 0 (for electrical networks)"
+  energy_balance_policy:    "Σ Q_in == Σ Q_out + ΔU_stored (for thermal networks)"
+
+integration_with_condor: |
+  Phase 3+: GUNNS networks can be wrapped as Condor ExternalSolverWrappers.
+  CasADi AD then provides dP/d(conductance_s), dflow/d(pressure) Jacobians
+  without finite-difference perturbation — useful for tau_ent sensitivity.
+
+integration_with_trick: |
+  GUNNS is directly used inside Trick simulations (S_define scheduling).
+  The natural integration path: Trick calls GUNNS solve at each sim step,
+  CAT/EPT bridge extracts nodal state and computes tau_ent.
+  bridge chain: trick_entropic_bridge → trick_native_backend → GUNNS runner
+
+build_requirements:
+  - git clone https://github.com/nasa/gunns.git multiphysics/external/gunns
+  - cd multiphysics/external/gunns && cmake . -DBUILD_TESTS=OFF && make -j4
+  - python3 -c "import gunns"   # test ICG bindings
+
+notes:
+  - Lead: NASA GMSEC (Goddard Mission Services Evolution Center)
+  - NOSA-1.3 is OSI-compatible with MIT-licensed projects
+  - GUNNS is used in real NASA missions: Orion, ISS thermal models
+  - The admittance-matrix pattern directly mirrors Condor AlgebraicSystem.residual()
+  - CasADi shared with Condor: GUNNS+Condor combo gives AD-enabled network sensitivity

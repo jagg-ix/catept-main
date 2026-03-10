@@ -1,0 +1,68 @@
+/*****************************************************************************
+PURPOSE:    (SIM_catept — CAT/EPT Trick simulation)
+DESCRIPTION: (
+  Integrates the CAT/EPT entropic time framework into a Trick simulation.
+  The CateptSimObject wraps the GUNNS nodal-network solver and exposes
+  tau_ent, delta_s_i, lambda_eff via the Trick Variable Server.
+
+  Scheduled jobs:
+    default_data()      — set parameter defaults
+    initialization()    — first network solve, establish baseline
+    dynamic 0.1 s       — per-timestep entropic coupling update
+    shutdown()          — cleanup
+
+  Variable Server access (from input.py or external TCP client):
+    catept_sim.catept.tau_ent       — accumulated entropic time
+    catept_sim.catept.delta_s_i     — last-step entropy increment
+    catept_sim.catept.lambda_eff    — effective entropic rate
+    catept_sim.catept.net.*         — full network state
+
+  To use the C++ GUNNS runner (Phase 3):
+    Set catept_sim.catept.runner_path to the binary path in input.py:
+      catept_sim.catept.runner_path = "/path/to/gunns_catept_runner"
+  Default: analytical stub (no binary required).
+)
+LIBRARY_DEPENDENCY:
+    ((models/catept_sim_object.o))
+*****************************************************************************/
+
+// Trick system headers (## prefix = C++ include in S_define)
+##include "trick/exec_proto.h"
+##include "trick/exec_proto.hh"
+
+// CAT/EPT SimObject header
+##include "models/catept_sim_object.hh"
+
+// ─── SimObject definition ────────────────────────────────────────────────────
+
+class CateptTrickSim : public Trick::SimObject {
+public:
+    CateptSimObject catept;
+
+    CateptTrickSim() {
+        // Phase 1: default data
+        ("default_data") catept.default_data();
+
+        // Phase 2: initialization
+        ("initialization") catept.initialize();
+
+        // Phase 3: dynamic — entropic coupling update every 0.1 s
+        (0.1, "dynamic") catept.step(0.1);
+
+        // Phase 4: shutdown
+        ("shutdown") catept.shutdown();
+    }
+};
+
+// ─── Instance ────────────────────────────────────────────────────────────────
+CateptTrickSim catept_sim;
+
+
+// ─── create_connections ──────────────────────────────────────────────────────
+// Optional: wire catept outputs into other SimObjects here.
+// Example (if a vehicle SimObject exists):
+//   vehicle_sim.vehicle.drag_lambda_hint = catept_sim.catept.lambda_eff;
+
+void create_connections() {
+    // No connections in standalone SIM_catept
+}

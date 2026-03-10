@@ -1,0 +1,373 @@
+diff --git a/include/taco/tensor.h b/include/taco/tensor.h
+index dbc1cf33..852944d7 100644
+--- a/include/taco/tensor.h
++++ b/include/taco/tensor.h
+@@ -44,6 +44,25 @@ struct ScalarAccess;
+ /// `TensorBase`.
+ class TensorBase {
+ public:
++  /// Entropic proper-time configuration used to advance CAT/EPT state during
++  /// tensor execution stages.
++  struct EntropicContext {
++    bool enabled = false;
++    bool includeAssembleStage = false;
++    double lambdaRate = 0.0;
++    double hbar = 1.0;
++    double dt = 1.0;
++    double entropyProductionScale = 0.0;
++  };
++
++  /// Runtime entropic state accumulated while the tensor executes.
++  struct EntropicState {
++    double tauEnt = 0.0;
++    double deltaSI = 0.0;
++    double lambdaEff = 0.0;
++    int steps = 0;
++  };
++
+   /* --- Constructor Methods --- */
+ 
+   /// Create a scalar
+@@ -433,6 +452,23 @@ public:
+   /// Compile, assemble and compute as needed.
+   void evaluate();
+ 
++  /// Set the entropic proper-time execution context.
++  void setEntropicContext(const EntropicContext& context);
++
++  /// Convenience overload for setting the entropic proper-time execution context.
++  void setEntropicContext(bool enabled, double lambdaRate, double hbar,
++                          double dt, double entropyProductionScale = 0.0,
++                          bool includeAssembleStage = false);
++
++  /// Get the currently configured entropic proper-time context.
++  EntropicContext getEntropicContext() const;
++
++  /// Get the current entropic proper-time runtime state.
++  EntropicState getEntropicState() const;
++
++  /// Reset the entropic proper-time runtime state.
++  void resetEntropicState(double tauEnt0 = 0.0);
++
+   /// True if the Tensor needs to be packed.
+   bool needsPack();
+ 
+@@ -522,6 +558,8 @@ private:
+ 
+   void syncValues();
+ 
++  void advanceEntropicState(bool fromAssembleStage);
++
+   template<typename CType>
+   iterator_wrapper<int,CType> iteratorPacked();
+   
+@@ -915,6 +953,8 @@ struct TensorBase::Content {
+   bool               needsCompile;
+   bool               needsAssemble;
+   bool               needsCompute;
++  EntropicContext    entropicContext;
++  EntropicState      entropicState;
+   std::vector<std::weak_ptr<TensorBase::Content>> dependentTensors;
+   unsigned int       uniqueId;
+ 
+diff --git a/src/tensor.cpp b/src/tensor.cpp
+index 257c396c..aaf83eb6 100644
+--- a/src/tensor.cpp
++++ b/src/tensor.cpp
+@@ -6,6 +6,7 @@
+ #include <sstream>
+ #include <cstdlib>
+ #include <climits>
++#include <cmath>
+ #include <vector>
+ #include <utility>
+ #include <mutex>
+@@ -124,6 +125,7 @@ TensorBase::TensorBase(string name, Datatype ctype, vector<int> dimensions,
+   taco_uassert(ctype == fill.getDataType()) << "Fill value must be of the same type as the tensor.";
+ 
+   content->allocSize = 1 << 20;
++  content->valuesSize = 0;
+ 
+   vector<ModeIndex> modeIndices(format.getOrder());
+   // Initialize dense storage modes
+@@ -144,6 +146,8 @@ TensorBase::TensorBase(string name, Datatype ctype, vector<int> dimensions,
+   content->needsCompile = false;
+   content->needsAssemble = false;
+   content->needsCompute = false;
++  content->entropicContext = TensorBase::EntropicContext();
++  content->entropicState = TensorBase::EntropicState();
+ 
+   content->coordinateBuffer = shared_ptr<vector<char>>(new vector<char>);
+   content->coordinateBufferUsed = 0;
+@@ -823,6 +827,7 @@ void TensorBase::assemble() {
+     setNeedsAssemble(false);
+     taco_tensor_t* tensorData = ((taco_tensor_t*)arguments[0]);
+     content->valuesSize = unpackTensorData(*tensorData, *this);
++    advanceEntropicState(true);
+   }
+ }
+ 
+@@ -847,6 +852,7 @@ void TensorBase::compute() {
+     taco_tensor_t* tensorData = ((taco_tensor_t*)arguments[0]);
+     content->valuesSize = unpackTensorData(*tensorData, *this);
+   }
++  advanceEntropicState(false);
+ }
+ 
+ void TensorBase::evaluate() {
+@@ -857,6 +863,66 @@ void TensorBase::evaluate() {
+   this->compute();
+ }
+ 
++void TensorBase::setEntropicContext(const EntropicContext& context) {
++  taco_uassert(context.hbar > 0.0) << "entropic context hbar must be > 0";
++  taco_uassert(context.dt > 0.0) << "entropic context dt must be > 0";
++  taco_uassert(context.lambdaRate >= 0.0)
++      << "entropic context lambdaRate must be >= 0";
++  taco_uassert(context.entropyProductionScale >= 0.0)
++      << "entropic context entropyProductionScale must be >= 0";
++  content->entropicContext = context;
++}
++
++void TensorBase::setEntropicContext(bool enabled, double lambdaRate, double hbar,
++                                    double dt, double entropyProductionScale,
++                                    bool includeAssembleStage) {
++  EntropicContext ctx;
++  ctx.enabled = enabled;
++  ctx.includeAssembleStage = includeAssembleStage;
++  ctx.lambdaRate = lambdaRate;
++  ctx.hbar = hbar;
++  ctx.dt = dt;
++  ctx.entropyProductionScale = entropyProductionScale;
++  setEntropicContext(ctx);
++}
++
++TensorBase::EntropicContext TensorBase::getEntropicContext() const {
++  return content->entropicContext;
++}
++
++TensorBase::EntropicState TensorBase::getEntropicState() const {
++  return content->entropicState;
++}
++
++void TensorBase::resetEntropicState(double tauEnt0) {
++  taco_uassert(tauEnt0 >= 0.0) << "entropic state tauEnt0 must be >= 0";
++  content->entropicState = TensorBase::EntropicState();
++  content->entropicState.tauEnt = tauEnt0;
++}
++
++void TensorBase::advanceEntropicState(bool fromAssembleStage) {
++  const EntropicContext& ctx = content->entropicContext;
++  if (!ctx.enabled) {
++    return;
++  }
++  if (fromAssembleStage && !ctx.includeAssembleStage) {
++    return;
++  }
++  const double workProxy = static_cast<double>(
++      content->valuesSize > 0 ? content->valuesSize
++                              : content->storage.getValues().getSize());
++  double deltaSI = (ctx.hbar * ctx.lambdaRate +
++                    ctx.entropyProductionScale * workProxy) * ctx.dt;
++  if (!std::isfinite(deltaSI) || deltaSI < 0.0) {
++    deltaSI = 0.0;
++  }
++  content->entropicState.deltaSI = deltaSI;
++  content->entropicState.lambdaEff =
++      (ctx.hbar > 0.0 && ctx.dt > 0.0) ? deltaSI / (ctx.hbar * ctx.dt) : 0.0;
++  content->entropicState.tauEnt += deltaSI / ctx.hbar;
++  content->entropicState.steps += 1;
++}
++
+ void TensorBase::operator=(const IndexExpr& expr) {
+   taco_uassert(getOrder() == 0)
+       << "Must use index variable on the left-hand-side when assigning an "
+diff --git a/tools/taco.cpp b/tools/taco.cpp
+index 30558c83..5f227881 100644
+--- a/tools/taco.cpp
++++ b/tools/taco.cpp
+@@ -146,6 +146,30 @@ static void printUsageInfo() {
+             "Time compilation, assembly and <repeat> times computation "
+             "(defaults to 1).");
+   cout << endl;
++  printFlag("entropic-enable",
++            "Enable entropic proper-time tracking for the result tensor.");
++  cout << endl;
++  printFlag("entropic-lambda=<value>",
++            "Set external entropic rate lambda (>= 0).");
++  cout << endl;
++  printFlag("entropic-hbar=<value>",
++            "Set reduced Planck constant scale used by entropic tracking (> 0).");
++  cout << endl;
++  printFlag("entropic-dt=<value>",
++            "Set integration timestep used for entropic tracking (> 0).");
++  cout << endl;
++  printFlag("entropic-tau0=<value>",
++            "Set initial entropic proper time tau_ent(0) (>= 0).");
++  cout << endl;
++  printFlag("entropic-entropy-scale=<value>",
++            "Set additional entropy production scaling from kernel work proxy (>= 0).");
++  cout << endl;
++  printFlag("entropic-include-assemble",
++            "Include assemble stage contributions in entropic state updates.");
++  cout << endl;
++  printFlag("entropic-print",
++            "Print entropic state (tau_ent, delta_s_i, lambda_eff, steps) after execution.");
++  cout << endl;
+   printFlag("write-time=<filename>",
+             "Write computation times in csv format to <filename> "
+             "as compileTime,assembleTime,mean,stdev,median.");
+@@ -672,6 +696,9 @@ int main(int argc, char* argv[]) {
+   bool verify              = false;
+   bool time                = false;
+   bool writeTime           = false;
++  bool entropicEnable      = false;
++  bool entropicPrint       = false;
++  bool entropicIncludeAssemble = false;
+ 
+   bool color               = true;
+   bool readKernels         = false;
+@@ -683,6 +710,11 @@ int main(int argc, char* argv[]) {
+   int chunkSize = 0;
+   int nthreads = 0;
+   string prefix = "";
++  double entropicLambdaRate = 0.0;
++  double entropicHbar = 1.0;
++  double entropicDt = 1.0;
++  double entropicTau0 = 0.0;
++  double entropicEntropyScale = 0.0;
+ 
+   taco::util::TimeResults compileTime;
+   taco::util::TimeResults assembleTime;
+@@ -961,6 +993,50 @@ int main(int argc, char* argv[]) {
+         }
+       }
+     }
++    else if ("-entropic-enable" == argName) {
++      entropicEnable = true;
++    }
++    else if ("-entropic-print" == argName) {
++      entropicPrint = true;
++    }
++    else if ("-entropic-include-assemble" == argName) {
++      entropicIncludeAssemble = true;
++    }
++    else if ("-entropic-lambda" == argName) {
++      try {
++        entropicLambdaRate = stod(argValue);
++      } catch (...) {
++        return reportError("Incorrect -entropic-lambda usage", 3);
++      }
++    }
++    else if ("-entropic-hbar" == argName) {
++      try {
++        entropicHbar = stod(argValue);
++      } catch (...) {
++        return reportError("Incorrect -entropic-hbar usage", 3);
++      }
++    }
++    else if ("-entropic-dt" == argName) {
++      try {
++        entropicDt = stod(argValue);
++      } catch (...) {
++        return reportError("Incorrect -entropic-dt usage", 3);
++      }
++    }
++    else if ("-entropic-tau0" == argName) {
++      try {
++        entropicTau0 = stod(argValue);
++      } catch (...) {
++        return reportError("Incorrect -entropic-tau0 usage", 3);
++      }
++    }
++    else if ("-entropic-entropy-scale" == argName) {
++      try {
++        entropicEntropyScale = stod(argValue);
++      } catch (...) {
++        return reportError("Incorrect -entropic-entropy-scale usage", 3);
++      }
++    }
+     else if ("-write-time" == argName) {
+       writeTimeFilename = argValue;
+       writeTime = true;
+@@ -1039,6 +1115,28 @@ int main(int argc, char* argv[]) {
+     }
+   }
+ 
++  if (entropicLambdaRate > 0.0 || entropicTau0 > 0.0 ||
++      entropicEntropyScale > 0.0 || entropicIncludeAssemble) {
++    entropicEnable = true;
++  }
++  if (entropicEnable) {
++    if (entropicLambdaRate < 0.0) {
++      return reportError("entropic lambda must be >= 0", 3);
++    }
++    if (entropicHbar <= 0.0) {
++      return reportError("entropic hbar must be > 0", 3);
++    }
++    if (entropicDt <= 0.0) {
++      return reportError("entropic dt must be > 0", 3);
++    }
++    if (entropicTau0 < 0.0) {
++      return reportError("entropic tau0 must be >= 0", 3);
++    }
++    if (entropicEntropyScale < 0.0) {
++      return reportError("entropic entropy scale must be >= 0", 3);
++    }
++  }
++
+   // Print compute is the default if nothing else was asked for
+   if (!printAssemble && !printEvaluate && !printIterationGraph &&
+       !writeCompute && !writeAssemble && !writeKernels && !readKernels &&
+@@ -1119,6 +1217,17 @@ int main(int argc, char* argv[]) {
+   } catch (parser::ParseError& e) {
+     return reportError(e.getMessage(), 6);
+   }
++  if (entropicEnable) {
++    TensorBase::EntropicContext entropicContext;
++    entropicContext.enabled = true;
++    entropicContext.includeAssembleStage = entropicIncludeAssemble;
++    entropicContext.lambdaRate = entropicLambdaRate;
++    entropicContext.hbar = entropicHbar;
++    entropicContext.dt = entropicDt;
++    entropicContext.entropyProductionScale = entropicEntropyScale;
++    tensor.setEntropicContext(entropicContext);
++    tensor.resetEntropicState(entropicTau0);
++  }
+ 
+   // Generate tensors
+   for (auto& fills : tensorsFill) {
+@@ -1229,6 +1338,17 @@ int main(int argc, char* argv[]) {
+       } catch (parser::ParseError& e) {
+         return reportError(e.getMessage(), 6);
+       }
++      if (entropicEnable) {
++        TensorBase::EntropicContext entropicContext;
++        entropicContext.enabled = true;
++        entropicContext.includeAssembleStage = entropicIncludeAssemble;
++        entropicContext.lambdaRate = entropicLambdaRate;
++        entropicContext.hbar = entropicHbar;
++        entropicContext.dt = entropicDt;
++        entropicContext.entropyProductionScale = entropicEntropyScale;
++        customTensor.setEntropicContext(entropicContext);
++        customTensor.resetEntropicState(entropicTau0);
++      }
+       customTensor.compileSource(kernelSource);
+ 
+       if (time) {
+@@ -1501,5 +1621,15 @@ int main(int argc, char* argv[]) {
+     }
+   }
+ 
++  if (entropicEnable && entropicPrint) {
++    auto entropic = tensor.getEntropicState();
++    cout << "entropic-state:"
++         << " tau_ent=" << entropic.tauEnt
++         << " delta_s_i=" << entropic.deltaSI
++         << " lambda_eff=" << entropic.lambdaEff
++         << " steps=" << entropic.steps
++         << endl;
++  }
++
+   return 0;
+ }
