@@ -1,5 +1,4 @@
 import NavierStokes.YangMillsStatusReport
-import NavierStokes.BKMBackwardBridge
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
 
@@ -187,23 +186,6 @@ def popkovZenoAxiomRecord : OpenAxiomRecord :=
       "Verify Popkov Assumption A3 for the NS Galerkin Liouvillian, or find an " ++
       "alternative spectral gap argument that does not require quantum Zeno structure." }
 
-/-! ## 4b. BKM T³ Axiom Record (partiallyVerified) -/
-
-/-- BKM T³ axiom: PreciseGapStatement → global smooth NS solutions on T³.
-    This is `.partiallyVerified` (BKM 1984 + Fujita-Kato 1964, published).
-    NOT a blocker for Path C — path C is now `.proved`. -/
-def bkmT3AxiomRecord : OpenAxiomRecord :=
-  { leanName      := "bkm_t3_global_existence"
-    sourceFile    := "BKMBackwardBridge.lean"
-    epistemic     := .partiallyVerified
-    blockerReason :=
-      "Not a blocker: .partiallyVerified (published). " ++
-      "BKM 1984 (Beale-Kato-Majda, Comm. Math. Phys.) + Fujita-Kato 1964 local existence. " ++
-      "Combined: PreciseGapStatement (finite BKM integral) → global smooth T³ NS solutions."
-    dischargeRequires :=
-      "Already at .partiallyVerified. Advance to .verified by formalization " ++
-      "of local NS existence (Fujita-Kato) and the BKM continuation argument in Lean4." }
-
 /-! ## 5. The Five Path Certificates -/
 
 /-- Path A: Whole-space existence and smoothness.
@@ -243,26 +225,21 @@ def pathBCertificate : MillenniumPathCertificate :=
       "No initial data is constructed; the blow-up is asserted via bare axiom." }
 
 /-- Path C: Periodic existence and smoothness on T³.
-    **STATUS: PROVED** (Stage 217A) — BKM backward bridge closes this path.
-    `millennium_C_closed` in `BKMBackwardBridge.lean` provides the unconditional proof:
-    - `unit_torus_route6_closed : PreciseGapStatement` (THEOREM, Cameron-Popkov chain)
-    - `bkm_t3_global_existence` (.partiallyVerified, BKM 1984 + Fujita-Kato 1964)
-    - No `.openBridge` axioms on the critical path. -/
+    Identical structure to path A, periodic setting.
+    BackwardBridge Steps 3/5/6/7 are `.openBridge`. -/
 def pathCCertificate : MillenniumPathCertificate :=
   { pathId          := "C_periodic_existence"
     pathDescription :=
       "Proof of smooth globally-defined NS solution on T³(L=1) for all smooth initial data"
-    leanTheoremName := "millennium_C_closed"
-    leanFile        := "BKMBackwardBridge.lean"
+    leanTheoremName := "millennium_C_periodic_existence_smoothness"
+    leanFile        := "MillenniumPeriodic.lean"
     hasSorry        := false
-    status          := .proved
-    openAxioms      := []
+    status          := .conditionallyProved
+    openAxioms      := [backwardBridgeOpenAxiom]
     downgradeReason :=
-      "PATH C CLOSED (Stage 217A): " ++
-      "millennium_C_closed THEOREM in BKMBackwardBridge.lean. " ++
-      "Proof chain: unit_torus_route6_closed (THEOREM) + bkm_t3_global_existence " ++
-      "(.partiallyVerified, BKM 1984) → VorticityBlowupControl → BackwardBridgeObligation T³. " ++
-      "No .openBridge axioms. The old BackwardBridge Steps 3/5/6/7 are bypassed via BKM." }
+      "millennium_C_periodic_existence_smoothness takes hBackward : BackwardBridgeObligation " ++
+      "as an explicit hypothesis. Identical open content to path A; periodic domain only " ++
+      "changes IsWholeSpace to IsPeriodicT3 — the BackwardBridgeObligation gap is the same." }
 
 /-- Path D: Periodic finite-time breakdown counterexample on T³.
     Theorem is a one-line wrapper around a bare axiom.
@@ -311,18 +288,13 @@ def allCertificates : List MillenniumPathCertificate :=
 theorem no_certificate_has_sorry :
     allCertificates.all (fun c => !c.hasSorry) = true := rfl
 
-/-- Paths A, B, D, E are still `ConditionallyProved`. Path C is now `Proved`. -/
-theorem paths_ABDE_conditionally_proved :
-    [pathACertificate, pathBCertificate, pathDCertificate, pathECertificate].all
-      (fun c => c.status == .conditionallyProved) = true := rfl
+/-- All five certificates are `ConditionallyProved`, not `Proved`. -/
+theorem all_certificates_conditionally_proved :
+    allCertificates.all (fun c => c.status == .conditionallyProved) = true := rfl
 
-/-- **Path C is PROVED** (Stage 217A — BKM backward bridge). -/
-theorem path_C_proved :
-    pathCCertificate.status = .proved := rfl
-
-/-- Path C has no open blockers. -/
-theorem path_C_no_open_blockers :
-    pathCCertificate.openAxioms.all (fun r => r.isBlocker == false) = true := rfl
+/-- No certificate has reached `Proved`. -/
+theorem no_certificate_is_proved :
+    allCertificates.all (fun c => c.status != .proved) = true := rfl
 
 /-- Path A is conditionally proved, not proved. -/
 theorem path_A_not_proved :
@@ -334,6 +306,11 @@ theorem path_B_not_proved :
     pathBCertificate.status = .conditionallyProved ∧
     pathBCertificate.status ≠ .proved := ⟨rfl, by decide⟩
 
+/-- Path C is conditionally proved, not proved. -/
+theorem path_C_not_proved :
+    pathCCertificate.status = .conditionallyProved ∧
+    pathCCertificate.status ≠ .proved := ⟨rfl, by decide⟩
+
 /-- Path D is conditionally proved, not proved. -/
 theorem path_D_not_proved :
     pathDCertificate.status = .conditionallyProved ∧
@@ -344,22 +321,21 @@ theorem path_E_not_proved :
     pathECertificate.status = .conditionallyProved ∧
     pathECertificate.status ≠ .proved := ⟨rfl, by decide⟩
 
-/-- Paths A, B, D, E have at least one `.openBridge` blocker. -/
-theorem paths_ABDE_have_open_blockers :
-    [pathACertificate, pathBCertificate, pathDCertificate, pathECertificate].all
-      (fun c => c.openAxioms.any (fun r => r.isBlocker)) = true := rfl
+/-- Every certificate has at least one `.openBridge` axiom blocking it. -/
+theorem every_certificate_has_open_blocker :
+    allCertificates.all (fun c => c.openAxioms.any (fun r => r.isBlocker)) = true := rfl
 
-/-- Paths B and D are axiom wrappers — the theorem body IS the axiom. -/
+/-- Paths B and D are axiom wrappers — the theorem body IS the axiom.
+    Encoded as: the downgrade reason explicitly names the one-line axiom application. -/
 theorem paths_B_D_are_axiom_wrappers :
     (pathBCertificate.leanTheoremName = "millennium_B_whole_space_breakdown_counterexample") ∧
     (pathDCertificate.leanTheoremName = "millennium_D_periodic_breakdown_counterexample") ∧
     (pathBCertificate.openAxioms.length = 1) ∧
     (pathDCertificate.openAxioms.length = 1) := ⟨rfl, rfl, rfl, rfl⟩
 
-/-- Path C's anchor theorem is now `millennium_C_closed` in `BKMBackwardBridge.lean`. -/
-theorem path_C_theorem_is_closed :
-    pathCCertificate.leanTheoremName = "millennium_C_closed" ∧
-    pathCCertificate.leanFile = "BKMBackwardBridge.lean" := ⟨rfl, rfl⟩
+/-- Paths A and C share the same open axiom (BackwardBridgeObligation). -/
+theorem paths_A_C_share_open_axiom :
+    pathACertificate.openAxioms.head? = pathCCertificate.openAxioms.head? := rfl
 
 /-- Path E's Cameron trace bound IS a proved theorem — only the Lindblad link is open. -/
 theorem path_E_cameron_cert_is_genuine :
@@ -369,55 +345,50 @@ theorem path_E_cameron_cert_is_genuine :
 
 /-! ## 7. The Audit Contract Theorem -/
 
-/-- **Path C is closed**: the audit has one `Proved` certificate.
-    This is the formal counterpart of `closure_status=PATH_C_CLOSED, exit_code=0`. -/
-theorem millennium_audit_path_C_closed :
-    allCertificates.any (fun c => c.status == .proved) = true := rfl
+/-- The audit correctly returns NOT_CLOSED: no path reaches `Proved`.
+    This is the formal counterpart of `closure_status=NOT_CLOSED, exit_code=2`. -/
+theorem millennium_audit_not_closed :
+    ¬ (allCertificates.any (fun c => c.status == .proved)) := by decide
 
-/-- Paths A, B, D, E remain not proved. -/
-theorem paths_ABDE_not_proved :
-    [pathACertificate, pathBCertificate, pathDCertificate, pathECertificate].all
-      (fun c => c.status != .proved) = true := rfl
-
-/-- What constitutes audit closure: some path has all axioms discharged
-    (no `.openBridge` axioms on the critical path). -/
+/-- What would be required for the audit to return CLOSED:
+    For some path P, all axioms in P.openAxioms must be discharged
+    (advanced from .openBridge to .verified or .partiallyVerified). -/
 def AuditClosureRequirement : Prop :=
   ∃ (c : MillenniumPathCertificate),
     c ∈ allCertificates ∧
     c.openAxioms.all (fun r => r.epistemic ≠ .openBridge)
 
-/-- **PATH C CLOSES THE AUDIT**: `pathCCertificate` satisfies the closure requirement.
-    Its `openAxioms = []`, so the vacuous `all` returns `true`. -/
-theorem audit_path_C_meets_closure : AuditClosureRequirement :=
-  ⟨pathCCertificate,
-   List.mem_cons.mpr (Or.inr
-     (List.mem_cons.mpr (Or.inr
-       (List.mem_cons.mpr (Or.inl rfl))))),
-   rfl⟩
+/-- The audit closure requirement is not yet met. -/
+theorem audit_closure_not_met :
+    ¬ AuditClosureRequirement := by
+  unfold AuditClosureRequirement
+  intro ⟨c, hMem, hOpen⟩
+  simp only [allCertificates, List.mem_cons,
+             List.mem_nil_iff, or_false] at hMem
+  rcases hMem with rfl | rfl | rfl | rfl | rfl <;>
+    exact absurd hOpen (by decide)
 
 /-! ## 8. Claim Registry -/
 
 def millenniumAuditClaims : List LabeledClaim :=
   [ ⟨"no_certificate_has_sorry", .verified,
       "THEOREM: all 5 path certificates are sorry-free (rfl)"⟩
-  , ⟨"paths_ABDE_conditionally_proved", .verified,
-      "THEOREM: paths A/B/D/E have status=ConditionallyProved (rfl)"⟩
-  , ⟨"path_C_proved", .verified,
-      "THEOREM: path C has status=Proved — BKM backward bridge closes T³ periodic case (rfl)"⟩
-  , ⟨"path_C_no_open_blockers", .verified,
-      "THEOREM: pathCCertificate.openAxioms has no .openBridge blockers (empty list, rfl)"⟩
-  , ⟨"paths_ABDE_have_open_blockers", .verified,
-      "THEOREM: paths A/B/D/E each have ≥1 .openBridge axiom blocking them (rfl)"⟩
+  , ⟨"all_certificates_conditionally_proved", .verified,
+      "THEOREM: all 5 certificates have status=ConditionallyProved (rfl)"⟩
+  , ⟨"no_certificate_is_proved", .verified,
+      "THEOREM: no certificate has status=Proved (rfl)"⟩
+  , ⟨"every_certificate_has_open_blocker", .verified,
+      "THEOREM: every certificate has ≥1 .openBridge axiom blocking it (rfl)"⟩
   , ⟨"paths_B_D_are_axiom_wrappers", .verified,
       "THEOREM: paths B and D are single-axiom wrapper theorems; counterexamples not constructed"⟩
-  , ⟨"path_C_theorem_is_closed", .verified,
-      "THEOREM: Path C anchor is millennium_C_closed in BKMBackwardBridge.lean (Stage 217A)"⟩
+  , ⟨"paths_A_C_share_open_axiom", .verified,
+      "THEOREM: paths A and C share the same BackwardBridgeObligation open axiom"⟩
   , ⟨"path_E_cameron_cert_is_genuine", .verified,
       "THEOREM: path E's Cameron trace bound is a proved theorem; only 2 Lindblad axioms are open"⟩
-  , ⟨"millennium_audit_path_C_closed", .verified,
-      "THEOREM: audit has 1 Proved certificate (Path C) — T³ periodic Millennium CLOSED"⟩
-  , ⟨"audit_path_C_meets_closure", .verified,
-      "THEOREM: AuditClosureRequirement MET — Path C has no .openBridge axioms"⟩
+  , ⟨"millennium_audit_not_closed", .verified,
+      "THEOREM: audit correctly returns NOT_CLOSED — no path is Proved (by decide)"⟩
+  , ⟨"audit_closure_not_met", .verified,
+      "THEOREM: AuditClosureRequirement not met — all paths have .openBridge axioms (simp+rcases+decide)"⟩
   ]
 
 end
