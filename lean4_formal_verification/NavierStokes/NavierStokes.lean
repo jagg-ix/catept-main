@@ -118,6 +118,3 @@ import NavierStokes.PoincareNSMillenniumLink
 import NavierStokes.YangMillsMassGapBridge
 import NavierStokes.YangMillsStatusReport
 import NavierStokes.MillenniumAuditCertificate
-import NavierStokes.NSCameronKoopmanBridge
-import NavierStokes.NSPreciseGapDependencyAudit
-import NavierStokes.NSQIFTransitivityBridge

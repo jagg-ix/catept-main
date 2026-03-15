@@ -388,7 +388,7 @@ def millenniumAuditClaims : List LabeledClaim :=
   , ⟨"millennium_audit_not_closed", .verified,
       "THEOREM: audit correctly returns NOT_CLOSED — no path is Proved (by decide)"⟩
   , ⟨"audit_closure_not_met", .verified,
-      "THEOREM: AuditClosureRequirement not met — all paths have .openBridge axioms (simp+rcases+decide)"⟩
+      "THEOREM: AuditClosureRequirement not met — all paths have .openBridge axioms (fin_cases)"⟩
   ]
 
 end
