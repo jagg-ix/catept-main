@@ -175,6 +175,7 @@ import NavierStokes.NSGalerkinCayleyLegacyAudit
 import NavierStokes.NSGalerkinConvStepDef
 import NavierStokes.NSGalerkinConvDef
 import NavierStokes.NSGalerkinConvergence
+import NavierStokes.NSGalerkinSplittingLemmata
 import NavierStokes.NSGalerkinTower
 import NavierStokes.NSGalerkinCompactness
 import NavierStokes.NSGalerkinWeakLimit
