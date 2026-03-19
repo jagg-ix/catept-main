@@ -1,4 +1,4 @@
-import NavierStokes.NSGalerkinConvergence
+import NavierStokes.NSGalerkinSplittingCore
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!

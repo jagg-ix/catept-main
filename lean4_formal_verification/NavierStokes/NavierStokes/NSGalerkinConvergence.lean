@@ -1,4 +1,4 @@
-import NavierStokes.NSGalerkinConvDef
+import NavierStokes.NSGalerkinSplittingCore
 
 /-!
 # Stage 173 — NSGalerkinConvergence: Lie-Splitting Convergence as h→0
@@ -16,13 +16,20 @@ exact finite-dimensional Galerkin ODE solution at rate O(h) on finite time inter
 3. **Convergence** (new theorem) — **discrete Grönwall inequality** (pure Rat induction, 0 new
    axioms): if `e(n+1) ≤ (1+L)*e(n) + B` then `e(n) ≤ (1+L)^n * (e(0) + n*B)`.
 
-## Net counts (after Stages 179-180)
+## Net counts (after Stages 179-180, modified by Stage 187)
 
-  - New defs:     2  (coeffSub, coeffNormSq)
+  - New defs:     2  (coeffSub, coeffNormSq — moved to NSGalerkinSplittingCore by Stage 187)
   - New axioms:   1  (galerkinSplitting_one_step_recurrence; constants→DEF; consistency+recurrence→theorems)
   - New theorems: 11
   - sorry:        0
   - warnings:     0
+
+## Stage 187 modification
+
+`coeffSub`, `coeffNormSq`, and `coeffNormSq_nonneg` have been moved to
+`NSGalerkinSplittingCore.lean` to break the import cycle that prevented
+`NSGalerkinConvergence` from importing `NSGalerkinFullStepBridge`.
+This file now imports `NSGalerkinSplittingCore` instead of `NSGalerkinConvDef`.
 -/
 
 namespace NavierStokes.GalerkinConvergence
@@ -34,19 +41,6 @@ open NavierStokes.GalerkinComplexModel
 open NavierStokes.GalerkinConvection
 open NavierStokes.GalerkinODE
 open NavierStokes.GalerkinConvDef
-
-/-! ## CoeffC operations -/
-
-/-- Pointwise subtraction of Galerkin coefficient vectors. -/
-def coeffSub {N : Nat} (u v : CoeffC N) : CoeffC N :=
-  fun i => u i - v i
-
-/-- Squared ℓ² norm of Galerkin coefficients. -/
-def coeffNormSq {N : Nat} (u : CoeffC N) : Rat :=
-  ∑ i : Fin N, normSqC (u i)
-
-theorem coeffNormSq_nonneg {N : Nat} (u : CoeffC N) : 0 ≤ coeffNormSq u :=
-  Finset.sum_nonneg (fun i _ => normSqC_nonneg (u i))
 
 /-! ## Helper: 1 ≤ a^n when 1 ≤ a -/
 
