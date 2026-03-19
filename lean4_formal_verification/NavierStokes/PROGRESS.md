@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-20 (Stage 211 — linter cleanup)
+**Date**: 2026-03-18 (Stage 173)
 **Branch**: `navier-stokes-investigation`
-**Build**: 2336 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 1569 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,13 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 194 |
-| Axioms | 228 (top-level `axiom` declarations) |
-| Theorems | 1852 (top-level `theorem` declarations) |
+| Lean4 files | 172 |
+| Axioms | 450 (raw grep; includes private/section axioms) |
+| Theorems | 3597 (raw grep) |
 | `sorry` | 0 |
-| Build jobs | 2336 |
+| Epistemic labels: `.verified` | ~242 |
+| Epistemic labels: `.partiallyVerified` | ~109 |
+| Epistemic labels: `.openBridge` | ~56 |
 
 ---
 
@@ -4716,25 +4718,3 @@ exact finite-dimensional Galerkin ODE solution at rate O(h) on finite time inter
 - `galerkinSplitting_convergence_certificate` — full assembly theorem
 
 **Net**: +3 axioms, +9 theorems, +1 file. Build: **1569 jobs, 0 errors, 0 sorry**
-
----
-
-### Stage 211: Linter Cleanup — Unused Variable Warnings (DONE)
-
-**Files modified**: `NSGalerkinLerayBridge.lean`, `NSGalerkinCompactness.lean`
-
-Fixed 3 pre-existing unused-variable linter warnings introduced by Stage 210B:
-
-1. **`GalerkinLerayExistence` definition** — `tower : GalerkinTower` parameter was unused because the
-   `Prop` body did not reference it. Fixed by adding the energy bound to the definition:
-   - Old: `∃ traj, SatisfiesNSPDE nsOps nsNu traj ∧ RespectsFunctionSpaces nsSpacesR3 traj`
-   - New: `∃ traj, SatisfiesNSPDE nsOps nsNu traj ∧ RespectsFunctionSpaces nsSpacesR3 traj ∧ kineticEnergy (traj.stateAt 0).velocity ≤ tower.E0`
-   - `galerkinLeray_existence` simplified to one-liner `galerkinTower_to_ns_trajectory tower hnu`
-
-2. **`coeffNormSqRRange_mono`** — lambda `fun n _ _ =>` had unused `n`; changed to `fun _ _ _ =>`
-
-3. **`coeffNormSqR_nonneg`** — `tsum_nonneg (fun n => ...)` had unused `n`; changed to `fun _ =>`
-
-**Net**: 0 new axioms, 0 new theorems. Build: **2336 jobs, 0 errors, 0 sorry**
-Axiom count corrected: **228** (re-grepped, PROGRESS.md had stale value 230).
-Theorem count corrected: **1852** (re-grepped, PROGRESS.md had stale value 1967).
