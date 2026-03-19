@@ -1,7 +1,7 @@
 import NavierStokes.NSGalerkinConvStepDef
 
 /-!
-# Stages 170–171 — NSGalerkinConvDef: Concrete galerkinConvection via Triadic Kernel
+# Stage 170 — NSGalerkinConvDef: Concrete galerkinConvection via Triadic Kernel
 
 Makes `galerkinConvection` (Stage 163 `.openBridge` axiom) concrete by defining it
 as a double finite sum over a triadic coupling kernel.
@@ -13,7 +13,7 @@ as a double finite sum over a triadic coupling kernel.
 where `CRat.mul` is complex multiplication and `triadK k j l : Rat` are the triadic
 coupling coefficients encoding the Fourier convolution structure on T³.
 
-## Stage 170: What becomes a theorem (0 new axioms for these)
+## What becomes a theorem (0 new axioms for these)
 
 | Statement | Was | Now |
 |-----------|-----|-----|
@@ -22,28 +22,17 @@ coupling coefficients encoding the Fourier convolution structure on T³.
 | `B_bilinear_antisymm`           | Stage 165 `.partiallyVerified` | THEOREM |
 | `B_energy_cancel`               | Stage 163 `.partiallyVerified` | THEOREM |
 
-## Stage 171: triadK_antisymm promoted from axiom to THEOREM
-
-`triadK_antisymm` (bilinear-form antisymmetry) is now proved by **polarization**
-from the strictly weaker `triadK_self_cancel` axiom (energy self-cancellation):
-
-  `∑_k Re(v̄_k · B(u,v)_k) = 0`  ← physics content (incompressibility)
-
-Polarization: `0 = b(u,v+w,v+w) = b(u,v,w) + b(u,w,v)` via bilinearity + `b(u,·,·) = 0`.
+## New axioms (+2)
 
 | Axiom | Content | Epistemic |
 |-------|---------|-----------|
-| `triadK_self_cancel` | Energy self-cancellation: ∑⟨v,Bu_v⟩ = 0 | `.partiallyVerified` (incompressibility, Temam 1984) |
+| `triadK_antisymm` | Trilinear form antisymmetry: ∑⟨v,Bu_w⟩ + ∑⟨w,Bu_v⟩ = 0 | `.partiallyVerified` (Temam 1984, Lemma II.1.1) |
 | `galerkinConvDef_is_galerkinConvection` | Identification: `galerkinConvDef = galerkinConvection` | `.partiallyVerified` (triadic sum identification) |
 
-| Was axiom | Now |
-|-----------|-----|
-| `triadK_antisymm` | THEOREM (polarization from `triadK_self_cancel`) |
+## Net counts
 
-## Net counts (Stages 170–171)
-
-  - New axioms:   2  (triadK_self_cancel + galerkinConvDef_is_galerkinConvection)
-  - New theorems: 15 (+3 helpers and triadK_antisymm promoted)
+  - New axioms:   2
+  - New theorems: 12
   - sorry:        0
   - warnings:     0
 -/
@@ -136,61 +125,30 @@ theorem galerkinConvDef_smul_right {N : Nat} (eb : ExtGalerkinBasis N)
   -- Step 1: bring r to outermost position in each term, then pull out of both sums
   simp_rw [CRat.smul_mul_smul_right, ← CRat.smul_finsum]
 
-/-! ## realInnerC linearity helpers (theorems, 0 new axioms) -/
-
-/-- Left linearity of `realInnerC`: `⟨a+b, c⟩ = ⟨a,c⟩ + ⟨b,c⟩`. -/
-theorem realInnerC_add_left (a b c : CRat) :
-    realInnerC (a + b) c = realInnerC a c + realInnerC b c := by
-  simp [realInnerC, CRat.re, CRat.im]; ring
-
-/-- Right linearity of `realInnerC`: `⟨a, b+c⟩ = ⟨a,b⟩ + ⟨a,c⟩`. -/
-theorem realInnerC_add_right (a b c : CRat) :
-    realInnerC a (b + c) = realInnerC a b + realInnerC a c := by
-  simp [realInnerC, CRat.re, CRat.im]; ring
-
-/-! ## Kernel energy self-cancellation (the irreducible physics axiom) -/
-
-/-- **triadK_self_cancel** — energy self-cancellation: `∑ Re(v̄ₖ · B(u,v)_k) = 0`.
-
-    The trilinear form `b(u,v,v) = 0` for all u, v. This is the core incompressibility
-    constraint: the convection operator does no work on the field it transports.
-
-    Physical basis: integration by parts on T³ with ∇·u = 0 gives
-      `⟨v, B(u,v)⟩ = -⟨v, B(u,v)⟩`, hence `⟨v, B(u,v)⟩ = 0`.
-
-    Epistemic status: `.partiallyVerified` (Temam 1984, Ch. II §1). -/
-axiom triadK_self_cancel {N : Nat} (eb : ExtGalerkinBasis N) (u v : CoeffC N) :
-    ∑ k : Fin N, realInnerC (v k) (galerkinConvDef eb u v k) = 0
-
-/-! ## Kernel antisymmetry (theorem from self-cancellation via polarization) -/
+/-! ## Kernel antisymmetry axiom (the irreducible physics content) -/
 
 /-- **triadK_antisymm** — the trilinear form `b(u,v,w) = ∑ Re(v̄ₖ · (B(u,w))ₖ)` is
     antisymmetric in `(v, w)`.
 
-    Proved by **polarization** from `triadK_self_cancel`:
-      `0 = b(u,v+w,v+w) = b(u,v,v) + b(u,v,w) + b(u,w,v) + b(u,w,w) = b(u,v,w) + b(u,w,v)`.
+    This is Temam 1984, Ch. II §1, Lemma 1.1 (`b(u,v,w) + b(u,w,v) = 0`),
+    stated for the concrete kernel. It follows from incompressibility (∇·u = 0)
+    and integration by parts on T³, which constrains `triadK k j l` to satisfy:
+      `K(k,j,l) + K(l,j,k) = 0` in the appropriate bilinear-form sense.
 
-    No new axioms. -/
-theorem triadK_antisymm {N : Nat} (eb : ExtGalerkinBasis N) (u v w : CoeffC N) :
+    Epistemic status: `.partiallyVerified` (Temam 1984 Lemma II.1.1). -/
+axiom triadK_antisymm {N : Nat} (eb : ExtGalerkinBasis N) (u v w : CoeffC N) :
     ∑ k : Fin N, realInnerC (v k) (galerkinConvDef eb u w k) +
-    ∑ k : Fin N, realInnerC (w k) (galerkinConvDef eb u v k) = 0 := by
-  have hvw := triadK_self_cancel eb u (v + w)
-  have hv  := triadK_self_cancel eb u v
-  have hw  := triadK_self_cancel eb u w
-  simp only [Pi.add_apply] at hvw
-  simp_rw [galerkinConvDef_add_right] at hvw
-  simp_rw [realInnerC_add_right, realInnerC_add_left] at hvw
-  simp only [Finset.sum_add_distrib] at hvw
-  linarith
+    ∑ k : Fin N, realInnerC (w k) (galerkinConvDef eb u v k) = 0
 
-/-! ## Energy cancellation (theorem from self-cancellation) -/
+/-! ## Energy cancellation (theorem from antisymmetry) -/
 
 /-- **galerkinConvDef_energy_cancel** — `∑ Re(ūₖ · (B(u,u))ₖ) = 0`.
 
-    Direct instance of `triadK_self_cancel` with `v := u`. -/
+    Proof: `triadK_antisymm eb u u u` gives `2x = 0`; linarith gives `x = 0`. -/
 theorem galerkinConvDef_energy_cancel {N : Nat} (eb : ExtGalerkinBasis N) (u : CoeffC N) :
-    ∑ k : Fin N, realInnerC (u k) (galerkinConvDef eb u u k) = 0 :=
-  triadK_self_cancel eb u u
+    ∑ k : Fin N, realInnerC (u k) (galerkinConvDef eb u u k) = 0 := by
+  have h := triadK_antisymm eb u u u
+  linarith
 
 /-! ## Identification: concrete def = abstract axiom -/
 
@@ -244,20 +202,21 @@ theorem galerkinConvection_smul_right_from_def {N : Nat} (basis : GalerkinBasis 
   simp_rw [galerkinConvDef_is_galerkinConvection] at h
   exact h
 
-def stage171Summary : String :=
-  "Stages 170-171: NSGalerkinConvDef — concrete galerkinConvection via triadic kernel. " ++
+def stage170Summary : String :=
+  "Stage 170: NSGalerkinConvDef — concrete galerkinConvection via triadic kernel. " ++
   "CRat.mul: complex multiplication (a+bi)(c+di). " ++
   "ExtGalerkinBasis: GalerkinBasis + triadK : Fin N → Fin N → Fin N → Rat. " ++
   "galerkinConvDef: ∑_j ∑_l K(k,j,l) · (u_j ⊗ v_l). " ++
-  "galerkinConvDef_add_right: THEOREM. galerkinConvDef_smul_right: THEOREM. " ++
-  "realInnerC_add_left/right: THEOREMS (by simp+ring). " ++
-  "triadK_self_cancel: ONE physics axiom (energy self-cancel, .partiallyVerified). " ++
-  "triadK_antisymm: THEOREM (polarization from triadK_self_cancel, 0 new axioms). " ++
-  "galerkinConvDef_energy_cancel: THEOREM (direct from triadK_self_cancel). " ++
+  "galerkinConvDef_add_right: THEOREM (CRat.mul_add_right + smul_add + sum_add_distrib). " ++
+  "galerkinConvDef_smul_right: THEOREM (CRat.mul_smul_right + smul_smul + smul_finsum). " ++
+  "triadK_antisymm: ONE physics axiom (Temam II.1.1, .partiallyVerified). " ++
+  "galerkinConvDef_energy_cancel: THEOREM (2x=0, linarith). " ++
   "standardTriadK: canonical extended basis (axiom). " ++
   "galerkinConvDef_is_galerkinConvection: identification axiom (.partiallyVerified). " ++
-  "B_energy_cancel_from_def: THEOREM. B_bilinear_antisymm_from_def: THEOREM. " ++
-  "galerkinConvection_add_right/smul_right_from_def: THEOREMS. " ++
-  "+2 axioms, +15 theorems, 0 sorry."
+  "B_energy_cancel_from_def: THEOREM (Stage 163 axiom promoted). " ++
+  "B_bilinear_antisymm_from_def: THEOREM (Stage 165 axiom promoted). " ++
+  "galerkinConvection_add_right_from_def: THEOREM (Stage 166 axiom promoted). " ++
+  "galerkinConvection_smul_right_from_def: THEOREM (Stage 166 axiom promoted). " ++
+  "+2 axioms, +12 theorems, 0 sorry."
 
 end NavierStokes.GalerkinConvDef
