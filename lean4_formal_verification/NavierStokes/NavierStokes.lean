@@ -177,4 +177,3 @@ import NavierStokes.NSGalerkinConvDef
 import NavierStokes.NSGalerkinConvergence
 import NavierStokes.NSGalerkinTower
 import NavierStokes.NSGalerkinCompactness
-import NavierStokes.NSGalerkinWeakLimit
