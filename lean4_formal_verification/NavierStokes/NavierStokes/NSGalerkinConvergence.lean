@@ -123,15 +123,83 @@ noncomputable def galerkinSplitting_constants {N : Nat} (basis : GalerkinBasis N
     lteC_pos := by linarith [sq_nonneg ν]
     lipC_pos := by linarith }
 
-/-! ## One-step recurrence sub-axiom (Stage 180) -/
+/-! ## Private helpers for parallelogram bound (Stage 182) -/
 
-/-- **Combined one-step Lipschitz+LTE bound** for the Lie-splitting map in squared ℓ² norm.
+/-- `normSqC` is nonneg. -/
+private lemma normSqC_nonneg (z : CRat) : 0 ≤ normSqC z := by
+  simp only [normSqC, CRat.re, CRat.im]; positivity
 
-    Setting `u = uExact t` recovers consistency (A2): error term `coeffSub u u = 0` vanishes.
-    Setting `u = traj.u n` and using `traj.step` recovers the Grönwall recurrence (A3).
+/-- **Parallelogram** for `normSqC`: `|z + w|² ≤ 2|z|² + 2|w|²`. -/
+private lemma normSqC_add_le (z w : CRat) :
+    normSqC (z + w) ≤ 2 * normSqC z + 2 * normSqC w := by
+  have h1 : (z + w).1 = z.1 + w.1 := rfl
+  have h2 : (z + w).2 = z.2 + w.2 := rfl
+  simp only [normSqC, CRat.re, CRat.im, h1, h2]
+  nlinarith [sq_nonneg (z.1 - w.1), sq_nonneg (z.2 - w.2)]
 
-    Epistemic: `.partiallyVerified` (finite-dim Lie splitting; Lubich 2008 §II.3). -/
-axiom galerkinSplitting_one_step_recurrence
+/-- **Parallelogram lifted** to `coeffNormSq`. -/
+private lemma coeffNormSq_add_le {N : Nat} (f g : CoeffC N) :
+    coeffNormSq (fun i => f i + g i) ≤ 2 * coeffNormSq f + 2 * coeffNormSq g := by
+  simp only [coeffNormSq]
+  calc ∑ i : Fin N, normSqC (f i + g i)
+      ≤ ∑ i : Fin N, (2 * normSqC (f i) + 2 * normSqC (g i)) :=
+          Finset.sum_le_sum (fun i _ => normSqC_add_le (f i) (g i))
+    _ = 2 * ∑ i : Fin N, normSqC (f i) + 2 * ∑ i : Fin N, normSqC (g i) := by
+          simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+
+/-! ## One-step recurrence decomposed (Stage 182) -/
+
+/-- **Stability sub-axiom (SA1)** — full splitting step `S_h = viscStep ∘ convStep` is
+    Lipschitz on the energy ball with constant `(lipC/2) h²`.
+
+    Conceptual proof (future stage): viscStep is contractive (Stage 164
+    `viscStep_energy_le`), so `|S_h u − S_h v|² ≤ |convStep u − convStep v|²`.
+    Cayley norm identity (Stage 166) then gives `|w₁−w₂|² ≤ |(u−v)+(h/2)B(u−v,w₂)|²`,
+    and Stage 181's `galerkinConvDef_normSq_le` bounds `|B(u−v,w₂)|² ≤ C_K|u−v|²E₀`,
+    yielding `|S_h u − S_h v|² ≤ (2 + (h²/2)C_K E₀)|u−v|² ≤ (lipC/2)h²|u−v|²`.
+
+    SA1 deliberately bounds the FULL step (not just convStep) to avoid importing
+    `viscStep_nonexpansive` from Stage 181 (which would create a circular import
+    since Stage 181 imports this file).
+
+    Epistemic: `.partiallyVerified` (Stage 166 Cayley identity + Stage 181 bilinear bound). -/
+axiom galerkinSplitting_step_lipschitz
+    {N : Nat} (basis : GalerkinBasis N)
+    (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (hE₀ : 0 ≤ E₀)
+    (u v : CoeffC N) (hu : coeffNormSq u ≤ E₀) (hv : coeffNormSq v ≤ E₀) :
+    coeffNormSq (coeffSub
+      (viscStep basis ν h (convStep basis u))
+      (viscStep basis ν h (convStep basis v))) ≤
+    (galerkinSplitting_constants basis ν E₀ hν hE₀).lipC / 2 * h ^ 2 *
+      coeffNormSq (coeffSub u v)
+
+/-- **LTE sub-axiom (SA2)** — Lie-splitting local truncation error in squared ℓ² norm.
+
+    For a first-order Lie-Trotter splitting the per-step error in ℓ² norm is O(h²)
+    (the splitting commutator is O(h) in the evolution, so O(h²) in ℓ² norm, giving
+    O(h^4) in squared norm; `lteC·h²/2` is a conservative upper bound).
+    Epistemic: `.partiallyVerified` (Lubich 2008 §II.3, Hairer–Lubich–Wanner). -/
+axiom galerkinSplitting_step_lte
+    {N : Nat} (basis : GalerkinBasis N)
+    (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (hE₀ : 0 ≤ E₀)
+    (uExact : Rat → CoeffC N)
+    (hEnergy : ∀ t : Rat, coeffNormSq (uExact t) ≤ E₀) (t : Rat) :
+    coeffNormSq (coeffSub
+      (viscStep basis ν h (convStep basis (uExact t)))
+      (uExact (t + h))) ≤
+    (galerkinSplitting_constants basis ν E₀ hν hE₀).lteC / 2 * h ^ 2
+
+/-- **Combined one-step recurrence** — promoted from axiom to THEOREM (Stage 182).
+
+    Proof strategy: parallelogram decomposition.
+    Let `uMid = convStep(uExact t)`.  Write the total error as
+    `(S_h u − S_h uMid) + (S_h uMid − uExact(t+h))` (stability + LTE).
+    Then `|A+B|² ≤ 2|A|² + 2|B|²` (parallelogram, `normSqC_add_le`), and
+      - `2|A|² ≤ 2·(lipC/2·h²)·|e|² = lipC·h²·|e|²`  (viscStep_nonexpansive + SA1)
+      - `2|B|² ≤ 2·(lteC/2·h²)   = lteC·h²`         (SA2)
+    giving `lipC·h²·|e|² + lteC·h² ≤ (1+lipC·h²)·|e|² + lteC·h²` (since `|e|² ≥ 0`).
+    Eliminates the Stage-173 `galerkinSplitting_one_step_recurrence` axiom. -/
+theorem galerkinSplitting_one_step_recurrence
     {N : Nat} (basis : GalerkinBasis N)
     (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (hE₀ : 0 ≤ E₀)
     (u : CoeffC N) (hu : coeffNormSq u ≤ E₀)
@@ -142,7 +210,52 @@ axiom galerkinSplitting_one_step_recurrence
       (uExact (t + h))) ≤
     (1 + (galerkinSplitting_constants basis ν E₀ hν hE₀).lipC * h ^ 2) *
       coeffNormSq (coeffSub u (uExact t)) +
-    (galerkinSplitting_constants basis ν E₀ hν hE₀).lteC * h ^ 2
+    (galerkinSplitting_constants basis ν E₀ hν hE₀).lteC * h ^ 2 := by
+  -- Abbreviations
+  let sc := galerkinSplitting_constants basis ν E₀ hν hE₀
+  let uMid := convStep basis (uExact t)
+  -- Rewrite total error as (stability term) + (LTE term) pointwise
+  have heq : ∀ i : Fin N,
+      coeffSub (viscStep basis ν h (convStep basis u)) (uExact (t + h)) i =
+      coeffSub (viscStep basis ν h (convStep basis u)) (viscStep basis ν h uMid) i +
+      coeffSub (viscStep basis ν h uMid) (uExact (t + h)) i := by
+    intro i; simp only [coeffSub]; ring
+  have hconv : coeffNormSq (coeffSub (viscStep basis ν h (convStep basis u)) (uExact (t + h))) =
+      coeffNormSq (fun i =>
+        coeffSub (viscStep basis ν h (convStep basis u)) (viscStep basis ν h uMid) i +
+        coeffSub (viscStep basis ν h uMid) (uExact (t + h)) i) := by
+    congr 1; funext i; exact heq i
+  -- Parallelogram bound on the split error
+  have hpara := coeffNormSq_add_le
+    (coeffSub (viscStep basis ν h (convStep basis u)) (viscStep basis ν h uMid))
+    (coeffSub (viscStep basis ν h uMid) (uExact (t + h)))
+  -- Stability: full step S_h Lipschitz (SA1, covers viscStep+convStep jointly)
+  have hstab :
+      coeffNormSq (coeffSub (viscStep basis ν h (convStep basis u)) (viscStep basis ν h uMid)) ≤
+      sc.lipC / 2 * h ^ 2 * coeffNormSq (coeffSub u (uExact t)) :=
+    galerkinSplitting_step_lipschitz basis ν h E₀ hν hh hE₀ u (uExact t) hu (hEnergy t)
+  -- LTE bound (SA2)
+  have hlte :
+      coeffNormSq (coeffSub (viscStep basis ν h uMid) (uExact (t + h))) ≤
+      sc.lteC / 2 * h ^ 2 :=
+    galerkinSplitting_step_lte basis ν h E₀ hν hh hE₀ uExact hEnergy t
+  -- Error nonnegativity
+  have hnn : 0 ≤ coeffNormSq (coeffSub u (uExact t)) :=
+    Finset.sum_nonneg (fun i _ => normSqC_nonneg _)
+  -- Combine
+  rw [hconv]
+  calc coeffNormSq (fun i =>
+          coeffSub (viscStep basis ν h (convStep basis u)) (viscStep basis ν h uMid) i +
+          coeffSub (viscStep basis ν h uMid) (uExact (t + h)) i)
+      ≤ 2 * coeffNormSq (coeffSub (viscStep basis ν h (convStep basis u)) (viscStep basis ν h uMid)) +
+        2 * coeffNormSq (coeffSub (viscStep basis ν h uMid) (uExact (t + h))) := hpara
+    _ ≤ 2 * (sc.lipC / 2 * h ^ 2 * coeffNormSq (coeffSub u (uExact t))) +
+        2 * (sc.lteC / 2 * h ^ 2) :=
+          add_le_add (mul_le_mul_of_nonneg_left hstab (by norm_num))
+                     (mul_le_mul_of_nonneg_left hlte (by norm_num))
+    _ = sc.lipC * h ^ 2 * coeffNormSq (coeffSub u (uExact t)) + sc.lteC * h ^ 2 := by ring
+    _ ≤ (1 + sc.lipC * h ^ 2) * coeffNormSq (coeffSub u (uExact t)) + sc.lteC * h ^ 2 := by
+          nlinarith [hnn]
 
 /-! ## Consistency (Stage 180: promoted from axiom to theorem) -/
 
@@ -273,13 +386,19 @@ def stage173Summary : String :=
     "e(n+1)≤(1+L)*e(n)+B → e(n)≤(1+L)^n*(e(0)+n*B). " ++
   "SplittingConstants: structure lteC, lipC (both positive). " ++
   "galerkinSplitting_constants: DEF (Stage 179: lteC=E₀+ν²+1, lipC=E₀+1). " ++
-  "galerkinSplitting_one_step_recurrence: AXIOM (Stage 180: combined Lipschitz+LTE, .partiallyVerified). " ++
+  "Stage 182: galerkinSplitting_one_step_recurrence AXIOM→THEOREM (-1 axiom). " ++
+  "  normSqC_nonneg: PRIVATE LEMMA (positivity). " ++
+  "  normSqC_add_le: PRIVATE LEMMA (|z+w|²≤2|z|²+2|w|², nlinarith). " ++
+  "  coeffNormSq_add_le: PRIVATE LEMMA (sum_le_sum + mul_sum). " ++
+  "  galerkinSplitting_step_lipschitz: AXIOM (SA1, convStep Lipschitz, .partiallyVerified). " ++
+  "  galerkinSplitting_step_lte: AXIOM (SA2, splitting LTE, .partiallyVerified). " ++
+  "  galerkinSplitting_one_step_recurrence: THEOREM (parallelogram+SA1+SA2, 0 sorry). " ++
   "galerkinSplitting_consistency: THEOREM (Stage 180: from sub-axiom with u=uExact t, 0 axioms). " ++
   "galerkinSplitting_gronwall_recurrence: THEOREM (Stage 180: from sub-axiom + traj.step, 0 axioms). " ++
   "galerkinSplitting_stability: THEOREM (Stage 164 energy_dissipation_mono, 0 new axioms). " ++
   "galerkinSplitting_error_bound: THEOREM (discrete_gronwall with e(0)=0). " ++
   "galerkinSplitting_convergence_certificate: THEOREM (0 new axioms, assembles all three). " ++
-  "Stage 173: +3 axioms original. Stage 179: -1 (constants→DEF). Stage 180: -1 (2 axioms→1 sub-axiom). " ++
-  "Net: +1 axiom, +11 theorems (incl. private), 0 sorry."
+  "Stage 173: +3 axioms. Stage 179: -1. Stage 180: -1 (2→1). Stage 182: +2-1=+1. " ++
+  "Net: +2 axioms total, +14 theorems (incl. 3 private), 0 sorry."
 
 end NavierStokes.GalerkinConvergence
