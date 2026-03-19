@@ -176,3 +176,7 @@ import NavierStokes.NSGalerkinConvStepDef
 import NavierStokes.NSGalerkinConvDef
 import NavierStokes.NSGalerkinConvergence
 import NavierStokes.NSGalerkinTower
+import NavierStokes.NSGalerkinCompactness
+import NavierStokes.NSGalerkinWeakLimit
+import NavierStokes.NSGalerkinLerayBridge
+import NavierStokes.NSGalerkinPGSInstance
