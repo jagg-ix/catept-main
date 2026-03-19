@@ -173,4 +173,3 @@ import NavierStokes.NSGalerkinInjectivityBridge
 import NavierStokes.NSGalerkinCayleySolveDef
 import NavierStokes.NSGalerkinCayleyLegacyAudit
 import NavierStokes.NSGalerkinConvStepDef
-import NavierStokes.NSGalerkinConvDef

@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-18 (Stage 170)
+**Date**: 2026-03-18 (Stage 169)
 **Branch**: `navier-stokes-investigation`
-**Build**: 2313 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 2312 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,12 +10,13 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 171 |
-| Axioms | 223 |
-| Theorems | 1848 |
+| Lean4 files | 176 |
+| Axioms | ~220 |
+| Theorems | ~1838 |
+| Definitions | ~415 |
 | `sorry` | 0 |
 | Epistemic labels: `.verified` | ~242 |
-| Epistemic labels: `.partiallyVerified` | ~109 |
+| Epistemic labels: `.partiallyVerified` | ~107 |
 | Epistemic labels: `.openBridge` | ~56 |
 
 ---
