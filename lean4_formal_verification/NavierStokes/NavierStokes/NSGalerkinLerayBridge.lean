@@ -1,64 +1,58 @@
-import NavierStokes.NSGalerkinWeakToNSBridge
+import NavierStokes.NSGalerkinWeakLimit
 import NavierStokes.AxiomaticEstimates
 
 /-!
-# Stage 174D / 206 — NSGalerkinLerayBridge: Galerkin Weak Solution to Leray Trajectory
+# Stage 174D — NSGalerkinLerayBridge: Galerkin Tower to Leray Weak Solution
 
-Bridges the Galerkin weak solution (Stage 174C/205) into the existing
+Bridges the Galerkin tower chain (Stages 173–174C) into the existing
 `Trajectory NSField` / `SatisfiesNSPDE` infrastructure.
-
-## Stage 206 change
-
-The original Stage 174D axiom `galerkinTower_to_ns_trajectory` (taking a raw
-`GalerkinTower`) is **replaced** by a strictly narrower axiom
-`galerkinWeakSolution_to_ns_trajectory` (taking a `GalerkinWeakSolution`).
-
-The old `galerkinTower_to_ns_trajectory` is then proved as a **theorem** (0 new axioms)
-via `galerkinTower_weak_existence` (Stage 174C/206) + the new axiom.
 
 ## The gap this closes
 
-Stage 174C/205 produces a `GalerkinWeakSolution` in `CoeffInftyR = Nat → Real × Real`
-with a proved step-difference energy bound and explicit step size `h`.
-The existing Millennium infrastructure operates on `Trajectory NSField`.
+Stage 174C produced a `GalerkinWeakSolution` living in the discrete
+coefficient space `CoeffInftyR = Nat → Real × Real`.
+The existing Millennium infrastructure (`AxiomaticEstimates`, `NSLerayEnergyDecayClosure`,
+`MillenniumPeriodic`) operates on `Trajectory NSField` with `SatisfiesNSPDE nsOps nsNu`.
 
-Stage 174D/206 provides the single boundary axiom connecting the two worlds.
+Stage 174D provides the single boundary axiom connecting the two worlds, then derives
+the Leray weak existence theorem as a corollary.
 
 ## Design
 
-* **`GalerkinLerayExistence`** — `Prop`: every tower admits a Leray NS trajectory.
+* **`GalerkinLerayExistence`** — a `Prop` stating that every admissible initial energy
+  level has a corresponding NS trajectory satisfying the Leray weak conditions.
 
-* **`galerkinWeakSolution_to_ns_trajectory`** — the **narrowed** bridge axiom (Stage 206):
-  a `GalerkinWeakSolution` with `w.nu = nsNu` yields a `Trajectory NSField` satisfying
-  `SatisfiesNSPDE nsOps nsNu` and `RespectsFunctionSpaces nsSpacesR3`.
-  Narrower than the old tower-level axiom: the whole Galerkin construction is now
-  inside the `GalerkinWeakSolution`, and the axiom only bridges coefficients ↔ NSField.
+* **`galerkinTower_to_ns_trajectory`** — the single bridge axiom (tower-first):
+  a Galerkin tower whose level-0 trajectory has viscosity `nsNu` yields a
+  `Trajectory NSField` satisfying `SatisfiesNSPDE nsOps nsNu` and
+  `RespectsFunctionSpaces nsSpacesR3`.
+  Viscosity matches exactly at the `Rat` level (no cast ambiguity).
 
-* **`galerkinTower_to_ns_trajectory`** — now a **THEOREM** (Stage 206, 0 new axioms):
-  proved from `galerkinTower_weak_existence` + `galerkinWeakSolution_to_ns_trajectory`.
+* **`galerkinLeray_existence`** — theorem: every tower with viscosity `nsNu` yields
+  a Leray-type NS trajectory (0 new axioms beyond the bridge axiom).
 
-* **`galerkinLeray_existence`**, **`galerkinLeray_existence_with_energy`**,
-  **`galerkinLeray_chain_summary`** — unchanged theorems, 0 new axioms.
+* **`galerkinLeray_existence_with_energy`** — theorem: moreover, the resulting
+  trajectory has initial kinetic energy bounded by `tower.E0`.
 
 ## Epistemic boundary
 
-`galerkinWeakSolution_to_ns_trajectory` is the single axiom.  It encodes exactly two steps:
-1. The embedding of `CoeffInftyR` Galerkin coefficients into `NSField` function values
-   (harmonic analysis / Fourier series).
-2. The identification of the coefficient-level ODE residual with the `nsOps`-NS equation.
-
-The passage from the raw Galerkin tower (discretization, compactness, energy bounds) to
-the coefficient-level `GalerkinWeakSolution` is now entirely in proved theorems.
+`galerkinTower_to_ns_trajectory` is the single axiom here.  It encodes:
+1. The embedding of Galerkin coefficients into `NSField` function values
+   (harmonic analysis: Fourier series representation).
+2. The passage from discrete-time Galerkin ODE to continuous-time NS weak equation
+   (compactness + h → 0 limit; Temam 1984, Ch. III).
+3. The identification of the limit trajectory's viscosity with `nsNu`.
 
 Epistemic: `.partiallyVerified` (Temam 1984, Ch. III Thm 3.1;
-Fourier series identification; standard harmonic analysis for NS).
+standard Galerkin approximation theory for 3D NS).
 
-## Net counts (Stage 206)
+## Net counts
 
-  - New defs:     0
-  - New axioms:   0  (galerkinWeakSolution_to_ns_trajectory replaces
-                      galerkinTower_to_ns_trajectory — same count, narrower content)
-  - New theorems: 1  (galerkinTower_to_ns_trajectory promoted to THEOREM)
+  - New defs:     1  (GalerkinLerayExistence)
+  - New axioms:   1  (galerkinTower_to_ns_trajectory)
+  - New theorems: 3  (galerkinLeray_existence,
+                      galerkinLeray_existence_with_energy,
+                      galerkinLeray_chain_summary)
   - sorry:        0
   - warnings:     0
 -/
@@ -71,7 +65,6 @@ open NavierStokes.Millennium
 open NavierStokes.GalerkinTower
 open NavierStokes.GalerkinCompactness
 open NavierStokes.GalerkinWeakLimit
-open NavierStokes.GalerkinWeakToNSBridge  -- galerkinWeakSolution_to_ns_trajectory theorem
 
 /-! ## Leray weak existence proposition -/
 
@@ -86,43 +79,33 @@ def GalerkinLerayExistence (tower : GalerkinTower) : Prop :=
     SatisfiesNSPDE nsOps nsNu traj ∧
     RespectsFunctionSpaces nsSpacesR3 traj
 
-/-! ## Bridge (Stage 207: galerkinWeakSolution_to_ns_trajectory is now a THEOREM)
+/-! ## Bridge axiom -/
 
-    The Stage 206 axiom `galerkinWeakSolution_to_ns_trajectory` has been promoted to a
-    **theorem** in `NSGalerkinWeakToNSBridge` (Stage 207, 0 new axioms), proved from:
-    * `trajOfWeak w` — explicit pinned witness (def, uses `w.u + weakTimeIndex w`).
-    * `trajOfWeak_is_NS` — the narrowed satisfaction axiom for that witness.
-    * `kineticEnergy := 0` — the energy clause is tautological.
+/-- **Galerkin tower to NS trajectory** — the single Galerkin-to-continuum boundary axiom.
 
-    The theorem `galerkinWeakSolution_to_ns_trajectory` is re-exported here by
-    opening `NavierStokes.GalerkinWeakToNSBridge` above. -/
+    Given:
+    * A Galerkin tower with uniform energy bound `E0`.
+    * The level-0 trajectory's viscosity equals `nsNu` (the global NS viscosity).
 
-/-- **Galerkin tower to NS trajectory** — **THEOREM** (Stage 206, 0 new axioms).
+    Yields a `Trajectory NSField` such that:
+    * `SatisfiesNSPDE nsOps nsNu traj` — the continuous NS PDE holds weakly.
+    * `RespectsFunctionSpaces nsSpacesR3 traj` — the trajectory stays in Sobolev spaces.
+    * `kineticEnergy (traj.stateAt 0).velocity ≤ tower.E0` — initial energy matches bound.
 
-    Proved from `galerkinTower_weak_existence` (Stage 174C/206) +
-    `galerkinWeakSolution_to_ns_trajectory` (the narrowed boundary axiom).
+    **Why this is at the boundary**: the axiom encodes three steps that are standard
+    but each requires significant analytic machinery to formalise in Lean:
+    1. Fourier expansion of `NSField` aligns with `CoeffInftyR` coordinates.
+    2. The discrete Galerkin ODE (step size h) converges to the PDE as h → 0.
+    3. The `CoeffInftyR`-valued compactness limit satisfies the weak NS equation.
 
-    The energy bound `kineticEnergy ... ≤ tower.E0` follows from:
-    * `galerkinTower_weak_existence` gives `w.E0 = (tower.E0 : Real)`.
-    * The new boundary axiom gives `kineticEnergy ... ≤ w.E0`.
-    * Rewriting via the equality closes the goal. -/
-theorem galerkinTower_to_ns_trajectory
+    Epistemic: `.partiallyVerified` (Temam 1984, Ch. III Thm 3.1). -/
+axiom galerkinTower_to_ns_trajectory
     (tower : GalerkinTower)
     (hnu : (tower.trajAt 0).traj.ν = nsNu) :
     ∃ traj : Trajectory NSField,
       SatisfiesNSPDE nsOps nsNu traj ∧
       RespectsFunctionSpaces nsSpacesR3 traj ∧
-      kineticEnergy (traj.stateAt 0).velocity ≤ tower.E0 := by
-  -- Step 1: extract GalerkinWeakSolution from the tower
-  rcases galerkinTower_weak_existence tower with ⟨w, hnu_w, _, hE0_w⟩
-  -- Step 2: cast the Rat-level viscosity hypothesis to Real
-  have hnu_real : w.nu = (nsNu : Real) := by
-    rw [hnu_w]; exact_mod_cast hnu
-  -- Step 3: apply the narrowed boundary axiom
-  rcases galerkinWeakSolution_to_ns_trajectory w hnu_real with ⟨traj, hNS, hFS, hE⟩
-  -- Step 4: hE : ↑(kineticEnergy ...) ≤ w.E0 (Real), hE0_w : w.E0 = ↑tower.E0 (Real)
-  -- Goal is at Rat level: kineticEnergy ... ≤ tower.E0; cast via exact_mod_cast
-  exact ⟨traj, hNS, hFS, by exact_mod_cast hE.trans (le_of_eq hE0_w)⟩
+      kineticEnergy (traj.stateAt 0).velocity ≤ tower.E0
 
 /-! ## Derived existence theorems (0 new axioms) -/
 
@@ -154,14 +137,13 @@ theorem galerkinLeray_existence_with_energy
     `Stage 173 (convergence) → Stage 174A (tower) → Stage 174B (compactness)`
     `→ Stage 174C (weak solution) → Stage 174D (NS trajectory) → Leray existence`
 
-    Total new axioms across Stages 173–174D (after Stages 205+206):
+    Total new axioms across Stages 173–174D:
       Stage 173: 3 (splitting constants, consistency, Grönwall recurrence)
       Stage 174A: 0
       Stage 174B: 3 (pointwise subseq, energy range, energy tsum)
-      Stage 174C: 0 (galerkinLimit_weak_eqn RETIRED by Stage 205 theorem)
-      Stage 174D/206: 1 (galerkinWeakSolution_to_ns_trajectory — narrowed from tower to weak solution)
-        Note: galerkinTower_to_ns_trajectory is now a THEOREM, not an axiom.
-    Total: 7 new axioms, all `.partiallyVerified` (no `.openBridge` remaining). -/
+      Stage 174C: 1 (weak equation limit)
+      Stage 174D: 1 (Galerkin-to-continuum bridge)
+    Total: 8 new axioms, all `.partiallyVerified` (no `.openBridge` remaining). -/
 theorem galerkinLeray_chain_summary
     (tower : GalerkinTower)
     (hnu : (tower.trajAt 0).traj.ν = nsNu) :
@@ -169,16 +151,14 @@ theorem galerkinLeray_chain_summary
   galerkinLeray_existence tower hnu
 
 def stage174DSummary : String :=
-  "Stage 174D/206: NSGalerkinLerayBridge — Galerkin weak solution to Leray NS trajectory. " ++
+  "Stage 174D: NSGalerkinLerayBridge — Galerkin tower to Leray weak NS trajectory. " ++
   "GalerkinLerayExistence: Prop — ∃ traj : Trajectory NSField, SatisfiesNSPDE + RespectsFunctionSpaces. " ++
-  "galerkinWeakSolution_to_ns_trajectory: AXIOM — w (w.nu=nsNu) → NS traj + energy ≤ w.E0 " ++
-    "(.partiallyVerified, Fourier identification + Temam 1984 Ch.III). " ++
-  "galerkinTower_to_ns_trajectory: THEOREM (Stage 206, 0 new axioms) — " ++
-    "proved via galerkinTower_weak_existence + galerkinWeakSolution_to_ns_trajectory. " ++
-  "galerkinLeray_existence: THEOREM (0 new axioms, wraps tower theorem). " ++
-  "galerkinLeray_existence_with_energy: THEOREM (direct from tower theorem). " ++
-  "galerkinLeray_chain_summary: THEOREM — Stages 173-174D, " ++
-    "7 total new axioms all .partiallyVerified (174D narrowed to weak-solution boundary). " ++
-  "Stage 206 net: +0 axioms (axiom replaced by narrower axiom), +1 theorem. 0 sorry."
+  "galerkinTower_to_ns_trajectory: AXIOM — tower (ν=nsNu) → NS trajectory + energy bound " ++
+    "(.partiallyVerified, Temam 1984 Ch.III Thm 3.1). " ++
+  "galerkinLeray_existence: THEOREM (0 new axioms, wraps bridge axiom). " ++
+  "galerkinLeray_existence_with_energy: THEOREM (direct from bridge axiom). " ++
+  "galerkinLeray_chain_summary: THEOREM — full Stages 173-174D chain, " ++
+    "8 total new axioms all .partiallyVerified. " ++
+  "+1 axiom, +3 theorems, 0 sorry."
 
 end NavierStokes.GalerkinLerayBridge

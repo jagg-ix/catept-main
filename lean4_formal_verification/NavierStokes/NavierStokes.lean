@@ -179,7 +179,3 @@ import NavierStokes.NSGalerkinTower
 import NavierStokes.NSGalerkinCompactness
 import NavierStokes.NSGalerkinWeakLimit
 import NavierStokes.NSGalerkinLerayBridge
-import NavierStokes.NSGalerkinPGSInstance
-import NavierStokes.NSGalerkinBKMClosure
-import NavierStokes.NSGalerkinEnergyTransfer
-import NavierStokes.NSGalerkinPointwiseSubseq
