@@ -123,14 +123,56 @@ structure NSCoeffDict where
     RespectsFunctionSpaces nsSpacesR3
       ⟨fun t => { velocity := vel (u (ti t)), pressure := pres (u (ti t)) }⟩
 
+/-! ## Factored axiom structures (Stage 213) -/
+
+/-- **Fourier interpretation maps** — the vel/pres embedding only, no PDE content.
+
+    Separates the Fourier function-space identification (`CoeffInftyR → NSField`)
+    from the dynamics bridge.  This is the "purely analytic" half of `NSCoeffDict`:
+    once `NSField` is concretized as `CoeffInftyR`, this becomes a trivial `id` map.
+
+    Epistemic: `.partiallyVerified` (Fourier series as NSField function values;
+    harmonic analysis; no PDE required). -/
+structure NSCoeffInterp where
+  /-- Velocity interpretation: Galerkin coefficient vector → NSField velocity value. -/
+  vel  : CoeffInftyR → NSField
+  /-- Pressure interpretation: Galerkin coefficient vector → NSField pressure value. -/
+  pres : CoeffInftyR → NSField
+
+/-- **PDE bridge obligation** parametrized by an `NSCoeffInterp`.
+
+    Separates the NS PDE identification from the Fourier embedding.  Given an
+    interpretation `interp`, this structure asserts that if the coefficient sequence
+    satisfies `SatisfiesNSPDECoeff` (O(h) step-difference bound), the trajectory
+    built from `interp.vel ∘ u ∘ ti` and `interp.pres ∘ u ∘ ti` satisfies
+    `SatisfiesNSPDE nsOps nsNu` and `RespectsFunctionSpaces nsSpacesR3`.
+
+    This is the irreducible semantic gap: it identifies coefficient-space ODE
+    dynamics with the abstract `nsOps`-NS equation.  When `NSField` is
+    concretized and `nsOps` is made concrete, this becomes a theorem.
+
+    Epistemic: `.partiallyVerified` (Temam 1984 Ch. III Thm 3.1). -/
+structure NSCoeffPDEBridge (interp : NSCoeffInterp) where
+  /-- The bridge: coefficient dynamics → abstract NS PDE satisfaction. -/
+  bridge : ∀ (u : Nat → CoeffInftyR) (ti : Rat → Nat) (h : Rat),
+    SatisfiesNSPDECoeff u (nsNu : Real) h →
+    SatisfiesNSPDE nsOps nsNu
+      ⟨fun t => { velocity := interp.vel (u (ti t)), pressure := interp.pres (u (ti t)) }⟩ ∧
+    RespectsFunctionSpaces nsSpacesR3
+      ⟨fun t => { velocity := interp.vel (u (ti t)), pressure := interp.pres (u (ti t)) }⟩
+
 def stage209ACoeffDictSummary : String :=
-  "Stage 209A: NSGalerkinNSCoeffDict — coefficient-to-NSField dictionary (0 new axioms). " ++
+  "Stage 209A/213: NSGalerkinNSCoeffDict — coefficient-to-NSField dictionary (0 new axioms). " ++
   "SatisfiesNSPDECoeff u nu h: ∃ C>0, ∀ k M, ‖u(k+1)−u(k)‖²_M ≤ C·h — " ++
     "strictly stronger than weak_eqn (≤4·E₀); ODE-accuracy characterization. " ++
   "NSCoeffDict: structure {vel, pres, bridge} — " ++
     "bridge: SatisfiesNSPDECoeff u nsNu h → SatisfiesNSPDE nsOps nsNu ⟨vel∘u∘ti, pres∘u∘ti⟩ " ++
     "∧ RespectsFunctionSpaces (.partiallyVerified, Temam 1984 III). " ++
+  "NSCoeffInterp: structure {vel, pres} — Fourier maps only, no PDE (Stage 213). " ++
+  "NSCoeffPDEBridge interp: structure {bridge} — PDE bridge parametrized by NSCoeffInterp (Stage 213). " ++
+    "bridge: SatisfiesNSPDECoeff u nsNu h → SatisfiesNSPDE + RespectsFunctionSpaces via interp. " ++
+    "When NSField := CoeffInftyR, bridge becomes theorem from SatisfiesNSPDECoeff alone (Stage 215 path). " ++
   "Stage 210 path: NSFieldConcrete := CoeffInftyR, vel := id, bridge := theorem. " ++
-  "Net: +2 defs, +0 axioms, +0 theorems, 0 sorry."
+  "Net: +2 defs, +0 axioms, +0 theorems, 0 sorry. Stage 213: +2 structures (NSCoeffInterp, NSCoeffPDEBridge)."
 
 end NavierStokes.GalerkinWeakToNSBridge

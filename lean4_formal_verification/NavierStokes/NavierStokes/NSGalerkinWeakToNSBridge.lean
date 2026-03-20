@@ -3,7 +3,7 @@ import Mathlib.Algebra.Order.Floor.Semiring
 import Mathlib.Data.Rat.Floor
 
 /-!
-# Stages 207–209 — NSGalerkinWeakToNSBridge: Pinned Witness Bridge
+# Stages 207–210B — NSGalerkinWeakToNSBridge: Pinned Witness Bridge
 
 ## Summary of changes across stages
 
@@ -28,36 +28,48 @@ via `NSGalerkinNSCoeffDict.lean` (Stage 209A):
   Bundles `vel`, `pres`, and the `bridge` field connecting coefficient NS dynamics
   to abstract NS PDE satisfaction.
 * `galerkinLimit_coeff_dynamics` — the Galerkin limit satisfies `SatisfiesNSPDECoeff`
-  (1 axiom, replaces what was implicit in `trajOfWeak_is_NS`).
+  (was axiom in Stage 209, **PROMOTED TO THEOREM** in Stage 210B).
 * `trajOfWeak_is_NS` — **THEOREM** (0 new axioms): from `canon_ns_dict.bridge` +
   `galerkinLimit_coeff_dynamics`.
 
 The old standalone `coeffToNSVelocity` / `coeffToNSPressure` axioms are subsumed
 into `canon_ns_dict.vel` / `canon_ns_dict.pres` (reducing axiom count by 1).
 
-## Irreducible content after Stage 209
+### Stage 210B — Retire `galerkinLimit_coeff_dynamics` as theorem (−1 axiom)
 
-| Axiom | Mathematical content | Epistemic |
-|-------|---------------------|-----------|
-| `canon_ns_dict` | Fourier vel/pres maps + PDE bridge | `.partiallyVerified` |
-| `galerkinLimit_coeff_dynamics` | Galerkin limit has O(h) step diffs | `.partiallyVerified` |
+`GalerkinWeakSolution` gains 5 back-reference fields: `tower`, `phi`, `hphi`, `hconv`,
+`htower_h`.  These record the tower provenance of the limit sequence.
 
-**2 axioms total** (down from 3 in Stage 208, down from 5 in Stage 207).
+`galerkinLimit_coeff_dynamics` is now a **THEOREM** proved from:
+* `galerkinTower_step_diff_range` (new axiom in NSGalerkinCompactness, Stage 210B)
+  — the limit's step diffs are bounded by C · h.
+* `w.tower`, `w.phi`, `w.hphi`, `w.hconv` — the back-reference fields of `w`.
+* `w.htower_h` — step-size agreement closes the Rat→Real cast.
 
-## Stage 210 path
+Net: `galerkinLimit_coeff_dynamics` retired; `galerkinTower_step_diff_range` added to
+NSGalerkinCompactness.  Total axiom change for Stage 210B: **0** (1 added, 1 retired).
 
-Set `NSFieldConcrete := CoeffInftyR`, `vel := id`, `pres := id`.
-Then `canon_ns_dict.bridge` becomes a theorem (definitional unfolding + NS op compat).
+## Irreducible content after Stage 213
 
-## Net counts (Stage 209, this file)
+| Axiom | File | Mathematical content | Epistemic |
+|-------|------|---------------------|-----------|
+| `canon_ns_interp` | this file | Fourier vel/pres maps (CoeffInftyR → NSField) | `.partiallyVerified` |
+| `canon_ns_bridge` | this file | PDE identification (SatisfiesNSPDECoeff → SatisfiesNSPDE) | `.partiallyVerified` |
+| `galerkinTower_step_diff_range` | NSGalerkinCompactness | Limit step diffs ≤ C·h | `.partiallyVerified` |
 
-  - New defs:     2  (weakTimeIndex, trajOfWeak)
-  - New axioms:   2  (canon_ns_dict, galerkinLimit_coeff_dynamics)
-  - Axioms removed: 3  (coeffToNSVelocity, coeffToNSPressure, trajOfWeak_is_NS)
-  - Axioms removed from NSGalerkinLerayBridge: 1 (galerkinWeakSolution_to_ns_trajectory)
-  - New theorems: 4  (weakTimeIndex_at_grid, trajOfWeak_stateAt_grid,
-                      trajOfWeak_is_NS, galerkinWeakSolution_to_ns_trajectory)
-  - Net axiom change vs Stage 208: −1  (3→2)
+**2 axioms in this file** (split from 1 in Stage 210B; `canon_ns_dict` promoted to `def`).
+
+Stage 215 discharge path:
+- `canon_ns_interp` → discharged by `NSField := CoeffInftyR`, `vel := id`, `pres := id`.
+- `canon_ns_bridge` → discharged by concretizing `nsOps` + proving `SatisfiesNSPDEΔ`
+  from `SatisfiesNSPDECoeff` via the forward-difference NS predicate (PDEInterfaces.lean).
+
+## Net counts (Stage 213, this file)
+
+  - New defs:     1  (canon_ns_dict promoted from axiom to def)
+  - New axioms:   2  (canon_ns_interp, canon_ns_bridge — split from canon_ns_dict)
+  - Axioms removed: 1  (canon_ns_dict was 1 axiom)
+  - Net axiom change vs Stage 210B: +1  (1→2 in this file)
   - sorry:        0
   - warnings:     0
 -/
@@ -104,39 +116,78 @@ theorem weakTimeIndex_at_grid (w : GalerkinWeakSolution) (k : Nat) :
   rw [max_eq_left hk_nn, mul_div_cancel_right₀ (k : Rat) (ne_of_gt hh_pos)]
   exact Nat.floor_natCast k
 
-/-! ## Canonical dictionary and coefficient dynamics (Stage 209) -/
+/-! ## Canonical dictionary and coefficient dynamics (Stages 209 / 213) -/
 
-/-- **Canonical Fourier NS dictionary** — the single axiom for Fourier interpretation.
+/-- **Canonical Fourier interpretation maps** — the vel/pres embedding axiom (Stage 213).
 
-    Provides the velocity/pressure interpretation maps (`canon_ns_dict.vel`,
-    `canon_ns_dict.pres : CoeffInftyR → NSField`) together with the PDE bridge:
-    if a coefficient sequence satisfies `SatisfiesNSPDECoeff u nsNu h`, the
-    piecewise-constant trajectory built from the maps satisfies `SatisfiesNSPDE nsOps nsNu`
-    and `RespectsFunctionSpaces nsSpacesR3`.
+    Provides `canon_ns_interp.vel, canon_ns_interp.pres : CoeffInftyR → NSField`, the
+    Fourier series identification of coefficient vectors with NSField values.
 
-    **This replaces** the Stage 208 pair `(coeffToNSVelocity, coeffToNSPressure)` and
-    the old `trajOfWeak_is_NS` axiom with a single, structured dictionary.
+    **Factored out of `canon_ns_dict`** in Stage 213: the embedding is purely analytic
+    (harmonic analysis, no PDE) and is separable from the dynamics bridge.
 
-    Epistemic: `.partiallyVerified` (Fourier series vel/pres interpretation; Temam 1984
-    Ch. III Thm 3.1; bridge dischargeable in Stage 210 by concretizing NSField). -/
-axiom canon_ns_dict : NSCoeffDict
+    When `NSField` is concretized as `CoeffInftyR`, this becomes the identity map
+    (0 axioms needed).  Until then, it is an independent `.partiallyVerified` axiom.
 
-/-- **Galerkin limit coefficient dynamics** — the limit sequence satisfies the
-    discrete NS equation with O(h) step-difference accuracy.
+    Epistemic: `.partiallyVerified` (Fourier series as NSField function values;
+    harmonic analysis; concretizable via `NSField := CoeffInftyR` + `vel := id`). -/
+axiom canon_ns_interp : NSCoeffInterp
 
-    For any `GalerkinWeakSolution w` with viscosity matching `nsNu`, the limit
-    sequence `w.u` satisfies `SatisfiesNSPDECoeff w.u nsNu w.h`: consecutive step
-    differences are bounded by `C · h` for some uniform `C > 0`.
+/-- **Canonical NS PDE bridge** — the dynamics-to-PDE identification axiom (Stage 213).
 
-    This is strictly stronger than `w.weak_eqn` (which gives `≤ 4 · E₀` independent
-    of `h`); it captures the ODE-accuracy of the Galerkin limit.
+    Given `canon_ns_interp`, asserts that a coefficient sequence satisfying
+    `SatisfiesNSPDECoeff u nsNu h` (O(h) step-difference bound) yields a trajectory
+    — built via `canon_ns_interp.vel` and `canon_ns_interp.pres` — that satisfies
+    `SatisfiesNSPDE nsOps nsNu` and `RespectsFunctionSpaces nsSpacesR3`.
 
-    Epistemic: `.partiallyVerified` (Temam 1984, Ch. III §3; compactness + weak limit
-    passage gives distributional NS equation satisfaction, implying O(h) step residuals). -/
-axiom galerkinLimit_coeff_dynamics
+    **Factored out of `canon_ns_dict`** in Stage 213: this is the irreducible semantic
+    gap between coefficient-space ODE dynamics and the abstract `nsOps`-NS equation.
+
+    When `NSField := CoeffInftyR` and `nsOps` is concretized (Stage 215), this becomes
+    a theorem: `SatisfiesNSPDEΔ nsOps nsNu h traj` is provable from
+    `SatisfiesNSPDECoeff` via the concrete forward-difference NS equation.
+
+    Epistemic: `.partiallyVerified` (Temam 1984 Ch. III Thm 3.1; Fourier identification
+    of Galerkin ODE residual with `nsOps`-NS equation). -/
+axiom canon_ns_bridge : NSCoeffPDEBridge canon_ns_interp
+
+/-- **Canonical Fourier NS dictionary** — **DEF** (Stage 213, 0 new axioms).
+
+    Assembles `canon_ns_interp` and `canon_ns_bridge` into the `NSCoeffDict` bundle
+    used by `trajOfWeak` and `trajOfWeak_is_NS`.
+
+    **Previously an axiom** (Stage 209).  Stage 213 replaces it with two focused axioms
+    (`canon_ns_interp` + `canon_ns_bridge`) and assembles the dict as a definition.
+    The axiom count increases by 1 (1 → 2) but the frontier is now explicit:
+    - `canon_ns_interp` : pure Fourier embedding (dischargeable via concreteness)
+    - `canon_ns_bridge` : PDE identification (the remaining semantic gap) -/
+noncomputable def canon_ns_dict : NSCoeffDict where
+  vel    := canon_ns_interp.vel
+  pres   := canon_ns_interp.pres
+  bridge := fun u ti h hdyn => canon_ns_bridge.bridge u ti h hdyn
+
+/-- **Galerkin limit coefficient dynamics** — **THEOREM** (Stage 210B, 0 new axioms here).
+
+    The limit sequence `w.u` satisfies `SatisfiesNSPDECoeff w.u nsNu w.h`: consecutive
+    step differences are bounded by `C · h` for some uniform `C > 0`.
+
+    Proved from `galerkinTower_step_diff_range` (Stage 210B axiom in NSGalerkinCompactness)
+    applied to the back-reference fields `w.tower`, `w.phi`, `w.hphi`, `w.hconv`.
+    The step-size agreement `w.htower_h : w.tower.h = w.h` closes the cast.
+
+    **This was an axiom in Stage 209.**  Stage 210B promotes it to a theorem by
+    recording tower provenance in `GalerkinWeakSolution` (Option A back-reference fields)
+    and using the compactness-layer `galerkinTower_step_diff_range` axiom. -/
+theorem galerkinLimit_coeff_dynamics
     (w : GalerkinWeakSolution)
-    (hnu : w.nu = (nsNu : Real)) :
-    SatisfiesNSPDECoeff w.u (nsNu : Real) w.h
+    (_ : w.nu = (nsNu : Real)) :
+    SatisfiesNSPDECoeff w.u (nsNu : Real) w.h := by
+  rcases galerkinTower_step_diff_range w.tower w.phi w.hphi w.u w.hconv with ⟨C, hC, hbound⟩
+  refine ⟨C, hC, fun k M => ?_⟩
+  have hstep := hbound k M
+  have heq : (w.tower.h : Real) = (w.h : Real) := by exact_mod_cast w.htower_h
+  rw [heq] at hstep
+  exact hstep
 
 /-! ## Pinned candidate trajectory (Stage 207, uses Stage 209 dict) -/
 
@@ -199,23 +250,28 @@ theorem galerkinWeakSolution_to_ns_trajectory
   simp only [h0, Rat.cast_zero]
   exact w.hE0
 
-def stage209Summary : String :=
-  "Stages 207–209: NSGalerkinWeakToNSBridge — pinned witness bridge (CoeffInftyR → NSField). " ++
+def stage210BSummary : String :=
+  "Stages 207–210B: NSGalerkinWeakToNSBridge — pinned witness bridge (CoeffInftyR → NSField). " ++
   "weakTimeIndex: DEF (Stage 208) — ⌊max(t,0)/h⌋₊ (0 axioms). " ++
   "weakTimeIndex_at_grid: THEOREM (Stage 208) — max_eq_left+mul_div_cancel_right₀+floor_natCast. " ++
-  "canon_ns_dict: AXIOM (Stage 209) — NSCoeffDict: {vel,pres,bridge} (.partiallyVerified, " ++
-    "Fourier interpretation + Temam 1984 III; subsumes coeffToNSVelocity+coeffToNSPressure). " ++
-  "galerkinLimit_coeff_dynamics: AXIOM (Stage 209) — " ++
-    "SatisfiesNSPDECoeff w.u nsNu w.h (.partiallyVerified, Temam 1984 III §3; " ++
-    "O(h) step-difference bound for Galerkin limit). " ++
+  "canon_ns_interp: AXIOM (Stage 213) — NSCoeffInterp: {vel,pres} (.partiallyVerified, " ++
+    "Fourier vel/pres embedding only; dischargeable by NSField := CoeffInftyR + id maps). " ++
+  "canon_ns_bridge: AXIOM (Stage 213) — NSCoeffPDEBridge canon_ns_interp: {bridge} (.partiallyVerified, " ++
+    "Temam 1984 III Thm 3.1; dischargeable by concretizing nsOps + SatisfiesNSPDEΔ proof). " ++
+  "canon_ns_dict: DEF (Stage 213, 0 new axioms) — assembles canon_ns_interp + canon_ns_bridge " ++
+    "into NSCoeffDict; replaces Stage 209 axiom. " ++
+  "galerkinLimit_coeff_dynamics: THEOREM (Stage 210B, 0 new axioms here) — " ++
+    "SatisfiesNSPDECoeff w.u nsNu w.h from galerkinTower_step_diff_range (NSGalerkinCompactness) " ++
+    "+ w.tower/phi/hphi/hconv/htower_h back-reference fields + htower_h cast. " ++
   "trajOfWeak: DEF (0 axioms) — Trajectory NSField via canon_ns_dict.vel/pres + weakTimeIndex. " ++
   "trajOfWeak_stateAt_grid: THEOREM (0 axioms, weakTimeIndex_at_grid + simp). " ++
   "trajOfWeak_is_NS: THEOREM (Stage 209, 0 new axioms) — " ++
-    "from canon_ns_dict.bridge + galerkinLimit_coeff_dynamics. " ++
+    "from canon_ns_dict.bridge (= canon_ns_bridge.bridge) + galerkinLimit_coeff_dynamics. " ++
   "galerkinWeakSolution_to_ns_trajectory: THEOREM (0 new axioms) — " ++
     "from trajOfWeak_is_NS + kineticEnergy=0 tautology. " ++
-  "Net (207–209): +2 axioms, -1 axiom (from NSGalerkinLerayBridge), +2 defs, +4 theorems. " ++
-  "Stage 209: -3 axioms (coeff maps + trajOfWeak_is_NS), +2 axioms (dict + dynamics), " ++
-    "+1 theorem (trajOfWeak_is_NS promoted). 0 sorry."
+  "Net (207–213): 2 axioms in this file (canon_ns_interp + canon_ns_bridge). " ++
+  "Stage 213: +1 axiom net (1→2 in this file), canon_ns_dict promoted from axiom to def, +1 def. " ++
+  "Stage 215 path: concretize NSField := CoeffInftyR → discharge both axioms as theorems. " ++
+  "0 sorry."
 
 end NavierStokes.GalerkinWeakToNSBridge
