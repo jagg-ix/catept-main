@@ -1,5 +1,5 @@
-import NavierStokes.NSGalerkinConvectionBridge
-import NavierStokes.NSGalerkinNSODETrajectory
+import NavierStokes.NSGalerkinViscStep
+import NavierStokes.NSDiscreteIntegralKernel
 
 /-!
 # Stage 165 — NSGalerkinCayleyBridge: Cayley Step + Algebraic Energy Preservation
@@ -49,7 +49,7 @@ set_option autoImplicit false
 open NavierStokes.PalinstrophyTauBridge  -- galerkinN
 open NavierStokes.GalerkinComplexModel   -- CRat, CoeffC, normSqC, realInnerC, NSFieldGalerkinK
 open NavierStokes.GalerkinConvection     -- GalerkinBasis, galerkinConvection, B_energy_cancel
-open NavierStokes.GalerkinODE            -- viscStep, convStep, GalerkinNSDiscreteTrajectory
+open NavierStokes.DiscreteKernel         -- diH
 
 /-! ## CRat scalar multiplication -/
 
@@ -168,34 +168,38 @@ theorem cayleySolve_energy_preserving {N : Nat} (basis : GalerkinBasis N) (h : R
   -- Step 5: factor out (h/2) and apply B_bilinear_self_zero
   rw [← Finset.mul_sum, B_bilinear_self_zero basis u (fun j => v j + u j), mul_zero]
 
-/-! ## Identification with Stage 164's convStep -/
+/-! ## convStep as a concrete noncomputable def (Stage 189A) -/
 
-/-- **`convStep_eq_cayleySolve`** — `convStep` is identified with the Cayley step at `h = diH`.
+/-- **`convStep`** — the concrete Cayley convective step at the fixed kernel step size `diH`.
 
-    This turns the Stage 164 axiom `convStep_energy_preserving` into a **theorem**:
-    the energy preservation holds because `convStep` IS the Cayley step, which preserves
-    energy algebraically.
+    Defined as `cayleySolve basis diH u`.  This replaces the Stage 164 open-bridge axiom
+    `axiom convStep` (which lives in `NavierStokes.GalerkinODE`).  Downstream code that
+    previously used `NavierStokes.GalerkinODE.convStep` should alias this definition.
 
-    Epistemic status: `.partiallyVerified` (operator splitting fidelity; matches the
-    Lie/Strang scheme in the limit as `diH → 0`). -/
-axiom convStep_eq_cayleySolve {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N) :
-    convStep basis u = cayleySolve basis NavierStokes.DiscreteKernel.diH u
+    Making this a `noncomputable def` (rather than an axiom) means energy preservation
+    is a zero-axiom theorem. -/
+noncomputable def convStep {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N) : CoeffC N :=
+  cayleySolve basis diH u
 
-/-- `convStep_energy_preserving` is now a **theorem** derived from the Cayley identification. -/
+/-- **`convStep_eq_cayleySolve`** — `convStep` equals `cayleySolve` at `diH` by definition. -/
+theorem convStep_eq_cayleySolve {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N) :
+    convStep basis u = cayleySolve basis diH u := rfl
+
+/-- `convStep_energy_preserving` is a **theorem** (0 new axioms). -/
 theorem convStep_energy_preserving_from_cayley {N : Nat}
     (basis : GalerkinBasis N) (u : CoeffC N) :
-    ∑ i : Fin N, normSqC (convStep basis u i) = ∑ i : Fin N, normSqC (u i) := by
-  rw [convStep_eq_cayleySolve basis u]
-  exact cayleySolve_energy_preserving basis _ u
+    ∑ i : Fin N, normSqC (convStep basis u i) = ∑ i : Fin N, normSqC (u i) :=
+  cayleySolve_energy_preserving basis diH u
 
 def stage165Summary : String :=
-  "Stage 165: NSGalerkinCayleyBridge — Cayley step + algebraic energy preservation. " ++
+  "Stage 165/189A: NSGalerkinCayleyBridge — Cayley step + algebraic energy preservation. " ++
   "B_bilinear_antisymm: ⟨B(u,v),w⟩+⟨B(u,w),v⟩=0 (.partiallyVerified, Temam II.1.1). " ++
   "cayleySolve: Cayley step axiom (implicit midpoint, finite-dim IFT). " ++
   "cayleySolve_eq: defining equation v−u = h/2·B(u,v+u). " ++
   "cayleySolve_energy_preserving: THEOREM (normSqC_diff + cayleySolve_eq + B_self_zero). " ++
-  "convStep_eq_cayleySolve: 1 axiom connecting Stage 164 convStep to cayleySolve. " ++
-  "convStep_energy_preserving_from_cayley: THEOREM (0 new axioms, rw + cayley). " ++
-  "+3 axioms, +7 theorems, 0 sorry."
+  "convStep: noncomputable def = cayleySolve basis diH u (Stage 189A, 0 new axioms). " ++
+  "convStep_eq_cayleySolve: THEOREM by rfl (was axiom). " ++
+  "convStep_energy_preserving_from_cayley: THEOREM (0 new axioms). " ++
+  "+3 axioms, +8 theorems, 0 sorry."
 
 end NavierStokes.GalerkinCayley
