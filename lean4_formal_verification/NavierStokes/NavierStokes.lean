@@ -174,9 +174,12 @@ import NavierStokes.NSGalerkinCayleySolveDef
 import NavierStokes.NSGalerkinCayleyLegacyAudit
 import NavierStokes.NSGalerkinConvStepDef
 import NavierStokes.NSGalerkinConvDef
+import NavierStokes.NSGalerkinSplittingCore
 import NavierStokes.NSGalerkinConvergence
 import NavierStokes.NSGalerkinSplittingLemmata
 import NavierStokes.NSGalerkinCayleyStabilityBridge
+import NavierStokes.NSGalerkinCayleyNearIdentityBridge
+import NavierStokes.NSGalerkinFullStepBridge
 import NavierStokes.NSGalerkinTower
 import NavierStokes.NSGalerkinCompactness
 import NavierStokes.NSGalerkinWeakLimit
@@ -184,3 +187,5 @@ import NavierStokes.NSGalerkinLerayBridge
 import NavierStokes.NSGalerkinPGSInstance
 import NavierStokes.NSGalerkinBKMClosure
 import NavierStokes.NSGalerkinEnergyTransfer
+import NavierStokes.NSGalerkinPointwiseSubseq
+import NavierStokes.NSGalerkinConvStepHBridge
