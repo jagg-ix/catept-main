@@ -77,7 +77,8 @@ open NavierStokes.GalerkinWeakLimit
 def GalerkinLerayExistence (tower : GalerkinTower) : Prop :=
   ∃ traj : Trajectory NSField,
     SatisfiesNSPDE nsOps nsNu traj ∧
-    RespectsFunctionSpaces nsSpacesR3 traj
+    RespectsFunctionSpaces nsSpacesR3 traj ∧
+    kineticEnergy (traj.stateAt 0).velocity ≤ tower.E0
 
 /-! ## Bridge axiom -/
 
@@ -115,9 +116,8 @@ axiom galerkinTower_to_ns_trajectory
 theorem galerkinLeray_existence
     (tower : GalerkinTower)
     (hnu : (tower.trajAt 0).traj.ν = nsNu) :
-    GalerkinLerayExistence tower := by
-  rcases galerkinTower_to_ns_trajectory tower hnu with ⟨traj, hNS, hFS, _⟩
-  exact ⟨traj, hNS, hFS⟩
+    GalerkinLerayExistence tower :=
+  galerkinTower_to_ns_trajectory tower hnu
 
 /-- **Galerkin Leray existence with energy bound** — the limit trajectory's initial
     kinetic energy is controlled by the tower's uniform bound `E0`. -/
