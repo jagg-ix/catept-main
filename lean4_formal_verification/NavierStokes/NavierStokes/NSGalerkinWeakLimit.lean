@@ -35,12 +35,13 @@ the step-difference bound `4 · E₀` is now a pure theorem, proved from:
 The `weak_eqn` field of `GalerkinWeakSolution` is updated to reflect the provable bound
 `≤ 4 · E₀` instead of the previously axiomatic `≤ E₀ / ν`.
 
-## Net counts (Stage 205)
+## Net counts (Stages 205 + 206)
 
-  - New defs:     0  (GalerkinWeakSolution structure fields unchanged except weak_eqn)
-  - New axioms:  -1  (galerkinLimit_weak_eqn RETIRED, 0 new axioms added)
+  - New defs:     0
+  - New axioms:  -1  (galerkinLimit_weak_eqn RETIRED in Stage 205, 0 new axioms added)
   - New theorems: 3  (normSqR_sub_le [private], coeffNormSqRRange_sub_le [private],
                       galerkinLimit_stepDiff_bound)
+  - Stage 206:    +3 fields in GalerkinWeakSolution (h, hh, hh1 from tower.h)
   - sorry:        0
   - warnings:     0
 -/
@@ -88,13 +89,16 @@ private lemma coeffNormSqRRange_sub_le (M : Nat) (u v : CoeffInftyR)
 /-! ## Weak solution bundle -/
 
 /-- A **Galerkin weak solution**: a limit coefficient sequence in `CoeffInftyR`
-    together with an energy bound and a step-difference bound.
+    together with an energy bound, a time step, and a step-difference bound.
 
     Fields:
     * `u`         — the limit sequence, indexed by discrete time step `k : Nat`.
-    * `nu`        — effective viscosity (metadata from the tower).
+    * `nu`        — effective viscosity (Real, from tower cast).
     * `nu_pos`    — positivity of viscosity.
-    * `E0`        — energy bound.
+    * `h`         — time step (Rat, = tower.h; used for time map k ↦ k·h in Stage 207).
+    * `hh`        — `0 < h`.
+    * `hh1`       — `h ≤ 1` (near-identity stability bound, from tower.hh1).
+    * `E0`        — energy bound (Real).
     * `hE0`       — non-negativity of the bound.
     * `energy`    — `coeffNormSqR (u k) ≤ E0` for all `k` (full tsum energy).
     * `weak_eqn`  — the M-mode step-difference satisfies the energy bound:
@@ -104,6 +108,9 @@ structure GalerkinWeakSolution where
   u        : Nat → CoeffInftyR
   nu       : Real
   nu_pos   : 0 < nu
+  h        : Rat
+  hh       : 0 < h
+  hh1      : h ≤ 1
   E0       : Real
   hE0      : 0 ≤ E0
   energy   : ∀ k : Nat, coeffNormSqR (u k) ≤ E0
@@ -114,6 +121,22 @@ structure GalerkinWeakSolution where
       bounds — **0 new axioms**. -/
   weak_eqn : ∀ (k M : Nat),
     coeffNormSqRRange M (fun m => u (k + 1) m - u k m) ≤ 4 * E0
+  /-- **Tower back-reference** (Stage 210B): the Galerkin tower from which `u` was
+      extracted as a limit.  Together with `phi`, `hphi`, and `hconv`, this records
+      the full provenance of the limit sequence so that compactness-layer axioms
+      (e.g. `galerkinTower_step_diff_range`) can be applied to `u`. -/
+  tower    : GalerkinTower
+  /-- Subsequence index: `phi n` is the N-index of the n-th extracted Galerkin level. -/
+  phi      : Nat → Nat
+  /-- Strict monotonicity of the subsequence. -/
+  hphi     : StrictMono phi
+  /-- Pointwise convergence: the real embedding of the phi(n)-th Galerkin trajectory
+      at step `k`, mode `m` converges to `u k m` as `n → ∞`. -/
+  hconv    : ∀ (k m : Nat),
+    Tendsto (fun n => embedCoeffR ((tower.trajAt (phi n)).traj.u k) m)
+      atTop (𝓝 (u k m))
+  /-- Step-size agreement: the tower's step size equals `h`. -/
+  htower_h : tower.h = h
 
 /-! ## Basic consequence -/
 
@@ -150,16 +173,21 @@ theorem galerkinLimit_stepDiff_bound
 
 /-! ## Weak existence theorem (0 new axioms) -/
 
-/-- **Galerkin weak solution existence**.
+/-- **Galerkin weak solution existence** (Stage 174C / 206).
 
-    Every uniformly energy-bounded Galerkin tower (Stage 174A) yields a
-    `GalerkinWeakSolution` via the compactness extraction (Stage 174B) and
-    the step-difference theorem above.
+    Every uniformly energy-bounded Galerkin tower (Stage 174A) with a shared step
+    size (Stage 206) yields a `GalerkinWeakSolution` via the compactness extraction
+    (Stage 174B) and the step-difference theorem (Stage 205).
 
-    Proof: apply `galerkinTower_compactness_certificate` to extract `phi`, `uInfty`,
-    and both energy bounds; then apply `galerkinLimit_stepDiff_bound` for `weak_eqn`. -/
+    Exposes three field equalities for downstream use in `galerkinTower_to_ns_trajectory`:
+    * `w.nu = ((tower.trajAt 0).traj.ν : Real)` — viscosity cast
+    * `w.h  = tower.h`                           — step size passthrough
+    * `w.E0 = (tower.E0 : Real)`                 — energy bound cast -/
 theorem galerkinTower_weak_existence (tower : GalerkinTower) :
-    ∃ _ : GalerkinWeakSolution, True := by
+    ∃ w : GalerkinWeakSolution,
+      w.nu = ((tower.trajAt 0).traj.ν : Real) ∧
+      w.h  = tower.h ∧
+      w.E0 = (tower.E0 : Real) := by
   -- Extract subsequence and limit from the compactness certificate
   rcases galerkinTower_compactness_certificate tower with
     ⟨phi, hphi, uInfty, hconv, _hrange, henergy⟩
@@ -171,25 +199,34 @@ theorem galerkinTower_weak_existence (tower : GalerkinTower) :
     u        := uInfty
     nu       := nu_eff
     nu_pos   := hnu
+    h        := tower.h
+    hh       := tower.hh
+    hh1      := tower.hh1
     E0       := (tower.E0 : Real)
     hE0      := Rat.cast_nonneg.mpr tower.hE0
     energy   := henergy
     weak_eqn := galerkinLimit_stepDiff_bound tower phi hphi uInfty hconv
-  }, trivial⟩
+    tower    := tower
+    phi      := phi
+    hphi     := hphi
+    hconv    := hconv
+    htower_h := rfl
+  }, rfl, rfl, rfl⟩
 
 def stage174CSummary : String :=
-  "Stage 174C (updated Stage 205): NSGalerkinWeakLimit — Galerkin compactness limit as weak solution. " ++
-  "GalerkinWeakSolution: struct { u, nu, E0, energy, weak_eqn } — " ++
-    "limit sequence + tsum energy bound + step-difference bound. " ++
+  "Stage 174C (Stages 205+206): NSGalerkinWeakLimit — Galerkin compactness limit as weak solution. " ++
+  "GalerkinWeakSolution: struct { u, nu, h, hh, hh1, E0, energy, weak_eqn } — " ++
+    "limit sequence + step size + energy bound + step-difference bound (Stage 206 adds h/hh/hh1). " ++
   "normSqR_sub_le: PRIVATE LEMMA (‖a−b‖²≤2‖a‖²+2‖b‖², nlinarith). " ++
   "coeffNormSqRRange_sub_le: PRIVATE LEMMA (sum version, sum_le_sum+mul_sum). " ++
   "GalerkinWeakSolution.energy_nonneg: THEOREM (coeffNormSqR_nonneg). " ++
   "galerkinLimit_stepDiff_bound: THEOREM — step-diff ≤ 4*E₀ " ++
     "(0 new axioms, galerkinTower_energy_range + AM-GM). " ++
-  "galerkinLimit_weak_eqn: RETIRED (Stage 205) — was axiom ≤E₀/ν, " ++
-    "replaced by galerkinLimit_stepDiff_bound THEOREM. " ++
-  "galerkinTower_weak_existence: THEOREM (0 new axioms, " ++
-    "compactness_certificate + galerkinLimit_stepDiff_bound). " ++
-  "Stage 205 net: -1 axiom (galerkinLimit_weak_eqn retired), +3 theorems, 0 sorry."
+  "galerkinLimit_weak_eqn: RETIRED (Stage 205). " ++
+  "galerkinTower_weak_existence: THEOREM — exposes w.nu/w.h/w.E0 equalities " ++
+    "(Stage 206: feeds galerkinTower_to_ns_trajectory proof; " ++
+    "Stage 210B: +5 fields tower/phi/hphi/hconv/htower_h). " ++
+  "Stage 205 net: -1 axiom, +3 theorems. Stage 206 net: +3 struct fields, 0 axioms. " ++
+  "Stage 210B net: +5 struct fields (tower/phi/hphi/hconv/htower_h), 0 axioms."
 
 end NavierStokes.GalerkinWeakLimit
