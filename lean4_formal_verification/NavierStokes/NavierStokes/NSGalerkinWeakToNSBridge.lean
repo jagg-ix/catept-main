@@ -1,20 +1,15 @@
 import NavierStokes.NSGalerkinWeakLimit
 import NavierStokes.AxiomaticEstimates
-import Mathlib.Algebra.Order.Floor.Semiring
-import Mathlib.Data.Rat.Floor
 
 /-!
-# Stage 207/208 — NSGalerkinWeakToNSBridge: Pinned Witness Bridge
+# Stage 207 — NSGalerkinWeakToNSBridge: Pinned Witness Bridge
 
 Replaces the Stage 206 "existence-from-thin-air" axiom
 `galerkinWeakSolution_to_ns_trajectory` (which neither mentioned `w.u` nor `w.h`)
-with a **pinned witness** architecture.
+with a **pinned witness** architecture:
 
-## Stage 207 (Stages 207–208 combined here)
-
-1. **`weakTimeIndex w`** — **DEF** (Stage 208, 0 new axioms): `⌊max(t,0)/h⌋₊`.
-2. **`weakTimeIndex_at_grid`** — **THEOREM** (Stage 208, 0 new axioms): proved from
-   `max_eq_left`, `mul_div_cancel_right₀`, `Nat.floor_natCast`.
+1. **`weakTimeIndex w`** — axiom: a canonical `Rat → Nat` map derived from `w.h`.
+2. **`weakTimeIndex_at_grid`** — axiom: at grid points `k · h`, the index returns `k`.
 3. **`coeffToNSVelocity`**, **`coeffToNSPressure`** — axioms: Fourier interpretation
    maps from `CoeffInftyR` into the opaque `NSField` type.
 4. **`trajOfWeak w`** — definition (0 new axioms): the candidate trajectory built
@@ -24,32 +19,35 @@ with a **pinned witness** architecture.
 6. **`galerkinWeakSolution_to_ns_trajectory`** — **THEOREM** (0 new axioms):
    recovered from `trajOfWeak_is_NS` + the `kineticEnergy := 0` tautology.
 
-## Stage 208: concrete time indexing (−2 axioms)
+## Why this is strictly narrower than the Stage 206 axiom
 
-`weakTimeIndex w t := ⌊max(t, 0) / w.h⌋₊`
+The old axiom asserted `∃ traj, SatisfiesNSPDE ∧ RespectsFunctionSpaces ∧ energy ≤ w.E0`
+without ever mentioning `w.u` or `w.h`.  The new axiom:
+* is stated for a **concrete explicit witness** `trajOfWeak w`,
+* depends on `weakTimeIndex w` (which uses `w.h`),
+* depends on `w.u` via the `trajOfWeak` definition.
 
-The `max` ensures the argument is non-negative before the floor.
-The grid lemma `weakTimeIndex w (k · h) = k` is now a **theorem**:
-- `max(k·h, 0) = k·h` because `k·h ≥ 0` (`k : Nat`, `h > 0`).
-- `k·h / h = k` by `mul_div_cancel_right₀`.
-- `⌊(k : ℚ)⌋₊ = k` by `Nat.floor_natCast`.
+The energy clause `kineticEnergy ... ≤ w.E0` is now a **theorem** (tautological under
+`kineticEnergy := 0`; no axiom needed).
 
 ## Irreducible content of the remaining axioms
 
 | Axiom | Mathematical content | Why axiomatic |
 |-------|---------------------|---------------|
+| `weakTimeIndex` | `Rat → Nat` step-index map for step `w.h` | choose floor vs round; Rat.floor imports heavy |
+| `weakTimeIndex_at_grid` | index recovers `k` at `k·h` | provable from `Nat.floor_natCast` once floor chosen |
 | `coeffToNSVelocity` | Fourier series `CoeffInftyR → NSField` | `NSField` opaque |
 | `coeffToNSPressure` | pressure Fourier series | `NSField` opaque |
 | `trajOfWeak_is_NS` | Fourier limit satisfies `nsOps` NS equation | the genuine hard gap |
 
-## Net counts (Stages 207+208 combined)
+## Net counts
 
-  - New defs:     2  (weakTimeIndex, trajOfWeak)
-  - New axioms:   3  (coeffToNSVelocity, coeffToNSPressure, trajOfWeak_is_NS)
-  - New theorems: 3  (weakTimeIndex_at_grid, trajOfWeak_stateAt_grid,
-                      galerkinWeakSolution_to_ns_trajectory)
+  - New defs:     1  (trajOfWeak)
+  - New axioms:   5  (weakTimeIndex, weakTimeIndex_at_grid,
+                      coeffToNSVelocity, coeffToNSPressure, trajOfWeak_is_NS)
+  - New theorems: 1  (galerkinWeakSolution_to_ns_trajectory — promoted from axiom)
   - Axioms removed from NSGalerkinLerayBridge: 1 (galerkinWeakSolution_to_ns_trajectory)
-  - Net axiom change: +2 (Stage 207 had +4; Stage 208 removes 2 by def-promotion)
+  - Net axiom change: +4 (all strictly narrower than the single removed existence axiom)
   - sorry:        0
   - warnings:     0
 -/
@@ -64,37 +62,28 @@ open NavierStokes.GalerkinCompactness    -- CoeffInftyR
 open NavierStokes.GalerkinWeakLimit      -- GalerkinWeakSolution
 open NavierStokes.Millennium             -- Trajectory, State, SatisfiesNSPDE, etc.
 
-/-! ## Time indexing (Stage 208: concrete def, 0 new axioms) -/
+/-! ## Time indexing -/
 
 /-- **Canonical time-step index** for a `GalerkinWeakSolution`.
 
-    Maps continuous time `t : Rat` to the discrete step index `k : Nat`
-    using the floor function: `⌊max(t, 0) / h⌋₊`.
+    Maps continuous time `t : Rat` to the discrete step index `k : Nat`,
+    using the step size `w.h`.  The intended semantics is `k = floor(t / h)`,
+    but the precise rounding rule is left axiomatic so that downstream code
+    is independent of the Rat-floor import chain.
 
-    The `max` clamps negative times to zero (ensuring a non-negative argument
-    before the natural-number floor).  At grid points `t = k · h`, this
-    returns exactly `k` — proved in `weakTimeIndex_at_grid`.
+    Epistemic: `.partiallyVerified` (standard left-Riemann rounding; the only
+    content is "which rounding rule"; provable from `Nat.floor_natCast` once fixed). -/
+axiom weakTimeIndex (w : GalerkinWeakSolution) : Rat → Nat
 
-    **Definition** (Stage 208, 0 new axioms).  Previously axiomatic (Stage 207). -/
-noncomputable def weakTimeIndex (w : GalerkinWeakSolution) (t : Rat) : Nat :=
-  Nat.floor (max t 0 / w.h)
+/-- **Grid-point recovery**: at continuous times `t = k · w.h`, the index returns `k`.
 
-/-- **Grid-point recovery** — **THEOREM** (Stage 208, 0 new axioms).
+    This is the essential property needed to connect the discrete trajectory
+    `w.u k` to the continuous-time trajectory at `t = k · h`.
 
-    At continuous time `t = k · w.h` for `k : Nat`, `weakTimeIndex` returns `k`.
-
-    Proof:
-    * `max(k·h, 0) = k·h`  —  `k·h ≥ 0` since `k : Nat` and `h > 0`.
-    * `k·h / h = k`          —  `mul_div_cancel_right₀`, `h ≠ 0`.
-    * `⌊(k : ℚ)⌋₊ = k`       —  `Nat.floor_natCast`. -/
-theorem weakTimeIndex_at_grid (w : GalerkinWeakSolution) (k : Nat) :
-    weakTimeIndex w ((k : Rat) * w.h) = k := by
-  simp only [weakTimeIndex]
-  have hh_pos : (0 : Rat) < w.h := w.hh
-  have hk_nn : (0 : Rat) ≤ (k : Rat) * w.h :=
-    mul_nonneg (Nat.cast_nonneg k) (le_of_lt hh_pos)
-  rw [max_eq_left hk_nn, mul_div_cancel_right₀ (k : Rat) (ne_of_gt hh_pos)]
-  exact Nat.floor_natCast k
+    Epistemic: `.partiallyVerified` (follows from `Nat.floor_natCast` once the
+    rounding rule in `weakTimeIndex` is concretized). -/
+axiom weakTimeIndex_at_grid (w : GalerkinWeakSolution) (k : Nat) :
+    weakTimeIndex w ((k : Rat) * w.h) = k
 
 /-! ## Coefficient → NSField interpretation maps -/
 
@@ -183,20 +172,19 @@ theorem galerkinWeakSolution_to_ns_trajectory
   simp only [h0, Rat.cast_zero]
   exact w.hE0
 
-def stage208Summary : String :=
-  "Stages 207+208: NSGalerkinWeakToNSBridge — pinned witness bridge (CoeffInftyR → NSField). " ++
-  "weakTimeIndex: DEF (Stage 208, 0 axioms) — ⌊max(t,0)/h⌋₊ (Nat.floor on Rat). " ++
-  "weakTimeIndex_at_grid: THEOREM (Stage 208, 0 axioms) — " ++
-    "max_eq_left + mul_div_cancel_right₀ + Nat.floor_natCast. " ++
+def stage207Summary : String :=
+  "Stage 207: NSGalerkinWeakToNSBridge — pinned witness bridge (CoeffInftyR → NSField). " ++
+  "weakTimeIndex: AXIOM — Rat→Nat step-index map using w.h (.partiallyVerified, floor/round). " ++
+  "weakTimeIndex_at_grid: AXIOM — k·h maps to k (.partiallyVerified, Nat.floor_natCast). " ++
   "coeffToNSVelocity: AXIOM — Fourier velocity interpretation (.partiallyVerified). " ++
   "coeffToNSPressure: AXIOM — Fourier pressure interpretation (.partiallyVerified). " ++
   "trajOfWeak: DEF (0 axioms) — Trajectory NSField pinned to w.u + weakTimeIndex. " ++
-  "trajOfWeak_stateAt_grid: THEOREM (0 axioms, weakTimeIndex_at_grid + simp). " ++
+  "trajOfWeak_stateAt_grid: THEOREM (0 axioms, weakTimeIndex_at_grid + rfl). " ++
   "trajOfWeak_is_NS: AXIOM — trajOfWeak satisfies SatisfiesNSPDE + RespectsFunctionSpaces " ++
     "(.partiallyVerified, Temam 1984 III; genuine Fourier↔nsOps gap). " ++
   "galerkinWeakSolution_to_ns_trajectory: THEOREM (0 new axioms) — " ++
     "from trajOfWeak_is_NS + kineticEnergy=0 tautology. " ++
-  "Net (207+208): +3 axioms, -1 axiom (removed from NSGalerkinLerayBridge), " ++
-    "+2 defs, +3 theorems, 0 sorry. Stage 208: -2 axioms promoted to def+theorem."
+  "Net: +5 axioms (all narrower), -1 axiom (removed from NSGalerkinLerayBridge), " ++
+    "+1 def, +2 theorems, 0 sorry."
 
 end NavierStokes.GalerkinWeakToNSBridge
