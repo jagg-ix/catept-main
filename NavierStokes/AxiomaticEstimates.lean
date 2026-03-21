@@ -808,12 +808,22 @@ theorem nsContinuationControl_to_globalVorticityWitness
       RespectsFunctionSpaces nsSpacesR3 traj := by
   exact hCont st0 hAdm
 
-/-- Final closure slice: continuation control implies global regularity. -/
-axiom nsContinuationControl_to_globalRegularity
+/-- Final closure slice: continuation control implies global regularity.
+
+    **Stage 217D THEOREM** (0 new axioms):
+    `GlobalRegularSolution nsOps nsSpacesR3 nsNu st0` unfolds to
+    `AdmissibleInitialData nsSpacesR3 st0 ∧ ∃ traj, ...`.
+    Admissibility follows from `nsVelocityMem_default`, `nsPressureMem_default`,
+    `nsDivFree_default` (all proved in Stage 217A). The trajectory witness
+    follows from `hCont st0 hAdm` (applying `NSContinuationControl`). -/
+theorem nsContinuationControl_to_globalRegularity
     (pi : PathIntegralInterface NSField)
     (st0 : State NSField)
     (hCont : NSContinuationControl pi st0) :
-    GlobalRegularSolution nsOps nsSpacesR3 nsNu st0
+    GlobalRegularSolution nsOps nsSpacesR3 nsNu st0 :=
+  let hAdm : AdmissibleInitialData nsSpacesR3 st0 :=
+    ⟨nsVelocityMem_default _, nsPressureMem_default _, nsDivFree_default _⟩
+  ⟨hAdm, hCont st0 hAdm⟩
 
 /--
 Backward-chain theorem (conjecture program form):
