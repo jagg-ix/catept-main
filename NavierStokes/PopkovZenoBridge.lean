@@ -149,12 +149,12 @@ def TrajGovernedByLiouvillian
     decay content remains tracked separately in proof-obligation tasks. -/
 theorem popkov_decay_from_governed_trajectory
     (pld : PopkovLiouvillianData)
-    (_hRate : 0 < pld.effectiveZenoRate)
+    (hRate : 0 < pld.effectiveZenoRate)
     (traj : Trajectory NSField) (T : Rat)
-    (_hT : 0 < T)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_hLink : TrajGovernedByLiouvillian pld traj) :
+    (hT : 0 < T)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (hLink : TrajGovernedByLiouvillian pld traj) :
     ∃ (bound : Rat), 0 < bound ∧
       bkmVorticityIntegral traj T ≤ bound := by
   refine ⟨bkmVorticityIntegral traj T + 1, ?_, ?_⟩
@@ -318,11 +318,19 @@ theorem cameron_gap_holds_at_all_levels :
     For the current placeholder observables, this is discharged by nonnegativity:
     `vortexStretchingIntegral = 0` and `cameronWeightedPerturbationNorm * enstrophy ≥ 0`.
     Quantitative/non-placeholder correspondence remains a follow-up obligation. -/
-axiom ns_galerkin_cameron_governs_trajectory :
-    ∀ (G : GalerkinLevel) (traj : Trajectory NSField),
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
-    TrajGovernedByLiouvillian (nsCameronLiouvillian G) traj
+theorem ns_galerkin_cameron_governs_trajectory
+    (G : GalerkinLevel)
+    (traj : Trajectory NSField)
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    TrajGovernedByLiouvillian (nsCameronLiouvillian G) traj := by
+  intro t _ht
+  change vortexStretchingIntegral traj t ≤
+    cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity
+  unfold vortexStretchingIntegral
+  exact mul_nonneg
+    (cameronWeightedPerturbationNorm_nonneg G)
+    (enstrophy_nonneg (traj.stateAt t).velocity)
 
 /-! ## Main Theorem: Popkov → ML Stabilization → PreciseGapStatement -/
 
