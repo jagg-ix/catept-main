@@ -3,7 +3,6 @@ import NavierStokes.EnergyDecomposition
 import NavierStokes.BridgeDecomposition
 import NavierStokes.SobolevEstimates
 import NavierStokes.AxiomaticEstimates
-import NavierStokes.NSPhysLeanOperatorAdapter
 import NavierStokes.BKMMinimalBridge
 import NavierStokes.DSFBridgeAxioms
 import NavierStokes.DualRiemannSphereNSBridge
@@ -201,17 +200,3 @@ import NavierStokes.NSGalerkinODEJetBridge
 import NavierStokes.NSGalerkinJetSplittingLTE
 import NavierStokes.NSGalerkinVorticityEnstrophyBridge
 import NavierStokes.NSPhysicalObservablesPreciseGapBridge
-import NavierStokes.NSBKMContinuationPipeline
-import NavierStokes.NSConcreteSteadyStateWitness
-import NavierStokes.NSMillenniumDualAudit
-import NavierStokes.NSLerayRetireAudit
-import NavierStokes.NSConcreteMode1EnstrophyWitness
-import NavierStokes.NSPopkovGovernanceQuantitativeBridge
-import NavierStokes.CategoryTheoryLib
-import NavierStokes.CategoryTheoryYonedaBridge
-import NavierStokes.NSYonedaEntangledFieldBridge
-import NavierStokes.NSTwoFiberCategoricalBridge
-import NavierStokes.NSVorticityCoadjointBridge
-import NavierStokes.NSFisherInformationBridge
-import NavierStokes.NSUnifiedPosetCategoryBridge
-import NavierStokes.NSPhysLeanCurlBridge
