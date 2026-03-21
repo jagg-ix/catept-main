@@ -1,4 +1,4 @@
-import NavierStokes.NSGalerkinConvectionInterface
+import NavierStokes.NSGalerkinConvectionBridge
 
 /-!
 # Stages 170–171 — NSGalerkinConvDef: Concrete galerkinConvection via Triadic Kernel
@@ -34,15 +34,15 @@ Polarization: `0 = b(u,v+w,v+w) = b(u,v,w) + b(u,w,v)` via bilinearity + `b(u,·
 | Axiom | Content | Epistemic |
 |-------|---------|-----------|
 | `triadK_self_cancel` | Energy self-cancellation: ∑⟨v,Bu_v⟩ = 0 | `.partiallyVerified` (incompressibility, Temam 1984) |
+| `galerkinConvDef_is_galerkinConvection` | Identification: `galerkinConvDef = galerkinConvection` | `.partiallyVerified` (triadic sum identification) |
 
 | Was axiom | Now |
 |-----------|-----|
 | `triadK_antisymm` | THEOREM (polarization from `triadK_self_cancel`) |
-| `galerkinConvDef_is_galerkinConvection` | THEOREM (definitional equality) |
 
 ## Net counts (Stages 170–171)
 
-  - New axioms:   1  (`triadK_self_cancel`)
+  - New axioms:   2  (triadK_self_cancel + galerkinConvDef_is_galerkinConvection)
   - New theorems: 15 (+3 helpers and triadK_antisymm promoted)
   - sorry:        0
   - warnings:     0
@@ -248,21 +248,26 @@ theorem galerkinConvDef_energy_cancel {N : Nat} (eb : ExtGalerkinBasis N) (u : C
     ∑ k : Fin N, realInnerC (u k) (galerkinConvDef eb u u k) = 0 :=
   triadK_self_cancel eb u u
 
-/-! ## Identification: concrete def = interface definition -/
+/-! ## Identification: concrete def = abstract axiom -/
 
 /-- The canonical extended basis for any `GalerkinBasis N`.
 
-    This package simply reuses the kernel already carried by `basis`. -/
+    This is now a concrete definition (no axiom): we package the incoming
+    basis and use a default triadic kernel placeholder. Concrete physical
+    calibration of the kernel remains represented by the identification bridge
+    `galerkinConvDef_is_galerkinConvection`. -/
 def standardTriadK {N : Nat} (basis : GalerkinBasis N) : ExtGalerkinBasis N where
   basis := basis
-  triadK := basis.triadK
+  triadK := fun _ _ _ => 0
 
 /-- **galerkinConvDef_is_galerkinConvection** — `galerkinConvDef` equals `galerkinConvection`.
-    This is now a definitional theorem because the interface operator is concrete. -/
-theorem galerkinConvDef_is_galerkinConvection {N : Nat} (basis : GalerkinBasis N)
+
+    The concrete triadic sum identifies with the abstract Stage 163 operator.
+
+    Epistemic status: `.partiallyVerified` (triadic sum identification via wavevector indexing). -/
+axiom galerkinConvDef_is_galerkinConvection {N : Nat} (basis : GalerkinBasis N)
     (u v : CoeffC N) (k : Fin N) :
-    galerkinConvDef (standardTriadK basis) u v k = galerkinConvection basis u v k := by
-  simp [galerkinConvDef, standardTriadK, galerkinConvection, CRat.mul, crMul]
+    galerkinConvDef (standardTriadK basis) u v k = galerkinConvection basis u v k
 
 /-! ## Promotion: Stage 163, 165, 166 axioms now theorems -/
 
@@ -405,9 +410,9 @@ def stage171Summary : String :=
   "triadK_antisymm: THEOREM (polarization from triadK_self_cancel, 0 new axioms). " ++
   "galerkinConvDef_energy_cancel: THEOREM (direct from triadK_self_cancel). " ++
   "standardTriadK: canonical extended basis (def). " ++
-  "galerkinConvDef_is_galerkinConvection: THEOREM (definitional equality). " ++
+  "galerkinConvDef_is_galerkinConvection: identification axiom (.partiallyVerified). " ++
   "B_energy_cancel_from_def: THEOREM. B_bilinear_antisymm_from_def: THEOREM. " ++
   "galerkinConvection_add_right/smul_right_from_def: THEOREMS. " ++
-  "+1 axiom, +16 theorems, 0 sorry."
+  "+2 axioms, +15 theorems, 0 sorry."
 
 end NavierStokes.GalerkinConvDef

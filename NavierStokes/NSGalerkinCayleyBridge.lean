@@ -102,29 +102,26 @@ theorem B_bilinear_self_zero {N : Nat} (basis : GalerkinBasis N) (u w : CoeffC N
 
 /-! ## Cayley solution: existence and defining equation -/
 
-/-- Packaged Cayley step specification:
-    existence of a candidate `v` with the implicit midpoint equation
-    `v − u = (h/2) · B(u, v+u)`.
+/-- Abstract Cayley step: the unique `v` satisfying `v − u = (h/2) · B(u, v+u)`.
 
-    This is the same epistemic content as the former paired axioms
-    `cayleySolve` + `cayleySolve_eq`, but consolidated into one contract. -/
-axiom cayleySolve_spec {N : Nat} (basis : GalerkinBasis N) (h : Rat) (u : CoeffC N) :
-    { v : CoeffC N // ∀ i : Fin N,
-        v i - u i =
-          CRat.smul (h / 2)
-            (galerkinConvection basis u (fun j => v j + u j) i) }
+    This is the implicit midpoint / Crank–Nicolson discretization of `du/dt = −B(u,u)`.
+    It is well-defined for small `h` (the equation is solvable by the implicit function
+    theorem in finite dimension), and it satisfies exact energy conservation. -/
+axiom cayleySolve {N : Nat} (basis : GalerkinBasis N) (h : Rat) (u : CoeffC N) : CoeffC N
 
-/-- Abstract Cayley step extracted from the packaged specification. -/
-noncomputable def cayleySolve {N : Nat} (basis : GalerkinBasis N) (h : Rat) (u : CoeffC N) : CoeffC N :=
-  (cayleySolve_spec basis h u).1
+/-- **Defining equation of the Cayley step**:
+      `cayleySolve basis h u − u = (h/2) · B(u, cayleySolve basis h u + u)`
 
-/-- Defining equation of the extracted Cayley step. -/
-theorem cayleySolve_eq {N : Nat} (basis : GalerkinBasis N) (h : Rat) (u : CoeffC N) :
+    In the operator notation: `(I − h/2 K_u) v = (I + h/2 K_u) u` where `K_u v = B(u,v)`.
+    This is the implicit midpoint equation for the frozen-coefficient linear system.
+
+    Epistemic status: `.partiallyVerified` (finite-dimensional implicit function theorem;
+    well-posed for `h` smaller than the spectral radius of `h/2 K_u`). -/
+axiom cayleySolve_eq {N : Nat} (basis : GalerkinBasis N) (h : Rat) (u : CoeffC N) :
     ∀ i : Fin N,
       cayleySolve basis h u i - u i =
       CRat.smul (h / 2)
-        (galerkinConvection basis u (fun j => cayleySolve basis h u j + u j) i) := by
-  simpa [cayleySolve] using (cayleySolve_spec basis h u).2
+        (galerkinConvection basis u (fun j => cayleySolve basis h u j + u j) i)
 
 /-! ## Main theorem: Cayley step preserves energy -/
 
@@ -191,13 +188,12 @@ theorem convStep_energy_preserving_from_cayley {N : Nat}
 def stage165Summary : String :=
   "Stage 165/189A: NSGalerkinCayleyBridge — Cayley step + algebraic energy preservation. " ++
   "B_bilinear_antisymm: THEOREM from NSGalerkinConvDef (Temam II.1.1 bridge). " ++
-  "cayleySolve_spec: packaged existence+equation axiom (implicit midpoint, finite-dim IFT). " ++
-  "cayleySolve: noncomputable def extracted from cayleySolve_spec. " ++
-  "cayleySolve_eq: THEOREM from cayleySolve_spec (definitional unpacking). " ++
+  "cayleySolve: Cayley step axiom (implicit midpoint, finite-dim IFT). " ++
+  "cayleySolve_eq: defining equation v−u = h/2·B(u,v+u). " ++
   "cayleySolve_energy_preserving: THEOREM (normSqC_diff + cayleySolve_eq + B_self_zero). " ++
   "convStep: noncomputable def = cayleySolve basis diH u (Stage 189A, 0 new axioms). " ++
   "convStep_eq_cayleySolve: THEOREM by rfl (was axiom). " ++
   "convStep_energy_preserving_from_cayley: THEOREM (0 new axioms). " ++
-  "+1 axiom, +9 theorems, 0 sorry."
+  "+2 axioms, +8 theorems, 0 sorry."
 
 end NavierStokes.GalerkinCayley
