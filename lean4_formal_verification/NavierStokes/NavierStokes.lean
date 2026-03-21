@@ -200,3 +200,8 @@ import NavierStokes.NSGalerkinODEJetBridge
 import NavierStokes.NSGalerkinJetSplittingLTE
 import NavierStokes.NSGalerkinVorticityEnstrophyBridge
 import NavierStokes.NSPhysicalObservablesPreciseGapBridge
+import NavierStokes.NSBKMContinuationPipeline
+import NavierStokes.NSConcreteSteadyStateWitness
+import NavierStokes.NSMillenniumDualAudit
+import NavierStokes.NSLerayRetireAudit
+import NavierStokes.NSConcreteMode1EnstrophyWitness
