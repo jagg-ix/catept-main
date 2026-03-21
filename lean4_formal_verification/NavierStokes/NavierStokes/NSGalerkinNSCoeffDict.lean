@@ -161,6 +161,89 @@ structure NSCoeffPDEBridge (interp : NSCoeffInterp) where
     RespectsFunctionSpaces nsSpacesR3
       ⟨fun t => { velocity := interp.vel (u (ti t)), pressure := interp.pres (u (ti t)) }⟩
 
+/-! ## Discrete-time (Δ) bridge structures (Stage 215A) -/
+
+/-- Build a `Trajectory NSField` from a coefficient sequence `u`, interpretation `interp`,
+    and time-index map `ti`.  Used by the Δ-bridge and FS-bridge. -/
+def trajOfCoeff (interp : NSCoeffInterp) (u : Nat → CoeffInftyR) (ti : Rat → Nat) :
+    Trajectory NSField :=
+  ⟨fun t => { velocity := interp.vel (u (ti t)), pressure := interp.pres (u (ti t)) }⟩
+
+/-- A time-index map `ti` is **step-compatible** with step size `h` if it advances by
+    exactly one index per step: `ti (t + h) = ti t + 1`. -/
+def TimeIndexStep (ti : Rat → Nat) (h : Rat) : Prop :=
+  ∀ t : Rat, ti (t + h) = ti t + 1
+
+/-- **Coefficient-level discrete NS dynamics**: the `interp`-interpreted sequence satisfies
+    the forward-difference NS momentum equation at every index `k`.
+
+    Unlike `SatisfiesNSPDECoeff` (which bounds ‖u(k+1)−u(k)‖²), this asserts the full
+    `IncompressibleNSΔ` equation — the intended hypothesis for `NSCoeffPDEBridgeΔ`. -/
+def SatisfiesNSPDECoeffΔ (interp : NSCoeffInterp)
+    (u : Nat → CoeffInftyR) (nu h : Rat) : Prop :=
+  ∀ k : Nat,
+    IncompressibleNSΔ nsOps nu h
+      { velocity := interp.vel (u k),     pressure := interp.pres (u k) }
+      { velocity := interp.vel (u (k+1)), pressure := interp.pres (u (k+1)) }
+
+/-- **Δ-bridge structure**: given step-compatibility and coefficient NS dynamics, the
+    `trajOfCoeff`-trajectory satisfies `SatisfiesNSPDEΔ`.
+
+    The `bridgeΔ` field is proved theoremically by `coeffΔ_to_traj_NSΔ` (pure unfolding):
+    no axioms needed once the coefficient dynamics hypothesis is supplied. -/
+structure NSCoeffPDEBridgeΔ (interp : NSCoeffInterp) where
+  bridgeΔ :
+    ∀ (u : Nat → CoeffInftyR) (ti : Rat → Nat) (h : Rat),
+      TimeIndexStep ti h →
+      SatisfiesNSPDECoeffΔ interp u nsNu h →
+      SatisfiesNSPDEΔ nsOps nsNu h (trajOfCoeff interp u ti)
+
+/-- **Key theorem (0 new axioms)**: `NSCoeffPDEBridgeΔ` is provable by pure unfolding.
+
+    Proof sketch: after `intro t`, the goal is
+    `IncompressibleNSΔ nsOps nsNu h (trajOfCoeff ..).stateAt t (trajOfCoeff ..).stateAt (t+h)`.
+    By definitional reduction of `trajOfCoeff` and rewriting `ti (t+h) = ti t + 1` via `hti t`,
+    the goal becomes exactly `hu (ti t)`. -/
+theorem coeffΔ_to_traj_NSΔ
+    (interp : NSCoeffInterp)
+    (u : Nat → CoeffInftyR) (ti : Rat → Nat) (h : Rat)
+    (hti : TimeIndexStep ti h)
+    (hu  : SatisfiesNSPDECoeffΔ interp u nsNu h) :
+    SatisfiesNSPDEΔ nsOps nsNu h (trajOfCoeff interp u ti) := by
+  intro t
+  show IncompressibleNSΔ nsOps nsNu h
+    { velocity := interp.vel (u (ti t)), pressure := interp.pres (u (ti t)) }
+    { velocity := interp.vel (u (ti (t + h))), pressure := interp.pres (u (ti (t + h))) }
+  rw [hti t]
+  exact hu (ti t)
+
+/-! ## Function-space bridge (Stage 215B) -/
+
+/-- **Function-space bridge**: asserts that every `trajOfCoeff`-trajectory has its
+    velocity in `nsVelocityMem`, pressure in `nsPressureMem`, and velocity divergence-free.
+
+    This is the **only semantic gap** remaining after Stage 215: the PDE content is
+    covered by `NSCoeffPDEBridgeΔ` (proved by `coeffΔ_to_traj_NSΔ`); the function-space
+    content requires Sobolev theory for `NSField := CoeffInftyR`.
+
+    Stage 216 path: concretize `nsVelocityMem`/`nsPressureMem`/`nsDivFree` via
+    coefficient ℓ²-norms, then prove membership by bounding the relevant Sobolev norm. -/
+structure NSCoeffFSBridge (interp : NSCoeffInterp) where
+  fs : ∀ (u : Nat → CoeffInftyR) (ti : Rat → Nat),
+    RespectsFunctionSpaces nsSpacesR3 (trajOfCoeff interp u ti)
+
+def stage215CoeffDictSummary : String :=
+  "Stage 215A/B: Δ-bridge structures — discrete-time (non-vacuous) PDE bridge. " ++
+  "trajOfCoeff interp u ti: Trajectory NSField — ⟨fun t => {vel:=interp.vel(u(ti t)), pres:=...}⟩. " ++
+  "TimeIndexStep ti h: ∀ t, ti(t+h) = ti t + 1 — step-compatibility hypothesis. " ++
+  "SatisfiesNSPDECoeffΔ interp u nu h: ∀ k, IncompressibleNSΔ nsOps nu h (interp.vel(u k), ...) (interp.vel(u(k+1)), ...). " ++
+  "NSCoeffPDEBridgeΔ interp: {bridgeΔ: TimeIndexStep → SatisfiesNSPDECoeffΔ → SatisfiesNSPDEΔ nsOps nsNu h (trajOfCoeff ...)}. " ++
+  "coeffΔ_to_traj_NSΔ: THEOREM (0 new axioms) — rw [hti t]; exact hu (ti t). " ++
+  "NSCoeffFSBridge interp: {fs: ∀ u ti, RespectsFunctionSpaces nsSpacesR3 (trajOfCoeff interp u ti)} — " ++
+    "the only remaining semantic gap (Sobolev membership); Stage 216 path: concretize via ℓ²-norms. " ++
+  "Net 215A: +4 defs, +1 structure, +1 theorem, 0 new axioms. " ++
+  "Net 215B: +1 structure (NSCoeffFSBridge), 0 new axioms here (canon_ns_fs_bridge axiom in bridge file)."
+
 def stage209ACoeffDictSummary : String :=
   "Stage 209A/213: NSGalerkinNSCoeffDict — coefficient-to-NSField dictionary (0 new axioms). " ++
   "SatisfiesNSPDECoeff u nu h: ∃ C>0, ∀ k M, ‖u(k+1)−u(k)‖²_M ≤ C·h — " ++

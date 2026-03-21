@@ -4858,3 +4858,44 @@ required no changes.
 **Net**: −6 axioms (230→224), +2 lemmas, +1 file. Build: **2337 jobs, 0 errors, 0 sorry**.
 
 **Axiom counts**: 224 | **Theorem/lemma counts**: 1968 | **Files**: 35 | **Jobs**: 2337
+
+---
+
+### Stage 215A+B: Non-Vacuous Δ-Bridge + FS Split (DONE)
+
+**Files modified**: `NSGalerkinNSCoeffDict.lean`, `NSGalerkinWeakToNSBridge.lean`
+
+#### NSGalerkinNSCoeffDict.lean — 4 new defs, 1 theorem, 2 new structures (0 new axioms)
+
+- `trajOfCoeff interp u ti : Trajectory NSField` — builds trajectory as
+  `⟨fun t => { velocity := interp.vel (u (ti t)), pressure := interp.pres (u (ti t)) }⟩`
+- `TimeIndexStep ti h : Prop` — `∀ t, ti (t + h) = ti t + 1` (step-compatibility)
+- `SatisfiesNSPDECoeffΔ interp u nu h : Prop` — `∀ k, IncompressibleNSΔ nsOps nu h (interp.vel (u k), ...) (interp.vel (u (k+1)), ...)`;
+  unlike `SatisfiesNSPDECoeff` (increment bound), this is the full discrete momentum equation
+- `NSCoeffPDEBridgeΔ interp` — `{ bridgeΔ : TimeIndexStep → SatisfiesNSPDECoeffΔ → SatisfiesNSPDEΔ nsOps nsNu h (trajOfCoeff ...) }`
+- `coeffΔ_to_traj_NSΔ` — **THEOREM** (0 new axioms): proof is `show IncompressibleNSΔ ...; rw [hti t]; exact hu (ti t)` — pure unfolding
+- `NSCoeffFSBridge interp` — `{ fs : ∀ u ti, RespectsFunctionSpaces nsSpacesR3 (trajOfCoeff interp u ti) }`;
+  the function-space membership structure (Stage 216 path: concretize via coefficient ℓ²-norms)
+
+#### NSGalerkinWeakToNSBridge.lean — 1 new def, 1 new axiom
+
+- `canon_ns_bridgeΔ : NSCoeffPDEBridgeΔ canon_ns_interp` — **DEF** (0 new axioms); proved by `coeffΔ_to_traj_NSΔ`.
+  **First non-vacuous NS bridge**: uses `SatisfiesNSPDEΔ` (constrains consecutive states) rather than `SatisfiesNSPDE` (vacuous pointwise `nsDdt`).
+- `canon_ns_fs_bridge : NSCoeffFSBridge canon_ns_interp` — **AXIOM** (+1); the sole remaining semantic gap.
+  Epistemic: `.partiallyVerified` (Sobolev embedding; enstrophy → H¹ → velocity membership).
+
+#### Audit picture after Stage 215
+
+| Name | Status | Content |
+|------|--------|---------|
+| `canon_ns_interp` | DEF (214A) | `vel := id, pres := id` — 0 axioms |
+| `canon_ns_bridgeΔ` | DEF (215A) | non-vacuous PDE bridge — 0 axioms |
+| `canon_ns_fs_bridge` | AXIOM (215B) | FS membership — sole remaining gap |
+| `canon_ns_bridge` | AXIOM (legacy) | vacuous PDE bridge for downstream compat |
+
+`canon_ns_bridge` can be retired in Stage 216 once `nsDdt` is concretized as a forward
+difference and `SatisfiesNSPDE ↔ SatisfiesNSPDEΔ` is bridged.
+
+**Net**: +1 axiom (224→225, `canon_ns_fs_bridge`), +1 def (`canon_ns_bridgeΔ`), +1 theorem (`coeffΔ_to_traj_NSΔ`), +4 defs, +2 structures. Build: **2337 jobs, 0 errors, 0 sorry**.
+
+**Axiom counts**: 225 | **Files**: 35 | **Jobs**: 2337

@@ -134,6 +134,40 @@ noncomputable def canon_ns_interp : NSCoeffInterp where
 @[simp] lemma canon_ns_interp_vel  (v : CoeffInftyR) : canon_ns_interp.vel  v = v := rfl
 @[simp] lemma canon_ns_interp_pres (p : CoeffInftyR) : canon_ns_interp.pres p = p := rfl
 
+/-! ## Stage 215A: Canonical Δ-bridge (THEOREM — 0 new axioms) -/
+
+/-- **Canonical Δ-bridge** — a non-axiom, non-vacuous discrete-time NS bridge.
+
+    Proved by `coeffΔ_to_traj_NSΔ`: given `TimeIndexStep ti h` and
+    `SatisfiesNSPDECoeffΔ canon_ns_interp u nsNu h`, the trajectory
+    `trajOfCoeff canon_ns_interp u ti` satisfies `SatisfiesNSPDEΔ nsOps nsNu h`.
+
+    Unlike `canon_ns_bridge` (which uses the vacuous pointwise `SatisfiesNSPDE`),
+    this bridge actually constrains consecutive trajectory states.
+
+    **0 new axioms** — the proof is pure unfolding + `hti t` rewrite. -/
+noncomputable def canon_ns_bridgeΔ : NSCoeffPDEBridgeΔ canon_ns_interp where
+  bridgeΔ u ti h hti hu := coeffΔ_to_traj_NSΔ canon_ns_interp u ti h hti hu
+
+/-! ## Stage 215B: Canonical function-space bridge (axiom — sole remaining FS gap) -/
+
+/-- **Canonical function-space bridge** — the only remaining semantic gap after Stage 215.
+
+    Asserts that for any coefficient sequence `u` and time-index map `ti`, the trajectory
+    `trajOfCoeff canon_ns_interp u ti` has velocity in `nsVelocityMem`, pressure in
+    `nsPressureMem`, and velocity divergence-free (`nsDivFree`).
+
+    The PDE content (momentum equation) is covered by `canon_ns_bridgeΔ` (a def).
+    This axiom isolates the **function-space membership** obligation, which requires:
+    - Sobolev H¹_div embedding for `NSField = CoeffInftyR = Nat → ℝ×ℝ`
+    - Coefficient ℓ²-norm bounds → continuous `nsVelocityMem`/`nsPressureMem` membership
+
+    Stage 216 path: concretize `nsVelocityMem`/`nsPressureMem`/`nsDivFree` via coefficient
+    norms, then prove membership by bounding the relevant Sobolev norm from enstrophy bounds.
+
+    Epistemic: `.partiallyVerified` (Sobolev embedding theorem; enstrophy → H¹ → membership). -/
+axiom canon_ns_fs_bridge : NSCoeffFSBridge canon_ns_interp
+
 /-- **Canonical NS PDE bridge** — the dynamics-to-PDE identification axiom (Stage 213).
 
     Given `canon_ns_interp`, asserts that a coefficient sequence satisfying
