@@ -3,7 +3,6 @@ import NavierStokes.EnergyDecomposition
 import NavierStokes.BridgeDecomposition
 import NavierStokes.SobolevEstimates
 import NavierStokes.NSDiscreteIntegralKernel
-import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Navier-Stokes W3 Slice: Axiomatic Estimates
@@ -40,39 +39,13 @@ noncomputable section
 -- by `NSFieldConcrete.lean` (concrete defs, 0 new axioms).
 -- `NSField = Nat → Real × Real` (definitionally equal to `CoeffInftyR`).
 
-/-! ## PDE operations (Stage 217A step: concrete mode-local compatibility model)
+/-! ## PDE operations (axiomatized over the concrete carrier) -/
 
-This retires opaque operator axioms and gives explicit operators on the concrete
-carrier `NSField = Nat → Real × Real`. The model remains a compatibility layer:
-it is not yet the full physical Fourier weak-form operator.
--/
-
-/-- Mode weight used by the concrete compatibility operators. -/
-def modeWeight (n : Nat) : Real := (n : Real)
-
-/-- Gradient surrogate: modewise scaling by `|k|` proxy (`n`). -/
-noncomputable def nsGrad (v : NSField) : NSField :=
-  fun n => (modeWeight n * (v n).1, modeWeight n * (v n).2)
-
-/-- Divergence surrogate packed in the first component. -/
-noncomputable def nsDiv (v : NSField) : NSField :=
-  fun n => ((v n).1 + (v n).2, (0 : Real))
-
-/-- Laplacian surrogate: modewise `- |k|^2` scaling (`n^2`). -/
-noncomputable def nsLaplace (v : NSField) : NSField :=
-  fun n =>
-    let k2 := modeWeight n * modeWeight n
-    (-k2 * (v n).1, -k2 * (v n).2)
-
-/-- Convection surrogate: pointwise complex-like bilinear product on mode pairs. -/
-noncomputable def nsConvection (u v : NSField) : NSField :=
-  fun n =>
-    ((u n).1 * (v n).1 - (u n).2 * (v n).2,
-     (u n).1 * (v n).2 + (u n).2 * (v n).1)
-
-/-- Time derivative placeholder for the pointwise interface.
-    Dynamic consistency remains encoded by `SatisfiesNSPDEΔ` in `PDEInterfaces`. -/
-noncomputable def nsDdt (_v : NSField) : NSField := nsZero
+axiom nsGrad : NSField → NSField
+axiom nsDiv : NSField → NSField
+axiom nsLaplace : NSField → NSField
+axiom nsConvection : NSField → NSField → NSField
+axiom nsDdt : NSField → NSField
 
 /-- Concrete FieldOps wiring for the NS model. -/
 def nsOps : FieldOps NSField where
@@ -87,33 +60,9 @@ def nsOps : FieldOps NSField where
 
 /-! ## Function space predicates -/
 
-/-- Weak mode-energy predicate used as a concrete nontrivial placeholder for
-    space membership while full Sobolev norms are phased in. -/
-def modeEnergy0 (v : NSField) : Real :=
-  (v 0).1 * (v 0).1 + (v 0).2 * (v 0).2
-
-/-- Velocity space membership (Stage 217A migration step):
-    mode-0 energy is nonnegative (nontrivial concrete predicate). -/
-def nsVelocityMem : NSField → Prop := fun v => 0 ≤ modeEnergy0 v
-
-/-- Pressure space membership: same weak nonnegativity envelope. -/
-def nsPressureMem : NSField → Prop := fun p => 0 ≤ modeEnergy0 p
-
-/-- Divergence-free placeholder envelope:
-    nonnegative mode-0 energy of the concrete divergence surrogate. -/
-def nsDivFree : NSField → Prop := fun v => 0 ≤ modeEnergy0 (nsDiv v)
-
-theorem nsVelocityMem_default (v : NSField) : nsVelocityMem v := by
-  unfold nsVelocityMem modeEnergy0
-  nlinarith [sq_nonneg ((v 0).1), sq_nonneg ((v 0).2)]
-
-theorem nsPressureMem_default (p : NSField) : nsPressureMem p := by
-  unfold nsPressureMem modeEnergy0
-  nlinarith [sq_nonneg ((p 0).1), sq_nonneg ((p 0).2)]
-
-theorem nsDivFree_default (v : NSField) : nsDivFree v := by
-  unfold nsDivFree modeEnergy0 nsDiv
-  nlinarith [sq_nonneg ((v 0).1 + (v 0).2), sq_nonneg ((0 : Real))]
+axiom nsVelocityMem : NSField → Prop
+axiom nsPressureMem : NSField → Prop
+axiom nsDivFree : NSField → Prop
 
 axiom nsNu : Rat
 axiom nsNu_pos : (0 : Rat) < nsNu
@@ -160,48 +109,6 @@ theorem kineticEnergy_nonneg (v : NSField) : (0 : Rat) ≤ kineticEnergy v := le
 theorem enstrophy_nonneg (v : NSField) : (0 : Rat) ≤ enstrophy v := le_refl _
 /-- L∞ norm of vorticity is nonneg (it is a norm). -/
 theorem vorticityLinfty_nonneg (v : NSField) : (0 : Rat) ≤ vorticityLinfty v := le_refl _
-
-/-! ### Stage 217A vorticity observable candidate (non-zero-model bridge)
-
-`vorticityLinfty` remains the legacy Rat-valued placeholder used by existing
-proof chains.  The following candidate is a concrete mode-0 observable derived
-from the divergence surrogate and can be used to incrementally migrate away from
-the zero model without breaking downstream files.
--/
-
-/-- Concrete mode-0 vorticity observable candidate.
-    Uses `floor (sqrt(modeEnergy0(div v)))` to stay Rat-valued. -/
-noncomputable def vorticityLinftyPhysicalMode0 (v : NSField) : Rat :=
-  Rat.ofInt (Int.floor (Real.sqrt (modeEnergy0 (nsDiv v))))
-
-/-- The physical mode-0 vorticity candidate is nonnegative. -/
-theorem vorticityLinftyPhysicalMode0_nonneg (v : NSField) :
-    (0 : Rat) ≤ vorticityLinftyPhysicalMode0 v := by
-  unfold vorticityLinftyPhysicalMode0
-  have hsqrt : (0 : Real) ≤ Real.sqrt (modeEnergy0 (nsDiv v)) := Real.sqrt_nonneg _
-  have hfloor : (0 : Int) ≤ Int.floor (Real.sqrt (modeEnergy0 (nsDiv v))) :=
-    Int.floor_nonneg.mpr hsqrt
-  simpa using (Rat.intCast_nonneg.mpr hfloor)
-
-/-- Legacy placeholder is pointwise dominated by the physical mode-0 candidate. -/
-theorem vorticityLinfty_legacy_le_physicalMode0 (v : NSField) :
-    vorticityLinfty v ≤ vorticityLinftyPhysicalMode0 v := by
-  simpa [vorticityLinfty] using vorticityLinftyPhysicalMode0_nonneg v
-
-/-- Discrete-time integral of the physical mode-0 vorticity candidate. -/
-noncomputable def bkmVorticityIntegralPhysicalMode0
-    (traj : Trajectory NSField) (T : Rat) : Rat :=
-  NavierStokes.DiscreteKernel.discreteIntegral
-    (fun t => vorticityLinftyPhysicalMode0 (traj.stateAt t).velocity) T
-
-/-- Nonnegativity of the physical mode-0 discrete vorticity integral. -/
-theorem bkmVorticityIntegralPhysicalMode0_nonneg
-    (traj : Trajectory NSField) (T : Rat) :
-    (0 : Rat) ≤ bkmVorticityIntegralPhysicalMode0 traj T := by
-  unfold bkmVorticityIntegralPhysicalMode0
-  apply NavierStokes.DiscreteKernel.discreteIntegral_nonneg
-  intro t
-  exact vorticityLinftyPhysicalMode0_nonneg (traj.stateAt t).velocity
 
 /-! ## Energy decomposition assumptions (scoped) -/
 
@@ -362,14 +269,16 @@ theorem volume_embedding_enstrophy_from_vorticity
   simp [enstrophy, vorticityLinfty]
 
 /-- Sub-axiom 2: Sobolev regularity — bounded enstrophy implies velocity regularity.
-    Stage 217A: discharged via the weak concrete membership predicate. -/
-theorem sobolev_enstrophy_to_velocity_regularity
+    Content: enstrophy = ‖∇u‖²_{L²} bounded ⟹ u ∈ H¹ ⟹ nsVelocityMem u.
+    This bridges from a Rat-valued bound to the opaque regularity predicate
+    `nsVelocityMem`, which cannot be trivially satisfied. -/
+axiom sobolev_enstrophy_to_velocity_regularity
     (traj : Trajectory NSField) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_M : Rat)
-    (_hBound : enstrophy (traj.stateAt t).velocity ≤ _M) :
-    nsVelocityMem (traj.stateAt t).velocity := nsVelocityMem_default _
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (M : Rat)
+    (hBound : enstrophy (traj.stateAt t).velocity ≤ M) :
+    nsVelocityMem (traj.stateAt t).velocity
 
 /-- Vorticity bound → velocity regularity (formerly an axiom).
     Proved by composing volume embedding + Sobolev regularity:
@@ -391,18 +300,16 @@ theorem nsBKMVorticityToRegularity
     (volumeEmbeddingConstant * vorticityLinfty (traj.stateAt t).velocity *
      vorticityLinfty (traj.stateAt t).velocity) hVol
 
-/-- **Parabolic bootstrap**: velocity regularity persists on [0,T].
-    Stage 217A: follows from the weak concrete membership predicate. -/
-theorem nsBKMBootstrap
-    (_traj : Trajectory NSField) (_T : Rat)
-    (_hT : 0 < _T)
-    (_hNS : SatisfiesNSPDE nsOps nsNu _traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 _traj)
-    (_hReg : ∀ (t : Rat), 0 ≤ t → t ≤ _T →
-      nsVelocityMem (_traj.stateAt t).velocity) :
-    ∀ (_t : Rat), 0 ≤ _t → _t ≤ _T →
-      nsVelocityMem (_traj.stateAt _t).velocity :=
-  fun _ _ _ => nsVelocityMem_default _
+/-- **Parabolic bootstrap**: velocity regularity persists on [0,T]. -/
+axiom nsBKMBootstrap
+    (traj : Trajectory NSField) (T : Rat)
+    (hT : 0 < T)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (hReg : ∀ (t : Rat), 0 ≤ t → t ≤ T →
+      nsVelocityMem (traj.stateAt t).velocity) :
+    ∀ (t : Rat), 0 ≤ t → t ≤ T →
+      nsVelocityMem (traj.stateAt t).velocity
 
 /-- BKM decomposition package for the concrete NSField model. -/
 def nsBKMDecomposition :
@@ -656,14 +563,13 @@ def NSControlledPIFluctuations
 
 /-- Eq113/Eq108-aligned predicate: complex-EFE tensor sector is controlled.
 
-Transparent definition: collapsed to the energy inequality (already proved).
-The complex-EFE tensor framework is bypassed — energy control is the operative
-consequence, and it holds unconditionally from `nsAxiomaticEstimates_energyInequality_holds`.
-
-Stage 217B: promoted from opaque `axiom` (unnamed epistemic) to `def`. -/
-def NSComplexEFETensorControl
-    (_pi : PathIntegralInterface NSField) (_st0 : State NSField) : Prop :=
-  nsAxiomaticEstimates.energyInequality
+Represents bounded/controlled tensor fields extracted from PI-induced geometry:
+- entropic stress tensor `S_ab`
+- imaginary curvature tensor `Λ_ab`
+- complex-EFE residual norm.
+-/
+axiom NSComplexEFETensorControl
+    (pi : PathIntegralInterface NSField) (st0 : State NSField) : Prop
 
 /-- Eq194-aligned predicate: PI control yields global energy control. -/
 def NSEnergyControlFromPI
@@ -712,17 +618,12 @@ theorem nsBoundedPathWeights_to_controlledFluctuations
     NSControlledPIFluctuations pi st0 := by
   exact hW
 
-/-- Eq195 + Sobolev slice: controlled fluctuations imply tensor control.
-
-**THEOREM** (Stage 217B, 0 new axioms): `NSComplexEFETensorControl` is now a
-transparent `def` equal to `nsAxiomaticEstimates.energyInequality`, which is
-already proved unconditionally. The hypothesis `hF` is unused. -/
-theorem nsControlledFluctuations_to_complexEFETensorControl
+/-- Eq195 + Sobolev slice: controlled fluctuations imply vorticity control. -/
+axiom nsControlledFluctuations_to_complexEFETensorControl
     (pi : PathIntegralInterface NSField)
     (st0 : State NSField)
-    (_hF : NSControlledPIFluctuations pi st0) :
-    NSComplexEFETensorControl pi st0 :=
-  nsAxiomaticEstimates_energyInequality_holds
+    (hF : NSControlledPIFluctuations pi st0) :
+    NSComplexEFETensorControl pi st0
 
 /-- Eq113/Eq108 tensor slice: controlled EFE tensors imply energy control. -/
 theorem nsComplexEFETensorControl_to_energyControl
@@ -747,51 +648,12 @@ theorem nsEnergyControl_to_globalVorticityControl
     NSGlobalVorticityControl pi st0 :=
   nsAxiomaticEstimates_continuationCriterion_holds
 
-/-- **Leray-Fujita-Kato global existence for NS on ℝ³ / T³.**
-
-For any admissible initial datum, the Navier-Stokes equations on ℝ³ (or T³)
-admit a globally defined weak solution trajectory that satisfies the function-
-space regularity assumptions.
-
-This is the Leray (1934) existence theorem combined with the Fujita-Kato (1964)
-local-existence result and BKM (1984) continuation criterion:
-  1. Fujita-Kato 1964 (Arch. Rational Mech. Anal. 16): local-in-time smooth
-     solutions exist for H¹ initial data.
-  2. Leray 1934 (Acta Math.): weak solutions exist globally for L² initial data.
-  3. BKM 1984 (Comm. Math. Phys. 94): if ∫‖ω‖_{L∞}dt < ∞ on [0,T] for an
-     existing solution, the solution extends smoothly past T.
-  4. PreciseGapStatement (unit_torus_route6_closed): the BKM integral IS
-     bounded for T³(L=1) solutions (Route 6 closure).
-
-Combined: 1+2 give existence; 3+4 give that weak solutions are globally smooth.
-
-Epistemic label: `.partiallyVerified` (three published theorems — Leray 1934,
-Fujita-Kato 1964, BKM 1984 — plus the Route 6 estimate for T³).
-
-Stage 217B: replaces the opaque 2-axiom chain
-  (`nsControlledFluctuations_to_complexEFETensorControl` [was axiom 8] +
-   `nsGlobalVorticityControl_to_continuationControl` [was axiom 9]).
-Both are now replaced by this single, explicitly-cited axiom. -/
-axiom leray_fk_bkm_global_existence :
-    ∀ (st0 : State NSField),
-      AdmissibleInitialData nsSpacesR3 st0 →
-      ∃ traj : Trajectory NSField,
-        traj.stateAt 0 = st0 ∧
-        SatisfiesNSPDE nsOps nsNu traj ∧
-        RespectsFunctionSpaces nsSpacesR3 traj
-
-/-- BKM preparation slice: vorticity control implies continuation control.
-
-**THEOREM** (Stage 217B, 0 new axioms): follows directly from
-`leray_fk_bkm_global_existence`. The `hV : NSGlobalVorticityControl pi st0`
-hypothesis (= BKM continuation criterion, already proved) is absorbed into
-the Leray-FK-BKM axiom which bundles all three published results. -/
-theorem nsGlobalVorticityControl_to_continuationControl
+/-- BKM preparation slice: vorticity control implies continuation control. -/
+axiom nsGlobalVorticityControl_to_continuationControl
     (pi : PathIntegralInterface NSField)
     (st0 : State NSField)
-    (_hV : NSGlobalVorticityControl pi st0) :
-    NSContinuationControl pi st0 :=
-  fun st hAdm => leray_fk_bkm_global_existence st hAdm
+    (hV : NSGlobalVorticityControl pi st0) :
+    NSContinuationControl pi st0
 
 /-- Continuation control to global vorticity witness (trajectory-level form).
 
@@ -808,22 +670,12 @@ theorem nsContinuationControl_to_globalVorticityWitness
       RespectsFunctionSpaces nsSpacesR3 traj := by
   exact hCont st0 hAdm
 
-/-- Final closure slice: continuation control implies global regularity.
-
-    **Stage 217D THEOREM** (0 new axioms):
-    `GlobalRegularSolution nsOps nsSpacesR3 nsNu st0` unfolds to
-    `AdmissibleInitialData nsSpacesR3 st0 ∧ ∃ traj, ...`.
-    Admissibility follows from `nsVelocityMem_default`, `nsPressureMem_default`,
-    `nsDivFree_default` (all proved in Stage 217A). The trajectory witness
-    follows from `hCont st0 hAdm` (applying `NSContinuationControl`). -/
-theorem nsContinuationControl_to_globalRegularity
+/-- Final closure slice: continuation control implies global regularity. -/
+axiom nsContinuationControl_to_globalRegularity
     (pi : PathIntegralInterface NSField)
     (st0 : State NSField)
     (hCont : NSContinuationControl pi st0) :
-    GlobalRegularSolution nsOps nsSpacesR3 nsNu st0 :=
-  let hAdm : AdmissibleInitialData nsSpacesR3 st0 :=
-    ⟨nsVelocityMem_default _, nsPressureMem_default _, nsDivFree_default _⟩
-  ⟨hAdm, hCont st0 hAdm⟩
+    GlobalRegularSolution nsOps nsSpacesR3 nsNu st0
 
 /--
 Backward-chain theorem (conjecture program form):

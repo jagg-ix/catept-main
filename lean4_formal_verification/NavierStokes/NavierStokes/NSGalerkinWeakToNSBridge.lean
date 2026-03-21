@@ -118,20 +118,21 @@ theorem weakTimeIndex_at_grid (w : GalerkinWeakSolution) (k : Nat) :
 
 /-! ## Canonical dictionary and coefficient dynamics (Stages 209 / 213) -/
 
-/-- **Canonical Fourier interpretation maps** — the vel/pres embedding axiom (Stage 213).
+/-- **Canonical Fourier interpretation maps** — **DEF** (Stage 214A, 0 new axioms).
 
-    Provides `canon_ns_interp.vel, canon_ns_interp.pres : CoeffInftyR → NSField`, the
-    Fourier series identification of coefficient vectors with NSField values.
+    `NSField = Nat → Real × Real = CoeffInftyR` (both are `abbrev` of the same type
+    after Stage 214A), so the velocity and pressure interpretation maps are the identity.
 
-    **Factored out of `canon_ns_dict`** in Stage 213: the embedding is purely analytic
-    (harmonic analysis, no PDE) and is separable from the dynamics bridge.
+    **Previously an axiom** (Stage 213).  Stage 214A kills it by concretizing
+    `NSField := Nat → Real × Real` in `NSFieldConcrete.lean` (imported before
+    `AxiomaticEstimates`), making `CoeffInftyR → NSField = CoeffInftyR → CoeffInftyR`
+    and `id` the trivially correct embedding. -/
+noncomputable def canon_ns_interp : NSCoeffInterp where
+  vel  := id
+  pres := id
 
-    When `NSField` is concretized as `CoeffInftyR`, this becomes the identity map
-    (0 axioms needed).  Until then, it is an independent `.partiallyVerified` axiom.
-
-    Epistemic: `.partiallyVerified` (Fourier series as NSField function values;
-    harmonic analysis; concretizable via `NSField := CoeffInftyR` + `vel := id`). -/
-axiom canon_ns_interp : NSCoeffInterp
+@[simp] lemma canon_ns_interp_vel  (v : CoeffInftyR) : canon_ns_interp.vel  v = v := rfl
+@[simp] lemma canon_ns_interp_pres (p : CoeffInftyR) : canon_ns_interp.pres p = p := rfl
 
 /-- **Canonical NS PDE bridge** — the dynamics-to-PDE identification axiom (Stage 213).
 

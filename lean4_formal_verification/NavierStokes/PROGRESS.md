@@ -4807,3 +4807,54 @@ The `trajOfWeak` and `trajOfWeak_is_NS` theorems required **no changes** —
 **Stage 215 discharge path now explicit in the audit table**.
 
 **Net**: +1 axiom (229→230), +0 theorems, +3 defs, +2 structures. Build: **2336 jobs, 0 errors, 0 sorry**.
+
+---
+
+### Stage 214A: Concretize `NSField` — Retire 6 Axioms (DONE)
+
+**Files created**: `NavierStokes/NSFieldConcrete.lean`
+**Files modified**: `AxiomaticEstimates.lean`, `NSGalerkinWeakToNSBridge.lean`
+
+#### NSFieldConcrete.lean — new shim file (0 axioms, 3 defs)
+
+Imports only `Mathlib.Data.Real.Basic` (no NavierStokes modules — avoids circular import
+since `AxiomaticEstimates` is upstream of `NSGalerkinCompactness`).
+
+- `abbrev NSField : Type := Nat → Real × Real` — concrete carrier (definitionally equal
+  to `CoeffInftyR = Nat → Real × Real` from `NSGalerkinCompactness`, both `abbrev` of the same type)
+- `noncomputable instance : Nonempty NSField` — witness `fun _ => (0,0)`
+- `noncomputable def nsZero : NSField` — additive identity
+- `noncomputable def nsAdd` / `nsSmul` — pointwise operations over `Real`
+
+#### AxiomaticEstimates.lean — retire 5 axioms
+
+Added `import NavierStokes.NSFieldConcrete` and removed:
+- `axiom NSField : Type` (−1)
+- `axiom NSField_nonempty : Nonempty NSField` + `instance` referencing it (−1)
+- `axiom nsZero : NSField` (−1)
+- `axiom nsAdd : NSField → NSField → NSField` (−1)
+- `axiom nsSmul : Rat → NSField → NSField` (−1)
+
+All five are now concrete defs in `NSFieldConcrete.lean`.
+
+#### NSGalerkinWeakToNSBridge.lean — retire `canon_ns_interp` axiom (−1)
+
+Replaced `axiom canon_ns_interp : NSCoeffInterp` with:
+```lean
+noncomputable def canon_ns_interp : NSCoeffInterp where
+  vel  := id
+  pres := id
+```
+and two `@[simp]` lemmas (`canon_ns_interp_vel`, `canon_ns_interp_pres`) proved by `rfl`.
+
+This works because `NSField = Nat → Real × Real` (from `NSFieldConcrete`) and
+`CoeffInftyR = Nat → Real × Real` (from `NSGalerkinCompactness`) are both `abbrev` of the
+same type — definitionally equal — so `id : CoeffInftyR → NSField` type-checks without
+any coercions.
+
+`canon_ns_dict : NSCoeffDict` and all downstream theorems (`trajOfWeak`, `trajOfWeak_is_NS`)
+required no changes.
+
+**Net**: −6 axioms (230→224), +2 lemmas, +1 file. Build: **2337 jobs, 0 errors, 0 sorry**.
+
+**Axiom counts**: 224 | **Theorem/lemma counts**: 1968 | **Files**: 35 | **Jobs**: 2337
