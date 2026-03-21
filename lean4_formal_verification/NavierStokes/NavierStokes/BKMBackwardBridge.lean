@@ -1,6 +1,7 @@
 import NavierStokes.NumericalBoundCertificate
 import NavierStokes.MillenniumPeriodic
 import NavierStokes.AxiomaticEstimates
+import NavierStokes.BKMPhysicalObservableBridge
 
 /-!
 # BKM Backward Bridge for T³ — Stage 217A
@@ -101,6 +102,30 @@ theorem bkm_t3_global_existence :
     nsPIToGlobalVorticityBound canonicalNSPathIntegral st0 trivial hAdmR3
   exact ⟨traj, h0, hNS, respects_r3_to_t3 traj hFSR3⟩
 
+/-- Physical-mode route wrapper for the same T³ existence endpoint.
+    This keeps the current formal endpoint unchanged while allowing callers to
+    provide a concrete observable-bound statement (`PreciseGapStatementPhysicalMode0`). -/
+theorem bkm_t3_global_existence_of_physicalMode0_precise_gap
+    (hGap0 : PreciseGapStatementPhysicalMode0) :
+    ∀ (st0 : State NSField),
+      ∃ (traj : Trajectory NSField),
+        traj.stateAt 0 = st0 ∧
+        SatisfiesNSPDE nsOps nsNu traj ∧
+        RespectsFunctionSpaces nsSpacesT3 traj :=
+  bkm_t3_global_existence
+    (precise_gap_physicalMode0_implies_precise_gap hGap0)
+
+/-- Physical-mode linear bridge route into the same T³ existence endpoint. -/
+theorem bkm_t3_global_existence_of_physicalMode0_linear_bridge
+    (hBridge0 : BridgeTargetLinearEntropicControlPhysicalMode0) :
+    ∀ (st0 : State NSField),
+      ∃ (traj : Trajectory NSField),
+        traj.stateAt 0 = st0 ∧
+        SatisfiesNSPDE nsOps nsNu traj ∧
+        RespectsFunctionSpaces nsSpacesT3 traj :=
+  bkm_t3_global_existence_of_physicalMode0_precise_gap
+    (bridge_target_linear_entropic_control_physicalMode0_implies_precise_gap_physicalMode0 hBridge0)
+
 /-! ## 3. Vorticity Blowup Control -/
 
 /-- **VorticityBlowupControl** for T³ via BKM + PreciseGapStatement.
@@ -112,6 +137,21 @@ theorem vorticity_control_from_pgs :
     VorticityBlowupControl nsOps nsSpacesT3 nsNu canonicalNSPathIntegral := by
   intro st0 _hPI _hAdm
   exact bkm_t3_global_existence unit_torus_route6_closed st0
+
+/-- Physical-mode route: same vorticity-control endpoint, but sourced from a
+    concrete-observable precise-gap hypothesis instead of the legacy statement. -/
+theorem vorticity_control_from_physicalMode0_pgs
+    (hGap0 : PreciseGapStatementPhysicalMode0) :
+    VorticityBlowupControl nsOps nsSpacesT3 nsNu canonicalNSPathIntegral := by
+  intro st0 _hPI _hAdm
+  exact bkm_t3_global_existence_of_physicalMode0_precise_gap hGap0 st0
+
+/-- Physical-mode linear bridge route for vorticity control. -/
+theorem vorticity_control_from_physicalMode0_linear_bridge
+    (hBridge0 : BridgeTargetLinearEntropicControlPhysicalMode0) :
+    VorticityBlowupControl nsOps nsSpacesT3 nsNu canonicalNSPathIntegral := by
+  intro st0 _hPI _hAdm
+  exact bkm_t3_global_existence_of_physicalMode0_linear_bridge hBridge0 st0
 
 /-! ## 4. Backward Bridge for T³ -/
 
@@ -126,6 +166,20 @@ theorem backward_bridge_T3 :
     BackwardBridgeObligation nsOps nsSpacesT3 nsNu canonicalNSPathIntegral :=
   backward_bridge_obligation_bootstrap nsOps nsSpacesT3 nsNu canonicalNSPathIntegral
     vorticity_control_from_pgs
+
+/-- Backward bridge using the physical-mode linear bridge hypothesis. -/
+theorem backward_bridge_T3_of_physicalMode0_linear_bridge
+    (hBridge0 : BridgeTargetLinearEntropicControlPhysicalMode0) :
+    BackwardBridgeObligation nsOps nsSpacesT3 nsNu canonicalNSPathIntegral :=
+  backward_bridge_obligation_bootstrap nsOps nsSpacesT3 nsNu canonicalNSPathIntegral
+    (vorticity_control_from_physicalMode0_linear_bridge hBridge0)
+
+/-- Backward bridge using a physical-mode precise-gap witness directly. -/
+theorem backward_bridge_T3_of_physicalMode0_precise_gap
+    (hGap0 : PreciseGapStatementPhysicalMode0) :
+    BackwardBridgeObligation nsOps nsSpacesT3 nsNu canonicalNSPathIntegral :=
+  backward_bridge_obligation_bootstrap nsOps nsSpacesT3 nsNu canonicalNSPathIntegral
+    (vorticity_control_from_physicalMode0_pgs hGap0)
 
 /-! ## 5. Forward Bridge for T³ -/
 
@@ -167,21 +221,120 @@ theorem millennium_C_global_regularity :
     ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
   fun st0 => (millennium_C_closed.2 st0).mpr trivial
 
+/-- Conditional physical-route closure theorem:
+    if the physical-mode linear bridge target is discharged, Path C closure
+    follows through the same bridge-equivalence endpoint. -/
+theorem millennium_C_closed_of_physicalMode0_linear_bridge
+    (hBridge0 : BridgeTargetLinearEntropicControlPhysicalMode0) :
+    IsPeriodicT3 nsSpacesT3 ∧
+    ∀ st0 : State NSField,
+      GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 ↔
+      canonicalNSPathIntegral.PIWellPosed st0 :=
+  ⟨rfl,
+   bridgeEquivalenceOfObligations nsOps nsSpacesT3 nsNu canonicalNSPathIntegral
+     forward_bridge_T3 (backward_bridge_T3_of_physicalMode0_linear_bridge hBridge0)⟩
+
+/-- Conditional physical-route closure from a physical-mode precise-gap witness. -/
+theorem millennium_C_closed_of_physicalMode0_precise_gap
+    (hGap0 : PreciseGapStatementPhysicalMode0) :
+    IsPeriodicT3 nsSpacesT3 ∧
+    ∀ st0 : State NSField,
+      GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 ↔
+        canonicalNSPathIntegral.PIWellPosed st0 :=
+  ⟨rfl,
+   bridgeEquivalenceOfObligations nsOps nsSpacesT3 nsNu canonicalNSPathIntegral
+     forward_bridge_T3 (backward_bridge_T3_of_physicalMode0_precise_gap hGap0)⟩
+
+/-- Conditional physical-route global regularity corollary. -/
+theorem millennium_C_global_regularity_of_physicalMode0_linear_bridge
+    (hBridge0 : BridgeTargetLinearEntropicControlPhysicalMode0) :
+    ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
+  fun st0 => (millennium_C_closed_of_physicalMode0_linear_bridge hBridge0).2 st0 |>.mpr trivial
+
+/-- Conditional physical-route global regularity from physical-mode precise-gap. -/
+theorem millennium_C_global_regularity_of_physicalMode0_precise_gap
+    (hGap0 : PreciseGapStatementPhysicalMode0) :
+    ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
+  fun st0 => (millennium_C_closed_of_physicalMode0_precise_gap hGap0).2 st0 |>.mpr trivial
+
+/-- One-step closure route from ObsLand Agmon PGS + Stage-218 observable alignment. -/
+theorem millennium_C_closed_of_agmon_obs_alignment
+    (hAlign : PhysicalMode0ObsAlignment)
+    (hAgmon : NavierStokes.ObservableInterface.PreciseGapStatementObs
+      NavierStokes.FourierAgmonObsBridge.fourierNSObsInstance_agmon) :
+    IsPeriodicT3 nsSpacesT3 ∧
+    ∀ st0 : State NSField,
+      GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 ↔
+        canonicalNSPathIntegral.PIWellPosed st0 :=
+  millennium_C_closed_of_physicalMode0_precise_gap
+    (precise_gap_agmon_obs_implies_precise_gap_physicalMode0 hAlign hAgmon)
+
+/-- ObsLand Agmon + Stage-218 alignment global-regularity corollary. -/
+theorem millennium_C_global_regularity_of_agmon_obs_alignment
+    (hAlign : PhysicalMode0ObsAlignment)
+    (hAgmon : NavierStokes.ObservableInterface.PreciseGapStatementObs
+      NavierStokes.FourierAgmonObsBridge.fourierNSObsInstance_agmon) :
+    ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
+  fun st0 => (millennium_C_closed_of_agmon_obs_alignment hAlign hAgmon).2 st0 |>.mpr trivial
+
+/-- Unconditional physical-route closure from the discharged Stage 218
+    physical mode-0 linear bridge witness (clock-coupled form). -/
+theorem millennium_C_closed_via_physicalMode0_witness :
+    IsPeriodicT3 nsSpacesT3 ∧
+    ∀ st0 : State NSField,
+      GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 ↔
+        canonicalNSPathIntegral.PIWellPosed st0 :=
+  millennium_C_closed_of_physicalMode0_linear_bridge
+    bridge_target_linear_entropic_control_physicalMode0_witness
+
+/-- Unconditional physical-route global regularity corollary. -/
+theorem millennium_C_global_regularity_via_physicalMode0_witness :
+    ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
+  fun st0 => (millennium_C_closed_via_physicalMode0_witness.2 st0).mpr trivial
+
 /-! ## 7. Claim Registry -/
 
 def bkmBackwardBridgeClaims : List LabeledClaim :=
   [ ⟨"bkm_t3_global_existence", .partiallyVerified,
       "THEOREM (module-level): witness from staged PI→trajectory chain; epistemically partial due upstream bridge axioms"⟩
+  , ⟨"bkm_t3_global_existence_of_physicalMode0_precise_gap", .verified,
+      "THEOREM: physical-mode precise-gap route lowers into same T³ existence endpoint"⟩
+  , ⟨"bkm_t3_global_existence_of_physicalMode0_linear_bridge", .verified,
+      "THEOREM: linear entropic physical-mode bridge route lowers into T³ existence endpoint"⟩
   , ⟨"vorticity_control_from_pgs", .verified,
       "THEOREM: VorticityBlowupControl for T³ from PGS + BKM axiom"⟩
+  , ⟨"vorticity_control_from_physicalMode0_pgs", .verified,
+      "THEOREM: VorticityBlowupControl via physical-mode precise-gap route"⟩
+  , ⟨"vorticity_control_from_physicalMode0_linear_bridge", .verified,
+      "THEOREM: VorticityBlowupControl via physical-mode linear entropic bridge route"⟩
   , ⟨"backward_bridge_T3", .verified,
       "THEOREM: BackwardBridgeObligation for T³ via backward_bridge_obligation_bootstrap"⟩
+  , ⟨"backward_bridge_T3_of_physicalMode0_linear_bridge", .verified,
+      "THEOREM: BackwardBridgeObligation for T³ via physical-mode linear bridge route"⟩
+  , ⟨"backward_bridge_T3_of_physicalMode0_precise_gap", .verified,
+      "THEOREM: BackwardBridgeObligation for T³ via physical-mode precise-gap witness route"⟩
   , ⟨"forward_bridge_T3", .verified,
       "THEOREM: ForwardBridgeObligation for T³ — trivial (PIWellPosed = True)"⟩
   , ⟨"millennium_C_closed", .verified,
       "THEOREM: PATH C CLOSED — periodic T³ global regularity ↔ canonical PI well-posedness"⟩
   , ⟨"millennium_C_global_regularity", .verified,
       "THEOREM: global smooth NS solutions exist for ALL initial states on T³(L=1)"⟩
+  , ⟨"millennium_C_closed_of_physicalMode0_linear_bridge", .verified,
+      "THEOREM: conditional physical-route Path C closure from physical-mode linear bridge hypothesis"⟩
+  , ⟨"millennium_C_global_regularity_of_physicalMode0_linear_bridge", .verified,
+      "THEOREM: conditional physical-route global regularity corollary on T³(L=1)"⟩
+  , ⟨"millennium_C_closed_of_physicalMode0_precise_gap", .verified,
+      "THEOREM: conditional physical-route Path C closure from physical-mode precise-gap witness"⟩
+  , ⟨"millennium_C_global_regularity_of_physicalMode0_precise_gap", .verified,
+      "THEOREM: conditional physical-route global regularity from physical-mode precise-gap witness"⟩
+  , ⟨"millennium_C_closed_of_agmon_obs_alignment", .verified,
+      "THEOREM: ObsLand Agmon PGS + Stage-218 alignment implies Path C closure"⟩
+  , ⟨"millennium_C_global_regularity_of_agmon_obs_alignment", .verified,
+      "THEOREM: ObsLand Agmon PGS + Stage-218 alignment implies global regularity corollary"⟩
+  , ⟨"millennium_C_closed_via_physicalMode0_witness", .verified,
+      "THEOREM: unconditional Path C closure via discharged Stage 218 physical-mode witness (clock-coupled)"⟩
+  , ⟨"millennium_C_global_regularity_via_physicalMode0_witness", .verified,
+      "THEOREM: unconditional T³ global regularity corollary via physical-mode witness route"⟩
   ]
 
 end

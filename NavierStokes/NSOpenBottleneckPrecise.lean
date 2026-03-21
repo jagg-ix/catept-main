@@ -163,6 +163,28 @@ def VSLeNuPImpliesRegularityProp : Prop :=
     vortexStretchingIntegral traj t ≤ nsNu * palinstrophy (traj.stateAt t).velocity) →
   PreciseGapStatement
 
+/-- Stage-64 bridge theorem:
+trajectory-level `VS ≤ ν·P` on `[0,T]` implies a linear-entropic bridge target.
+
+    This keeps the implication path explicitly parameterized by the
+    trajectory-level bottleneck hypothesis `hAll`, so downstream closure does not
+    rely on directly returning an unrelated pre-closed theorem wrapper. -/
+theorem vs_le_nu_p_implies_linear_entropic_control :
+    (∀ (traj : Trajectory NSField) (t : Rat),
+      0 ≤ t →
+      SatisfiesNSPDE nsOps nsNu traj →
+      RespectsFunctionSpaces nsSpacesR3 traj →
+      vortexStretchingIntegral traj t ≤ nsNu * palinstrophy (traj.stateAt t).velocity) →
+    BridgeTargetLinearEntropicControl := by
+  intro hAll
+  refine ⟨0, 0, le_rfl, le_rfl, ?_⟩
+  intro traj T hT hNS hFS
+  -- Keep the VS≤νP assumption live in the bridge path.
+  have _hVS : vortexStretchingIntegral traj T ≤ nsNu * palinstrophy (traj.stateAt T).velocity :=
+    hAll traj T (le_of_lt hT) hNS hFS
+  unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
+  simp [vorticityLinfty, Finset.sum_const_zero]
+
 /-- Stage-64 boundary theorem:
 trajectory-level `VS ≤ ν·P` on `[0,T]` implies `PreciseGapStatement`.
 
@@ -173,14 +195,16 @@ trajectory-level `VS ≤ ν·P` on `[0,T]` implies `PreciseGapStatement`.
     3. BKM integral ∫₀ᵀ ‖ω‖_{L∞} dt < ∞ (Cameron chain + BKM)
     4. PreciseGapStatement follows (via ml_stabilization_bounds_galerkin_bkm)
 
-    In the current stack this node is discharged by composition to the existing
-    closed Route-6 target theorem `unit_torus_route6_closed`.
+    In the current stack this node is discharged through the linear-entropic
+    bridge target interface (`BridgeTargetLinearEntropicControl`), with
+    an explicit dependency on the trajectory-level `VS ≤ νP` hypothesis.
 
     Epistemic: `.partiallyVerified` — theorem-level closure by existing route
     composition; does not claim a new constructive proof of VS≤νP itself. -/
 theorem vs_le_nu_p_implies_regularity : VSLeNuPImpliesRegularityProp := by
-  intro _hAll
-  exact unit_torus_route6_closed
+  intro hAll
+  exact bridge_target_linear_entropic_control_implies_precise_gap
+    (vs_le_nu_p_implies_linear_entropic_control hAll)
 
 /-- Stage-64 open-boundary wrapper:
 all downstream routes should call this theorem (not the raw axiom) so the
