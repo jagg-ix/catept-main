@@ -6,11 +6,11 @@ import NavierStokes.NSPhysicalObservablesPreciseGapBridge
 
 Makes `PreciseGapStatement` semantically explicit in the global-existence chain.
 
-## What this file proves (1 new axiom, 3 theorems)
+## What this file proves (0 new axioms, 4 theorems)
 
 | # | Item | Status |
 |---|------|--------|
-| 1 | `ns_bkm_global_existence_from_pgs` — PGS-conditional global existence | AXIOM (.partiallyVerified) |
+| 1 | `ns_bkm_global_existence_from_pgs` — PGS-conditional global existence | THEOREM |
 | 2 | `leray_fk_bkm_from_physical_mode0` — unconditional global existence via Stage 220 PGS | THEOREM |
 | 3 | `millennium_t3_from_bkm_pipeline` — `GlobalRegularSolution` via pipeline | THEOREM |
 | 4 | `bkm_pipeline_matches_leray_fk` — `ns_bkm_global_existence_from_pgs` + PGS matches the unconditional axiom | THEOREM |
@@ -33,14 +33,14 @@ discharges it unconditionally, reproducing the same global-existence conclusion.
 ## Axiom decomposition
 
 `leray_fk_bkm_global_existence` (existing) bundles all three published results.
-`ns_bkm_global_existence_from_pgs` (new) makes the BKM-PGS link explicit.
-Both are `.partiallyVerified` (peer-reviewed published results); the new one
-is strictly more transparent about where PGS enters.
+`ns_bkm_global_existence_from_pgs` is now theoremized by reusing the already-proved
+`bkm_t3_global_existence` route from `BKMBackwardBridge.lean`, while preserving
+the semantically explicit PGS interface.
 
 ## Net counts
 
-  - New axioms:   1  (ns_bkm_global_existence_from_pgs, .partiallyVerified)
-  - New theorems: 3
+  - New axioms:   0
+  - New theorems: 4
   - sorry:        0
   - warnings:     0
 -/
@@ -61,16 +61,20 @@ set_option autoImplicit false
     - `PreciseGapStatement`: bounds the BKM integral for every trajectory.
     - Together: no blowup time, hence global smooth solutions exist.
 
-    Epistemic: `.partiallyVerified` (three peer-reviewed published results, same
-    epistemic tier as the existing `leray_fk_bkm_global_existence` axiom). -/
-axiom ns_bkm_global_existence_from_pgs :
+    The proof reuses `bkm_t3_global_existence` from Stage 217A and transports
+    the function-space witness from `nsSpacesT3` to `nsSpacesR3` (same
+    membership predicates in the current compatibility layer). -/
+theorem ns_bkm_global_existence_from_pgs :
     PreciseGapStatement →
     ∀ (st0 : State NSField),
       AdmissibleInitialData nsSpacesR3 st0 →
       ∃ traj : Trajectory NSField,
         traj.stateAt 0 = st0 ∧
         SatisfiesNSPDE nsOps nsNu traj ∧
-        RespectsFunctionSpaces nsSpacesR3 traj
+        RespectsFunctionSpaces nsSpacesR3 traj := by
+  intro hPGS st0 _hAdm
+  obtain ⟨traj, h0, hNS, hFST3⟩ := bkm_t3_global_existence hPGS st0
+  exact ⟨traj, h0, hNS, ⟨hFST3.1, hFST3.2.1, hFST3.2.2⟩⟩
 
 /-! ## 2. Unconditional Global Existence via Stage 220 -/
 
@@ -124,10 +128,10 @@ theorem bkm_pipeline_matches_leray_fk :
 
 def stage221Summary : String :=
   "Stage 221: NSBKMContinuationPipeline — " ++
-  "ns_bkm_global_existence_from_pgs: PGS-conditional global existence (AXIOM, .partiallyVerified). " ++
+  "ns_bkm_global_existence_from_pgs: PGS-conditional global existence (THEOREM, reused Stage 217A route). " ++
   "leray_fk_bkm_from_physical_mode0: unconditional via pgs_from_physical_mode0 (THEOREM). " ++
   "millennium_t3_from_bkm_pipeline: GlobalRegularSolution for all st0 (THEOREM). " ++
   "bkm_pipeline_matches_leray_fk: consistency with existing axiom (THEOREM). " ++
-  "+1 axiom, +3 theorems, 0 sorry."
+  "+0 axioms, +4 theorems, 0 sorry."
 
 end NavierStokes.Millennium
