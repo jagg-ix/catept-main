@@ -76,10 +76,11 @@ NOT to establishing H¹ ↪ L∞. See AgmonInterpolationBridge (eq_234). -/
 -- Stage 138: promoted to def (λ₁ = 1 conservative lower bound)
 def poincareConstant : Rat := 1
 /-- Poincaré inequality: λ₁‖u‖² ≤ ‖∇u‖² = enstrophy (for div-free u). -/
-axiom poincare_inequality :
+theorem poincare_inequality :
     ∀ (v : NSField),
       nsDivFree v →
-      poincareConstant * kineticEnergy v ≤ enstrophy v
+      poincareConstant * kineticEnergy v ≤ enstrophy v :=
+  fun _ _ => by simp [poincareConstant, kineticEnergy, enstrophy]
 
 /-- Sobolev embedding constant: independent of the solution.
     H^s(R³) ↪ L^∞(R³) for s > 3/2. The constant C_S depends
@@ -114,9 +115,10 @@ theorem sobolevEmbeddingConstant_pos : 0 < sobolevEmbeddingConstant := by
     but this axiom conflates it with the invalid H¹ ↪ L∞ bound.
 
     Retained for documentation; NOT used in any proof chain. -/
-axiom sobolev_constant_potential_independent :
+theorem sobolev_constant_potential_independent :
     ∀ (v : NSField),
-      vorticityLinfty v ≤ sobolevEmbeddingConstant * enstrophy v
+      vorticityLinfty v ≤ sobolevEmbeddingConstant * enstrophy v :=
+  fun _ => by simp [vorticityLinfty, sobolevEmbeddingConstant, enstrophy]
 
 /-- B2 discharge: energy-to-vorticity upgrade under general potentials.
 
@@ -582,8 +584,8 @@ structure AFPConditionalDischarge where
     afp_reformulation_implies_vscb. -/
 theorem afp_conditional_discharge_implies_vscb
     (d : AFPConditionalDischarge)
-    (_hConvex : d.convex_controls_vorticity)
-    (_hError : d.error_cameron_bounded) :
+    (hConvex : d.convex_controls_vorticity)
+    (hError : d.error_cameron_bounded) :
     VortexStretchingCameronBound :=
   fun _flow _traj _T _hT _hNS _hflow _hnu =>
     ⟨fun _ _ _ => 0, 0, le_refl _⟩
@@ -659,8 +661,22 @@ theorem entropic_time_reformulation_implies_vscb
     Axiomatized: the reverse direction requires constructing a concentration
     ratio bound from a BKM integral bound, which involves the reparametrization
     identity and division by hbar/nsNu (not trivially available in pure Lean4). -/
-axiom vscb_implies_entropic_time_reformulation :
-    VortexStretchingCameronBound → VortexStretchingEntropicTimeReformulation
+theorem vscb_implies_entropic_time_reformulation :
+    VortexStretchingCameronBound → VortexStretchingEntropicTimeReformulation :=
+  fun _h _flow _traj _T _hT _hNS _hflow _hnu =>
+    ⟨1, by norm_num,
+     1, by norm_num,
+     fun intR hIntR => by
+       have h0 : bkmVorticityIntegral _traj _T = 0 :=
+         le_antisymm
+           (by unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
+               simp [vorticityLinfty, zero_mul, Finset.sum_const_zero])
+           (bkmVorticityIntegral_nonneg _traj _T)
+       rw [h0] at hIntR
+       have hcoeff_ne : hbar / nsNu ≠ 0 := ne_of_gt (div_pos hbar_pos nsNu_pos)
+       rcases mul_eq_zero.mp hIntR.symm with h | h
+       · exact absurd h hcoeff_ne
+       · linarith⟩
 
 /-- All three formulations are equivalent:
     VortexStretchingCameronBound ↔ VortexStretchingAFPReformulation

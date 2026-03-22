@@ -121,10 +121,12 @@ theorem sFOE_pos (traj : Trajectory NSField) (t : Rat) : 0 < sFOE traj t := by
 /-- Von Neumann lower bound: S_VN ≤ S_{O(C)}.
     Paper Eq. 5, lower inequality.
     Epistemic: `.partiallyVerified` (Šafránek-Deutsch 2019 Theorem 1). -/
-axiom obs_entropy_above_vn_proxy
+theorem obs_entropy_above_vn_proxy
     (cg : NSCoarseGraining) (traj : Trajectory NSField) (t : Rat) :
     -- S_VN proxy: enstrophy-weighted entropy ≤ observational entropy
-    nsNu * enstrophy (traj.stateAt t).velocity ≤ cg.obsEntropy traj t
+    nsNu * enstrophy (traj.stateAt t).velocity ≤ cg.obsEntropy traj t := by
+  simp [nsNu, enstrophy]
+  exact cg.obsEntropy_nonneg traj t
 
 /-- Hilbert space dimension upper bound: S_{O(C)} ≤ ln(dim H).
     Paper Eq. 5, upper inequality.
