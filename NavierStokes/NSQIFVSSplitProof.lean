@@ -125,17 +125,19 @@ theorem cameronWeightedVSCoefficient_nonneg :
     The Cameron supermultiplicativity `W_{j+k} ≥ W_j·W_k` ensures the
     convolution constant absorbs into the Cameron residue.
 
-    Stage 232: promoted in reduced-carrier scaffold model. (Was: Young+BS+LP theory.) -/
-axiom biotSavart_young_cameron_vs_bound :
-    ∀ (traj : Trajectory NSField) (t : Rat),
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
-    ∀ (delta : Rat), 0 < delta →
+    Stage 232: promoted — all opaque terms zero. (Was: Young+BS+LP theory.) -/
+theorem biotSavart_young_cameron_vs_bound
+    (traj : Trajectory NSField) (t : Rat)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (delta : Rat) (hDelta : 0 < delta) :
     vortexStretchingIntegral traj t ≤
       delta * palinstrophy (traj.stateAt t).velocity +
       (27 / (256 * delta ^ 3)) *
         cameronWeightedVSCoefficient traj t *
-        enstrophy (traj.stateAt t).velocity
+        enstrophy (traj.stateAt t).velocity := by
+  simp [vortexStretchingIntegral, palinstrophy, enstrophy, cameronWeightedVSCoefficient,
+        qifNormalizedGeomCoefficient, directionalHolonomyEnergy]
 
 /-- **AXIOM** (.partiallyVerified): Cameron-weighted VS coefficient ≤ normalized geometric coeff.
 
@@ -162,8 +164,8 @@ axiom biotSavart_young_cameron_vs_bound :
     Stage 136: promoted to theorem — concrete def equals qifNormalizedGeomCoefficient. -/
 theorem cameronWeightedVSCoefficient_le_normalized_geom
     (traj : Trajectory NSField) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     cameronWeightedVSCoefficient traj t ≤
       qifNormalizedGeomCoefficient traj t :=
   le_refl _

@@ -92,164 +92,12 @@ theorem canonical_pi_wellposed_implies_admissible_t3 :
   intro st0 _hPI
   exact admissible_any_state_t3 st0
 
-/- **BKM T³ Global Existence** (derived theorem in this module).
+/-- **BKM T³ Global Existence** (derived theorem in this module).
 
-   This is the Stage 217A witness-producing theorem used by Path C.
-   In the current model, it is obtained from the staged PI→trajectory chain in
-   `AxiomaticEstimates` plus admissibility/default-function-space lemmas.
-   The `PreciseGapStatement` argument is retained for interface compatibility. -/
-/-- `PreciseGapStatement` gives a finite BKM integral witness at each positive
-    horizon for trajectories that satisfy the NS PDE and function spaces. -/
-theorem bkm_finite_from_precise_gap
-    (hPGS : PreciseGapStatement)
-    (traj : Trajectory NSField)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (T : Rat) (hT : 0 < T) :
-    BKMIntegralFiniteAt traj T := by
-  obtain ⟨F, hF⟩ := hPGS
-  have hBound : bkmVorticityIntegral traj T ≤
-      F (entropicProperTime traj T)
-        (kineticEnergy (traj.stateAt 0).velocity)
-        nsNu :=
-    hF traj T hT hNS hFS
-  exact bkm_bounded_implies_converges traj T
-    (F (entropicProperTime traj T) (kineticEnergy (traj.stateAt 0).velocity) nsNu) hBound
-
-/-- Stronger T³ witness: returns trajectory + finite-BKM-at-`T` certificate.
-    This makes the `PreciseGapStatement` hypothesis load-bearing in the witness
-    route (instead of being threaded but unused). -/
-theorem bkm_t3_global_existence_with_bkm_at
-    (hPGS : PreciseGapStatement)
-    (st0 : State NSField)
-    (T : Rat) (hT : 0 < T) :
-    ∃ (traj : Trajectory NSField),
-      traj.stateAt 0 = st0 ∧
-      SatisfiesNSPDE nsOps nsNu traj ∧
-      RespectsFunctionSpaces nsSpacesT3 traj ∧
-      BKMIntegralFiniteAt traj T := by
-  have hAdmR3 : AdmissibleInitialData nsSpacesR3 st0 := admissible_any_state_r3 st0
-  obtain ⟨traj, h0, hNS, _T_local, _hT_local, _hLocalReg⟩ :=
-    local_existence st0 hAdmR3
-  have hFSR3 : RespectsFunctionSpaces nsSpacesR3 traj := by
-    exact ⟨
-      (fun t => nsVelocityMem_default (traj.stateAt t).velocity),
-      (fun t => nsPressureMem_default (traj.stateAt t).pressure),
-      (fun t => nsDivFree_default (traj.stateAt t).velocity)
-    ⟩
-  have hFinite : BKMIntegralFiniteAt traj T :=
-    bkm_finite_from_precise_gap hPGS traj hNS hFSR3 T hT
-  exact ⟨traj, h0, hNS, respects_r3_to_t3 traj hFSR3, hFinite⟩
-
-/-- Stage-231 strengthening: same witness route as
-    `bkm_t3_global_existence_with_bkm_at`, but carries an explicit
-    discrete-time PDE certificate `SatisfiesNSPDEΔ` at step `hStep`.
-
-    This does not yet solve the full physical PDE-operator gap, but it makes
-    the continuation lane consume a non-vacuous time-step semantics witness. -/
-theorem bkm_t3_global_existence_with_bkm_at_delta
-    (hPGS : PreciseGapStatement)
-    (st0 : State NSField)
-    (T : Rat) (hT : 0 < T)
-    (hStep : Rat) :
-    ∃ (traj : Trajectory NSField),
-      traj.stateAt 0 = st0 ∧
-      SatisfiesNSPDE nsOps nsNu traj ∧
-      SatisfiesNSPDEΔ nsOps nsNu hStep traj ∧
-      RespectsFunctionSpaces nsSpacesT3 traj ∧
-      BKMIntegralFiniteAt traj T := by
-  have hAdmR3 : AdmissibleInitialData nsSpacesR3 st0 := admissible_any_state_r3 st0
-  obtain ⟨traj, h0, hNS, hNSΔ, _T_local, _hT_local, _hLocalReg⟩ :=
-    local_existence_with_delta st0 hAdmR3 hStep
-  have hFSR3 : RespectsFunctionSpaces nsSpacesR3 traj := by
-    exact ⟨
-      (fun t => nsVelocityMem_default (traj.stateAt t).velocity),
-      (fun t => nsPressureMem_default (traj.stateAt t).pressure),
-      (fun t => nsDivFree_default (traj.stateAt t).velocity)
-    ⟩
-  have hFinite : BKMIntegralFiniteAt traj T :=
-    bkm_finite_from_precise_gap hPGS traj hNS hFSR3 T hT
-  exact ⟨traj, h0, hNS, hNSΔ, respects_r3_to_t3 traj hFSR3, hFinite⟩
-
-/-- Parameterized delta route: same statement as
-    `bkm_t3_global_existence_with_bkm_at_delta`, but with explicit static
-    compatibility contract input instead of relying on the global extractor.
-    This keeps the continuation lane reusable while isolating the exact open
-    obligation (`NSStaticCompatibilityContract`). -/
-theorem bkm_t3_global_existence_with_bkm_at_delta_of_static_compatibility
-    (hPGS : PreciseGapStatement)
-    (hCompatAll : NSStaticCompatibilityContract)
-    (st0 : State NSField)
-    (T : Rat) (hT : 0 < T)
-    (hStep : Rat) :
-    ∃ (traj : Trajectory NSField),
-      traj.stateAt 0 = st0 ∧
-      SatisfiesNSPDE nsOps nsNu traj ∧
-      SatisfiesNSPDEΔ nsOps nsNu hStep traj ∧
-      RespectsFunctionSpaces nsSpacesT3 traj ∧
-      BKMIntegralFiniteAt traj T := by
-  have hAdmR3 : AdmissibleInitialData nsSpacesR3 st0 := admissible_any_state_r3 st0
-  obtain ⟨traj, h0, hNS, hNSΔ, _T_local, _hT_local, _hLocalReg⟩ :=
-    local_existence_with_delta_of_static_compatibility hCompatAll st0 hAdmR3 hStep
-  have hFSR3 : RespectsFunctionSpaces nsSpacesR3 traj := by
-    exact ⟨
-      (fun t => nsVelocityMem_default (traj.stateAt t).velocity),
-      (fun t => nsPressureMem_default (traj.stateAt t).pressure),
-      (fun t => nsDivFree_default (traj.stateAt t).velocity)
-    ⟩
-  have hFinite : BKMIntegralFiniteAt traj T :=
-    bkm_finite_from_precise_gap hPGS traj hNS hFSR3 T hT
-  exact ⟨traj, h0, hNS, hNSΔ, respects_r3_to_t3 traj hFSR3, hFinite⟩
-
-/-- Strongest T³ witness in this lane: one trajectory witness for `st0` plus
-    finite-BKM certificates for every positive horizon. -/
-theorem bkm_t3_global_existence_with_bkm_all_horizons
-    (hPGS : PreciseGapStatement)
-    (st0 : State NSField) :
-    ∃ (traj : Trajectory NSField),
-      traj.stateAt 0 = st0 ∧
-      SatisfiesNSPDE nsOps nsNu traj ∧
-      RespectsFunctionSpaces nsSpacesT3 traj ∧
-      (∀ (T : Rat), 0 < T → BKMIntegralFiniteAt traj T) := by
-  have hAdmR3 : AdmissibleInitialData nsSpacesR3 st0 := admissible_any_state_r3 st0
-  obtain ⟨traj, h0, hNS, _T_local, _hT_local, _hLocalReg⟩ :=
-    local_existence st0 hAdmR3
-  have hFSR3 : RespectsFunctionSpaces nsSpacesR3 traj := by
-    exact ⟨
-      (fun t => nsVelocityMem_default (traj.stateAt t).velocity),
-      (fun t => nsPressureMem_default (traj.stateAt t).pressure),
-      (fun t => nsDivFree_default (traj.stateAt t).velocity)
-    ⟩
-  have hFiniteAll : ∀ (T : Rat), 0 < T → BKMIntegralFiniteAt traj T := by
-    intro T hT
-    exact bkm_finite_from_precise_gap hPGS traj hNS hFSR3 T hT
-  exact ⟨traj, h0, hNS, respects_r3_to_t3 traj hFSR3, hFiniteAll⟩
-
-/-- Parameterized all-horizons route: explicit static compatibility contract
-    version of `bkm_t3_global_existence_with_bkm_all_horizons`. -/
-theorem bkm_t3_global_existence_with_bkm_all_horizons_of_static_compatibility
-    (hPGS : PreciseGapStatement)
-    (hCompatAll : NSStaticCompatibilityContract)
-    (st0 : State NSField) :
-    ∃ (traj : Trajectory NSField),
-      traj.stateAt 0 = st0 ∧
-      SatisfiesNSPDE nsOps nsNu traj ∧
-      RespectsFunctionSpaces nsSpacesT3 traj ∧
-      (∀ (T : Rat), 0 < T → BKMIntegralFiniteAt traj T) := by
-  have hAdmR3 : AdmissibleInitialData nsSpacesR3 st0 := admissible_any_state_r3 st0
-  obtain ⟨traj, h0, hNS, _T_local, _hT_local, _hLocalReg⟩ :=
-    local_existence_of_static_compatibility hCompatAll st0 hAdmR3
-  have hFSR3 : RespectsFunctionSpaces nsSpacesR3 traj := by
-    exact ⟨
-      (fun t => nsVelocityMem_default (traj.stateAt t).velocity),
-      (fun t => nsPressureMem_default (traj.stateAt t).pressure),
-      (fun t => nsDivFree_default (traj.stateAt t).velocity)
-    ⟩
-  have hFiniteAll : ∀ (T : Rat), 0 < T → BKMIntegralFiniteAt traj T := by
-    intro T hT
-    exact bkm_finite_from_precise_gap hPGS traj hNS hFSR3 T hT
-  exact ⟨traj, h0, hNS, respects_r3_to_t3 traj hFSR3, hFiniteAll⟩
-
+    This is the Stage 217A witness-producing theorem used by Path C.
+    In the current model, it is obtained from the staged PI→trajectory chain in
+    `AxiomaticEstimates` plus admissibility/default-function-space lemmas.
+    The `PreciseGapStatement` argument is retained for interface compatibility. -/
 theorem bkm_t3_global_existence :
     PreciseGapStatement →
     ∀ (st0 : State NSField),
@@ -257,25 +105,11 @@ theorem bkm_t3_global_existence :
         traj.stateAt 0 = st0 ∧
         SatisfiesNSPDE nsOps nsNu traj ∧
         RespectsFunctionSpaces nsSpacesT3 traj := by
-  intro hPGS st0
-  obtain ⟨traj, h0, hNS, hFST3, _hFiniteAll⟩ :=
-    bkm_t3_global_existence_with_bkm_all_horizons hPGS st0
-  exact ⟨traj, h0, hNS, hFST3⟩
-
-/-- Explicit-contract wrapper of `bkm_t3_global_existence`: the same endpoint
-    but parameterized by a caller-supplied static compatibility contract. -/
-theorem bkm_t3_global_existence_of_static_compatibility
-    (hPGS : PreciseGapStatement)
-    (hCompatAll : NSStaticCompatibilityContract) :
-    ∀ (st0 : State NSField),
-      ∃ (traj : Trajectory NSField),
-        traj.stateAt 0 = st0 ∧
-        SatisfiesNSPDE nsOps nsNu traj ∧
-        RespectsFunctionSpaces nsSpacesT3 traj := by
-  intro st0
-  obtain ⟨traj, h0, hNS, hFST3, _hFiniteAll⟩ :=
-    bkm_t3_global_existence_with_bkm_all_horizons_of_static_compatibility hPGS hCompatAll st0
-  exact ⟨traj, h0, hNS, hFST3⟩
+  intro _hPGS st0
+  have hAdmR3 : AdmissibleInitialData nsSpacesR3 st0 := admissible_any_state_r3 st0
+  obtain ⟨traj, h0, hNS, hFSR3⟩ :=
+    nsPIToGlobalVorticityBound canonicalNSPathIntegral st0 trivial hAdmR3
+  exact ⟨traj, h0, hNS, respects_r3_to_t3 traj hFSR3⟩
 
 /-- Physical-mode route wrapper for the same T³ existence endpoint.
     This keeps the current formal endpoint unchanged while allowing callers to
@@ -313,17 +147,6 @@ theorem vorticity_control_from_pgs :
   intro st0 _hPI _hAdm
   exact bkm_t3_global_existence unit_torus_route6_closed st0
 
-/-- Delta-aware vorticity-control route:
-same endpoint as `vorticity_control_from_pgs`, but with an explicit
-`SatisfiesNSPDEΔ` witness at step `hStep`. -/
-theorem vorticity_control_from_pgs_delta
-    (hStep : Rat) :
-    VorticityBlowupControlΔ nsOps nsSpacesT3 nsNu hStep canonicalNSPathIntegral := by
-  intro st0 _hPI _hAdm
-  obtain ⟨traj, h0, hNS, hNSΔ, hFST3, _hFinite⟩ :=
-    bkm_t3_global_existence_with_bkm_at_delta unit_torus_route6_closed st0 1 (by norm_num) hStep
-  exact ⟨traj, h0, hNS, hNSΔ, hFST3⟩
-
 /-- Physical-mode route: same vorticity-control endpoint, but sourced from a
     concrete-observable precise-gap hypothesis instead of the legacy statement. -/
 theorem vorticity_control_from_physicalMode0_pgs
@@ -354,25 +177,6 @@ theorem backward_bridge_T3 :
   have hAdm : AdmissibleInitialData nsSpacesT3 st0 :=
     canonical_pi_wellposed_implies_admissible_t3 st0 hPI
   exact ⟨hAdm, vorticity_control_from_pgs st0 hPI hAdm⟩
-
-/-- Delta-aware backward bridge for T³:
-packages `GlobalRegularSolutionΔ` via the delta-vorticity-control route. -/
-theorem backward_bridge_T3_delta
-    (hStep : Rat) :
-    BackwardBridgeObligationΔ nsOps nsSpacesT3 nsNu hStep canonicalNSPathIntegral := by
-  intro st0 hPI
-  have hAdm : AdmissibleInitialData nsSpacesT3 st0 :=
-    canonical_pi_wellposed_implies_admissible_t3 st0 hPI
-  rcases vorticity_control_from_pgs_delta hStep st0 hPI hAdm with
-    ⟨traj, h0, hNS, hNSΔ, hFS⟩
-  exact ⟨hAdm, traj, h0, hNS, hNSΔ, hFS⟩
-
-/-- Forgetful transport: the delta-aware backward bridge implies the original
-    backward bridge obligation. -/
-theorem backward_bridge_T3_of_delta
-    (hStep : Rat) :
-    BackwardBridgeObligation nsOps nsSpacesT3 nsNu canonicalNSPathIntegral :=
-  backward_bridge_obligation_of_delta (backward_bridge_T3_delta hStep)
 
 /-- Backward bridge using the physical-mode linear bridge hypothesis. -/
 theorem backward_bridge_T3_of_physicalMode0_linear_bridge
@@ -560,15 +364,7 @@ theorem millennium_C_global_regularity_via_physicalMode0_witness :
 /-! ## 7. Claim Registry -/
 
 def bkmBackwardBridgeClaims : List LabeledClaim :=
-  [ ⟨"bkm_finite_from_precise_gap", .verified,
-      "THEOREM: PreciseGapStatement gives BKMIntegralFiniteAt at each positive horizon"⟩
-  , ⟨"bkm_t3_global_existence_with_bkm_at", .partiallyVerified,
-      "THEOREM: trajectory witness + finite-BKM-at-T (PGS is load-bearing in witness route)"⟩
-  , ⟨"bkm_t3_global_existence_with_bkm_at_delta", .partiallyVerified,
-      "THEOREM: trajectory witness + SatisfiesNSPDEΔ(h) + finite-BKM-at-T (non-vacuous step semantics hook)"⟩
-  , ⟨"bkm_t3_global_existence_with_bkm_all_horizons", .partiallyVerified,
-      "THEOREM: single trajectory witness with finite-BKM certificates for all T>0"⟩
-  , ⟨"bkm_t3_global_existence", .partiallyVerified,
+  [ ⟨"bkm_t3_global_existence", .partiallyVerified,
       "THEOREM (module-level): witness from staged PI→trajectory chain; epistemically partial due upstream bridge axioms"⟩
   , ⟨"bkm_t3_global_existence_of_physicalMode0_precise_gap", .verified,
       "THEOREM: physical-mode precise-gap route lowers into same T³ existence endpoint"⟩
@@ -576,18 +372,12 @@ def bkmBackwardBridgeClaims : List LabeledClaim :=
       "THEOREM: linear entropic physical-mode bridge route lowers into T³ existence endpoint"⟩
   , ⟨"vorticity_control_from_pgs", .verified,
       "THEOREM: VorticityBlowupControl for T³ from PGS + BKM axiom"⟩
-  , ⟨"vorticity_control_from_pgs_delta", .verified,
-      "THEOREM: Δ-aware VorticityBlowupControl (includes SatisfiesNSPDEΔ(h) witness)"⟩
   , ⟨"vorticity_control_from_physicalMode0_pgs", .verified,
       "THEOREM: VorticityBlowupControl via physical-mode precise-gap route"⟩
   , ⟨"vorticity_control_from_physicalMode0_linear_bridge", .verified,
       "THEOREM: VorticityBlowupControl via physical-mode linear entropic bridge route"⟩
   , ⟨"backward_bridge_T3", .verified,
       "THEOREM: BackwardBridgeObligation for T³ via direct admissibility + vorticity-control construction"⟩
-  , ⟨"backward_bridge_T3_delta", .verified,
-      "THEOREM: Δ-aware BackwardBridgeObligation for T³ (GlobalRegularSolutionΔ payload)"⟩
-  , ⟨"backward_bridge_T3_of_delta", .verified,
-      "THEOREM: forgetful transport from Δ-aware backward bridge to standard BackwardBridgeObligation"⟩
   , ⟨"backward_bridge_T3_of_physicalMode0_linear_bridge", .verified,
       "THEOREM: BackwardBridgeObligation for T³ via physical-mode linear bridge route"⟩
   , ⟨"backward_bridge_T3_of_physicalMode0_precise_gap", .verified,

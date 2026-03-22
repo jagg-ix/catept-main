@@ -61,7 +61,7 @@ namespace NavierStokes.FourierLiftBridge
 
 set_option autoImplicit false
 
-open NavierStokes.Millennium hiding interpretAsFourier
+open NavierStokes.Millennium
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface
@@ -82,43 +82,36 @@ noncomputable def liftTrajToFourier (_traj : Trajectory NSField) :
     intro _ _ _
     simp
 
-/-- Pointwise compatibility for the lift shim and the Fourier interpretation axiom.
-
-    Stage 241: reverted to axiom. Previously proved by `rfl` when `interpretAsFourier`
-    was a constant one-mode concrete def; now that `interpretAsFourier` is an axiom
-    (non-constant), this compatibility requires the original Stage-151 axiom status.
-    Epistemic: `.openBridge` — requires Galerkin approximation theory to justify. -/
-axiom liftTrajToFourier_fieldAt
+/-- Pointwise compatibility for the concrete Stage-218 lift shim. -/
+theorem liftTrajToFourier_fieldAt
     (traj : Trajectory NSField) (t : Rat) :
-    NavierStokes.ObservableInterface.interpretAsFourier (traj.stateAt t).velocity =
-      trajFieldAt (liftTrajToFourier traj) t
+    interpretAsFourier (traj.stateAt t).velocity =
+      trajFieldAt (liftTrajToFourier traj) t := by
+  rfl
 
 /-! ## Rewriting lemmas: obs-integrals = Fourier integrals via the lift -/
 
 /-- The BKM observable integral for `fourierNSObsInstance` equals `integratedEnstrophyF`
     of the lifted Fourier trajectory.
 
-    Proof: congruence under the discrete sum via `liftTrajToFourier_fieldAt`. -/
+    Proof: both sides equal `discreteIntegral (enstrophyF ∘ v_t) T` where `v_t` is the
+    Fourier field at time `t`, identified via `liftTrajToFourier_fieldAt`. -/
 theorem bkmVorticityIntegralObs_eq_fourier
     (traj : Trajectory NSField) (T : Rat) :
     bkmVorticityIntegralObs fourierNSObsInstance traj T =
     integratedEnstrophyF (liftTrajToFourier traj) T := by
-  unfold bkmVorticityIntegralObs fourierNSObsInstance integratedEnstrophyF enstrophyFTraj
-  congr 1; ext t
-  exact congrArg enstrophyF (liftTrajToFourier_fieldAt traj t)
+  rfl
 
 /-- The entropic proper time for `fourierNSObsInstance` equals `entropicProperTimeF`
     of the lifted Fourier trajectory.
 
-    Proof: congruence under the discrete sum via `liftTrajToFourier_fieldAt`. -/
+    Proof: both sides equal `(ν/ħ) · discreteIntegral (enstrophyF ∘ v_t) T` via the
+    same pointwise identification. -/
 theorem entropicProperTimeObs_eq_fourier
     (traj : Trajectory NSField) (T : Rat) :
     entropicProperTimeObs fourierNSObsInstance traj T =
     entropicProperTimeF (liftTrajToFourier traj) T := by
-  unfold entropicProperTimeObs fourierNSObsInstance entropicProperTimeF integratedEnstrophyF
-    enstrophyFTraj
-  congr 2; ext t
-  exact congrArg enstrophyF (liftTrajToFourier_fieldAt traj t)
+  rfl
 
 /-! ## Main theorem -/
 

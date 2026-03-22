@@ -548,8 +548,9 @@ theorem path_C_stage218_adapter_route
 /-- Stage-218 audit hardening:
     under the current reduced-carrier zero-enstrophy model, full alignment is
     inconsistent with the nontrivial Obs/Fourier witness assumptions. -/
-axiom path_C_stage218_alignment_currently_inconsistent :
-    PhysicalMode0ObsAlignment → False
+theorem path_C_stage218_alignment_currently_inconsistent :
+    PhysicalMode0ObsAlignment → False :=
+  alignment_inconsistent_with_obs_nontrivial
 
 /-- Stage-218 concrete non-placeholder witness in ObsLand:
     existing Parseval/Fourier bridge axioms already imply positive physical
@@ -595,19 +596,22 @@ theorem path_C_stage218_strong_bridge_reduces_to_candidate_swap
   bridge_target_linear_entropic_control_physicalMode0Strong_of_candidate_swap hSwap
 
 /-- In the current zero-placeholder model, full candidate swap is itself blocked. -/
-axiom path_C_stage218_candidate_swap_impossible_current_model :
-    ¬ (∀ v : NSField, enstrophy v = EnstrophyPhysicalizedCandidate v)
+theorem path_C_stage218_candidate_swap_impossible_current_model :
+    ¬ (∀ v : NSField, enstrophy v = EnstrophyPhysicalizedCandidate v) :=
+  enstrophy_candidate_swap_impossible_current_model
 
 /-- Stage-218 current-model impossibility gate:
     mode-0 non-placeholder witness cannot hold while `enstrophy` is still the
     reduced-carrier zero placeholder. -/
-axiom path_C_stage218_mode0_nonplaceholder_impossible_current_model :
-    ¬ PhysicalMode0NonPlaceholderWitness
+theorem path_C_stage218_mode0_nonplaceholder_impossible_current_model :
+    ¬ PhysicalMode0NonPlaceholderWitness :=
+  physicalMode0_nonplaceholder_impossible_current_model
 
 /-- Consequently, the strong Stage-218 bridge contract is also impossible in the
     current reduced-carrier model until enstrophy is concretized. -/
-axiom path_C_stage218_strong_bridge_impossible_current_model :
-    ¬ BridgeTargetLinearEntropicControlPhysicalMode0Strong
+theorem path_C_stage218_strong_bridge_impossible_current_model :
+    ¬ BridgeTargetLinearEntropicControlPhysicalMode0Strong :=
+  bridge_target_linear_entropic_control_physicalMode0Strong_impossible_current_model
 
 /-- Stage-221 strict one-step closure hook:
     physicalization gate directly yields global regularity for all initial states

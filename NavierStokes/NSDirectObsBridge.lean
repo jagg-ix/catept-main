@@ -55,7 +55,7 @@ namespace NavierStokes.DirectObsBridge
 
 set_option autoImplicit false
 
-open NavierStokes.Millennium hiding interpretAsFourier
+open NavierStokes.Millennium
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface
@@ -71,14 +71,13 @@ open NavierStokes.PalinstrophyTauBridge
     (Stage 156).  It is strictly stronger: it applies to any `NSField` directly,
     without going through a trajectory lift.
 
-    Epistemic: `.openBridge` — requires that the axiom `interpretAsFourier` produces
-    Galerkin-band-limited fields.  Previously proved by simplification when
-    `interpretAsFourier` was the concrete Stage-218 one-mode shim (freq = 1 ≤ 1024).
-    After Stage 241, `interpretAsFourier` is an opaque axiom; this bound is an
-    additional modeling assumption. -/
-axiom interpretAsFourier_freq_le_galerkinN
+    In the concrete Stage-218 shim (`interpretAsFourier` = one-mode field with
+    `freq = 1`), this is discharged by simplification. -/
+theorem interpretAsFourier_freq_le_galerkinN
     (v : NSField) (i : Fin (interpretAsFourier v).N) :
-    (interpretAsFourier v).freq i ≤ galerkinN
+    (interpretAsFourier v).freq i ≤ galerkinN := by
+  unfold interpretAsFourier galerkinN
+  simp
 
 /-! ## Pointwise palinstrophy bound (field-level) -/
 
