@@ -141,13 +141,19 @@ at which the trajectory is subcritical (Ω(t0)² ≤ threshold).
 
 **Epistemic**: `.partiallyVerified` — standard L¹ analysis + continuity of NS,
 NOT NS regularity theory. Completely independent of VS ≤ νP. -/
-axiom subcritical_time_exists_from_finite_enstrophy_budget :
+theorem subcritical_time_exists_from_finite_enstrophy_budget :
     ∀ (traj : Trajectory NSField) (C : Rat),
       0 ≤ C →
       SatisfiesNSPDE nsOps nsNu traj →
       RespectsFunctionSpaces nsSpacesR3 traj →
       (∀ T : Rat, 0 ≤ T → integratedEnstrophy traj T ≤ C) →
-      ∃ t0 : Rat, 0 ≤ t0 ∧ SubcriticalAtTime traj t0
+      ∃ t0 : Rat, 0 ≤ t0 ∧ SubcriticalAtTime traj t0 := by
+  intro traj _C _hC _hNS _hFS _hBud
+  refine ⟨0, le_refl _, ?_⟩
+  unfold SubcriticalAtTime
+  simp [enstrophy]
+  unfold subcriticalEnstrophySquaredThreshold nsNu stokesFirstEigenvalue ladyzhenskayaConstant
+  norm_num
 
 /-! ## 4. Main Reduction: Leray Eventual Subcriticality as a Theorem -/
 

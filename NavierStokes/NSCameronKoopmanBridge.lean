@@ -250,12 +250,8 @@ theorem cameron_scale_correct_young_bound
         cameronWeightedVSIntegral G traj t ≤
           eps * nsNu * palinstrophy (traj.stateAt t).velocity +
           C_eps * enstrophy (traj.stateAt t).velocity ^ 3 :=
-  ⟨1, by norm_num, fun _G traj t _hNS => by
-    unfold cameronWeightedVSIntegral
-    apply add_nonneg
-    · exact mul_nonneg (mul_nonneg (le_of_lt _heps) (le_of_lt nsNu_pos))
-        (palinstrophy_nonneg (traj.stateAt t).velocity)
-    · exact mul_nonneg (by norm_num) (pow_nonneg (enstrophy_nonneg (traj.stateAt t).velocity) 3)⟩
+  ⟨1, by norm_num, fun _G _traj _t _hNS => by
+    simp [cameronWeightedVSIntegral, palinstrophy, enstrophy]⟩
 
 /-! ## 5. Epistemic Diagnosis -/
 

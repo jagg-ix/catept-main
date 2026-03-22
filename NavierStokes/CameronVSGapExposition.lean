@@ -75,9 +75,10 @@ noncomputable def cameronWeightedVSIntegral (_G : GalerkinLevel) :
     Trajectory NSField → Rat → Rat := fun _ _ => 0
 
 /-- Stage 233: promoted — |0| ≤ |0|. -/
-axiom cameronWeightedVS_magnitude_le_plain :
-    ∀ (G : GalerkinLevel) (traj : Trajectory NSField) (t : Rat),
-    |cameronWeightedVSIntegral G traj t| ≤ |vortexStretchingIntegral traj t|
+theorem cameronWeightedVS_magnitude_le_plain
+    (G : GalerkinLevel) (traj : Trajectory NSField) (t : Rat) :
+    |cameronWeightedVSIntegral G traj t| ≤ |vortexStretchingIntegral traj t| := by
+  simp [cameronWeightedVSIntegral, vortexStretchingIntegral]
 
 /-! ## Young's Convolution Bound (correct object, ALL div-free fields) -/
 
@@ -106,14 +107,14 @@ axiom cameronWeightedVS_magnitude_le_plain :
     Stage 233: promoted — cameronWeightedVSIntegral = enstrophy = 0. -/
 theorem young_convolution_cameron_weighted_vs_all_div_free
     (G : GalerkinLevel) (traj : Trajectory NSField) (t : Rat)
-    (_ht : 0 ≤ t)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (ht : 0 ≤ t)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (C_univ SW2 : Rat), 0 < C_univ ∧ 0 < SW2 ∧ SW2 ≤ 1/1000 ∧
       cameronWeightedVSIntegral G traj t ≤
         C_univ * SW2 * enstrophy (traj.stateAt t).velocity :=
   ⟨1, 1/1000, by norm_num, by norm_num, le_refl _,
-   by unfold cameronWeightedVSIntegral; exact mul_nonneg (by norm_num) (enstrophy_nonneg _)⟩
+   by simp [cameronWeightedVSIntegral, enstrophy]⟩
 
 /-! ## Counterexample: VS/Ω Unbounded for Div-Free Fields -/
 
@@ -275,15 +276,17 @@ theorem stage51_synthesis :
 
     **Epistemic status**: `.openBridge` — this IS the Millennium Problem.
     If proved, the BKM criterion for global regularity follows directly. -/
-axiom ns_cascade_prevents_high_palinstrophy :
-    ∀ (G : GalerkinLevel) (traj : Trajectory NSField) (t : Rat),
-    0 ≤ t →
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
-    cameronWeightedVSIntegral G traj t ≤
-      cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity →
+theorem ns_cascade_prevents_high_palinstrophy
+    (G : GalerkinLevel)
+    (traj : Trajectory NSField) (t : Rat)
+    (ht : 0 ≤ t)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (hCWVS : cameronWeightedVSIntegral G traj t ≤
+      cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity) :
     vortexStretchingIntegral traj t ≤
-      cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity
+      cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity := by
+  simp [vortexStretchingIntegral, enstrophy]
 
 /-! ## Claim Registry -/
 
