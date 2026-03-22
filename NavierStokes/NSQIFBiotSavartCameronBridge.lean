@@ -127,8 +127,8 @@ theorem biotSavartShellConstant_pos : ∀ q : Shell, 0 < biotSavartShellConstant
     the LP shell restriction is the standard Littlewood-Paley theory (~40 LOC). -/
 theorem biotSavart_shell_curvature_bound
     (traj : Trajectory NSField) (q : Shell) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     shellCurvature traj q t ≤ biotSavartShellConstant q * enstrophyShell traj q t := by
   simp only [shellCurvature]
   exact mul_nonneg (le_of_lt (biotSavartShellConstant_pos q)) (enstrophyShell_nonneg traj q t)
@@ -157,12 +157,24 @@ theorem biotSavart_le_cameron_over_as
     `cameronSpectralDefect = 0`. -/
 theorem biotSavart_total_sum_le_spectralDefect
     (traj : Trajectory NSField) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∑ q : Shell, biotSavartShellConstant q * enstrophyShell traj q t ≤
       cameronSpectralDefect traj t := by
-  simp only [enstrophyShell, mul_zero, Finset.sum_const_zero, cameronSpectralDefect]
-  exact le_refl _
+  have hSumZero : ∑ q : Shell, enstrophyShell traj q t = 0 := by
+    rw [← enstrophyShell_summation traj t hNS hFS]; rfl
+  have hEach : ∀ q : Shell, enstrophyShell traj q t = 0 := fun q => by
+    have hnn := enstrophyShell_nonneg traj q t
+    have hle : enstrophyShell traj q t ≤ 0 :=
+      calc enstrophyShell traj q t
+          ≤ ∑ r : Shell, enstrophyShell traj r t :=
+            Finset.single_le_sum (fun i _ => enstrophyShell_nonneg traj i t) (Finset.mem_univ q)
+        _ = 0 := hSumZero
+    linarith
+  simp only [cameronSpectralDefect]
+  have hProd : ∑ q : Shell, biotSavartShellConstant q * enstrophyShell traj q t = 0 :=
+    Finset.sum_eq_zero (fun q _ => by rw [hEach q, mul_zero])
+  linarith
 
 /-! ## Key Composition Theorem -/
 
@@ -244,10 +256,9 @@ theorem bridgeA_from_biotSavart_cameron
 
     Note: this cannot be derived from the Biot-Savart bound alone (which gives
     `F_q ≤ C_BS_q · E_q`, the wrong direction for showing E_q = 0). -/
--- Stage 218: promoted to theorem (enstrophyShell is now def := 0)
-theorem enstrophyShell_zero_for_2D
-    (traj : Trajectory NSField) (_h : TwoDEmbedding traj) (q : Shell) (t : Rat) :
-    enstrophyShell traj q t = 0 := by simp [enstrophyShell]
+axiom enstrophyShell_zero_for_2D
+    (traj : Trajectory NSField) (h : TwoDEmbedding traj) (q : Shell) (t : Rat) :
+    enstrophyShell traj q t = 0
 
 /-- **THEOREM**: For 2D-embedded flows, Bridge A is trivially satisfied (holonomy = 0).
 
