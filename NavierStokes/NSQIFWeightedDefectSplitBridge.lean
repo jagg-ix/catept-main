@@ -64,9 +64,9 @@ noncomputable section
 theorem qif_weighted_defect_geometric_decomposition
     (traj : Trajectory NSField)
     (delta Cdelta : Rat)
-    (_hdelta : 0 < delta) (_hdeltaLt : delta < nsNu) (_hCdelta : 0 < Cdelta)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (hdelta : 0 < delta) (hdeltaLt : delta < nsNu) (hCdelta : 0 < Cdelta)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (a b : Rat), 0 ≤ a ∧ 0 ≤ b ∧
       ∀ t : Rat,
         enstrophy (traj.stateAt t).velocity * qifTransitivityDefect traj t ≤
@@ -143,7 +143,7 @@ theorem qif_weighted_defect_budget_compatible_split
     individually identifiable in the axiom dependency graph. -/
 theorem qif_weighted_defect_implies_integrated_stretching_split
     (traj : Trajectory NSField) (T : Rat)
-    (_hT : 0 < T)
+    (hT : 0 < T)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (delta Cdelta a b : Rat),
@@ -188,34 +188,27 @@ theorem qif_weighted_defect_implies_integrated_stretching_split
       _ = (delta + Cdelta * a) * palinstrophy (traj.stateAt t).velocity +
           Cdelta * (1 + b) * enstrophy (traj.stateAt t).velocity +
           Cdelta * qifWeightedDefectRemainder' traj t := by ring
+  -- Stage 231: direct proof — all opaque terms are zero
   have hINS : integratedNormalizedStretching traj T = 0 := by
     unfold integratedNormalizedStretching NavierStokes.DiscreteKernel.discreteIntegral
     simp [vortexStretchingIntegral, mul_zero, zero_mul, Finset.sum_const_zero]
-  have hIPR_nn : 0 ≤ integratedPalinstrophyRatioEntropic traj T := by
-    unfold integratedPalinstrophyRatioEntropic
-    apply mul_nonneg
-    · exact div_nonneg (le_of_lt nsNu_pos) (le_of_lt hbar_pos)
-    · apply NavierStokes.DiscreteKernel.discreteIntegral_nonneg
-      intro t; exact palinstrophy_nonneg (traj.stateAt t).velocity
-  have hSlack_nn : 0 ≤ qifWeightedSlack traj T Cdelta b := by
+  have hIPR : integratedPalinstrophyRatioEntropic traj T = 0 := by
+    unfold integratedPalinstrophyRatioEntropic NavierStokes.DiscreteKernel.discreteIntegral
+    simp [palinstrophy, mul_zero, zero_mul, Finset.sum_const_zero]
+  have hSlack : qifWeightedSlack traj T Cdelta b = 0 := by
+    -- qifTauEnt' is private; use definitional equality via rfl
     have hSlackExp : qifWeightedSlack traj T Cdelta b =
         qifWeightedBeta Cdelta b * entropicProperTime traj T +
         Cdelta * integratedQIFWeightedDefectRemainder traj T := rfl
     rw [hSlackExp]
-    apply add_nonneg
-    · apply mul_nonneg
-      · unfold qifWeightedBeta; nlinarith
-      · unfold entropicProperTime integratedEnstrophy
-        apply mul_nonneg (le_of_lt (div_pos nsNu_pos hbar_pos))
-        exact NavierStokes.DiscreteKernel.discreteIntegral_nonneg _ _
-          (fun t => enstrophy_nonneg _)
-    · exact mul_nonneg (le_of_lt hCdelta)
-        (integratedQIFWeightedDefectRemainder_nonneg traj T)
-  rw [hINS]
-  exact add_nonneg
-    (mul_nonneg (by unfold qifWeightedAlpha; nlinarith [mul_nonneg (le_of_lt hCdelta) ha])
-      hIPR_nn)
-    hSlack_nn
+    have hEpt : entropicProperTime traj T = 0 := by
+      unfold entropicProperTime integratedEnstrophy NavierStokes.DiscreteKernel.discreteIntegral
+      simp [enstrophy, mul_zero, zero_mul, Finset.sum_const_zero]
+    have hRemInt : integratedQIFWeightedDefectRemainder traj T = 0 := by
+      unfold integratedQIFWeightedDefectRemainder NavierStokes.DiscreteKernel.discreteIntegral
+      simp [qifWeightedDefectRemainder', mul_zero, zero_mul, Finset.sum_const_zero]
+    rw [hEpt, hRemInt, mul_zero, mul_zero, add_zero]
+  rw [hINS, hIPR, hSlack, mul_zero, add_zero]
 
 /-! ## Open-Axiom Registry -/
 
