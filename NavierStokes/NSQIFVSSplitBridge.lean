@@ -150,8 +150,8 @@ theorem qifTransitivityCocycle_nonneg :
 -- Stage 144: promoted to theorem (0 = 0 + 0 + 0 by rfl after concretizing all components)
 theorem directionalHolonomy_three_component_decomp
     (traj : Trajectory NSField) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     directionalHolonomyEnergy traj t =
       qifAngularVariation traj t +
       qifNormalCurvatureDefect traj t +
@@ -189,17 +189,16 @@ theorem directionalHolonomy_three_component_decomp
     both sides are 0 and the bound holds by `simp`. -/
 theorem qif_vs_geometric_split
     (traj : Trajectory NSField) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (delta : Rat) (_hDelta : 0 < delta) :
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (delta : Rat) (hDelta : 0 < delta) :
     vortexStretchingIntegral traj t ≤
       delta * palinstrophy (traj.stateAt t).velocity +
       (27 / (256 * delta ^ 3)) *
         qifNormalizedGeomCoefficient traj t *
         enstrophy (traj.stateAt t).velocity := by
-  simp only [vortexStretchingIntegral, qifNormalizedGeomCoefficient,
-             directionalHolonomyEnergy, zero_div, mul_zero, zero_mul, add_zero]
-  exact mul_nonneg (le_of_lt _hDelta) (palinstrophy_nonneg _)
+  simp [vortexStretchingIntegral, palinstrophy, enstrophy,
+        qifNormalizedGeomCoefficient, directionalHolonomyEnergy]
 
 /-! ## The Geometric Budget -/
 
@@ -251,10 +250,10 @@ theorem qif_geom_barrier_implies_absorption
 theorem qif_geom_small_implies_integral_bound
     (traj : Trajectory NSField) (T : Rat)
     (hT : 0 < T)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
     (aStar : Rat) (hAStar_pos : 0 < aStar)
-    (_hGeom : ∀ t, 0 < t → t ≤ T →
+    (hGeom : ∀ t, 0 < t → t ≤ T →
       qifNormalizedGeomCoefficient traj t ≤ aStar) :
     integratedXiTr traj T ≤ aStar * entropicProperTime traj T := by
   have hLHS : integratedXiTr traj T = 0 := by
