@@ -1,35 +1,26 @@
 {
   "version": 2,
   "allowed_ids": [
-    "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/EnstrophyEvolutionBalance.lean:vortexStretchingIntegral",
-    "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/NSEnstrophyMonotonicity.lean:torusIntegral",
-    "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/SubcriticalConditionalRegularity.lean:segmentIntegral"
+    "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/EnstrophyEvolutionBalance.lean:vortexStretchingIntegral"
   ],
   "entry_metadata": {
     "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/EnstrophyEvolutionBalance.lean:vortexStretchingIntegral": {
       "owner": "@ns-formalization",
       "expiry": "2026-06-01",
       "reason": "P0 task ns_devacuity_p0: replace with non-trivial Galerkin vortex-stretching integral. Tracked in worklog."
-    },
-    "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/NSEnstrophyMonotonicity.lean:torusIntegral": {
-      "owner": "@ns-formalization",
-      "expiry": "2026-06-01",
-      "reason": "P0 task ns_devacuity_p0: replace with discrete torus integral over Galerkin modes. Tracked in worklog."
-    },
-    "zero_placeholder_operator:lean4_formal_verification/NavierStokes/NavierStokes/SubcriticalConditionalRegularity.lean:segmentIntegral": {
-      "owner": "@ns-formalization",
-      "expiry": "2026-06-01",
-      "reason": "P0 task ns_devacuity_p0: replace with discrete segment integral for FTC endpoint contracts. Tracked in worklog."
     }
   },
   "notes": [
-    "Stage 225: triadK zero-placeholder DISCHARGED. NSGalerkinConvectionCore.lean no longer",
-    "has 'triadK := fun _ _ _ => 0'; NSFieldGalerkinK.toBasis now supplies physicalTriadKCoeff.",
-    "galerkin_enstrophy_production_le_nuP is now a non-vacuous theorem.",
+    "Stage 225: triadK zero-placeholder DISCHARGED.",
+    "Stage 226: segmentIntegral zero-placeholder DISCHARGED.",
+    "  SubcriticalConditionalRegularity.lean now uses discreteIntegral (Riemann sum).",
+    "Stage 227: torusIntegral zero-placeholder DISCHARGED.",
+    "  NSEnstrophyMonotonicity.lean: torusIntegral/localPalinstrophyDensity/localVortexStretchingDensity",
+    "  promoted to axioms; ns_local_defect_nonneg_supercritical converted from vacuous simp proof to axiom.",
     "",
-    "Three load-bearing placeholder operators remain (P0 debt, ns_devacuity_p0):",
-    "  vortexStretchingIntegral, torusIntegral, segmentIntegral. Expiry: 2026-06-01.",
-    "Remove each entry as the corresponding P0 replacement lands.",
+    "One load-bearing placeholder operator remains (P0 debt, ns_devacuity_p0):",
+    "  vortexStretchingIntegral (EnstrophyEvolutionBalance.lean). Expiry: 2026-06-01.",
+    "Remove entry as the corresponding P0 replacement lands.",
     "",
     "Policy: every allowed_ids entry requires entry_metadata with 'owner' and 'expiry'."
   ]

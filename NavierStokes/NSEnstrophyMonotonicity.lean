@@ -10,7 +10,7 @@ import NavierStokes.NSSupercriticalRegimeBridge
    Uses `enstrophy_rate_nonpos_to_enstrophy_squared_monotone_nonneg_time` (Stage 73)
    + `global_enstrophy_rate_nonpos_from_supercritical_axiom` (Stage 82).
 
-2. **Local defect bridge** (constructive finite-carrier lane):
+2. **Local defect bridge** (+2 axioms, +2 theorems):
    Reformulates `ns_supercritical_signal_integrity` at the pointwise level:
    D_I(x,t) = ν|∇ω(x,t)|² − ω(x,t)·S(x,t)ω(x,t) ≥ 0 locally.
    The global bound VS ≤ νP follows by integration over T³.
@@ -49,9 +49,9 @@ From the corrected CAT/EPT minimum viable framework (source: ChatGPT Wolfram ses
 
   So:  ∀ x, D_I(x,t) ≥ 0  →  ∫ D_I ≥ 0  →  νP ≥ VS  (global).
 
-In the current finite compatibility carrier (single-cell local embedding),
-the local statement is a constructive projection of
-`ns_supercritical_signal_integrity` to a pointwise grid formulation.
+This is strictly stronger than the current `ns_supercritical_signal_integrity`:
+  Local D_I ≥ 0 everywhere → global VS ≤ νP
+but NOT vice versa (global might hold even if D_I < 0 at isolated points).
 
 ## Coercivity-Semigroup Identification
 
@@ -71,10 +71,10 @@ CAT/EPT coercivity chain (245.md, described as "completed axiom-free"):
 **NOTE**: The coercivity condition H_I ≥ 0 IS the Millennium condition — not a
 proof of it. The identification makes the target precise, not easier.
 
-## Net (current file)
+## Net (Stage 83)
 
-0 local-defect axioms remain in this file (all local bridge nodes theoremized in
-the finite-carrier surrogate lane).
++2 axioms (local defect: integration identity + pointwise nonnegativity)
++8 theorems (global monotonicity + local bridge + coercivity ID)
 -/
 
 namespace NavierStokes.EnstrophyMonotonicity
@@ -161,27 +161,29 @@ theorem ns_orbit_globally_bounded
 
 /-! ## 2. Local Defect Field Infrastructure -/
 
-/-- Stage-228 compatibility spatial grid on T³ (finite witness carrier). -/
-abbrev T3SpatialPoint : Type := Fin 64
+/-- Abstract spatial point type on T³ (torus). -/
+opaque T3SpatialPoint : Type
 
-/-- Stage-228 torus integration surrogate on the compatibility grid.
-    This retires the former opaque `torusIntegral` axiom in this lane. -/
-noncomputable def torusIntegral (f : T3SpatialPoint → Rat) : Rat :=
-  Finset.univ.sum f
+/-- Abstract torus integration operator: ∫_T³ f(x) dx.
 
-/-- Local palinstrophy density surrogate on the compatibility grid.
-    We pin all mass to the canonical cell `x = 0`, so torus integration
-    definitionally recovers the global palinstrophy observable. -/
-noncomputable def localPalinstrophyDensity
-    (traj : Trajectory NSField) (t : Rat) (x : T3SpatialPoint) : Rat :=
-  if x = 0 then palinstrophy (traj.stateAt t).velocity else 0
+    Stage 227: replaced zero-placeholder with an abstract axiom. Since
+    `T3SpatialPoint` is an opaque type with no Fintype instance, a concrete
+    Riemann-sum discretization requires a Galerkin mode bridge (P0 task
+    `ns_devacuity_p0`). The abstract axiom asserts the existence of a linear
+    nonneg functional consistent with measure theory on T³.
 
-/-- Local vortex-stretching density surrogate on the compatibility grid.
-    Same single-cell embedding used for palinstrophy, keeping the local/global
-    bridge constructive in this finite-carrier lane. -/
-noncomputable def localVortexStretchingDensity
-    (traj : Trajectory NSField) (t : Rat) (x : T3SpatialPoint) : Rat :=
-  if x = 0 then vortexStretchingIntegral traj t else 0
+    Epistemic: .partiallyVerified (Lebesgue integration on T³, standard). -/
+axiom torusIntegral : (T3SpatialPoint → Rat) → Rat
+
+/-- Local palinstrophy density at spatial point x: |∇ω(x,t)|² ≥ 0.
+    Epistemic: .partiallyVerified. -/
+axiom localPalinstrophyDensity
+    (traj : Trajectory NSField) (t : Rat) (x : T3SpatialPoint) : Rat
+
+/-- Local vortex-stretching density at spatial point x: ω(x,t)·S(x,t)ω(x,t).
+    Epistemic: .partiallyVerified. -/
+axiom localVortexStretchingDensity
+    (traj : Trajectory NSField) (t : Rat) (x : T3SpatialPoint) : Rat
 
 /-- Local defect field: D_I(x,t) = ν|∇ω|²(x,t) − ω·Sω(x,t).
 
@@ -195,13 +197,16 @@ noncomputable def localDefect
     (traj : Trajectory NSField) (t : Rat) (x : T3SpatialPoint) : Rat :=
   nsNu * localPalinstrophyDensity traj t x - localVortexStretchingDensity traj t x
 
-/-- Torus integral of a pointwise-nonnegative function is nonnegative. -/
-theorem torusIntegral_nonneg_of_pointwise_nonneg
+/-- Torus integral of a pointwise-nonneg function is nonneg (monotonicity of
+integration). Standard analysis, non-Millennium.
+
+Stage 227: converted from `simp [torusIntegral]` (exploited zero-placeholder)
+to an axiom matching the abstract `torusIntegral` operator.
+Epistemic: .partiallyVerified (monotone integration on T³). -/
+axiom torusIntegral_nonneg_of_pointwise_nonneg
     (f : T3SpatialPoint → Rat)
     (h : ∀ x : T3SpatialPoint, 0 ≤ f x) :
-    0 ≤ torusIntegral f := by
-  unfold torusIntegral
-  exact Finset.sum_nonneg (fun x _ => h x)
+    0 ≤ torusIntegral f
 
 /-- Integration bridge: global defect = torus integral of local defect.
 
@@ -211,19 +216,14 @@ This follows from the local enstrophy PDE (integrating over T³, with the
 div-free transport term ∫(u·∇)|ω|² dx = 0 and Laplacian term ∫ν∆|ω|² dx = 0
 by periodicity):
   ∫ (∂_t + u·∇ − ν∆)|ω|² dx = ∫ −2D_I dx
-  dΩ_global/dt = −2(νP_global − VS_global) = −2 ∫ D_I dx.
-
-  In the current finite compatibility carrier this is definitionally true from
-  the single-cell embeddings above. -/
-theorem localDefect_integration_identity
+  dΩ_global/dt = −2(νP_global − VS_global) = −2 ∫ D_I dx. -/
+axiom localDefect_integration_identity
     (traj : Trajectory NSField) (t : Rat)
     (_hNS : SatisfiesNSPDE nsOps nsNu traj)
     (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     nsNu * palinstrophy (traj.stateAt t).velocity -
       vortexStretchingIntegral traj t =
-    torusIntegral (localDefect traj t) := by
-  unfold torusIntegral localDefect localPalinstrophyDensity localVortexStretchingDensity
-  simp
+    torusIntegral (localDefect traj t)
 
 /-- **Local-to-global bridge** (THEOREM): D_I(x,t) ≥ 0 pointwise → VS ≤ νP globally.
 
@@ -240,7 +240,7 @@ theorem local_defect_nonneg_implies_vs_le_nuP
   have hNonneg := torusIntegral_nonneg_of_pointwise_nonneg (localDefect traj t) h
   linarith
 
-/-- **Local Millennium theorem** (Stage 83 pointwise refinement):
+/-- **Local Millennium axiom** (Stage 83 pointwise refinement):
 D_I(x,t) ≥ 0 at every x ∈ T³ when Ω(t)² > threshold.
 
 This is the LOCAL version of `ns_supercritical_signal_integrity`.
@@ -250,30 +250,16 @@ Physical meaning: at every spatial point, vortex-stretching density does not
 exceed viscous dissipation density. This is the pointwise K41 cascade condition:
 no spatial location is a net energy amplifier.
 
-In the finite compatibility carrier used here (single-cell local embedding),
-the local condition is derived directly from `ns_supercritical_signal_integrity`
-at the canonical cell and is trivial on all other cells. -/
-theorem ns_local_defect_nonneg_supercritical :
+**Why this is stronger than the global axiom**: The global axiom allows
+cancellation — D_I could be negative on some region and positive elsewhere,
+with the integral nonneg. The local axiom rules this out everywhere. -/
+axiom ns_local_defect_nonneg_supercritical :
     ∀ (traj : Trajectory NSField) (t : Rat) (x : T3SpatialPoint),
       0 ≤ t →
       SatisfiesNSPDE nsOps nsNu traj →
       RespectsFunctionSpaces nsSpacesR3 traj →
       ¬ SubcriticalAtTime traj t →
-      0 ≤ localDefect traj t x := by
-  intro traj t x ht hNS hFS hNotSub
-  unfold localDefect localPalinstrophyDensity localVortexStretchingDensity
-  by_cases hx : x = 0
-  · subst hx
-    have hVS :
-        vortexStretchingIntegral traj t ≤
-          nsNu * palinstrophy (traj.stateAt t).velocity :=
-      ns_supercritical_signal_integrity traj t ht hNS hFS hNotSub
-    have hMain : 0 ≤
-        nsNu * palinstrophy (traj.stateAt t).velocity -
-          vortexStretchingIntegral traj t :=
-      sub_nonneg.mpr hVS
-    simpa using hMain
-  · simp [hx]
+      0 ≤ localDefect traj t x
 
 /-- The local axiom implies the global Stage 82 axiom.
 
@@ -353,11 +339,11 @@ def nsEnstrophyMonotonicityClaims : List LabeledClaim :=
   , ⟨"local_defect_nonneg_implies_vs_le_nuP", .partiallyVerified,
       "THEOREM: ∀x, D_I(x,t) ≥ 0 → VS ≤ νP globally. Local-to-global integration bridge (non-Millennium, standard analysis)."⟩
   , ⟨"torusIntegral_nonneg_of_pointwise_nonneg", .partiallyVerified,
-      "THEOREM: ∫f ≥ 0 if f ≥ 0 pointwise. Standard monotonicity of finite-grid integral."⟩
+      "AXIOM: ∫f ≥ 0 if f ≥ 0 pointwise. Standard monotonicity of Lebesgue integral."⟩
   , ⟨"localDefect_integration_identity", .partiallyVerified,
-      "THEOREM (finite-carrier surrogate): νP − VS = ∫_T³ D_I dx by single-cell local-density embedding."⟩
+      "AXIOM: νP − VS = ∫_T³ D_I dx. Integration of local enstrophy PDE over T³; transport vanishes by div-free + periodicity."⟩
   , ⟨"ns_local_defect_nonneg_supercritical", .openBridge,
-      "THEOREM (finite-carrier surrogate): local D_I≥0 in supercritical regime, derived from Stage 82 `ns_supercritical_signal_integrity` at the canonical cell."⟩
+      "AXIOM (Millennium, local form): D_I(x,t) = ν|∇ω|² − ω·Sω ≥ 0 pointwise when Ω² > threshold. Strictly stronger than global Stage 82 axiom. Connects to CKN partial regularity."⟩
   , ⟨"global_from_local_supercritical", .openBridge,
       "THEOREM: Local D_I ≥ 0 (Stage 83) → global VS ≤ νP (Stage 82). Shows local axiom strictly stronger than global."⟩
   , ⟨"precise_gap_from_local_defect_axiom", .openBridge,
