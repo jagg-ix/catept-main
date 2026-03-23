@@ -212,4 +212,3 @@ import NavierStokes.NSYonedaEntangledFieldBridge
 import NavierStokes.NSTwoFiberCategoricalBridge
 import NavierStokes.NSVorticityCoadjointBridge
 import NavierStokes.NSFisherInformationBridge
-import NavierStokes.NSUnifiedPosetCategoryBridge
