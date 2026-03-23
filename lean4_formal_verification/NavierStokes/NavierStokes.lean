@@ -176,7 +176,6 @@ import NavierStokes.NSGalerkinInjectivityBridge
 import NavierStokes.NSGalerkinCayleySolveDef
 import NavierStokes.NSGalerkinCayleyLegacyAudit
 import NavierStokes.NSGalerkinConvStepDef
-import NavierStokes.NSGalerkinPhysicalTriadKernel
 import NavierStokes.NSGalerkinConvDef
 import NavierStokes.NSGalerkinSplittingCore
 import NavierStokes.NSGalerkinConvergence
@@ -216,5 +215,3 @@ import NavierStokes.NSVorticityCoadjointBridge
 import NavierStokes.NSFisherInformationBridge
 import NavierStokes.NSUnifiedPosetCategoryBridge
 import NavierStokes.NSPhysLeanCurlBridge
-import NavierStokes.NSPhysLeanVorticityBridge
-import NavierStokes.NSPhysLeanCurlCurlBridge
