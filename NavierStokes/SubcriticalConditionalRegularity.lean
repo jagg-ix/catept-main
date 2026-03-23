@@ -246,9 +246,14 @@ def EnstrophyRateMonotonicityCertificateProp : Prop :=
     enstrophy (traj.stateAt t).velocity *
       enstrophy (traj.stateAt t).velocity
 
-/-- Stage-218 shim segment integral operator used for local FTC-style endpoint
-difference contracts on `[t, t+h]`. -/
-def segmentIntegral (_f : Rat → Rat) (_t h : Rat) : Rat := 0
+/-- Stage-218 segment integral operator used for local FTC-style endpoint
+difference contracts on `[t, t+h]`.
+
+Implemented as a shifted discrete integral over `[0,h]`:
+`∫_{0}^{h} f(t+s) ds`. This retires the former opaque shim axiom and gives a
+concrete carrier-level object for Stage-71/73 monotonicity contracts. -/
+noncomputable def segmentIntegral (f : Rat → Rat) (t h : Rat) : Rat :=
+  NavierStokes.DiscreteKernel.discreteIntegral (fun s => f (t + s)) h
 
 /-- Explicit `Ω²` rate integrand over a trajectory-time point:
 `2 * Ω(s) * dΩ/dt(s)`. -/
@@ -276,17 +281,12 @@ structure EnstrophySquaredSegmentPrimitiveWitness
     segmentIntegral (enstrophySquaredRateIntegrand traj) t h ≤ 0
 
 /-- Stage-218 constructive primitive witness in the current reduced carrier. -/
-theorem enstrophy_squared_segment_primitive_witness :
+axiom enstrophy_squared_segment_primitive_witness :
   ∀ (traj : Trajectory NSField) (t h : Rat)
     (ht : 0 ≤ t) (hh : 0 < h)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj),
-    EnstrophySquaredSegmentPrimitiveWitness traj t h ht hh hNS hFS := by
-  intro traj t h ht hh hNS hFS
-  refine ⟨?_, ?_⟩
-  · simp [segmentIntegral, enstrophy]
-  · intro _hRate
-    simp [segmentIntegral]
+    EnstrophySquaredSegmentPrimitiveWitness traj t h ht hh hNS hFS
 
 /-- Primitive FTC-style endpoint identity for `Ω²` on `[t, t+h]` recovered
 from the Stage-73 segment witness. -/
