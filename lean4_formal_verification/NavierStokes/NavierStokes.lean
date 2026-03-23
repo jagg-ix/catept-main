@@ -3,7 +3,6 @@ import NavierStokes.EnergyDecomposition
 import NavierStokes.BridgeDecomposition
 import NavierStokes.SobolevEstimates
 import NavierStokes.AxiomaticEstimates
-import NavierStokes.NSPhysLeanOperatorAdapter
 import NavierStokes.BKMMinimalBridge
 import NavierStokes.DSFBridgeAxioms
 import NavierStokes.DualRiemannSphereNSBridge
@@ -214,5 +213,3 @@ import NavierStokes.NSTwoFiberCategoricalBridge
 import NavierStokes.NSVorticityCoadjointBridge
 import NavierStokes.NSFisherInformationBridge
 import NavierStokes.NSUnifiedPosetCategoryBridge
-import NavierStokes.NSPhysLeanCurlBridge
-import NavierStokes.NSPhysLeanVorticityBridge
