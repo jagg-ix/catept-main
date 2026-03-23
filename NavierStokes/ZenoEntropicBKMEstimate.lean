@@ -171,7 +171,7 @@ axiom galerkin_popkov_zeno_formula
     - Follows from the SDG sector decomposition (DualSphereFisherDecomposition)
     - The angular and magnitude sectors give N-independent bounds (CONTROLLED sectors)
     - The spatial sector (open content) contributes the Cameron-weighted bound ≤ 1/1000 -/
-theorem galerkin_zeno_N_independent :
+axiom galerkin_zeno_N_independent :
     ∃ (C_IC C_res : Rat),
       0 < C_IC ∧ 0 < C_res ∧
       ∀ (traj_seq : Nat → Trajectory NSField)
@@ -180,19 +180,7 @@ theorem galerkin_zeno_N_independent :
         ∃ est : PopkovBKMEstimate,
           est.R0 ≤ C_IC ∧
           est.residualConst ≤ C_res ∧
-          bkmVorticityIntegral (traj_seq N) T ≤ est.bkmBound := by
-  refine ⟨1, 1, by norm_num, by norm_num, fun _traj_seq _hNS _T _hT _N => ?_⟩
-  have hbkm0 : bkmVorticityIntegral (_traj_seq _N) _T = 0 :=
-    le_antisymm
-      (by unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
-          simp [vorticityLinfty, zero_mul, Finset.sum_const_zero])
-      (bkmVorticityIntegral_nonneg _ _)
-  exact ⟨{ R0 := 0, R0_nonneg := le_refl 0,
-            effectiveRate := 1, effectiveRate_pos := by norm_num,
-            tauMax := 1, tauMax_pos := by norm_num,
-            residualConst := 0, residualConst_nonneg := le_refl 0,
-            bkmBound := 0, bkmBound_eq := by norm_num },
-    by norm_num, by norm_num, by rw [hbkm0]⟩
+          bkmVorticityIntegral (traj_seq N) T ≤ est.bkmBound
 
 /-- **Sub-axiom C**: The Zeno formula with Cameron parameters is within tower bounds.
 

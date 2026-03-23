@@ -128,47 +128,6 @@ axiom rellich_kondrachov_ns :
           ∃ N, ∀ n, N ≤ n →
             kineticEnergy (nsAdd (seq (subseq n)) (nsSmul (-1) limit)) < ε)
 
-/-- Contract form of Rellich-Kondrachov compactness.
-
-    This keeps the compactness obligation injectable at call sites so we can
-    progressively replace the axiom route with theoremized infrastructure
-    without changing downstream theorem signatures. -/
-def RellichKondrachovContract : Prop :=
-  ∀ (seq : Nat → NSField),
-    (∀ n, nsVelocityMem (seq n)) →
-    (∃ (E_bound : Rat), ∀ n, kineticEnergy (seq n) ≤ E_bound) →
-    ∃ (subseq : Nat → Nat) (limit : NSField),
-      nsVelocityMem limit ∧
-      StrictMono subseq ∧
-      (∀ (ε : Rat), 0 < ε →
-        ∃ N, ∀ n, N ≤ n →
-          kineticEnergy (nsAdd (seq (subseq n)) (nsSmul (-1) limit)) < ε)
-
-/-- The current Rellich axiom discharges the contract form immediately. -/
-theorem rellich_kondrachov_contract_holds :
-    RellichKondrachovContract := by
-  intro seq hMem hBound
-  obtain ⟨subseq, limit, hMemLim, hMono, hConv⟩ :=
-    rellich_kondrachov_ns seq hMem hBound
-  exact ⟨subseq, limit, hMemLim, (fun {n m} hnm => hMono n m hnm), hConv⟩
-
-/-- Compatibility wrapper: any contract witness reproduces the legacy theorem
-    shape used across existing files. -/
-theorem rellich_kondrachov_ns_of_contract
-    (hRellich : RellichKondrachovContract) :
-    ∀ (seq : Nat → NSField),
-      (∀ n, nsVelocityMem (seq n)) →
-      (∃ (E_bound : Rat), ∀ n, kineticEnergy (seq n) ≤ E_bound) →
-      ∃ (subseq : Nat → Nat) (limit : NSField),
-        nsVelocityMem limit ∧
-        (∀ n m, n < m → subseq n < subseq m) ∧
-        (∀ (ε : Rat), 0 < ε →
-          ∃ N, ∀ n, N ≤ n →
-            kineticEnergy (nsAdd (seq (subseq n)) (nsSmul (-1) limit)) < ε) := by
-  intro seq hMem hBound
-  obtain ⟨subseq, limit, hMemLim, hMono, hConv⟩ := hRellich seq hMem hBound
-  exact ⟨subseq, limit, hMemLim, (fun n m hnm => hMono hnm), hConv⟩
-
 /-- The Galerkin level energy bounds are uniform (consequence of Leray energy inequality).
     For NS trajectories, the kinetic energy is monotone non-increasing. -/
 axiom galerkin_energy_uniform_bound :
@@ -294,14 +253,8 @@ def sobolevNSClaims : List LabeledClaim :=
       "H¹(T³) does NOT embed in L∞(T³): Morrey requires p > 3 but energy gives p=2"⟩
   , ⟨"sobolev_l6_embedding_3d", .partiallyVerified,
       "H¹(T³) ↪ L⁶(T³): the valid 3D Sobolev embedding (exponent 1/6 = 1/2 - 1/3)"⟩
-  , ⟨"RellichKondrachovContract", .verified,
-      "CONTRACT: injectable form of H¹(T³) ⊂⊂ L²(T³) compactness for downstream routes"⟩
   , ⟨"rellich_kondrachov_ns", .partiallyVerified,
       "H¹(T³) ⊂⊂ L²(T³): compact embedding drives Galerkin convergence"⟩
-  , ⟨"rellich_kondrachov_contract_holds", .verified,
-      "THEOREM: current Rellich axiom discharges the injectable compactness contract"⟩
-  , ⟨"rellich_kondrachov_ns_of_contract", .verified,
-      "THEOREM: any contract witness reproduces legacy rellich_kondrachov_ns theorem shape"⟩
   , ⟨"hilbert_basis_stokes", .partiallyVerified,
       "Stokes operator has countable orthonormal L²-eigenbasis (spectral theorem)"⟩
   , ⟨"stokes_eigenvalues_diverge", .partiallyVerified,

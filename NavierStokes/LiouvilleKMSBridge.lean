@@ -199,7 +199,7 @@ axiom conditional_liouville_from_kms_uniqueness :
 -- Physical proof: by_contra → blowup rescaling → ancient bounded solution (ESS 2003)
 -- → Liouville → trivial solution → contradiction with ‖u‖=1. Requires Mathlib by_contra.
 axiom liouville_implies_global_regularity :
-    ∀ (_liouville : LiouvilleTheoremNS) (traj : Trajectory NSField),
+    ∀ (liouville : LiouvilleTheoremNS) (traj : Trajectory NSField),
     SatisfiesNSPDE nsOps nsNu traj →
     RespectsFunctionSpaces nsSpacesR3 traj →
     ∀ (T : Rat), 0 < T →

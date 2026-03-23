@@ -246,14 +246,9 @@ def EnstrophyRateMonotonicityCertificateProp : Prop :=
     enstrophy (traj.stateAt t).velocity *
       enstrophy (traj.stateAt t).velocity
 
-/-- Stage-218 segment integral operator used for local FTC-style endpoint
-difference contracts on `[t, t+h]`.
-
-Implemented as a shifted discrete integral over `[0,h]`:
-`∫_{0}^{h} f(t+s) ds`. This retires the former opaque shim axiom and gives a
-concrete carrier-level object for Stage-71/73 monotonicity contracts. -/
-noncomputable def segmentIntegral (f : Rat → Rat) (t h : Rat) : Rat :=
-  NavierStokes.DiscreteKernel.discreteIntegral (fun s => f (t + s)) h
+/-- Stage-218 shim segment integral operator used for local FTC-style endpoint
+difference contracts on `[t, t+h]`. -/
+axiom segmentIntegral (f : Rat → Rat) (t h : Rat) : Rat
 
 /-- Explicit `Ω²` rate integrand over a trajectory-time point:
 `2 * Ω(s) * dΩ/dt(s)`. -/

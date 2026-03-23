@@ -315,10 +315,10 @@ theorem three_millennium_reformulations_equivalent :
     Axiom: re-stated here from Stage 73 (`enstrophyRate_eq_neg_two_imaginaryNoetherDefect`). -/
 theorem real_conservation_proxy
     (traj : Trajectory NSField) (t : Rat)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     enstrophyRate traj t = -2 * nsImaginaryNoetherDefect traj t := by
-  simp [enstrophyRate, nsImaginaryNoetherDefect, palinstrophy, vortexStretchingIntegral, nsNu]
+  unfold enstrophyRate nsImaginaryNoetherDefect; ring
 
 /-- When D_I ≥ 0 (VS ≤ νP), enstrophy is non-increasing: dΩ/dt ≤ 0. -/
 theorem enstrophy_nonincreasing_when_di_nonneg
