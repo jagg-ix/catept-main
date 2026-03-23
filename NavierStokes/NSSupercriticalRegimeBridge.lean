@@ -1,5 +1,4 @@
 import NavierStokes.NSInfoTheoreticBottleneckBridge
-import NavierStokes.NSGalerkinNSODETrajectory
 
 /-!
 # NS Supercritical Regime Bridge (Stage 82)
@@ -63,8 +62,6 @@ open NavierStokes.SubcriticalRegularity
 open NavierStokes.LerayEventualSubcritical
 open NavierStokes.LerayEnergyDecayClosure
 open NavierStokes.InfoTheoreticBottleneck
-open NavierStokes.GalerkinConvection   -- GalerkinBasis
-open NavierStokes.GalerkinComplexModel -- CoeffC, normSqC, waveVecMag2
 
 noncomputable section
 
@@ -91,70 +88,30 @@ theorem supercriticalDefect_nonneg_iff_vs_le_nuP
   unfold supercriticalDefect
   constructor <;> intro h <;> linarith
 
-/-! ## 2. Galerkin Kinetic Energy Defect (Stage 231) -/
+/-! ## 2. Narrow Lift Axiom (Stage 230) -/
 
-/-- **Galerkin kinetic energy defect** at level N: the viscous energy dissipation
-rate `ν · enstrophyK` associated with Galerkin mode coefficients `u` and basis.
+/-- **Galerkin-limit transport axiom**: the supercritical defect is nonneg
+for all NS smooth trajectories on T³ in the supercritical regime.
 
-This is the quantity that the `galerkin_energy_balance` theorem shows equals
-`-d/dt E_N` (energy decreases at rate ν·enstrophyK). It is the Galerkin-level
-analogue of the supercritical defect νP − VS. -/
-noncomputable def galerkinKineticEnergyDefect
-    {N : Nat} (basis : GalerkinBasis N) (ν : Rat) (u : CoeffC N) : Rat :=
-  ν * ∑ i : Fin N, waveVecMag2 (basis.wvec i) * normSqC (u i)
+**What this says**: `νP(traj,t) − VS(traj,t) ≥ 0` when Ω(t)² > threshold.
 
-/-- **THEOREM (Stage 231, 0 axioms)**: the Galerkin kinetic energy defect is
-nonneg for any ν > 0.
+**Why "transport"**: At each Galerkin truncation level N, the Galerkin ODE
+satisfies `VS_N ≤ ν·P_N` by the triadic cancellation identity
+(`triadK_self_cancel`). The open content is transporting this inequality
+through the N → ∞ limit to the actual NS trajectory — a compactness/semicontinuity
+argument that requires uniform estimates on `(VS_N − ν·P_N)⁻` in the limit.
 
-Proof: `ν > 0` (hypothesis) × `∑ |k|² |û|² ≥ 0` (sum of products of nonneg terms). -/
-theorem galerkin_kinetic_defect_nonneg
-    {N : Nat} (basis : GalerkinBasis N) (ν : Rat) (hν : 0 < ν) (u : CoeffC N) :
-    0 ≤ galerkinKineticEnergyDefect basis ν u :=
-  mul_nonneg (le_of_lt hν)
-    (Finset.sum_nonneg (fun i _ =>
-      mul_nonneg (waveVecMag2_nonneg (basis.wvec i)) (normSqC_nonneg (u i))))
-
-/-! ## 3. Narrow Transport Axiom (Stage 231) -/
-
-/-- **Tower-scoped transport axiom** (Stage 231): the NS supercritical defect is
-nonneg, given that the Galerkin kinetic energy defect is nonneg at every level.
-
-**What this captures**: the open transport gap is precisely the step from
-"ν·enstrophyK_N ≥ 0 at every Galerkin level N" to "νP − VS ≥ 0 for the NS
-limit trajectory." This requires:
-  (a) A Galerkin approximating sequence converging to `traj`
-  (b) Weak lower semicontinuity of the defect functional under N → ∞
-  (c) The identification of the Galerkin kinetic energy defect with νP_N − VS_N
-
-**Epistemic status** (.openBridge): the Galerkin-level fact (the hypothesis) is
-a proved theorem (`galerkin_kinetic_defect_nonneg`). Only the compactness/transport
-step remains open. -/
-axiom galerkin_ns_defect_limit_transport :
+**Epistemic status** (.openBridge): requires weak lower semicontinuity of the
+defect functional under Galerkin→NS weak limits. Not available without uniform
+H¹ compactness on the defect. This is the precise transport gap remaining after
+the Galerkin-level cancellation is already formalized (Stage 163–171). -/
+axiom supercritical_defect_nonneg_from_galerkin_limit :
     ∀ (traj : Trajectory NSField) (t : Rat),
       0 ≤ t →
       SatisfiesNSPDE nsOps nsNu traj →
       RespectsFunctionSpaces nsSpacesR3 traj →
       ¬ SubcriticalAtTime traj t →
-      (∀ {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N),
-          0 ≤ galerkinKineticEnergyDefect basis nsNu u) →
       0 ≤ supercriticalDefect traj t
-
-/-- **THEOREM (Stage 231)**: NS supercritical defect ≥ 0 in the supercritical regime.
-
-Derived by applying `galerkin_ns_defect_limit_transport` with the proved
-`galerkin_kinetic_defect_nonneg` as the Galerkin premise. This replaces the
-former broad axiom `supercritical_defect_nonneg_from_galerkin_limit`. -/
-theorem supercritical_defect_nonneg_from_galerkin_limit :
-    ∀ (traj : Trajectory NSField) (t : Rat),
-      0 ≤ t →
-      SatisfiesNSPDE nsOps nsNu traj →
-      RespectsFunctionSpaces nsSpacesR3 traj →
-      ¬ SubcriticalAtTime traj t →
-      0 ≤ supercriticalDefect traj t := by
-  intro traj t ht hNS hFS hNotSub
-  apply galerkin_ns_defect_limit_transport traj t ht hNS hFS hNotSub
-  intro N basis u
-  exact galerkin_kinetic_defect_nonneg basis nsNu nsNu_pos u
 
 /-! ## 3. The Millennium Theorem (derived from narrow lift) -/
 
@@ -285,7 +242,7 @@ structure MillenniumIrreducibilityCertificate where
   supercriticalCaseOpen         : Bool := true
   /-- The one remaining axiom is the Galerkin→NS transport lift. -/
   singleOpenAxiom               : String :=
-    "galerkin_ns_defect_limit_transport"
+    "supercritical_defect_nonneg_from_galerkin_limit"
   /-- This axiom is equivalent to global enstrophy monotonicity. -/
   equivalentToEnstrophyMonotone : Bool := true
   /-- All other proof routes converge on this one axiom. -/
@@ -324,16 +281,10 @@ theorem global_enstrophy_rate_nonpos_from_supercritical_axiom
 /-! ## 7. Claim Registry -/
 
 def nsSupercriticalRegimeClaims : List LabeledClaim :=
-  [ ⟨"galerkin_ns_defect_limit_transport", .openBridge,
-      "AXIOM (Stage 231, transport gap): if Galerkin-level defects are nonneg along approximating tower, " ++
-      "then NS-limit defect is nonneg. Minimal content: lower semicontinuity of defect functional under Galerkin limit. " ++
-      "Galerkin nonnegativity itself is a THEOREM (galerkin_kinetic_defect_nonneg, 0 axioms, Stage 231)."⟩
-  , ⟨"galerkin_kinetic_defect_nonneg", .verified,
-      "THEOREM (Stage 231, 0 axioms): Galerkin-level defect ν·Σ|k|²|û_k|² ≥ 0 from ν>0 + sum of squares. " ++
-      "Proved by mul_nonneg + Finset.sum_nonneg + waveVecMag2_nonneg + normSqC_nonneg."⟩
-  , ⟨"supercritical_defect_nonneg_from_galerkin_limit", .openBridge,
-      "THEOREM (Stage 231): νP−VS ≥ 0 when supercritical — derived from transport axiom + Galerkin theorem. " ++
-      "No longer an axiom (Stage 230 demoted it; Stage 231 proves it from narrow transport axiom)."⟩
+  [ ⟨"supercritical_defect_nonneg_from_galerkin_limit", .openBridge,
+      "AXIOM (transport gap): defect νP−VS ≥ 0 when supercritical. " ++
+      "Scoped to Galerkin→NS weak-limit transport (lower semicontinuity of defect functional). " ++
+      "Single irreducible content — Galerkin cancellation already proved (Stage 163–171)."⟩
   , ⟨"ns_supercritical_signal_integrity", .openBridge,
       "THEOREM (Stage 230): VS ≤ νP when Ω² > threshold — derived from " ++
       "`supercritical_defect_nonneg_from_galerkin_limit` by `linarith`. No longer an axiom."⟩
@@ -350,7 +301,7 @@ def nsSupercriticalRegimeClaims : List LabeledClaim :=
   , ⟨"global_enstrophy_rate_nonpos_from_supercritical_axiom", .openBridge,
       "THEOREM (conditional): dΩ/dt ≤ 0 for all t ≥ 0 — global enstrophy monotonicity from two-regime VS ≤ νP."⟩
   , ⟨"irreducibility_cert_complete", .verified,
-      "THEOREM: irreducibility certificate — single open axiom `galerkin_ns_defect_limit_transport` (Galerkin→NS transport) is the unique remaining content (Stage 231)."⟩
+      "THEOREM: irreducibility certificate — single open axiom `supercritical_defect_nonneg_from_galerkin_limit` (Galerkin→NS transport) is the unique remaining content."⟩
   ]
 
 end
