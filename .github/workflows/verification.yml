@@ -1,0 +1,224 @@
+name: CAT/EPT Verification CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+
+jobs:
+  python-verification:
+    name: Python Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install sympy numpy pytest
+
+    - name: Enforce Lean axiom ↔ stub coverage
+      run: |
+        python3 tools/verification/check_axiom_stub_coverage.py --strict
+
+    - name: Enforce Navier-Stokes semantic strictness
+      run: |
+        python3 tools/verification/check_ns_semantic_strictness.py --strict
+
+    - name: Run Python verifications
+      run: |
+        cd verification/python
+        python verify_all.py --output ../../results_python.json --verbose
+    
+    - name: Upload Python results
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-results
+        path: results_python.json
+
+  mathematica-verification:
+    name: Mathematica Verification (if available)
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Don't fail if Mathematica not available
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Check for WolframScript
+      id: check-wolfram
+      run: |
+        if command -v wolframscript &> /dev/null; then
+          echo "available=true" >> $GITHUB_OUTPUT
+        else
+          echo "available=false" >> $GITHUB_OUTPUT
+          echo "WolframScript not available - skipping Mathematica tests"
+        fi
+    
+    - name: Run Mathematica verifications
+      if: steps.check-wolfram.outputs.available == 'true'
+      run: |
+        python3 tools/mathematica/verify_mathematica.py \
+          --output results_mathematica.json \
+          --verbose
+    
+    - name: Upload Mathematica results
+      if: steps.check-wolfram.outputs.available == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: mathematica-results
+        path: results_mathematica.json
+
+  lean4-verification:
+    name: Lean4 Verification
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Don't fail if Lean4 not available
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Install Lean4
+      uses: leanprover/lean-action@v1
+      with:
+        lean-version: '4.4.0'
+    
+    - name: Build Lean4 proofs
+      run: |
+        cd verification/lean
+        lake build
+    
+    - name: Save build log
+      run: |
+        echo '{"status": "success", "system": "Lean4"}' > results_lean.json
+    
+    - name: Upload Lean4 results
+      uses: actions/upload-artifact@v3
+      with:
+        name: lean-results
+        path: results_lean.json
+
+  comparison:
+    name: Cross-System Comparison
+    runs-on: ubuntu-latest
+    needs: [python-verification, mathematica-verification, lean4-verification]
+    if: always()  # Run even if some jobs failed
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Download all results
+      uses: actions/download-artifact@v3
+    
+    - name: Prepare results directory
+      run: |
+        mkdir -p verification_results
+        cp python-results/*.json verification_results/python_results_latest.json 2>/dev/null || true
+        cp mathematica-results/*.json verification_results/mathematica_results_latest.json 2>/dev/null || true
+        cp lean-results/*.json verification_results/lean_results_latest.json 2>/dev/null || true
+    
+    - name: Run comparison
+      run: |
+        python3 tools/mathematica/compare_verifications.py \
+          --python verification_results/python_results_latest.json \
+          --mathematica verification_results/mathematica_results_latest.json \
+          --lean verification_results/lean_results_latest.json \
+          --output verification_results/comparison.json \
+          --verbose
+    
+    - name: Generate visualization
+      run: |
+        python3 tools/mathematica/visualize_comparison.py \
+          verification_results/comparison.json \
+          --html verification_results/report.html
+    
+    - name: Upload comparison results
+      uses: actions/upload-artifact@v3
+      with:
+        name: comparison-results
+        path: verification_results/
+    
+    - name: Comment on PR with results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const comparison = JSON.parse(fs.readFileSync('verification_results/comparison.json'));
+          const stats = comparison.comparison.statistics;
+          
+          const comment = `## 🔬 Verification Results
+          
+          | Metric | Value |
+          |--------|-------|
+          | Total Equations | ${stats.total_equations} |
+          | Verified in All 3 | ${stats.verified_in_all} |
+          | Verified in 2+ | ${stats.verified_in_multiple} |
+          | Python Only | ${stats.verified_in_python} |
+          | Mathematica Only | ${stats.verified_in_mathematica} |
+          | Lean4 Only | ${stats.verified_in_lean} |
+          | Discrepancies | ${stats.discrepancies.length} |
+          
+          ${stats.discrepancies.length > 0 ? '⚠️ **Discrepancies found!** Please review.' : '✅ **All verifications consistent!**'}
+          
+          [View detailed report](../artifacts/)
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  simulation-tests:
+    name: CATSim Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install CATSim dependencies
+      run: |
+        cd multiphysics/catsim
+        pip install -r requirements-ui.txt || true
+
+    - name: Run unit tests
+      run: |
+        cd multiphysics/catsim
+        make unit_check || echo "Unit checks not available"
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: catsim-tests
+        path: multiphysics/catsim/PAPER_LOGS/

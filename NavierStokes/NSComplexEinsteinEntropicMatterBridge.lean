@@ -318,7 +318,7 @@ theorem real_conservation_proxy
     (_hNS : SatisfiesNSPDE nsOps nsNu traj)
     (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     enstrophyRate traj t = -2 * nsImaginaryNoetherDefect traj t := by
-  unfold enstrophyRate nsImaginaryNoetherDefect; ring
+  simp [enstrophyRate, nsImaginaryNoetherDefect, vortexStretchingIntegral, nsNu]
 
 /-- When D_I ≥ 0 (VS ≤ νP), enstrophy is non-increasing: dΩ/dt ≤ 0. -/
 theorem enstrophy_nonincreasing_when_di_nonneg

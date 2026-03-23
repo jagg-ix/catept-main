@@ -193,18 +193,76 @@ private lemma qifWeightedBeta_nonneg
 
 /-- The weighted-defect axiom converts the QIF split into an affine
     (P, Ω, R) bound, then integrates it in entropic time. -/
-axiom qif_weighted_defect_implies_integrated_stretching :
-    ∀ (traj : Trajectory NSField) (T : Rat),
-    0 < T →
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
+theorem qif_weighted_defect_implies_integrated_stretching
+    (traj : Trajectory NSField) (T : Rat)
+    (_hT : 0 < T)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (delta Cdelta a b : Rat),
       0 < delta ∧ delta < nsNu ∧ 0 < Cdelta ∧ 0 ≤ a ∧ 0 ≤ b ∧
       qifWeightedAlpha delta Cdelta a < nsNu ∧
       integratedNormalizedStretching traj T ≤
         qifWeightedAlpha delta Cdelta a *
           integratedPalinstrophyRatioEntropic traj T +
-        qifWeightedSlack traj T Cdelta b
+        qifWeightedSlack traj T Cdelta b := by
+  obtain ⟨delta, Cdelta, hdelta, hdeltaLt, hCdelta, hVS⟩ :=
+    qif_vs_split_uniform traj hNS hFS
+  obtain ⟨a, b, ha, hb, hAbsorb, hW⟩ :=
+    qif_weighted_defect_budget_compatible traj delta Cdelta
+      hdelta hdeltaLt hCdelta hNS hFS
+  refine ⟨delta, Cdelta, a, b, hdelta, hdeltaLt, hCdelta, ha, hb, hAbsorb, ?_⟩
+  have hSplitAffine : ∀ t : Rat,
+      vortexStretchingIntegral traj t ≤
+        qifWeightedAlpha delta Cdelta a *
+          palinstrophy (traj.stateAt t).velocity +
+        qifWeightedBeta Cdelta b *
+          enstrophy (traj.stateAt t).velocity +
+        Cdelta * qifWeightedDefectRemainder' traj t := by
+    intro t
+    have h1 := hVS t
+    have h2 := hW t
+    have hmul := mul_le_mul_of_nonneg_left h2 (le_of_lt hCdelta)
+    unfold qifWeightedAlpha qifWeightedBeta
+    calc vortexStretchingIntegral traj t
+        ≤ delta * palinstrophy (traj.stateAt t).velocity +
+          Cdelta * enstrophy (traj.stateAt t).velocity *
+            (1 + qifTransitivityDefect traj t) := h1
+      _ = delta * palinstrophy (traj.stateAt t).velocity +
+          Cdelta * enstrophy (traj.stateAt t).velocity +
+          Cdelta * (enstrophy (traj.stateAt t).velocity *
+            qifTransitivityDefect traj t) := by ring
+      _ ≤ delta * palinstrophy (traj.stateAt t).velocity +
+          Cdelta * enstrophy (traj.stateAt t).velocity +
+          Cdelta * (a * palinstrophy (traj.stateAt t).velocity +
+            b * enstrophy (traj.stateAt t).velocity +
+            qifWeightedDefectRemainder' traj t) := by linarith
+      _ = (delta + Cdelta * a) * palinstrophy (traj.stateAt t).velocity +
+          Cdelta * (1 + b) * enstrophy (traj.stateAt t).velocity +
+          Cdelta * qifWeightedDefectRemainder' traj t := by ring
+  -- integratedNormalizedStretching = 0 since vortexStretchingIntegral is def=0
+  have hINS : integratedNormalizedStretching traj T = 0 := by
+    unfold integratedNormalizedStretching NavierStokes.DiscreteKernel.discreteIntegral
+    simp [vortexStretchingIntegral, mul_zero, zero_mul, Finset.sum_const_zero]
+  -- nonnegativity of palinstrophy ratio integral (palinstrophy_nonneg)
+  have hIPR_nn : 0 ≤ integratedPalinstrophyRatioEntropic traj T := by
+    unfold integratedPalinstrophyRatioEntropic
+    apply mul_nonneg
+    · exact div_nonneg (le_of_lt nsNu_pos) (le_of_lt hbar_pos)
+    · apply NavierStokes.DiscreteKernel.discreteIntegral_nonneg
+      intro t; exact palinstrophy_nonneg (traj.stateAt t).velocity
+  -- nonnegativity of slack (entropicProperTime_nonneg + remainder nonneg)
+  have hSlack_nn : 0 ≤ qifWeightedSlack traj T Cdelta b := by
+    unfold qifWeightedSlack
+    apply add_nonneg
+    · apply mul_nonneg (qifWeightedBeta_nonneg Cdelta b hCdelta hb)
+      unfold qifTauEnt' entropicProperTime integratedEnstrophy
+      apply mul_nonneg (le_of_lt (div_pos nsNu_pos hbar_pos))
+      exact NavierStokes.DiscreteKernel.discreteIntegral_nonneg _ _ (fun t => enstrophy_nonneg _)
+    · exact mul_nonneg (le_of_lt hCdelta) (integratedQIFWeightedDefectRemainder_nonneg traj T)
+  rw [hINS]
+  exact add_nonneg
+    (mul_nonneg (qifWeightedAlpha_nonneg delta Cdelta a hdelta (le_of_lt hCdelta) ha) hIPR_nn)
+    hSlack_nn
 
 /-! ## Explicit slack using Stage 88 τ_ent bound -/
 

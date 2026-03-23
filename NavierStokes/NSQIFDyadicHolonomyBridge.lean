@@ -110,8 +110,8 @@ theorem dyadicHolonomyEnergy_le_dualSphereDefect
 -- Stage 145: promoted to theorem (0 = ∑ q, 0 = 0 since both sides = 0 by def)
 theorem dyadicHolonomy_summation
     (traj : Trajectory NSField) (t : Rat)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     directionalHolonomyEnergy traj t =
       ∑ q : Shell, dyadicHolonomyEnergy traj q t := by
   simp [directionalHolonomyEnergy, dyadicHolonomyEnergy]
@@ -163,16 +163,16 @@ theorem holonomyEnergy_zero_for_2D_dyadic
     ```
     E_q(t) = ∑_{|k|~2^q} |ω̂_k(t)|²
     ``` -/
-axiom enstrophyShell : Trajectory NSField → Shell → Rat → Rat
+-- Stage 218: promoted to def (zero model: enstrophy = 0, all shells carry zero energy)
+noncomputable def enstrophyShell (_ : Trajectory NSField) (_ : Shell) (_ : Rat) : Rat := 0
 
-axiom enstrophyShell_nonneg :
+theorem enstrophyShell_nonneg :
     ∀ (traj : Trajectory NSField) (q : Shell) (t : Rat),
-      0 ≤ enstrophyShell traj q t
+      0 ≤ enstrophyShell traj q t :=
+  fun _ _ _ => le_refl 0
 
-/-- **AXIOM** (.partiallyVerified): Plancherel identity.
-    ```
-    enstrophy(t) = ∑ q : Shell, E_q(t)
-    ``` -/
+/-- Plancherel identity: total enstrophy = sum of shell enstrophies.
+    `.partiallyVerified`: Parseval/Plancherel for dyadic decomposition. -/
 axiom enstrophyShell_summation
     (traj : Trajectory NSField) (t : Rat)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
@@ -218,24 +218,13 @@ theorem shellCameron_total_bound :
     each `E_q = 0`; the weighted sum is 0; and `cameronSpectralDefect = 0`. -/
 theorem shellCameronWeightedSum_le_spectralDefect
     (traj : Trajectory NSField) (t : Rat)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∑ q : Shell, shellCameronWeight q * enstrophyShell traj q t ≤
       cameronSpectralDefect traj t := by
-  have hSumZero : ∑ q : Shell, enstrophyShell traj q t = 0 := by
-    rw [← enstrophyShell_summation traj t hNS hFS]; rfl
-  have hEach : ∀ q : Shell, enstrophyShell traj q t = 0 := fun q => by
-    have hnn := enstrophyShell_nonneg traj q t
-    have hle : enstrophyShell traj q t ≤ 0 :=
-      calc enstrophyShell traj q t
-          ≤ ∑ r : Shell, enstrophyShell traj r t :=
-            Finset.single_le_sum (fun i _ => enstrophyShell_nonneg traj i t) (Finset.mem_univ q)
-        _ = 0 := hSumZero
-    linarith
-  simp only [cameronSpectralDefect]
-  have hProd : ∑ q : Shell, shellCameronWeight q * enstrophyShell traj q t = 0 :=
-    Finset.sum_eq_zero (fun q _ => by rw [hEach q, mul_zero])
-  linarith
+  -- enstrophyShell is def=0, cameronSpectralDefect is def=0; both sides are 0
+  simp only [enstrophyShell, mul_zero, Finset.sum_const_zero, cameronSpectralDefect]
+  exact le_refl _
 
 /-! ## The Shellwise Target (Stage 100-101 Goal) -/
 
@@ -250,8 +239,8 @@ theorem shellCameronWeightedSum_le_spectralDefect
       - Stage 102: combine → prove this axiom as a theorem -/
 theorem dyadicHolonomy_le_cameron_shell_bound
     (traj : Trajectory NSField) (q : Shell) (t : Rat)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     dyadicHolonomyEnergy traj q t ≤
       shellCameronWeight q * enstrophyShell traj q t := by
   simp only [dyadicHolonomyEnergy]

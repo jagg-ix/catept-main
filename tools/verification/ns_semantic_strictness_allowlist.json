@@ -1,20 +1,11 @@
 {
-  "version": 2,
+  "version": 1,
   "allowed_ids": [],
-  "entry_metadata": {},
   "notes": [
-    "Stage 225: triadK zero-placeholder DISCHARGED.",
-    "Stage 226: segmentIntegral zero-placeholder DISCHARGED.",
-    "  SubcriticalConditionalRegularity.lean now uses discreteIntegral (Riemann sum).",
-    "Stage 227: torusIntegral zero-placeholder DISCHARGED.",
-    "  NSEnstrophyMonotonicity.lean: torusIntegral/localPalinstrophyDensity/localVortexStretchingDensity",
-    "  promoted to axioms; ns_local_defect_nonneg_supercritical converted from vacuous simp proof to axiom.",
-    "Stage 228: vortexStretchingIntegral zero-placeholder DISCHARGED.",
-    "  EnstrophyEvolutionBalance.lean: vortexStretchingIntegral promoted to axiom.",
-    "  ~40 vacuous simp proofs across ~20 files converted to axioms (de-vacuity cascade).",
-    "",
-    "No load-bearing placeholder operators remain (P0 debt cleared).",
-    "",
-    "Policy: every allowed_ids entry requires entry_metadata with 'owner' and 'expiry'."
+    "All known drift resolved as of Stage 224:",
+    "  - qif_integrated_vs_bound_entropic: axiom → theorem (entropic_time_integral_of_linear_omega_bound)",
+    "  - qif_pal_bound_uniform_in_energy_entropic: dead axiom removed (content proved elsewhere)",
+    "  - qifV2AllOpenAxioms registry updated to honestly enumerate 2 remaining factorization axioms.",
+    "Keep allowlist empty. Add entries only for known debt with a removal plan."
   ]
 }

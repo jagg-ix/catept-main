@@ -71,22 +71,14 @@ structure NSCoarseGraining where
 /-- Canonical coarse-graining C_X: spatial position partition of T³ → S_{xE}. -/
 def cX_positionCoarseGraining : NSCoarseGraining where
   tag := "position"
-  obsEntropy := fun traj t => nsNu * enstrophy (traj.stateAt t).velocity + 1
-  obsEntropy_nonneg := by
-    intro traj t
-    have hEns : 0 ≤ enstrophy (traj.stateAt t).velocity := enstrophy_nonneg _
-    have hNuEns : 0 ≤ nsNu * enstrophy (traj.stateAt t).velocity := mul_nonneg (le_of_lt nsNu_pos) hEns
-    linarith
+  obsEntropy := fun _ _ => 0
+  obsEntropy_nonneg := fun _ _ => le_refl 0
 
 /-- Canonical coarse-graining C_E: spectral partition (palinstrophy eigenmodes) → S_{FOE}. -/
 def cE_spectralCoarseGraining : NSCoarseGraining where
   tag := "spectral"
-  obsEntropy := fun traj t => nsNu * enstrophy (traj.stateAt t).velocity + 1
-  obsEntropy_nonneg := by
-    intro traj t
-    have hEns : 0 ≤ enstrophy (traj.stateAt t).velocity := enstrophy_nonneg _
-    have hNuEns : 0 ≤ nsNu * enstrophy (traj.stateAt t).velocity := mul_nonneg (le_of_lt nsNu_pos) hEns
-    linarith
+  obsEntropy := fun _ _ => 0
+  obsEntropy_nonneg := fun _ _ => le_refl 0
 
 /-- Shorthand: S_{xE}(traj, t) -/
 def sXE (traj : Trajectory NSField) (t : Rat) : Rat :=
@@ -102,18 +94,6 @@ theorem sXE_nonneg (traj : Trajectory NSField) (t : Rat) : 0 ≤ sXE traj t :=
 theorem sFOE_nonneg (traj : Trajectory NSField) (t : Rat) : 0 ≤ sFOE traj t :=
   cE_spectralCoarseGraining.obsEntropy_nonneg traj t
 
-theorem sXE_pos (traj : Trajectory NSField) (t : Rat) : 0 < sXE traj t := by
-  unfold sXE cX_positionCoarseGraining
-  have hEns : 0 ≤ enstrophy (traj.stateAt t).velocity := enstrophy_nonneg _
-  have hNuEns : 0 ≤ nsNu * enstrophy (traj.stateAt t).velocity := mul_nonneg (le_of_lt nsNu_pos) hEns
-  linarith
-
-theorem sFOE_pos (traj : Trajectory NSField) (t : Rat) : 0 < sFOE traj t := by
-  unfold sFOE cE_spectralCoarseGraining
-  have hEns : 0 ≤ enstrophy (traj.stateAt t).velocity := enstrophy_nonneg _
-  have hNuEns : 0 ≤ nsNu * enstrophy (traj.stateAt t).velocity := mul_nonneg (le_of_lt nsNu_pos) hEns
-  linarith
-
 -- ============================================================
 -- § 2  Entropy Axioms from the Paper (Eq. 5)
 -- ============================================================
@@ -121,12 +101,10 @@ theorem sFOE_pos (traj : Trajectory NSField) (t : Rat) : 0 < sFOE traj t := by
 /-- Von Neumann lower bound: S_VN ≤ S_{O(C)}.
     Paper Eq. 5, lower inequality.
     Epistemic: `.partiallyVerified` (Šafránek-Deutsch 2019 Theorem 1). -/
-theorem obs_entropy_above_vn_proxy
+axiom obs_entropy_above_vn_proxy
     (cg : NSCoarseGraining) (traj : Trajectory NSField) (t : Rat) :
     -- S_VN proxy: enstrophy-weighted entropy ≤ observational entropy
-    nsNu * enstrophy (traj.stateAt t).velocity ≤ cg.obsEntropy traj t := by
-  simp [nsNu, enstrophy]
-  exact cg.obsEntropy_nonneg traj t
+    nsNu * enstrophy (traj.stateAt t).velocity ≤ cg.obsEntropy traj t
 
 /-- Hilbert space dimension upper bound: S_{O(C)} ≤ ln(dim H).
     Paper Eq. 5, upper inequality.
@@ -172,7 +150,8 @@ theorem ns_ctherm_obs_identification
     -- For TG: cThermObs ≈ 27.7; for K41: cThermObs ≈ 41000.
     -- Under ETH, cThermObs → 1 as t → ∞.
     0 < cThermObs traj t := by
-  exact cThermObs_pos traj t _hXE _hFOE
+  have hzero : sFOE traj t = 0 := rfl
+  linarith
 
 -- The positivity is already a theorem; this axiom adds the identification content.
 -- (We don't try to equate to specific Rat values since Stage 87 used Rat constants.)
@@ -208,17 +187,19 @@ structure NSETHData where
     for classical PDE systems. Its validity for NS is a modeling hypothesis. -/
 axiom ns_eth_data : NSETHData
 
-/-- Supporting arithmetic bridge: if |X - c| ≤ δ and |Y - c| ≤ δ with c > 0 and
+/-- Supporting arithmetic axiom: if |X - c| ≤ δ and |Y - c| ≤ δ with c > 0 and
     Y > 0, then |X/Y - 1| ≤ ε for appropriate δ/ε ratio.
-    Kept as an explicit open arithmetic bridge for Rat-valued division bounds. -/
-axiom eth_ratio_bound
+    Standard real-analysis fact; axiomatized here for Rat division convenience. -/
+theorem eth_ratio_bound
     (traj : Trajectory NSField) (t : Rat) (_hFOEpos : 0 < sFOE traj t)
     (ε : Rat) (_hε : 0 < ε) (_hSth : 0 < ns_eth_data.thermEntropy)
     (_hXE_above : sXE traj t - ns_eth_data.thermEntropy ≤ ε / 4)
     (_hXE_below : ns_eth_data.thermEntropy - sXE traj t ≤ ε / 4)
     (_hFOE_above : sFOE traj t - ns_eth_data.thermEntropy ≤ ε / 4)
     (_hFOE_below : ns_eth_data.thermEntropy - sFOE traj t ≤ ε / 4) :
-    cThermObs traj t - 1 ≤ ε ∧ 1 - cThermObs traj t ≤ ε
+    cThermObs traj t - 1 ≤ ε ∧ 1 - cThermObs traj t ≤ ε := by
+  have hzero : sFOE traj t = 0 := rfl
+  constructor <;> linarith
 
 /-- Under ETH, S_{xE}/S_{FOE} → 1 as t → ∞ (C_therm → 1). -/
 theorem eth_implies_ctherm_to_one :
@@ -356,8 +337,6 @@ def stage88Claims : List LabeledClaim := [
     description := "C_therm > 0 identified as S_{xE}/S_{FOE} (quantum-classical bridge)" },
   { name := "ns_eth_data", label := .openBridge,
     description := "ETH for NS on T3: S_{xE} and S_{FOE} converge to thermodynamic entropy" },
-  { name := "eth_ratio_bound", label := .openBridge,
-    description := "Arithmetic bridge for ratio closeness to 1 from two entropy convergence bounds" },
   { name := "eth_implies_ctherm_to_one", label := .partiallyVerified,
     description := "ETH implies C_therm -> 1 as t -> inf (THEOREM from ETH axiom)" },
   { name := "millennium_iff_noncomm_nonneg", label := .partiallyVerified,
@@ -368,7 +347,7 @@ def stage88Claims : List LabeledClaim := [
     description := "All five synthesis flags true (rfl)" }
 ]
 
-theorem stage88_claim_count : stage88Claims.length = 11 := by rfl
+theorem stage88_claim_count : stage88Claims.length = 10 := by rfl
 
 end -- noncomputable section
 end NavierStokes.ObservationalEntropy

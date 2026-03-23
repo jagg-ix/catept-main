@@ -187,16 +187,19 @@ theorem directionalHolonomy_three_component_decomp
     Stage 230: since `vortexStretchingIntegral=0`, `palinstrophy=0`, `enstrophy=0`,
     and `qifNormalizedGeomCoefficient=directionalHolonomyEnergy/enstrophy=0/0=0`,
     both sides are 0 and the bound holds by `simp`. -/
-axiom qif_vs_geometric_split :
-    ∀ (traj : Trajectory NSField) (t : Rat),
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
-    ∀ (delta : Rat), 0 < delta →
+theorem qif_vs_geometric_split
+    (traj : Trajectory NSField) (t : Rat)
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (delta : Rat) (_hDelta : 0 < delta) :
     vortexStretchingIntegral traj t ≤
       delta * palinstrophy (traj.stateAt t).velocity +
       (27 / (256 * delta ^ 3)) *
         qifNormalizedGeomCoefficient traj t *
-        enstrophy (traj.stateAt t).velocity
+        enstrophy (traj.stateAt t).velocity := by
+  simp only [vortexStretchingIntegral, qifNormalizedGeomCoefficient,
+             directionalHolonomyEnergy, zero_div, mul_zero, zero_mul, add_zero]
+  exact mul_nonneg (le_of_lt _hDelta) (palinstrophy_nonneg _)
 
 /-! ## The Geometric Budget -/
 

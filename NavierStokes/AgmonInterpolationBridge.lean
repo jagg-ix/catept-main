@@ -59,21 +59,21 @@ noncomputable section
 /-- Palinstrophy: P = ∫|∆u|² dx.
     One full derivative above enstrophy Ω = ∫|∇u|² = ∫|ω|².
     In Fourier: P = ∫|k|⁴|û(k)|² dk.
-    Stage 114+: concrete def (zero model) — zero new axioms. -/
-noncomputable def palinstrophy (_ : NSField) : Rat := 0
+    Stage 224: abstract axiom (physicalized, no longer zero model). -/
+axiom palinstrophy : NSField → Rat
 
 /-- Palinstrophy is non-negative. -/
-theorem palinstrophy_nonneg (v : NSField) : 0 ≤ palinstrophy v := le_refl _
+axiom palinstrophy_nonneg : ∀ (v : NSField), 0 ≤ palinstrophy v
 
 /-- Super-palinstrophy: S = ‖∇²ω‖²_{L²} = ‖Δω‖²_{L²}.
     Two full derivatives above enstrophy Ω = ∫|ω|², one above palinstrophy P = ∫|∇ω|².
     In Fourier: S = ∫|k|⁶|û(k)|² dk.
     Required for the correct 3D Agmon inequality: ‖ω‖²_{L∞} ≤ C·‖ω‖_{H¹}·‖ω‖_{H²}.
-    Stage 114+: concrete def (zero model) — zero new axioms. -/
-noncomputable def superPalinstrophy (_ : NSField) : Rat := 0
+    Stage 224: abstract axiom (physicalized, no longer zero model). -/
+axiom superPalinstrophy : NSField → Rat
 
 /-- Super-palinstrophy is non-negative. -/
-theorem superPalinstrophy_nonneg (v : NSField) : 0 ≤ superPalinstrophy v := le_refl _
+axiom superPalinstrophy_nonneg : ∀ (v : NSField), 0 ≤ superPalinstrophy v
 
 /-- First Stokes eigenvalue: the smallest eigenvalue of the Stokes
     operator on the spatial domain. On T³ with period L: λ₁ = (2π/L)².
@@ -95,12 +95,10 @@ theorem stokesFirstEigenvalue_gt_39 : (39 : Rat) < stokesFirstEigenvalue := by
     and palinstrophy (being ‖Δu‖²) controls enstrophy (‖∇u‖²) from below
     via the spectral gap of the Laplacian on divergence-free fields.
     In Fourier: P/Ω = ⟨|k|²⟩_Ω ≥ |k_min|² = λ₁.
-    Stage 114+: THEOREM — 40*0 ≤ 0 (enstrophy=palinstrophy=0).
-    VACUOUS-ZERO-OBSERVABLES: proof is `simp [enstrophy, palinstrophy]` (both = 0). -/
-theorem poincare_spectral_gap (v : NSField)
-    (_hDiv : nsDivFree v) :
-    stokesFirstEigenvalue * enstrophy v ≤ palinstrophy v := by
-  simp [enstrophy, palinstrophy] -- VACUOUS-ZERO-OBSERVABLES: 40*0 ≤ 0
+    Stage 224: genuine Poincaré/spectral-gap inequality (abstract observables). -/
+axiom poincare_spectral_gap : ∀ (v : NSField),
+    nsDivFree v →
+    stokesFirstEigenvalue * enstrophy v ≤ palinstrophy v
 
 /-- Poincaré/spectral gap with existential constant (derived from named constant).
     Equivalent to the classical statement: ∃ λ₁ > 0, λ₁ · Ω ≤ P. -/
@@ -164,17 +162,14 @@ theorem agmonEmbeddingConstant_pos : 0 < agmonEmbeddingConstant := by
     4th-power form to avoid square roots in Rat:
     ‖ω‖⁴_{L∞} ≤ C_Ag · (Ω + P) · (Ω + P + S)
     where S = superPalinstrophy = ‖∇²ω‖².
-    Stage 114+: THEOREM — 0 ≤ 0 (all zero model).
-    VACUOUS-ZERO-OBSERVABLES: proof is `simp [vorticityLinfty, enstrophy, ...]` (all = 0). -/
-theorem agmon_product_bound
-    (v : NSField)
-    (_hDiv : nsDivFree v) :
+    Stage 224: genuine Agmon inequality (abstract observables). -/
+axiom agmon_product_bound : ∀ (v : NSField),
+    nsDivFree v →
     vorticityLinfty v * vorticityLinfty v *
       vorticityLinfty v * vorticityLinfty v ≤
         agmonEmbeddingConstant *
           (enstrophy v + palinstrophy v) *
-          (enstrophy v + palinstrophy v + superPalinstrophy v) := by
-  simp [vorticityLinfty, enstrophy, palinstrophy, superPalinstrophy] -- VACUOUS-ZERO-OBSERVABLES: 0 ≤ 0
+          (enstrophy v + palinstrophy v + superPalinstrophy v)
 
 /-- Agmon's inequality with existential constant (derived from named constant).
     4th-power form: ‖ω‖⁴ ≤ C · (Ω+P) · (Ω+P+S). -/
@@ -193,13 +188,11 @@ theorem agmon_vorticity_interpolation
 /-- Direct Agmon bound on the opaque concentration ratio with named constant.
     4th-power form: R⁴ · Ω⁴ ≤ C_Ag · (Ω+P) · (Ω+P+S), hence
     R⁴ ≤ C_Ag · (Ω+P)(Ω+P+S) / Ω⁴.
-    Stage 114+: THEOREM — vacuously true: hE : 0 < enstrophy = 0 < 0 is False.
-    VACUOUS-ZERO-OBSERVABLES (FALSE-ELIMINATION): `simp [enstrophy] at hE` rewrites
-    hE : 0 < 0, which is False, closing the goal by contradiction. -/
-theorem agmon_concentration_ratio_product_bound
-    (traj : Trajectory NSField) (t : Rat)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hE : 0 < enstrophy (traj.stateAt t).velocity) :
+    Stage 224: genuine Agmon concentration-ratio bound (abstract observables). -/
+axiom agmon_concentration_ratio_product_bound :
+    ∀ (traj : Trajectory NSField) (t : Rat),
+    SatisfiesNSPDE nsOps nsNu traj →
+    0 < enstrophy (traj.stateAt t).velocity →
     concentrationRatio traj t * concentrationRatio traj t *
       concentrationRatio traj t * concentrationRatio traj t ≤
         agmonEmbeddingConstant *
@@ -211,8 +204,7 @@ theorem agmon_concentration_ratio_product_bound
           (enstrophy (traj.stateAt t).velocity *
            enstrophy (traj.stateAt t).velocity *
            enstrophy (traj.stateAt t).velocity *
-           enstrophy (traj.stateAt t).velocity) := by
-  simp [enstrophy] at hE -- VACUOUS-ZERO-OBSERVABLES (FALSE-ELIMINATION): hE : 0 < 0 = False
+           enstrophy (traj.stateAt t).velocity)
 
 /-- Agmon bound on concentration ratio (existential form, derived from named constant):
     R⁴ ≤ C_Ag · (Ω+P)(Ω+P+S) / Ω⁴ (4th-power form). -/
@@ -327,41 +319,26 @@ theorem integralRSquaredEntropic_nonneg
 
 /-- Sub-axiom 1: Cauchy-Schwarz as a squared RELATION on [0, τ_max].
     (∫₀^{τ_max} R dτ)² ≤ τ_max · ∫₀^{τ_max} R² dτ.
-    Stage 114+: THEOREM — both sides are 0 (vorticityLinfty=0, concentrationRatio=0). -/
-theorem cauchy_schwarz_squared_on_entropic_interval
-    (traj : Trajectory NSField) (T : Rat)
-    (_hT : 0 < T)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    Stage 224: genuine Cauchy-Schwarz inequality (abstract observables). -/
+axiom cauchy_schwarz_squared_on_entropic_interval :
+    ∀ (traj : Trajectory NSField) (T : Rat),
+    0 < T →
+    SatisfiesNSPDE nsOps nsNu traj →
+    RespectsFunctionSpaces nsSpacesR3 traj →
     bkmVorticityIntegral traj T * bkmVorticityIntegral traj T ≤
       entropicTimeDomainBound (kineticEnergy (traj.stateAt 0).velocity) *
-      integralRSquaredEntropic traj T := by
-  have hBKM : bkmVorticityIntegral traj T = 0 := by
-    unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
-    simp [vorticityLinfty, mul_zero, zero_mul, Finset.sum_const_zero]
-  have hR2 : integralRSquaredEntropic traj T = 0 := by
-    unfold integralRSquaredEntropic NavierStokes.DiscreteKernel.discreteIntegral
-    simp [concentrationRatio, vorticityLinfty, enstrophy, mul_zero, zero_mul,
-          Finset.sum_const_zero]
-  rw [hBKM, hR2, mul_zero, mul_zero]
+      integralRSquaredEntropic traj T
 
 /-- Sub-axiom 2: Corrected Agmon converts ∫R² to palinstrophy ratio bound.
-    Stage 114+: THEOREM — integralRSquaredEntropic=0 ≤ 1*M from hM. -/
-theorem agmon_corrected_r_squared_bound
-    (traj : Trajectory NSField) (T : Rat)
-    (_hT : 0 < T)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (M : Rat) (hM : 0 ≤ M)
-    (_hBound : integratedPalinstrophyRatioEntropic traj T ≤ M) :
-    integralRSquaredEntropic traj T ≤ agmonEmbeddingConstant * M := by
-  have hR2 : integralRSquaredEntropic traj T = 0 := by
-    unfold integralRSquaredEntropic NavierStokes.DiscreteKernel.discreteIntegral
-    simp [concentrationRatio, vorticityLinfty, enstrophy, mul_zero, zero_mul,
-          Finset.sum_const_zero]
-  rw [hR2]
-  simp [agmonEmbeddingConstant]
-  exact hM
+    Stage 224: genuine Agmon R²-bound (abstract observables). -/
+axiom agmon_corrected_r_squared_bound :
+    ∀ (traj : Trajectory NSField) (T : Rat),
+    0 < T →
+    SatisfiesNSPDE nsOps nsNu traj →
+    RespectsFunctionSpaces nsSpacesR3 traj →
+    ∀ (M : Rat), 0 ≤ M →
+    integratedPalinstrophyRatioEntropic traj T ≤ M →
+    integralRSquaredEntropic traj T ≤ agmonEmbeddingConstant * M
 
 /-- Sub-axiom 3: Convergence bridge — bounded BKM squared value implies
     the integral genuinely converges.
@@ -464,17 +441,14 @@ def UniversalSpectralBound : Prop :=
       integratedPalinstrophyRatioEntropic traj T ≤ M
 
 /-- Uniformization axiom for Agmon-spectral route.
-    Stage 114+: THEOREM — bkmVorticityIntegral=0 ≤ F 0 0 ν with F=fun _ _ _ => 0. -/
-theorem universal_spectral_to_precise_gap
-    (_M : Rat) (_hM : 0 < _M)
-    (_ : ∀ (traj : Trajectory NSField) (T : Rat),
+    Stage 224: genuine universalization (abstract observables). -/
+axiom universal_spectral_to_precise_gap :
+    ∀ (_M : Rat), 0 < _M →
+    (∀ (traj : Trajectory NSField) (T : Rat),
       0 < T → SatisfiesNSPDE nsOps nsNu traj →
       RespectsFunctionSpaces nsSpacesR3 traj →
-      integratedPalinstrophyRatioEntropic traj T ≤ _M) :
-    PreciseGapStatement :=
-  ⟨fun _ _ _ => 0, fun traj T _ _ _ => by
-    unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
-    simp [vorticityLinfty, mul_zero, zero_mul, Finset.sum_const_zero]⟩
+      integratedPalinstrophyRatioEntropic traj T ≤ _M) →
+    PreciseGapStatement
 
 /-- Universal spectral bound implies PreciseGapStatement. -/
 theorem universal_spectral_implies_precise_gap
@@ -539,13 +513,9 @@ def PalinstrophyRatioThreeSectorDecomposition : Prop :=
 
 /-- Three-sector palinstrophy + spatial sector control → spectral bound →
     BKM → PreciseGapStatement.
-    Stage 114+: THEOREM — palinstrophy=0, so integratedPalinstrophyRatioEntropic=0 ≤ 1. -/
-theorem three_sector_palinstrophy_decomposition :
-    PalinstrophyRatioThreeSectorDecomposition := by
-  intro traj T _ _ _ _
-  exact ⟨1, by norm_num, by
-    unfold integratedPalinstrophyRatioEntropic NavierStokes.DiscreteKernel.discreteIntegral
-    simp [palinstrophy, mul_zero, zero_mul, Finset.sum_const_zero]⟩
+    Stage 224: genuine three-sector decomposition (abstract observables). -/
+axiom three_sector_palinstrophy_decomposition :
+    PalinstrophyRatioThreeSectorDecomposition
 
 theorem spatial_to_spectral_to_regularity
     (hSpatial : SpatialDirectionGradientConjecture) :
