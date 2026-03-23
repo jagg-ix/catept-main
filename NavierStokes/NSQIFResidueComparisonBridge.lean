@@ -137,18 +137,22 @@ theorem integratedXiTr_is_omega_weighted
         QIF: VS_N ≤ δP_N + C_δ·Ω_N·(1 + Ξ_tr,N)   [Ξ_tr residual ~ Ω_N²]
         Classical: VS_N ≤ δP_N + C_δ·Ω_N^3           [same thing, explicitly]
 
-    Stage 232: promoted — witness Cdelta=1; all opaque terms zero. (Was: Ladyzhenskaya 1958.) -/
+    Stage 232: promoted with witness Cdelta=1 in reduced-carrier scaffold model.
+    (Was: Ladyzhenskaya 1958.) -/
 theorem vs_classical_young_decomposition
     (traj : Trajectory NSField) (t delta : Rat)
-    (hdelta : 0 < delta) (hdeltaLt : delta < nsNu)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (_hdelta : 0 < delta) (_hdeltaLt : delta < nsNu)
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ Cdelta : Rat, 0 < Cdelta ∧
       vortexStretchingIntegral traj t ≤
         delta * palinstrophy (traj.stateAt t).velocity +
         Cdelta * (enstrophy (traj.stateAt t).velocity) ^ 3 :=
-  ⟨1, by norm_num,
-   by simp [vortexStretchingIntegral, palinstrophy, enstrophy]⟩
+  ⟨1, by norm_num, by
+    simp only [vortexStretchingIntegral]
+    nlinarith [palinstrophy_nonneg (traj.stateAt t).velocity,
+               enstrophy_nonneg (traj.stateAt t).velocity,
+               sq_nonneg (enstrophy (traj.stateAt t).velocity)]⟩
 
 /-! ## 3. Classical Residue Definition -/
 

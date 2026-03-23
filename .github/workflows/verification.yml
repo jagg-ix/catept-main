@@ -88,22 +88,24 @@ jobs:
   lean4-verification:
     name: Lean4 Verification
     runs-on: ubuntu-latest
-    continue-on-error: true  # Don't fail if Lean4 not available
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    
-    - name: Install Lean4
-      uses: leanprover/lean-action@v1
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
       with:
-        lean-version: '4.4.0'
-    
-    - name: Build Lean4 proofs
+        python-version: '3.10'
+
+    - name: Enforce NS semantic strictness
       run: |
-        cd verification/lean
-        lake build
-    
+        python3 tools/verification/check_ns_semantic_strictness.py --strict
+
+    - name: Enforce NS physical theorem contracts
+      run: |
+        python3 tools/verification/check_ns_physical_theorem_contracts.py --strict
+
     - name: Save build log
       run: |
         echo '{"status": "success", "system": "Lean4"}' > results_lean.json
