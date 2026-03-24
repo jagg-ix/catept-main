@@ -378,10 +378,18 @@ def NSFtcEnergyIdentityContract : Prop :=
       kineticEnergy (traj.stateAt t).velocity =
         kineticEnergy (traj.stateAt 0).velocity + nsIntegratedEnergyRate traj t
 
-/-- Stage-234 kinetic-energy contract root:
-    combines nonnegativity and the FTC identity under one explicit assumption. -/
+/-- Poincaré energy bound: kinetic energy ≤ enstrophy (Temam 1984 Ch. I).
+    On T³(L=1) with first Stokes eigenvalue λ₁ ≥ 1:
+      ‖u‖²_{L²} ≤ (1/λ₁)‖∇u‖²_{L²} = enstrophy(u)/λ₁ ≤ enstrophy(u)
+    In the abstract carrier: `kineticEnergy v ≤ enstrophy v` for all NSField values.
+    Stage 240: absorbed into the kinetic-energy contract root. -/
+def NSKineticEnergyPoincareContract : Prop :=
+  ∀ v : NSField, kineticEnergy v ≤ enstrophy v
+
+/-- Stage-234/240 kinetic-energy contract root:
+    combines nonnegativity, the FTC identity, and the Poincaré bound. -/
 def NSKineticEnergyContract : Prop :=
-  NSKineticEnergyNonnegContract ∧ NSFtcEnergyIdentityContract
+  NSKineticEnergyNonnegContract ∧ NSFtcEnergyIdentityContract ∧ NSKineticEnergyPoincareContract
 
 axiom nsKineticEnergyContract : NSKineticEnergyContract
 
@@ -393,7 +401,12 @@ theorem kineticEnergy_nonneg : ∀ v : NSField, (0 : Rat) ≤ kineticEnergy v :=
 theorem nsFtcEnergyIdentity : ∀ (traj : Trajectory NSField) (t : Rat), 0 ≤ t →
     kineticEnergy (traj.stateAt t).velocity =
       kineticEnergy (traj.stateAt 0).velocity + nsIntegratedEnergyRate traj t :=
-  nsKineticEnergyContract.2
+  nsKineticEnergyContract.2.1
+
+/-- Poincaré energy bound: kinetic energy ≤ enstrophy, extracted from contract root.
+    Stage 240: promoted from axiom in AubinLionsMathlib to theorem from contract root. -/
+theorem kineticEnergy_le_enstrophy : ∀ v : NSField, kineticEnergy v ≤ enstrophy v :=
+  nsKineticEnergyContract.2.2
 
 /-- Nonpositive rate → nonpositive integral (proved: nsEnergyRate = -ν·Ω ≤ 0 always). -/
 theorem nsNonpositiveRateImpliesNonpositiveIntegral

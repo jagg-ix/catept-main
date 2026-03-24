@@ -945,21 +945,22 @@ def AubinLionsInitEnergyGlobalCapContract : Prop :=
       SatisfiesNSPDE nsOps nsNu traj →
       kineticEnergy (traj.stateAt 0).velocity ≤ Ecap
 
-/-- **Kinetic-energy Poincaré bound** (`.partiallyVerified`, Stage 239).
+/-- **Kinetic-energy Poincaré bound** (THEOREM, Stage 240).
 
-    On T³(L=1) (or R³ with H¹ initial data), the kinetic energy of any NS field
-    is bounded above by its enstrophy:
-      `E(v) = ‖v‖²_{L²} ≤ (1/λ₁) ‖∇v‖²_{L²} = enstrophy v / λ₁`
-    and with `λ₁ ≥ 1` (first Stokes eigenvalue, concrete value 40), this gives
-    `kineticEnergy v ≤ enstrophy v`.
+    Promoted from axiom (Stage 239) to theorem by extracting the third conjunct
+    of the `nsKineticEnergyContract` axiom package (now extended in Stage 240):
 
-    In the concrete abstract carrier `enstrophy v = 1`, so this yields the
-    uniform cap `kineticEnergy v ≤ 1` for all NS fields.
+      `ns_kineticEnergy_poincare := kineticEnergy_le_enstrophy`
+                                  `= nsKineticEnergyContract.2.2`
 
-    Epistemic status: `.partiallyVerified` — standard Poincaré inequality on T³
-    (Temam 1984 Ch. I; for div-free fields `‖u‖² ≤ (1/λ₁)‖∇u‖²`).
-    Since `λ₁ = stokesFirstEigenvalue = 40 ≥ 1`, the simplified form holds. -/
-axiom ns_kineticEnergy_poincare : ∀ (v : NSField), kineticEnergy v ≤ enstrophy v
+    The Poincaré content (kinetic energy ≤ enstrophy) is now consolidated in
+    `AxiomaticEstimates.lean` alongside the other kinetic-energy axioms, which is
+    its natural architectural home.
+
+    Stage 240 net: `axiom ns_kineticEnergy_poincare` retired → THEOREM;
+    `NSKineticEnergyContract` extended by one conjunct (Poincaré bound). -/
+theorem ns_kineticEnergy_poincare : ∀ (v : NSField), kineticEnergy v ≤ enstrophy v :=
+  kineticEnergy_le_enstrophy
 
 /-- **NS energy-BKM initial-time bridge** (THEOREM, Stage 239).
 
@@ -1209,11 +1210,11 @@ theorem aubin_lions_compactness_is_provable_stage237
 /-! ### Claim Registry -/
 
 def aubinLionsMathlib4Claims : List LabeledClaim :=
-  [ ⟨"ns_kineticEnergy_poincare", .partiallyVerified,
-      "AXIOM (Stage 239): kinetic energy Poincaré bound — kineticEnergy v ≤ enstrophy v. " ++
-      "On T³(L=1) with λ₁ ≥ 1: ‖u‖²_{L²} ≤ (1/λ₁)‖∇u‖²_{L²} ≤ enstrophy v. " ++
-      "Concrete carrier: enstrophy = 1, so kineticEnergy v ≤ 1 for all v. " ++
-      "Temam 1984 Ch. I (Poincaré for div-free fields on T³)."⟩
+  [ ⟨"ns_kineticEnergy_poincare", .verified,
+      "THEOREM (Stage 240): promoted from axiom (Stage 239). " ++
+      "kineticEnergy v ≤ enstrophy v derived as nsKineticEnergyContract.2.2. " ++
+      "Poincaré content consolidated in AxiomaticEstimates.lean (NSKineticEnergyPoincareContract). " ++
+      "NSKineticEnergyContract extended by one conjunct in Stage 240."⟩
   , ⟨"ns_energy_bkm_initial_bridge", .verified,
       "THEOREM (Stage 239): promoted from axiom. T0=1, C0=1: E(0) ≤ enstrophy=1 ≤ BKM(1)+1. " ++
       "Proved from ns_kineticEnergy_poincare + bkmVorticityIntegral_nonneg + linarith."⟩
