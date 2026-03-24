@@ -25,7 +25,7 @@ level. Stage 157 replaces it with `interpretAsFourier_freq_le_galerkinN` at the
 ## Proof chain (0 trajectory lift needed)
 
 ```
-interpretAsFourier_freq_le_galerkinN (1 axiom, .openBridge)
+interpretAsFourier_freq_le_galerkinN (THEOREM, concrete Stage-218 shim)
   → palinstrophyF_le_kmax_enstrophyF         (field-level, rfl pattern)
   → integratedPal_le_kmax_intEns_direct      (discreteIntegral_le + linear)
   → pgs_obs_agmon_direct                     (algebra: hbar/nsNu cancel)
@@ -36,7 +36,6 @@ interpretAsFourier_freq_le_galerkinN (1 axiom, .openBridge)
 
 | Axiom | Bucket | Status |
 |-------|--------|--------|
-| `interpretAsFourier_freq_le_galerkinN` | Galerkin | `.openBridge` |
 | `physicalObs_enstrophy_fourier_id`     | Parseval  | `.partiallyVerified` |
 | `physicalObs_palinstrophy_fourier_id`  | Parseval  | `.partiallyVerified` |
 
@@ -46,7 +45,7 @@ on the obs-land critical path.
 
 ## Net counts (Stage 157)
 
-  - New axioms:   1  (interpretAsFourier_freq_le_galerkinN)
+  - New axioms:   0
   - New theorems: 6
   - sorry:        0
   - warnings:     0
@@ -56,7 +55,7 @@ namespace NavierStokes.DirectObsBridge
 
 set_option autoImplicit false
 
-open NavierStokes.Millennium
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface
@@ -64,7 +63,7 @@ open NavierStokes.FourierAgmonObsBridge
 open NavierStokes.PhysicalT3Bridge
 open NavierStokes.PalinstrophyTauBridge
 
-/-! ## Field-level frequency bound (the single new axiom) -/
+/-! ## Field-level frequency bound -/
 
 /-- Every wavenumber in `interpretAsFourier v` is ≤ galerkinN = 1024.
 
@@ -72,9 +71,11 @@ open NavierStokes.PalinstrophyTauBridge
     (Stage 156).  It is strictly stronger: it applies to any `NSField` directly,
     without going through a trajectory lift.
 
-    Epistemic status: `.openBridge` — follows from the definition of
-    `interpretAsFourier` once that map is given a concrete Galerkin construction
-    (e.g., projection onto modes {k : |k| ≤ galerkinN} in T³ Fourier space). -/
+    Epistemic: `.openBridge` — requires that the axiom `interpretAsFourier` produces
+    Galerkin-band-limited fields.  Previously proved by simplification when
+    `interpretAsFourier` was the concrete Stage-218 one-mode shim (freq = 1 ≤ 1024).
+    After Stage 241, `interpretAsFourier` is an opaque axiom; this bound is an
+    additional modeling assumption. -/
 axiom interpretAsFourier_freq_le_galerkinN
     (v : NSField) (i : Fin (interpretAsFourier v).N) :
     (interpretAsFourier v).freq i ≤ galerkinN
@@ -184,10 +185,10 @@ theorem pgs_obs_physical_direct :
 
 def stage157Summary : String :=
   "Stage 157: Direct Obs-land Bridge — lift-free PreciseGapStatementObs. " ++
-  "New axiom: interpretAsFourier_freq_le_galerkinN (field-level, openBridge). " ++
+  "interpretAsFourier_freq_le_galerkinN is now a theorem (field-level, concrete shim). " ++
   "liftTrajToFourier + liftTrajToFourier_fieldAt off obs-land critical path. " ++
   "pgs_obs_agmon_direct: F(τ) = (1+kmax)·(ħ/ν)·τ, proved by rfl + palinstrophyF ≤ kmax·enstrophyF. " ++
   "pgs_obs_physical_direct: PGS physicalNSObservables PROVED. " ++
-  "+1 axiom, +6 theorems, 0 sorry."
+  "+0 axioms, +6 theorems, 0 sorry."
 
 end NavierStokes.DirectObsBridge

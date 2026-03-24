@@ -64,7 +64,7 @@ namespace NavierStokes.PalinstrophyTauBridge
 
 set_option autoImplicit false
 
-open NavierStokes.Millennium
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface

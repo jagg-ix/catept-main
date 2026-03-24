@@ -34,7 +34,7 @@ namespace NavierStokes.PhysicalT3Bridge
 
 set_option autoImplicit false
 
-open NavierStokes.Millennium
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface

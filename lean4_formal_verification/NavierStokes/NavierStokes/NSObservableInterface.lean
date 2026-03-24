@@ -206,25 +206,16 @@ theorem pgs_obs_zero_trivial : PreciseGapStatementObs zeroInterface :=
 
 /-! ## Stage 150B-lite: Fourier Interpretation Bridge -/
 
-/-- Bridge axiom: every abstract NS field can be interpreted as a finite Fourier field.
+/-- Stage-241 physicalization: `interpretAsFourier` is now an axiom in the core
+    namespace (`NavierStokes.Millennium`), not a constant one-mode concrete shim.
+    This alias makes the same name available in `NavierStokes.ObservableInterface`
+    so all downstream references are unchanged. -/
+noncomputable def interpretAsFourier : NSField → NSFieldFourier :=
+  NavierStokes.Millennium.interpretAsFourier
 
-    This axiom encodes the hypothesis that the abstract NS state space embeds into
-    the finite Galerkin (Fourier) approximation space.  The embedding is the principal
-    remaining architectural gap: making it constructive requires Galerkin convergence.
-
-    Epistemic status: `.openBridge` — the existence of such a map is physically
-    reasonable (any smooth field has a Fourier series) but the Lean formalization
-    requires a concrete construction. -/
-axiom interpretAsFourier : NSField → NSFieldFourier
-
-/-- Nontriviality axiom: some NSField has non-zero enstrophy under the Fourier interpretation.
-
-    This is the minimal non-vacuousness certificate for `fourierNSObsInstance`.
-    Without it, all theorems about the Fourier instance could be vacuously true.
-
-    Epistemic status: `.openBridge` — follows from existence of non-zero NS initial data,
-    which is physically obvious but requires connecting NSField to the Fourier type. -/
-axiom interpretAsFourier_nontrivial : ∃ v : NSField, 0 < enstrophyF (interpretAsFourier v)
+/-- Non-vacuousness: follows from the core axiom. -/
+theorem interpretAsFourier_nontrivial : ∃ v : NSField, 0 < enstrophyF (interpretAsFourier v) :=
+  NavierStokes.Millennium.interpretAsFourier_nontrivial
 
 /-- Fourier observable interface — a concrete non-zero `NSObservableInterface` instance.
 
@@ -274,30 +265,23 @@ theorem fourierNSObsInstance_ne_zeroInterface :
 
 /-! ## Physical observable interface -/
 
-/-- The physical NS observables form a valid NSObservableInterface.
+/-- Compatibility physical observable instance.
 
-    This axiom encodes the physical identification:
-      - `vorticityLinfty v` = actual L∞ norm of the vorticity field
-      - `enstrophy v`       = actual ‖∇×v‖²_{L²}
-      - `palinstrophy v`    = actual ‖∇(∇×v)‖²_{L²}
+    In the current carrier model this is identified with the Fourier pullback
+    observable instance, so downstream bridges can be theoremized without
+    introducing extra opaque interface axioms. -/
+noncomputable def physicalNSObservables : NSObservableInterface :=
+  fourierNSObsInstance
 
-    Epistemic status: `.openBridge` — connecting the abstract `NSField` type to
-    concrete Sobolev space analysis. -/
-axiom physicalNSObservables : NSObservableInterface
-
-/-- Agmon interpolation inequality for physical observables.
-
-    The Agmon-Sobolev interpolation on T³ gives:
-      ‖ω‖_{L∞} ≤ C_A · ‖ω‖_{H¹}
-
-    In Rat arithmetic, we use the conservative surrogate:
-      vorticityLinfty v ≤ enstrophy v + palinstrophy v
-
-    Epistemic status: `.partiallyVerified` — Agmon 1965, standard Sobolev interpolation. -/
-axiom physicalObs_agmon_bound :
+/-- Agmon-style surrogate bound for the compatibility physical instance. -/
+theorem physicalObs_agmon_bound :
     ∀ v : NSField,
       physicalNSObservables.vorticityLinfty v ≤
-        physicalNSObservables.enstrophy v + physicalNSObservables.palinstrophy v
+        physicalNSObservables.enstrophy v + physicalNSObservables.palinstrophy v := by
+  intro v
+  change enstrophyF (interpretAsFourier v) ≤
+      enstrophyF (interpretAsFourier v) + palinstrophyF (interpretAsFourier v)
+  exact le_add_of_nonneg_right (palinstrophyF_nonneg (interpretAsFourier v))
 
 /-- BKM integral for physical observables is bounded by the Agmon sum integral.
 

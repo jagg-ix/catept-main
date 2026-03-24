@@ -61,7 +61,7 @@ namespace NavierStokes.ObsLandCert
 
 set_option autoImplicit false
 
-open NavierStokes.Millennium
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.MillenniumAudit
 open NavierStokes.ObservableInterface
 open NavierStokes.FourierLiftBridge
