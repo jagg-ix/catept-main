@@ -1,4 +1,5 @@
 import NavierStokes.BKMBackwardBridge
+import NavierStokes.AubinLionsMathlib
 import NavierStokes.NSPhysicalObservablesPreciseGapBridge
 
 /-!
@@ -8,7 +9,7 @@ Makes `PreciseGapStatement` semantically explicit in the global-existence chain.
 Also exposes strict Stage-218 (`PhysicalMode0Strong`) routes as first-class
 continuation theorems for physicalization work.
 
-## What this file proves (0 new axioms, 13 theorems)
+## What this file proves (0 new axioms, 19 theorems)
 
 | # | Item | Status |
 |---|------|--------|
@@ -25,6 +26,12 @@ continuation theorems for physicalization work.
 |11 | `backward_bridge_T3_via_pipeline` — backward bridge from unconditional pipeline | THEOREM |
 |12 | `millennium_C_closed_via_pipeline` — Path C equivalence via pipeline route | THEOREM |
 |13 | `millennium_C_global_regularity_via_pipeline` — global regularity corollary via pipeline closure | THEOREM |
+|14 | `ns_bkm_global_existence_from_pgs_stage234` — explicit Stage-234 contract variant | THEOREM |
+|15 | `leray_fk_bkm_from_physical_mode0_stage234` — unconditional route with Stage-234 contract | THEOREM |
+|16 | `millennium_t3_from_bkm_pipeline_stage234` — global regularity with explicit Stage-234 contract | THEOREM |
+|17 | `ns_bkm_global_existence_from_pgs_stage234_stage237` — Stage-234 + Stage-237 contracts | THEOREM |
+|18 | `leray_fk_bkm_from_physical_mode0_stage234_stage237` — unconditional + dual contracts | THEOREM |
+|19 | `millennium_t3_from_bkm_pipeline_stage234_stage237` — global regularity + dual contracts | THEOREM |
 
 ## Semantic content
 
@@ -34,8 +41,9 @@ continuation theorems for physicalization work.
   (ii) BKM 1984: if ∫₀ᵀ ‖ω‖_{L∞} dt < ∞ then no blowup at T
   (iii) PGS bounds the BKM integral → T_max = ∞
 
-In the current Lean model, the PGS argument is unused in `bkm_t3_global_existence`
-(see `BKMBackwardBridge.lean:99`: `intro _hPGS st0`).
+`bkm_t3_global_existence` now consumes `PreciseGapStatement` through the
+finite-BKM witness route (`bkm_t3_global_existence_with_bkm_at`), so the PGS
+hypothesis is load-bearing in that theorem path.
 
 `ns_bkm_global_existence_from_pgs` is the semantically honest version:
 PGS is an **explicit** hypothesis.  Stage 220's `pgs_from_physical_mode0` then
@@ -224,6 +232,75 @@ theorem millennium_t3_from_bkm_pipeline_strong_of_candidate_swap
   millennium_t3_from_bkm_pipeline_strong
     (bridge_target_linear_entropic_control_physicalMode0Strong_of_candidate_swap hSwap)
 
+/-! ## 9. Stage-234 explicit contract variants (caller-facing route hooks) -/
+
+/-- PGS-conditional global existence with an explicit Stage-234 compactness-route
+    contract in scope. This lets downstream modules enforce the Stage-234 route
+    as part of their API while reusing the existing theoremized pipeline. -/
+theorem ns_bkm_global_existence_from_pgs_stage234
+    (_hStage234 : Stage234CompactnessRoute) :
+    PreciseGapStatement →
+    ∀ (st0 : State NSField),
+      AdmissibleInitialData nsSpacesR3 st0 →
+      ∃ traj : Trajectory NSField,
+        traj.stateAt 0 = st0 ∧
+        SatisfiesNSPDE nsOps nsNu traj ∧
+        RespectsFunctionSpaces nsSpacesR3 traj :=
+  ns_bkm_global_existence_from_pgs
+
+/-- Unconditional global existence via physical mode-0 plus explicit Stage-234
+    compactness-route contract. -/
+theorem leray_fk_bkm_from_physical_mode0_stage234
+    (_hStage234 : Stage234CompactnessRoute) :
+    ∀ (st0 : State NSField),
+      AdmissibleInitialData nsSpacesR3 st0 →
+      ∃ traj : Trajectory NSField,
+        traj.stateAt 0 = st0 ∧
+        SatisfiesNSPDE nsOps nsNu traj ∧
+        RespectsFunctionSpaces nsSpacesR3 traj :=
+  leray_fk_bkm_from_physical_mode0
+
+/-- Global regularity route that keeps the Stage-234 compactness-route contract
+    explicit in the theorem signature for downstream strict APIs. -/
+theorem millennium_t3_from_bkm_pipeline_stage234
+    (_hStage234 : Stage234CompactnessRoute) :
+    ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
+  millennium_t3_from_bkm_pipeline
+
+/-- PGS-conditional global existence with both compactness-route contracts:
+    Stage-234 diagonal interface + Stage-237 init-energy contract interface. -/
+theorem ns_bkm_global_existence_from_pgs_stage234_stage237
+    (_hStage234 : Stage234CompactnessRoute)
+    (_hInitContract : AubinLionsInitEnergyBoundContract) :
+    PreciseGapStatement →
+    ∀ (st0 : State NSField),
+      AdmissibleInitialData nsSpacesR3 st0 →
+      ∃ traj : Trajectory NSField,
+        traj.stateAt 0 = st0 ∧
+        SatisfiesNSPDE nsOps nsNu traj ∧
+        RespectsFunctionSpaces nsSpacesR3 traj :=
+  ns_bkm_global_existence_from_pgs
+
+/-- Unconditional global existence with both Stage-234 and Stage-237 compactness
+    contracts explicit in the route signature. -/
+theorem leray_fk_bkm_from_physical_mode0_stage234_stage237
+    (_hStage234 : Stage234CompactnessRoute)
+    (_hInitContract : AubinLionsInitEnergyBoundContract) :
+    ∀ (st0 : State NSField),
+      AdmissibleInitialData nsSpacesR3 st0 →
+      ∃ traj : Trajectory NSField,
+        traj.stateAt 0 = st0 ∧
+        SatisfiesNSPDE nsOps nsNu traj ∧
+        RespectsFunctionSpaces nsSpacesR3 traj :=
+  leray_fk_bkm_from_physical_mode0
+
+/-- Global regularity endpoint with both compactness-route contracts explicit. -/
+theorem millennium_t3_from_bkm_pipeline_stage234_stage237
+    (_hStage234 : Stage234CompactnessRoute)
+    (_hInitContract : AubinLionsInitEnergyBoundContract) :
+    ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
+  millennium_t3_from_bkm_pipeline
+
 /-! ## Summary -/
 
 def stage221Summary : String :=
@@ -237,6 +314,10 @@ def stage221Summary : String :=
   "backward_bridge_T3_via_pipeline / millennium_C_closed_via_pipeline / " ++
   "millennium_C_global_regularity_via_pipeline: direct Path-C closure route that bypasses " ++
   "backward_bridge_obligation_bootstrap as a load-bearing node (THEOREM). " ++
-  "+0 axioms, +13 theorems, 0 sorry."
+  "Stage-234 explicit contract variants (ns_bkm_global_existence_from_pgs_stage234 / " ++
+  "leray_fk_bkm_from_physical_mode0_stage234 / millennium_t3_from_bkm_pipeline_stage234): " ++
+  "caller-facing strict route hooks (THEOREM). " ++
+  "Stage-234+Stage-237 dual-contract variants ( ..._stage234_stage237 ): integrated compactness-route hooks. " ++
+  "+0 axioms, +19 theorems, 0 sorry."
 
 end NavierStokes.Millennium

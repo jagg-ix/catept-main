@@ -922,86 +922,18 @@ noncomputable def canonicalPositiveRatEnumeration : PositiveRatEnumeration :=
     enum_pos   := posRatEnumFn237_pos
     enum_dense := posRatEnumFn237_dense }
 
-/-! ### Stage 238: contract interfaces + BKM bridge axiom -/
+/-- **Initial kinetic energy is uniformly bounded** (`.partiallyVerified`, Stage 237).
 
-/-- Bridge contract (discharge-oriented): a fixed positive horizon `T0` and slack
-    `C0` such that each trajectory's initial kinetic energy is controlled by its
-    BKM integral at `T0` plus `C0`.
-
-    If this bridge is proved, `AubinLionsInitEnergyBoundContract` follows
-    constructively from the existing uniform BKM bound hypothesis `hH1`. -/
-def AubinLionsInitEnergyFromBKMBridge : Prop :=
-  ∃ (T0 C0 : Rat), 0 < T0 ∧ 0 ≤ C0 ∧
-    ∀ (traj : Trajectory NSField),
-      SatisfiesNSPDE nsOps nsNu traj →
-      kineticEnergy (traj.stateAt 0).velocity ≤ bkmVorticityIntegral traj T0 + C0
-
-/-- Alternative minimal contract: a global cap on initial kinetic energy over
-    NS trajectories. This is strictly stronger than needed for Stage-237 but
-    very simple to reason about and can discharge the BKM bridge immediately. -/
-def AubinLionsInitEnergyGlobalCapContract : Prop :=
-  ∃ Ecap : Rat, 0 ≤ Ecap ∧
-    ∀ (traj : Trajectory NSField),
-      SatisfiesNSPDE nsOps nsNu traj →
-      kineticEnergy (traj.stateAt 0).velocity ≤ Ecap
-
-/-- **Kinetic-energy Poincaré bound** (THEOREM, Stage 240).
-
-    Promoted from axiom (Stage 239) to theorem by extracting the third conjunct
-    of the `nsKineticEnergyContract` axiom package (now extended in Stage 240):
-
-      `ns_kineticEnergy_poincare := kineticEnergy_le_enstrophy`
-                                  `= nsKineticEnergyContract.2.2`
-
-    The Poincaré content (kinetic energy ≤ enstrophy) is now consolidated in
-    `AxiomaticEstimates.lean` alongside the other kinetic-energy axioms, which is
-    its natural architectural home.
-
-    Stage 240 net: `axiom ns_kineticEnergy_poincare` retired → THEOREM;
-    `NSKineticEnergyContract` extended by one conjunct (Poincaré bound). -/
-theorem ns_kineticEnergy_poincare : ∀ (v : NSField), kineticEnergy v ≤ enstrophy v :=
-  kineticEnergy_le_enstrophy
-
-/-- **NS energy-BKM initial-time bridge** (THEOREM, Stage 239).
-
-    Promoted from axiom (Stage 238) to theorem by combining:
-    1. `ns_kineticEnergy_poincare`: `E(0) ≤ enstrophy (traj.stateAt 0) = 1`
-       (Poincaré inequality in abstract carrier, `enstrophy = 1` by definition)
-    2. `bkmVorticityIntegral_nonneg`: BKM integral ≥ 0
-    3. Arithmetic: `1 ≤ 0 + 1 ≤ BKM(1) + 1`
-
-    Witnesses: `T0 = 1`, `C0 = 1`.
-
-    Net (Stage 239): axiom `ns_energy_bkm_initial_bridge` retired → theorem.
-    Sole new axiom: `ns_kineticEnergy_poincare` (`.partiallyVerified`). -/
-theorem ns_energy_bkm_initial_bridge : AubinLionsInitEnergyFromBKMBridge := by
-  refine ⟨1, 1, by norm_num, by norm_num, ?_⟩
-  intro traj _hNS
-  have hP := ns_kineticEnergy_poincare (traj.stateAt 0).velocity
-  have hEnstrophy : enstrophy (traj.stateAt 0).velocity = 1 := rfl
-  rw [hEnstrophy] at hP
-  linarith [bkmVorticityIntegral_nonneg traj 1]
-
-/-- **Initial kinetic energy is uniformly bounded** (Stage 238: THEOREM).
-
-    Promoted from axiom to theorem using `ns_energy_bkm_initial_bridge`
-    (single-trajectory bound) + `aubin_lions_init_energy_bound_contract_of_bkm_bridge`
-    (sequence-level derivation from per-trajectory bound + uniform BKM `hH1`).
-
-    Net: `axiom aubin_lions_seq_init_energy_bounded` retired. -/
-theorem aubin_lions_seq_init_energy_bounded
+    For a sequence of NS trajectories with a uniform BKM-vorticity bound,
+    the kinetic energy at time 0 is uniformly bounded.  Follows from the
+    energy inequality `E(t) ≤ E(0)` and the BKM/Poincaré bound on integrated
+    enstrophy (Temam 1984, Ch. III, Proposition 3.1). -/
+axiom aubin_lions_seq_init_energy_bounded
     (ald : AubinLionsData)
     (traj_seq : Nat → Trajectory NSField)
     (hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
     (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N)) :
-    ∃ E₀ : Rat, ∀ N : Nat, kineticEnergy ((traj_seq N).stateAt 0).velocity ≤ E₀ := by
-  -- Inline proof via ns_energy_bkm_initial_bridge (avoids forward ref to
-  -- aubin_lions_init_energy_bound_contract_of_bkm_bridge, defined later).
-  rcases ns_energy_bkm_initial_bridge with ⟨T0, C0, hT0, _hC0, hBound⟩
-  exact ⟨ald.h1Bound + C0, fun N => by
-    have h0 := hBound (traj_seq N) (hNS N)
-    have h1 := hH1 N T0 hT0
-    linarith⟩
+    ∃ E₀ : Rat, ∀ N : Nat, kineticEnergy ((traj_seq N).stateAt 0).velocity ≤ E₀
 
 /-- **Stage 237 redundancy theorem**: `aubin_lions_core_compact` is a theorem once
     `aubin_lions_seq_init_energy_bounded` is available.
@@ -1039,73 +971,6 @@ def AubinLionsInitEnergyBoundContract : Prop :=
     (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N)),
       ∃ E₀ : Rat, ∀ N : Nat, kineticEnergy ((traj_seq N).stateAt 0).velocity ≤ E₀
 
-/-- A global initial-energy cap implies the fixed-horizon BKM bridge contract.
-
-    Proof idea:
-    1. choose `T0 = 1`, `C0 = Ecap`;
-    2. use `bkmVorticityIntegral_nonneg traj 1` to get
-       `Ecap ≤ bkmVorticityIntegral traj 1 + Ecap`;
-    3. chain with the cap hypothesis. -/
-theorem aubin_lions_init_energy_from_bkm_bridge_of_global_cap
-    (hCap : AubinLionsInitEnergyGlobalCapContract) :
-    AubinLionsInitEnergyFromBKMBridge := by
-  rcases hCap with ⟨Ecap, hEcapNonneg, hCapBound⟩
-  refine ⟨1, Ecap, by norm_num, hEcapNonneg, ?_⟩
-  intro traj hNS
-  have hCap0 : kineticEnergy (traj.stateAt 0).velocity ≤ Ecap := hCapBound traj hNS
-  have hBkmNonneg : (0 : Rat) ≤ bkmVorticityIntegral traj 1 :=
-    bkmVorticityIntegral_nonneg traj 1
-  have hLift : Ecap ≤ bkmVorticityIntegral traj 1 + Ecap := by
-    linarith
-  exact le_trans hCap0 hLift
-
-/-- Reduction theorem: the Stage-237 init-energy contract is discharged once the
-    BKM-to-initial-energy bridge is available. -/
-theorem aubin_lions_init_energy_bound_contract_of_bkm_bridge
-    (hBridge : AubinLionsInitEnergyFromBKMBridge) :
-    AubinLionsInitEnergyBoundContract := by
-  rcases hBridge with ⟨T0, C0, hT0, _hC0, hInitLeBKMPlus⟩
-  intro ald traj_seq hH1 hNS
-  refine ⟨ald.h1Bound + C0, ?_⟩
-  intro N
-  have h0 : kineticEnergy ((traj_seq N).stateAt 0).velocity ≤
-      bkmVorticityIntegral (traj_seq N) T0 + C0 :=
-    hInitLeBKMPlus (traj_seq N) (hNS N)
-  have h1 : bkmVorticityIntegral (traj_seq N) T0 + C0 ≤ ald.h1Bound + C0 :=
-    by
-      simpa [add_comm, add_left_comm, add_assoc] using
-        add_le_add_right (hH1 N T0 hT0) C0
-  exact le_trans h0 h1
-
-/-- **`AubinLionsInitEnergyBoundContract` is currently discharged by the axiom
-    `aubin_lions_seq_init_energy_bounded`.**
-
-    This theorem isolates the open obligation to a single call site.  Once the
-    axiom is promoted to a theorem (from energy-inequality / Poincaré infrastructure),
-    only this definition needs updating; all `_of_contract` callers downstream
-    stay clean automatically.
-
-    Epistemic status: the body is a one-line axiom call — the hard content lives
-    in `aubin_lions_seq_init_energy_bounded` (`.partiallyVerified`). -/
-theorem aubin_lions_init_energy_bound_contract_holds :
-    AubinLionsInitEnergyBoundContract :=
-  fun ald traj_seq hH1 hNS => aubin_lions_seq_init_energy_bounded ald traj_seq hH1 hNS
-
-/-- Strict variant: avoid the monolithic Stage-237 sub-axiom call by supplying
-    the BKM bridge contract explicitly. -/
-theorem aubin_lions_init_energy_bound_contract_holds_of_bkm_bridge
-    (hBridge : AubinLionsInitEnergyFromBKMBridge) :
-    AubinLionsInitEnergyBoundContract :=
-  aubin_lions_init_energy_bound_contract_of_bkm_bridge hBridge
-
-/-- Alias route: discharge the Stage-237 init-energy contract from the global
-    cap contract via the bridge theorem chain. -/
-theorem aubin_lions_init_energy_bound_contract_holds_of_global_cap
-    (hCap : AubinLionsInitEnergyGlobalCapContract) :
-    AubinLionsInitEnergyBoundContract :=
-  aubin_lions_init_energy_bound_contract_of_bkm_bridge
-    (aubin_lions_init_energy_from_bkm_bridge_of_global_cap hCap)
-
 /-- Stage-237 route variant parameterized by an explicit init-energy contract. -/
 theorem aubin_lions_core_compact_stage237_of_contract
     (hInitContract : AubinLionsInitEnergyBoundContract)
@@ -1142,8 +1007,7 @@ theorem aubin_lions_compactness_from_components_stage237
       SatisfiesNSPDE nsOps nsNu traj_lim ∧
       RespectsFunctionSpaces nsSpacesR3 traj_lim := by
   obtain ⟨φ, hMono, hConv⟩ :=
-    aubin_lions_core_compact_stage237_of_contract
-      aubin_lions_init_energy_bound_contract_holds ald traj_seq hH1 hNS
+    aubin_lions_core_compact_stage237 ald traj_seq hH1 hNS
   obtain ⟨traj_lim, hNS_lim, hFS_lim⟩ :=
     ns_galerkin_passage_to_limit traj_seq φ hMono hNS hConv
   exact ⟨φ, traj_lim, hMono, hNS_lim, hFS_lim⟩
@@ -1165,36 +1029,6 @@ theorem aubin_lions_compactness_from_components_stage237_of_contract
     ns_galerkin_passage_to_limit traj_seq φ hMono hNS hConv
   exact ⟨φ, traj_lim, hMono, hNS_lim, hFS_lim⟩
 
-/-- Stage-237 compactness endpoint discharged from the BKM bridge contract. -/
-theorem aubin_lions_compactness_from_components_stage237_of_bkm_bridge
-    (hBridge : AubinLionsInitEnergyFromBKMBridge)
-    (ald : AubinLionsData)
-    (traj_seq : Nat → Trajectory NSField)
-    (hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
-    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N)) :
-    ∃ (φ : Nat → Nat) (traj_lim : Trajectory NSField),
-      StrictMono φ ∧
-      SatisfiesNSPDE nsOps nsNu traj_lim ∧
-      RespectsFunctionSpaces nsSpacesR3 traj_lim :=
-  aubin_lions_compactness_from_components_stage237_of_contract
-    (aubin_lions_init_energy_bound_contract_holds_of_bkm_bridge hBridge)
-    ald traj_seq hH1 hNS
-
-/-- Stage-237 compactness endpoint discharged from the global-cap contract. -/
-theorem aubin_lions_compactness_from_components_stage237_of_global_cap
-    (hCap : AubinLionsInitEnergyGlobalCapContract)
-    (ald : AubinLionsData)
-    (traj_seq : Nat → Trajectory NSField)
-    (hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
-    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N)) :
-    ∃ (φ : Nat → Nat) (traj_lim : Trajectory NSField),
-      StrictMono φ ∧
-      SatisfiesNSPDE nsOps nsNu traj_lim ∧
-      RespectsFunctionSpaces nsSpacesR3 traj_lim :=
-  aubin_lions_compactness_from_components_stage237_of_bkm_bridge
-    (aubin_lions_init_energy_from_bkm_bridge_of_global_cap hCap)
-    ald traj_seq hH1 hNS
-
 /-- Alias exposing the Stage-237 reduced-axiom route as a provability endpoint. -/
 theorem aubin_lions_compactness_is_provable_stage237
     (ald : AubinLionsData)
@@ -1210,21 +1044,10 @@ theorem aubin_lions_compactness_is_provable_stage237
 /-! ### Claim Registry -/
 
 def aubinLionsMathlib4Claims : List LabeledClaim :=
-  [ ⟨"ns_kineticEnergy_poincare", .verified,
-      "THEOREM (Stage 240): promoted from axiom (Stage 239). " ++
-      "kineticEnergy v ≤ enstrophy v derived as nsKineticEnergyContract.2.2. " ++
-      "Poincaré content consolidated in AxiomaticEstimates.lean (NSKineticEnergyPoincareContract). " ++
-      "NSKineticEnergyContract extended by one conjunct in Stage 240."⟩
-  , ⟨"ns_energy_bkm_initial_bridge", .verified,
-      "THEOREM (Stage 239): promoted from axiom. T0=1, C0=1: E(0) ≤ enstrophy=1 ≤ BKM(1)+1. " ++
-      "Proved from ns_kineticEnergy_poincare + bkmVorticityIntegral_nonneg + linarith."⟩
-  , ⟨"aubin_lions_seq_init_energy_bounded", .verified,
-      "THEOREM (Stage 238): promoted from axiom. Proved from ns_energy_bkm_initial_bridge " ++
-      "via inline linarith chain: E_N(0) ≤ BKM_N(T0)+C0 ≤ h1Bound+C0."⟩
-  , ⟨"aubin_lions_core_compact", .openBridge,
+  [ ⟨"aubin_lions_core_compact", .openBridge,
       "Simon (1987) Thm 5: L²(I;H¹) ∩ {H⁻¹ time deriv} → precompact L²(I;L²). " ++
-      "Stage 237/239: THEOREM aubin_lions_core_compact_stage237 proves the same endpoint " ++
-      "from ns_kineticEnergy_poincare (.partiallyVerified) + Stage-234 diagonal."⟩
+      "Stage 237: THEOREM aubin_lions_core_compact_stage237 proves the same endpoint " ++
+      "from aubin_lions_seq_init_energy_bounded (.partiallyVerified) + Stage-234 diagonal."⟩
   , ⟨"aubin_lions_core_compact_from_init_bound", .verified,
       "THEOREM (Stage 234): full Cantor diagonal proved. " ++
       "φ_diag_strictMono + φ_diag_converges PROVED (0 new axioms) from: " ++
@@ -1246,32 +1069,10 @@ def aubinLionsMathlib4Claims : List LabeledClaim :=
       "(aubin_lions_core_compact_stage237 + theoremized passage_to_limit)."⟩
   , ⟨"AubinLionsInitEnergyBoundContract", .verified,
       "CONTRACT: explicit local interface for Stage-237 init-energy bound obligation."⟩
-  , ⟨"AubinLionsInitEnergyFromBKMBridge", .verified,
-      "CONTRACT (Stage 239): discharged — ns_energy_bkm_initial_bridge is now a THEOREM. " ++
-      "T0=1, C0=1: E(0) ≤ enstrophy=1 ≤ BKM(1)+1 via Poincaré + BKM nonnegativity."⟩
-  , ⟨"AubinLionsInitEnergyGlobalCapContract", .partiallyVerified,
-      "CONTRACT: global cap on initial kinetic energy over NS trajectories. " ++
-      "This stronger contract implies the BKM bridge contract constructively."⟩
-  , ⟨"aubin_lions_init_energy_from_bkm_bridge_of_global_cap", .verified,
-      "THEOREM: global-cap contract ⇒ AubinLionsInitEnergyFromBKMBridge."⟩
-  , ⟨"aubin_lions_init_energy_bound_contract_of_bkm_bridge", .verified,
-      "THEOREM: proves AubinLionsInitEnergyBoundContract from AubinLionsInitEnergyFromBKMBridge."⟩
-  , ⟨"aubin_lions_init_energy_bound_contract_holds", .verified,
-      "THEOREM (Stage 239): AubinLionsInitEnergyBoundContract fully discharged — " ++
-      "aubin_lions_seq_init_energy_bounded is now a theorem (Stage 238) and " ++
-      "ns_energy_bkm_initial_bridge is a theorem (Stage 239). Zero open axioms in chain."⟩
-  , ⟨"aubin_lions_init_energy_bound_contract_holds_of_bkm_bridge", .verified,
-      "THEOREM alias: strict contract discharge route via AubinLionsInitEnergyFromBKMBridge."⟩
-  , ⟨"aubin_lions_init_energy_bound_contract_holds_of_global_cap", .verified,
-      "THEOREM alias: strict contract discharge route via global initial-energy cap contract."⟩
   , ⟨"aubin_lions_core_compact_stage237_of_contract", .verified,
       "THEOREM: Stage-237 compactness route parameterized by an explicit init-energy contract."⟩
   , ⟨"aubin_lions_compactness_from_components_stage237_of_contract", .verified,
       "THEOREM: compactness endpoint via Stage-237 route with explicit init-energy contract input."⟩
-  , ⟨"aubin_lions_compactness_from_components_stage237_of_bkm_bridge", .verified,
-      "THEOREM: Stage-237 compactness endpoint discharged from AubinLionsInitEnergyFromBKMBridge."⟩
-  , ⟨"aubin_lions_compactness_from_components_stage237_of_global_cap", .verified,
-      "THEOREM: Stage-237 compactness endpoint discharged from AubinLionsInitEnergyGlobalCapContract."⟩
   , ⟨"aubin_lions_compactness_is_provable_stage237", .verified,
       "THEOREM alias for Stage-237 reduced-axiom compactness route."⟩
   , ⟨"ns_galerkin_passage_to_limit", .verified,

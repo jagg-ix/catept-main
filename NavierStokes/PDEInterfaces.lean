@@ -142,6 +142,21 @@ def GlobalRegularSolution {X : Type u}
         SatisfiesNSPDE ops nu traj /\
         RespectsFunctionSpaces spaces traj
 
+/-- Delta-aware regularity witness:
+same as `GlobalRegularSolution`, but also carries a discrete-time PDE witness
+`SatisfiesNSPDEΔ` at step `h`. -/
+def GlobalRegularSolutionΔ {X : Type u}
+    (ops : FieldOps X)
+    (spaces : FunctionSpaceAssumptions X)
+    (nu h : Rat)
+    (st0 : State X) : Prop :=
+  AdmissibleInitialData spaces st0 /\
+    ∃ traj : Trajectory X,
+      traj.stateAt 0 = st0 /\
+        SatisfiesNSPDE ops nu traj /\
+        SatisfiesNSPDEΔ ops nu h traj /\
+        RespectsFunctionSpaces spaces traj
+
 structure BreakdownWitness (X : Type u) where
   blowupTime : Rat
   blowupTimePos : 0 < blowupTime
@@ -199,6 +214,22 @@ def VorticityBlowupControl {X : Type u}
       SatisfiesNSPDE _ops nu traj ∧
       RespectsFunctionSpaces spaces traj
 
+/-- Delta-aware vorticity-control endpoint:
+adds a discrete-time witness `SatisfiesNSPDEΔ` to the continuation payload. -/
+def VorticityBlowupControlΔ {X : Type u}
+    (_ops : FieldOps X)
+    (spaces : FunctionSpaceAssumptions X)
+    (nu h : Rat)
+    (pi : PathIntegralInterface X) : Prop :=
+  ∀ (st0 : State X),
+    pi.PIWellPosed st0 →
+    AdmissibleInitialData spaces st0 →
+    ∃ (traj : Trajectory X),
+      traj.stateAt 0 = st0 ∧
+      SatisfiesNSPDE _ops nu traj ∧
+      SatisfiesNSPDEΔ _ops nu h traj ∧
+      RespectsFunctionSpaces spaces traj
+
 def ForwardBridgeObligation {X : Type u}
     (ops : FieldOps X)
     (spaces : FunctionSpaceAssumptions X)
@@ -212,6 +243,15 @@ def BackwardBridgeObligation {X : Type u}
     (nu : Rat)
     (pi : PathIntegralInterface X) : Prop :=
   forall st0 : State X, pi.PIWellPosed st0 -> GlobalRegularSolution ops spaces nu st0
+
+/-- Delta-aware backward bridge obligation:
+same endpoint as `BackwardBridgeObligation`, but with `GlobalRegularSolutionΔ`. -/
+def BackwardBridgeObligationΔ {X : Type u}
+    (ops : FieldOps X)
+    (spaces : FunctionSpaceAssumptions X)
+    (nu h : Rat)
+    (pi : PathIntegralInterface X) : Prop :=
+  ∀ st0 : State X, pi.PIWellPosed st0 → GlobalRegularSolutionΔ ops spaces nu h st0
 
 theorem bridgeEquivalenceOfObligations {X : Type u}
     (ops : FieldOps X)
@@ -254,5 +294,43 @@ theorem backward_bridge_obligation_bootstrap
     BackwardBridgeObligation ops spaces nu pi := by
   intro hAdmissible st0 hPI
   exact ⟨hAdmissible st0 hPI, hControl st0 hPI (hAdmissible st0 hPI)⟩
+
+/-- Forgetful transport from delta-aware regularity to the original endpoint. -/
+theorem global_regular_of_delta
+    {X : Type u}
+    {ops : FieldOps X}
+    {spaces : FunctionSpaceAssumptions X}
+    {nu h : Rat}
+    {st0 : State X} :
+    GlobalRegularSolutionΔ ops spaces nu h st0 →
+      GlobalRegularSolution ops spaces nu st0 := by
+  intro hΔ
+  rcases hΔ with ⟨hAdm, traj, h0, hNS, _hNSΔ, hFS⟩
+  exact ⟨hAdm, traj, h0, hNS, hFS⟩
+
+/-- Delta-aware vorticity control implies the original vorticity-control endpoint. -/
+theorem vorticity_control_of_delta
+    {X : Type u}
+    {ops : FieldOps X}
+    {spaces : FunctionSpaceAssumptions X}
+    {nu h : Rat}
+    {pi : PathIntegralInterface X} :
+    VorticityBlowupControlΔ ops spaces nu h pi →
+      VorticityBlowupControl ops spaces nu pi := by
+  intro hΔ st0 hPI hAdm
+  rcases hΔ st0 hPI hAdm with ⟨traj, h0, hNS, _hNSΔ, hFS⟩
+  exact ⟨traj, h0, hNS, hFS⟩
+
+/-- Delta-aware backward bridge implies the original backward bridge obligation. -/
+theorem backward_bridge_obligation_of_delta
+    {X : Type u}
+    {ops : FieldOps X}
+    {spaces : FunctionSpaceAssumptions X}
+    {nu h : Rat}
+    {pi : PathIntegralInterface X} :
+    BackwardBridgeObligationΔ ops spaces nu h pi →
+      BackwardBridgeObligation ops spaces nu pi := by
+  intro hΔ st0 hPI
+  exact global_regular_of_delta (hΔ st0 hPI)
 
 end NavierStokes.Millennium
