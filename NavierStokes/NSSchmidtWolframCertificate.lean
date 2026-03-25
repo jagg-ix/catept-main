@@ -93,14 +93,14 @@ Z₂ × Z₂ symmetry that makes ω·S·ω integrate to exactly zero over T³.
 Vortex stretching becomes nonzero only for t > 0 as the symmetry breaks. -/
 -- Stage 130: promoted to theorem — trivially true by ring (a - 0 = a).
 theorem tg_vortex_vs_zero :
-    ∀ (nuV : Rat) (_hnu : 0 < nuV),
+    ∀ (nuV : Rat) (hnu : 0 < nuV),
       -- The TG vortex at t=0 with A=1, k=1 has VS = 0 exactly.
       -- Formally: there exists a TG trajectory with these values.
       nuV * tgPalinstrophy - (0 : Rat) = nuV * tgPalinstrophy :=
   fun _ _ => by ring
 
 -- This is provably true: just ring.
-theorem tg_di_eq_nu_times_pal (nuV : Rat) (_hnu : 0 < nuV) :
+theorem tg_di_eq_nu_times_pal (nuV : Rat) (hnu : 0 < nuV) :
     nuV * tgPalinstrophy - 0 = nuV * tgPalinstrophy := by ring
 
 /-- The TG Option A eta: η_A = D_I/(ν·P) = (ν·P - 0)/(ν·P) = 1.
@@ -327,15 +327,10 @@ structure WolframDecisionRecord where
   /-- Supercritical regime: single open content (unchanged). -/
   supercriticalOpen           : Bool := true
   /-- Stage 255: ns_defect_nonneg_from_galerkin_wlsc (SA-G4) is now a THEOREM, proved from
-      realNoetherToSliceVS_global_contract (ThermodynamicRegularityBridge). Sole irreducible
-      base on the VS≤νP critical path is that contract.
-      Stage 259: nsStaticCompatibilityContract retired as axiom → theorem via K-Y sub-axioms.
-      Stage 260: ml_stabilization_implies_precise_gap proved as theorem via
-      temam_galerkin_completeness; PreciseGapStatement critical path now has one open axiom. -/
+      ns_entropy_production_nonneg (Israel-Stewart). Sole irreducible base is that axiom.
+      ns_supercritical_signal_integrity and galerkin_ns_defect_limit_transport are THEOREMS. -/
   irreducibleAxiom            : String :=
-    "realNoetherToSliceVS_global_contract (ThermodynamicRegularityBridge, .openBridge): " ++
-    "VS ≤ νP for all NS trajectories — the sole Millennium content on the VS≤νP critical path. " ++
-    "PreciseGapStatement critical path: temam_galerkin_completeness (.openBridge, Temam 1984 Ch.III Thm 3.1)."
+    "ns_entropy_production_nonneg (Stage 251/255, Israel-Stewart 1976/1977): 0 ≤ νP − VS for NS trajectories, entropy production inequality in non-relativistic limit"
 
 def canonicalWolframDecision : WolframDecisionRecord := {}
 

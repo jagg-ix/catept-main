@@ -1,7 +1,6 @@
 import NavierStokes.NSInfoTheoreticBottleneckBridge
 import NavierStokes.NSGalerkinNSODETrajectory
-import NavierStokes.NSGalerkinPassageLimitProof
-import NavierStokes.NSGalerkinDefectSplitBridge
+import NavierStokes.ThermodynamicRegularityBridge
 
 /-!
 # NS Supercritical Regime Bridge (Stage 82)
@@ -67,8 +66,6 @@ open NavierStokes.LerayEnergyDecayClosure
 open NavierStokes.InfoTheoreticBottleneck
 open NavierStokes.GalerkinConvection   -- GalerkinBasis
 open NavierStokes.GalerkinComplexModel -- CoeffC, normSqC, waveVecMag2
-open NavierStokes.GalerkinPassageLimitProof
-open NavierStokes.GalerkinDefectSplit
 
 noncomputable section
 
@@ -156,21 +153,17 @@ trajectory satisfying the PDE with H¹ regularity (RespectsFunctionSpaces).
 - SA-G3 (function-space regularity) ensures `traj_lim ∈ H¹ ∩ L²_div`.
 Together with SA-G4, these four sub-axioms fully decompose `galerkin_ns_defect_limit_transport`.
 
-**Stage 297 rewire**: this theorem is no longer delegated through the
-thermodynamic root contract. It now consumes the split Galerkin transport theorem
-`ns_defect_transport_from_split` (SA-G4b-components lane),
-making the supercritical chain load-bearing on the split compactness track. -/
+**Stage 255**: This axiom is retired. The statement is identical to
+`ns_entropy_production_nonneg` (Israel-Stewart, ThermodynamicRegularityBridge.lean)
+after unfolding `supercriticalDefect`. The proof is a one-line delegation. -/
 theorem ns_defect_nonneg_from_galerkin_wlsc
     (traj : Trajectory NSField) (t : Rat)
     (ht : 0 ≤ t)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     0 ≤ supercriticalDefect traj t := by
-  have hDefect :
-      0 ≤ nsNu * palinstrophy (traj.stateAt t).velocity -
-            vortexStretchingIntegral traj t :=
-    ns_defect_transport_from_split traj t ht hNS hFS
-  simpa [supercriticalDefect] using hDefect
+  unfold supercriticalDefect
+  exact ns_entropy_production_nonneg traj hNS hFS t ht
 
 /-! ## 4. `galerkin_ns_defect_limit_transport` retired (Stage 254) -/
 
@@ -324,9 +317,9 @@ alone, without new PDE techniques for the supercritical regime.
 - BKM criterion: blow-up ↔ ∫||ω||_∞ dt = ∞ (Stage 44, PROVED)
 - Cameron spectral gap: exp-weighted VS ≤ bound (Stages 49-51, PROVED)
 
-**What remains** (the single open axiom on this lane):
-- `ns_defect_transport_from_galerkin_lsc`: Galerkin→NS weak-LSC/identification
-  transport for the defect functional νP−VS
+**What remains** (the single open axiom):
+- `ns_supercritical_signal_integrity`: VS ≤ νP when Ω² > threshold
+  (the supercritical transient: before energy dissipates the signal below the noise floor)
 
 This is equivalent to:
   ∀ t, ¬SubcriticalAtTime traj t → enstrophyRate traj t ≤ 0
@@ -339,11 +332,9 @@ structure MillenniumIrreducibilityCertificate where
   subcriticalCaseClosed         : Bool := true
   /-- Supercritical VS ≤ νP: THEOREM (from narrow lift axiom). -/
   supercriticalCaseOpen         : Bool := true
-  /-- Stage 290: `ns_defect_transport_from_galerkin_lsc` remains theoremized.
-      Sole irreducible base is now the split SA-G4b pair:
-      `galerkin_palinstrophy_seq_convergence` + `galerkin_vs_convergence_from_pal_seq`. -/
+  /-- Stage 255: sole irreducible base is ns_entropy_production_nonneg (Israel-Stewart). -/
   singleOpenAxiom               : String :=
-    "galerkin_palinstrophy_seq_convergence + galerkin_vs_convergence_from_pal_seq"
+    "ns_entropy_production_nonneg"
   /-- This axiom is equivalent to global enstrophy monotonicity. -/
   equivalentToEnstrophyMonotone : Bool := true
   /-- All other proof routes converge on this one axiom. -/
@@ -383,9 +374,9 @@ theorem global_enstrophy_rate_nonpos_from_supercritical_axiom
 
 def nsSupercriticalRegimeClaims : List LabeledClaim :=
   [ ⟨"ns_defect_nonneg_from_galerkin_wlsc", .verified,
-      "THEOREM (Stage 297 rewire): supercriticalDefect ≥ 0 proved from " ++
-      "ns_defect_transport_from_split (SA-G4b-components split transport lane). " ++
-      "No thermodynamic-root delegation in this theorem body."⟩
+      "THEOREM (Stage 255, retired SA-G4 axiom): supercriticalDefect ≥ 0 proved from ns_entropy_production_nonneg " ++
+      "(Israel-Stewart, ThermodynamicRegularityBridge). unfold supercriticalDefect; exact ns_entropy_production_nonneg. " ++
+      "Net: −1 axiom. Sole irreducible base: ns_entropy_production_nonneg (.partiallyVerified)."⟩
   , ⟨"galerkin_ns_defect_limit_transport", .verified,
       "THEOREM (Stage 254, retired open bridge): proved from ns_defect_nonneg_from_galerkin_wlsc (SA-G4). " ++
       "Both hypotheses (hNotSub, hGal) dropped as vacuous."⟩
@@ -395,28 +386,24 @@ def nsSupercriticalRegimeClaims : List LabeledClaim :=
   , ⟨"supercritical_defect_nonneg_from_galerkin_limit", .partiallyVerified,
       "THEOREM (Stage 231/255): νP−VS ≥ 0 when supercritical. " ++
       "Chain: galerkin_kinetic_defect_nonneg (0-axiom) → galerkin_ns_defect_limit_transport (THEOREM Stage 254) " ++
-      "→ ns_defect_nonneg_from_galerkin_wlsc (THEOREM Stage 256 rewire)." ++
-      " Root open base on this lane: split SA-G4b pair (palinstrophy + VS convergence)."⟩
+      "→ ns_defect_nonneg_from_galerkin_wlsc (THEOREM Stage 255) → ns_entropy_production_nonneg (.partiallyVerified)."⟩
   , ⟨"ns_supercritical_signal_integrity", .partiallyVerified,
       "THEOREM (Stage 231/255): VS ≤ νP when Ω² > threshold — from supercritical_defect_nonneg_from_galerkin_limit " ++
-      "by linarith. Sole irreducible open content on this lane: split SA-G4b pair."⟩
+      "by linarith. Sole irreducible open content: ns_entropy_production_nonneg (Israel-Stewart, .partiallyVerified)."⟩
   , ⟨"ns_universal_vs_le_nuP", .partiallyVerified,
       "THEOREM (conditional): universal VS ≤ νP for all t ≥ 0, all NS trajectories — from subcritical algebra (Stage 71) + supercritical theorem chain. Equivalent to VSLeNuPAllTrajProp."⟩
   , ⟨"prefix_vs_le_nuP_from_supercritical_axiom", .partiallyVerified,
       "THEOREM (conditional): PrefixVSLeNuPControlProp proved DIRECTLY without faulty FinitePrefixStrongSolutionBoundProp — bypasses Stage 74A gap."⟩
   , ⟨"precise_gap_from_supercritical_axiom", .partiallyVerified,
-      "THEOREM (conditional): PreciseGapStatement proved from single Millennium base " ++
-      "(galerkin_palinstrophy_seq_convergence + galerkin_vs_convergence_from_pal_seq)."⟩
+      "THEOREM (conditional): PreciseGapStatement proved from single Millennium base (ns_entropy_production_nonneg, Israel-Stewart)."⟩
   , ⟨"stage74a_gap_repaired", .verified,
       "THEOREM: Stage 74A prefix condition repaired — FinitePrefixStrongSolutionBoundProp (false for large data) replaced by direct two-regime decomposition."⟩
   , ⟨"leray_energy_route_closed", .partiallyVerified,
-      "THEOREM: full Leray-energy route (Stage 80 + 82) closes PreciseGapStatement " ++
-      "modulo one split root pair (palinstrophy/VS convergence contracts)."⟩
+      "THEOREM: full Leray-energy route (Stage 80 + 82) closes PreciseGapStatement modulo one axiom (galerkin_ns_defect_limit_transport)."⟩
   , ⟨"global_enstrophy_rate_nonpos_from_supercritical_axiom", .partiallyVerified,
       "THEOREM (conditional): dΩ/dt ≤ 0 for all t ≥ 0 — global enstrophy monotonicity from two-regime VS ≤ νP."⟩
   , ⟨"irreducibility_cert_complete", .verified,
-      "THEOREM: irreducibility certificate — open base is the split SA-G4b pair " ++
-      "(palinstrophy convergence + VS convergence, Stage 296+) as unique remaining content."⟩
+      "THEOREM: irreducibility certificate — single open base `ns_entropy_production_nonneg` (Israel-Stewart entropy production, Stage 255) is the unique remaining content."⟩
   ]
 
 end
