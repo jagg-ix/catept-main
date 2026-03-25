@@ -89,7 +89,6 @@ import NavierStokes.NSArakiRelativeEntropyBridge
 import NavierStokes.Bridges.NSArakiRelativeEntropyBridge
 import NavierStokes.NSImaginaryActionConcavityBridge
 import NavierStokes.Bridges.NSImaginaryActionConcavityBridge
-import NavierStokes.NS2DImaginaryActionBridge
 import NavierStokes.NSAdSCFTBottleneckBridge
 import NavierStokes.NSCanonicalNoGravityEntropicBridge
 import NavierStokes.NSModularForcingBridge
@@ -226,5 +225,3 @@ import NavierStokes.NSPhysLeanVorticityBridge
 import NavierStokes.NSPhysLeanCurlCurlBridge
 import NavierStokes.NSParsevalT3Bridge
 import NavierStokes.NSGalerkinPassageLimitProof
-import NavierStokes.NSCameronMLConnectionBridge
-import NavierStokes.NSHomotopyH2ShellBridge

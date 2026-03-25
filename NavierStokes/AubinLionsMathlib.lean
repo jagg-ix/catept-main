@@ -1,5 +1,4 @@
 import NavierStokes.GalerkinNSInfrastructure
-import NavierStokes.NSObservableTailControlBridge
 
 /-!
 # Aubin-Lions Mathlib: Implementing MeasureTheory.aubin_lions_embedding
@@ -82,11 +81,6 @@ namespace NavierStokes.Millennium
 set_option autoImplicit false
 
 noncomputable section
-
-open NavierStokes.ObservableTailControl
-open NavierStokes.ObservableInterface
-open NavierStokes.T3SobolevSupplement
-open NavierStokes.DiscreteKernel
 
 /-! ## Core Sub-Axiom 1: Bochner-Sobolev Compact Interpolation -/
 
@@ -770,11 +764,11 @@ structure PositiveRatEnumeration where
 def Stage234CompactnessRoute : Prop :=
   ∀ (ald : AubinLionsData)
     (traj_seq : Nat → Trajectory NSField)
-    (_hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
-    (_hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N))
-    (_hInitBound : ∃ E₀ : Rat, ∀ N : Nat,
+    (hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
+    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N))
+    (hInitBound : ∃ E₀ : Rat, ∀ N : Nat,
       kineticEnergy ((traj_seq N).stateAt 0).velocity ≤ E₀)
-    (_ratQ : PositiveRatEnumeration),
+    (ratQ : PositiveRatEnumeration),
     ∃ (φ : Nat → Nat), StrictMono φ ∧
       ∀ (T : Rat), 0 < T →
         ∃ (field_lim : NSField),
@@ -923,21 +917,6 @@ theorem kineticEnergy_initial_le_one : ∀ (traj : Trajectory NSField),
   (kineticEnergy_le_enstrophy (traj.stateAt 0).velocity).trans
     (nsFourierInterp.initial_enstrophy_bound traj hNS)
 
-/-- Tail-budget contract for the compactness lane:
-integrated high-frequency enstrophy tail is controlled by integrated palinstrophy. -/
-def AubinLionsTailBudgetContract : Prop :=
-  ∀ (traj : Trajectory NSField) (T : Rat) (K : Nat),
-    discreteIntegral
-      (fun t =>
-        frequencyTailSeminorm
-          (ObservableInterface.interpretAsFourier (traj.stateAt t).velocity) 1 K) T ≤
-      palinstrophyIntegralObs physicalNSObservables traj T
-
-theorem aubin_lions_tail_budget_contract_holds :
-    AubinLionsTailBudgetContract := by
-  intro traj T K
-  exact physical_enstrophyTailIntegral_le_palinstrophyIntegral traj T K
-
 /-- **NS energy-BKM initial-time bridge** (THEOREM, Stage 239/241).
 
     Witnesses: `T0 = 1`, `C0 = 1`.
@@ -1064,8 +1043,8 @@ theorem aubin_lions_compactness_is_provable
 def AubinLionsInitEnergyBoundContract : Prop :=
   ∀ (ald : AubinLionsData)
     (traj_seq : Nat → Trajectory NSField)
-    (_hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
-    (_hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N)),
+    (hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
+    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N)),
       ∃ E₀ : Rat, ∀ N : Nat, kineticEnergy ((traj_seq N).stateAt 0).velocity ≤ E₀
 
 /-- A global initial-energy cap implies the fixed-horizon BKM bridge contract.
