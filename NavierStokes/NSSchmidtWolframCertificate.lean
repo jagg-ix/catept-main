@@ -326,11 +326,11 @@ structure WolframDecisionRecord where
   subcriticalProved           : Bool := true
   /-- Supercritical regime: single open content (unchanged). -/
   supercriticalOpen           : Bool := true
-  /-- Stage 255: ns_defect_nonneg_from_galerkin_wlsc (SA-G4) is now a THEOREM, proved from
-      ns_entropy_production_nonneg (Israel-Stewart). Sole irreducible base is that axiom.
-      ns_supercritical_signal_integrity and galerkin_ns_defect_limit_transport are THEOREMS. -/
+  /-- Stage 254: galerkin_ns_defect_limit_transport is now a THEOREM, proved from SA-G4.
+      The real remaining open sub-axiom is ns_defect_nonneg_from_galerkin_wlsc (SA-G4).
+      ns_supercritical_signal_integrity is a THEOREM (Stage 231) — not an axiom. -/
   irreducibleAxiom            : String :=
-    "ns_entropy_production_nonneg (Stage 251/255, Israel-Stewart 1976/1977): 0 ≤ νP − VS for NS trajectories, entropy production inequality in non-relativistic limit"
+    "ns_defect_nonneg_from_galerkin_wlsc (SA-G4, Stage 254): H¹ weak LSC + Galerkin identification (Brezis Cor.3.9 + Temam Ch.III §3)"
 
 def canonicalWolframDecision : WolframDecisionRecord := {}
 
