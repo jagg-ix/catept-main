@@ -235,4 +235,3 @@ import NavierStokes.NSHelicalTrichotomyClosureBridge
 import NavierStokes.NSHelicalSmallDataCaseC
 import NavierStokes.NSK41EPTUniversalityBridge
 import NavierStokes.NSHamiltonianComplexityBridge
-import NavierStokes.NSCollapseTransientBridge
