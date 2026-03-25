@@ -232,4 +232,3 @@ import NavierStokes.NSHomotopy2D3DEquivalenceBridge
 import NavierStokes.NSHelicalCascadeBridge
 import NavierStokes.NSHelicalPoincareClosureBridge
 import NavierStokes.NSHelicalTrichotomyClosureBridge
-import NavierStokes.NSHelicalSmallDataCaseC

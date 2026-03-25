@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 266 — small-data Case C via GN+Poincaré, +1 axiom)
+**Date**: 2026-03-25 (Stage 265 — master trichotomy + exact 1/20 derivation, 0 new axioms)
 **Branch**: `navier-stokes-investigation`
-**Build**: 3154 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 3153 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 216 |
-| Axioms | 229 |
-| Theorems | 2487 |
+| Lean4 files | 215 |
+| Axioms | 228 |
+| Theorems | 2477 |
 | `sorry` | 0 |
-| Build jobs | 3154 |
+| Build jobs | 3153 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,27 +23,6 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
-
-### Stage 266 (2026-03-25): Small-data Case C via Gagliardo-Nirenberg + Poincaré (+1 axiom)
-
-**File**: new `NSHelicalSmallDataCaseC.lean` (+1 axiom, +10 theorems, +1 file)
-
-**GN-Poincaré small-data threshold**: `gnSmallDataThreshold = 40·ν⁴ = λ₁·ν⁴`.
-
-**Core theorem** `gn_small_data_vs_le_nu_pal`:
-> Ω(t)² ≤ 40·ν⁴  →  VS(t) ≤ ν·P(t)
-
-Proof by contradiction: assume VS > νP. Then (νP)⁴ < VS⁴ ≤ Ω³·P³ (GN) → ν⁴·P < Ω³ (cancel P³). Then 40·ν⁴·Ω ≤ ν⁴·P < Ω³ (Poincaré) → 40·ν⁴ < Ω² (cancel Ω). Contradicts Ω² ≤ 40·ν⁴.
-
-All arithmetic at degree ≤ 4 in rational form (no fractional exponents). Key tactic: `by_contra + nlinarith` with explicit polynomial witnesses (MulLeftStrictMono ℚ unavailable).
-
-**New axiom**: `gn_small_data_propagates` (.partiallyVerified): Ω(0)² ≤ 40·ν⁴ → ∀t≥0, Ω(t)² ≤ 40·ν⁴ (Gronwall/ODE stability, Doering-Gibbon 1995).
-
-**Chain**: small initial data → KMSCompatible → PreciseGapStatement.
-
-**Documents Millennium gap**: GN+Poincaré fails for Ω² > 40·ν⁴ (large data regime).
-
----
 
 ### Stage 265 (2026-03-25): Master trichotomy + exact 1/20 threshold derivation (+0 axioms)
 
