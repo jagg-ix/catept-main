@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 265 — master trichotomy + exact 1/20 derivation, 0 new axioms)
+**Date**: 2026-03-25 (Stage 264 — conditional Millennium closure: VS ≤ νP proved for ν ≥ 1/20)
 **Branch**: `navier-stokes-investigation`
-**Build**: 3153 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 3152 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 215 |
+| Lean4 files | 214 |
 | Axioms | 228 |
-| Theorems | 2477 |
+| Theorems | 2463 |
 | `sorry` | 0 |
-| Build jobs | 3153 |
+| Build jobs | 3152 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,29 +23,6 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
-
-### Stage 265 (2026-03-25): Master trichotomy + exact 1/20 threshold derivation (+0 axioms)
-
-**File**: new `NSHelicalTrichotomyClosureBridge.lean` (+0 axioms, +14 theorems, +1 file)
-
-**The 1/20 threshold — verified decomposition**:
-| Factor | Value | Origin |
-|--------|-------|--------|
-| Numerator | 2 | `helical_maximal_identity_bound`: VS ≤ 2·Ω (from H±(k)=2k·E±(k), paper eq 2.15) |
-| Denominator | 40 | `stokesFirstEigenvalue = 40` (surrogate for λ₁=(2π)²≈39.478) |
-| Threshold | 1/20 | 2/40 = 1/20 = 0.05 |
-| Exact value | ≈0.0507 | 2/(2π)² = 1/(2π²), within 1.3% of surrogate |
-
-**The master trichotomy** (0 new axioms): PreciseGapStatement follows from any of:
-- **(A)** `nsNu * 40 ≥ 2` (i.e., ν ≥ 1/20): Poincaré + helical (Stage 264)
-- **(B)** `TwoDimensionalFlow traj`: VS=0 trivially (Stage 262)
-- **(C)** `∀t≥0, enstrophyRate traj t ≤ 0`: Enstrophy non-increasing
-
-**Key IFF** (`enstrophy_nonincreasing_iff_kms`): `dΩ/dt ≤ 0 ↔ VS ≤ νP` — pure linarith from enstrophy_evolution_identity. Zero new axioms.
-
-**Stationary equality** (`stationary_vs_eq_nu_pal`): `dΩ/dt = 0 → VS = νP` exactly — the Kolmogorov energy balance as an algebraic theorem.
-
-**Irreducible Millennium content**: Prove Case C holds for all large-data NS solutions (∀t≥0, dΩ/dt ≤ 0). This is equivalent to `realNoetherToSliceVS_global_contract`.
 
 ### Stage 264 (2026-03-25): Conditional Millennium closure — VS ≤ νP proved for ν ≥ 1/20 (+0 axioms)
 
