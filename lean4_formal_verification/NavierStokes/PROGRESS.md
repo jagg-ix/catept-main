@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 263 — helical cascade decomposition as supporting evidence for VS ≤ νP)
+**Date**: 2026-03-25 (Stage 262 — non-vacuous PDE–topology correspondence: TwoDimensionalFlow ↔ TwoDEmbedding)
 **Branch**: `navier-stokes-investigation`
-**Build**: 3151 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 2176 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 213 |
-| Axioms | 235 |
-| Theorems | 2453 |
+| Lean4 files | 212 |
+| Axioms | 231 |
+| Theorems | 2406 |
 | `sorry` | 0 |
-| Build jobs | 3151 |
+| Build jobs | 2176 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,35 +23,6 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
-
-### Stage 263 (2026-03-25): Helical cascade decomposition — Chen–Chen–Eyink 2002 as supporting evidence for VS ≤ νP
-
-**File**: new `NSHelicalCascadeBridge.lean` (+4 axioms, +12 theorems, +1 file)
-
-**Achievement**: Formalizes the Chen–Chen–Eyink (2002) helical cascade mechanism as supporting
-evidence for the Millennium content `realNoetherToSliceVS_global_contract` (VS ≤ νP).
-
-**Physical basis** (Chen–Chen–Eyink 2002, Physica D 160, 40–52, arXiv:physics/0206030):
-- Helical decomposition `v = v⁺ + v⁻` (eigenstates of Σ = (−Δ)^{−1/2}∇×)
-- Maximal helicity identity (paper eq 2.15): `H±(k,t) = 2k·E±(k,t)`
-- Vortex stretching IS inter-channel transfer (paper eq 3.17): `VS(t) = R_H(t)`
-- Parity restoration at small scales: `H⁺(k,t) ≈ H⁻(k,t)` → `R_H(t) ≤ ν·P(t)`
-- DNS confirmation: 512³ simulation at R_λ = 220
-
-**New axioms (+4)**:
-- `helical_transfer_nonneg` (.partiallyVerified, paper eq 2.4): `R_H(t) ≥ 0`
-- `vs_eq_helical_transfer` (.partiallyVerified, paper eq 3.17): `VS(t) = R_H(t)`
-- `helical_parity_restores_in_3d` (.openBridge, Millennium content): `R_H(t) ≤ ν·P(t)`
-- `helical_maximal_identity_bound` (.partiallyVerified, paper eq 2.15): `VS(t) ≤ 2·Ω(t)`
-
-**Key theorems (+12)**:
-- `twoD_kms_trivial`: `TwoDimensionalFlow → KMSCompatible` with 0 new axioms (VS=0 ≤ νP trivially)
-- `helical_cascade_implies_kms`: `R_H ≤ νP → KMSCompatible` (3D case)
-- `helical_cascade_certifies_contract`: helical mechanism gives `RealNoetherToSliceVSContract`
-- `helical_route_to_precise_gap`: helical mechanism → `PreciseGapStatement`
-
-**Millennium reduction**: The sole irreducible open content is `helical_parity_restores_in_3d`
-(R_H(t) ≤ ν·P(t)), physically equivalent to `realNoetherToSliceVS_global_contract`.
 
 ### Stage 262 (2026-03-25): Non-vacuous PDE–topology correspondence — TwoDimensionalFlow ↔ TwoDEmbedding
 

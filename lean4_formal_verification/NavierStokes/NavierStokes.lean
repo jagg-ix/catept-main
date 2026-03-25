@@ -229,4 +229,3 @@ import NavierStokes.NSGalerkinPassageLimitProof
 import NavierStokes.NSCameronMLConnectionBridge
 import NavierStokes.NSHomotopyH2ShellBridge
 import NavierStokes.NSHomotopy2D3DEquivalenceBridge
-import NavierStokes.NSHelicalCascadeBridge
