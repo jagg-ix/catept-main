@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 273 — Hamiltonian complexity front bridge, +3 axioms)
+**Date**: 2026-03-25 (Stage 272 — K41 EPT universality bridge, +1 axiom)
 **Branch**: `navier-stokes-investigation`
-**Build**: 3156 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 2277 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 218 |
-| Axioms | 233 |
-| Theorems | 2507 |
+| Lean4 files | 217 |
+| Axioms | 230 |
+| Theorems | 2496 |
 | `sorry` | 0 |
-| Build jobs | 3156 |
+| Build jobs | 2277 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,36 +23,6 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
-
-### Stage 273 (2026-03-25): Hamiltonian complexity front bridge (+3 axioms)
-
-**File**: new `NSHamiltonianComplexityBridge.lean` (+3 axioms, +11 theorems, +1 file)
-
-**Source**: Bolsinov–Taimanov *Space-Time Complexity in Hamiltonian Dynamics* (2000).
-
-The complexity-front framework gives `k41_ept_universality` a **structural
-derivation route** by decomposing the abstract K41 existential into three
-`.partiallyVerified` sub-axioms:
-
-1. `ns_trajectory_has_complexity_data`: the Bolsinov–Taimanov framework applies
-   to NS trajectories — each trajectory has a (α_⊥, α_∥, β, c) exponent package.
-2. `directionalExponentCollapse_after_front`: after τ_ent ≥ β/c, directional
-   exponents equalize (α_⊥ = α_∥) — K41 SO(3) restoration at inertial scales.
-3. `complexity_front_implies_kms`: directional gap = 0 → VS ≤ νP (Chen-Chen-Eyink
-   identification of directional exponents with VS/P ratio).
-
-**Key theorem** `k41_via_complexity_front`:
-> k41_ept_universality derived from sub-axioms (1)–(3) with explicit τ_iso =
-> complexityFrontArrivalEPT d = β/c (the traveling-wave front arrival time).
-
-**EPT as log-time**: entropicProperTime τ_ent(t) = (ν/ħ)·∫Ω dt plays the role
-of the log-time coordinate η = ln(t/t₀) — both linearize complexity progress.
-
-**Two-phase story formalized**: `two_phase_complexity_story` records 0 < τ_iso
-as the EPT transition point between exponential (anisotropic) and algebraic
-(isotropic/universal) complexity regimes.
-
----
 
 ### Stage 272 (2026-03-25): K41 EPT universality bridge (+1 axiom)
 
