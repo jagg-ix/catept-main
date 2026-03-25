@@ -241,3 +241,5 @@ import NavierStokes.NSGalerkinVSNuPDecompositionBridge
 import NavierStokes.NSBernsteinDynamicBridge
 import NavierStokes.NSAnteneolVallekosDecorrelationBridge
 import NavierStokes.NSBernsteinEPTDegree4Bridge
+import NavierStokes.NSEPTPhysicalTimeBridge
+import NavierStokes.NSEPTCIBound
