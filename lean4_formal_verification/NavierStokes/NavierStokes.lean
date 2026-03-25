@@ -243,3 +243,4 @@ import NavierStokes.NSAnteneolVallekosDecorrelationBridge
 import NavierStokes.NSBernsteinEPTDegree4Bridge
 import NavierStokes.NSEPTPhysicalTimeBridge
 import NavierStokes.NSEPTCIBound
+import NavierStokes.NSEPTNSSynthesisBound
