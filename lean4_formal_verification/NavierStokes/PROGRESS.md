@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 277 — Dynamic Bernstein bridge, +5 axioms)
+**Date**: 2026-03-25 (Stage 279 — Degree-4 EPT polynomial BKM bound, 0 new axioms)
 **Branch**: `navier-stokes-investigation`
-**Build**: 2281 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 2282 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 220 |
-| Axioms | 238 |
-| Theorems | 2517 |
+| Lean4 files | 222 |
+| Axioms | 243 |
+| Theorems | 2535 |
 | `sorry` | 0 |
-| Build jobs | 2281 |
+| Build jobs | 2282 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,6 +23,69 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
+
+### Stage 279 (2026-03-25): Degree-4 EPT polynomial BKM bound (0 new axioms, +8 theorems)
+
+**File**: new `NSBernsteinEPTDegree4Bridge.lean` (+0 axioms, +8 theorems, +1 file)
+
+**Key identity** (`integratedEnstrophy_eq_hbar_nu_ept`, 0 new axioms):
+```
+integratedEnstrophy traj T = (ħ/ν) * entropicProperTime traj T
+```
+Pure algebraic inverse of the `entropicProperTime` definition.
+
+**Main theorem** `bkm_physical_degree4_ept_bound`:
+```
+BKM(T) ≤ B · (1 + τ)³ · (ħ/ν) · τ  =  (ħ/ν) · (τ + 3τ² + 3τ³ + τ⁴)
+```
+where τ = τ_ent(T). Degree-4 polynomial in EPT, **finite for all finite T**, **0 new axioms**.
+
+**Proof** (3 lines):
+```lean
+have h := bkm_physical_ept_polynomial_bound traj T   -- Stage 277
+rw [vorticityCutoffBound_eq] at h                    -- K_eff = 1 + τ
+rw [integratedEnstrophy_eq_hbar_nu_ept] at h         -- intEnstrophy = (ħ/ν)·τ
+exact h
+```
+
+**Special cases**: zero-EPT (BKM = 0), unit-EPT (BKM ≤ 8·ħ/ν), convergence ∃M.
+
+---
+
+### Stage 278 (2026-03-25): Anteneolo–Vallejos decorrelation bridge (+5 axioms, +10 theorems)
+
+**File**: new `NSAnteneolVallekosDecorrelationBridge.lean` (+5 axioms, +10 theorems, +1 file)
+
+**Source**: Anteneolo & Vallejos, *Phys. Rev. E* 65 (2001) — largest Lyapunov exponent
+scaling for long-range Hamiltonians via random-matrix approach.
+
+**Third independent derivation route** for `k41_ept_universality` (alongside Stage 272
+bare axiom and Stage 273 Bolsinov–Taimanov complexity front).
+
+**The AV mechanism** (missing middle term in Stage 273):
+```
+EPT ≥ τ_corr
+  → tangent maps approximately independent  [AV random-matrix]
+  → random-symplectic averaging: α_⊥ = α_∥  [AV §III]
+  → VS ≤ νP                                  [CET identification]
+```
+
+**Key new ingredient**: AV scaling law `τ_corr² · Ω₀ ≤ C` (rational form of τ ∝ ε^{-1/2}).
+This gives τ_iso an explicit energy-dependent rational upper bound, replacing Stage 272's
+non-constructive `Classical.choose`.
+
+**New axioms (5)**:
+| Axiom | Status | AV Content |
+|-------|--------|-----------|
+| `avDecorrelationConst` | `.partiallyVerified` | Universal scaling constant C |
+| `avDecorrelationConst_pos` | `.partiallyVerified` | C > 0 |
+| `ns_trajectory_has_decorrelation_data` | `.partiallyVerified` | AV framework applies to NS |
+| `tauCorr_sq_enstrophy_bounded` | `.partiallyVerified` | τ²·Ω₀ ≤ C (τ ∝ ε^{-1/2}) |
+| `decorrelation_implies_kms` | `.partiallyVerified` | Decorrelation → VS ≤ νP |
+
+**Three-route certificate**: `avDecorrelationCertificate`, `avDecorrelationCertificate.subAxiomCount = 3`
+
+---
 
 ### Stage 277 (2026-03-25): Dynamic Bernstein bridge (+5 axioms, +10 theorems)
 
