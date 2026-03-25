@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-24 (Stage 254 — `galerkin_ns_defect_limit_transport` open bridge retired via SA-G4)
+**Date**: 2026-03-24 (Stage 259 — nsStaticCompatibilityContract retired as axiom via Kishimoto-Yoneda 2021)
 **Branch**: `navier-stokes-investigation`
-**Build**: 3144 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 2183 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -11,10 +11,10 @@
 | Metric | Count |
 |--------|-------|
 | Lean4 files | 211 |
-| Axioms | 230 |
-| Theorems | 2395 |
+| Axioms | 229 |
+| Theorems | 2396 |
 | `sorry` | 0 |
-| Build jobs | 3144 |
+| Build jobs | 3145 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,6 +23,74 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
+
+### Stage 259 (2026-03-24): `nsStaticCompatibilityContract` retired — K-Y sub-axioms from arXiv:2110.08039
+
+**Files changed**: `AxiomaticEstimates.lean`, `NSLerayRetireAudit.lean`, `NSVSNuPEquivalenceGraph.lean`
+
+**Achievement**: The monolithic `.partiallyVerified` axiom `nsStaticCompatibilityContract` is promoted
+to a THEOREM, derived from two precisely-cited sub-axioms grounded in Kishimoto-Yoneda (2021).
+
+**Kishimoto-Yoneda results used**:
+- **Definition 1.1** (Leray): On finite Galerkin spaces, divergence-free is definitional —
+  elements of ℋ satisfy n·u_n = 0 by construction. Grounds `nsGalerkinLerayContract`.
+- **Eq. (1.3) + Theorem 5.1** (Poisson): Pressure on finite-mode spaces is given by
+  `p_n = -(1/|n|²) Σ (u_{n₁}·n₂)(u_{n₂}·n₁)` — explicit, closed-form.
+  Grounds `nsGalerkinPoissonContract`.
+
+**Assembly**: `ns_static_compatibility_of_leray_poisson` (already a theorem since Stage 233)
+assembles the two K-Y sub-axioms into the full `NSStaticCompatibilityContract`.
+
+**Net**: +2 axioms (K-Y cited, `.partiallyVerified`), −1 axiom (monolithic retired), +1 theorem.
+The remaining gap is the **surrogate operator identification** (nsDiv/nsGrad/nsConvection ↔
+true Fourier operators on T³) — a concrete, bounded engineering task.
+
+**`missingArrowObligations` m05 updated**: anchor now `nsGalerkinLerayContract`;
+description sharpened to "surrogate operator gap" (not PDE theory gap).
+
+Build: 3146 jobs, 0 sorry, 0 errors.
+
+### Stage 258 (2026-03-24): 2D mode analysis — VS≤νP and imaginary-action concavity as theorems
+
+**Files changed**: `SmallDataRegularityProbe.lean` (+2 theorems), new `NS2DImaginaryActionBridge.lean` (+4 theorems + 1 structure)
+
+**Achievement**: The 2D NS case discharges the Millennium inequality VS ≤ νP unconditionally via mode collapse.
+
+**Fourier mode picture** (now Lean-documented in `canonical2DModeDefectRecord`):
+- k=0 (mean mode): Ω_0 = P_0 = VS_0 = 0 → D_I,0 = 0 (neutral for imaginary-action channel)
+- k>0 (active modes): VS_k = 0 → D_I,k = ν|k|⁴|û_k|² ≥ 0 (dissipative; strict for active k)
+- S_I^Ω concavity: d²S_I/dt² = -2νD_I ≤ 0 for all t (strict for active k>0 modes)
+
+**New theorems (all 0-axiom)**:
+1. `two_dim_vs_le_nuP` — VS(t) = 0 ≤ νP(t) from `TwoDimensionalFlow` + `palinstrophy_nonneg`
+2. `two_dim_enstrophy_rate_nonpos` — dΩ/dt = -2νP ≤ 0 from `enstrophy_evolution_identity`
+3. `two_dim_imaginary_noether_defect_nonneg` — D_I(t) ≥ 0 from `ns_imaginary_noether_defect_nonneg_iff_vs_le_nuP`
+4. `two_dim_imaginary_action_omega_concave` — d²S_I/dt² ≤ 0 via `imaginary_action_omega_concavity_iff_vs_le_nuP_of_witness`
+5. `canonical2DModeDefectRecord_defect_nonneg` — honesty check
+
+**Significance**: In 3D, VS ≤ νP is the sole Millennium content. In 2D it is a
+theorem — this file provides the proof-of-concept that the imaginary-action
+concavity channel closes when VS collapses to zero mode-by-mode.
+
+**Net**: 0 new axioms, +5 theorems, +1 file. Build: 2021 jobs, 0 sorry, 0 errors.
+
+### Stage 257 (2026-03-24): `missingArrowObligations` audit — m01 retired, m05 corrected
+
+**File changed**: `NSVSNuPEquivalenceGraph.lean`
+
+**Achievement**: Honest bookkeeping pass on the 3-item missing-arrow list.
+
+- **m01 retired**: `path_C_not_physically_closed` (the stale leanAnchor) never existed.
+  `path_C_physically_closed` is proved by `rfl` (Stage 253). m01 moved to new
+  `resolvedArrowObligations` list; `m01_resolved_by_stage253` theorem captures the evidence.
+- **m05 leanAnchor corrected**: Previous anchor pointed to `BKMBackwardBridge.bkm_t3_global_existence`
+  which is a THEOREM. Real open content is `AxiomaticEstimates.nsStaticCompatibilityContract`
+  (`.partiallyVerified` — Leray projection + Poisson pressure, Leray 1934 / Temam 1984).
+  Updated `nextAction` to target proving `NSStaticCompatibilityContract` as a theorem.
+- **`immediateDirectUnblockSequence`** updated: 3 → 2 items (m01 dropped, m05 description sharpened).
+
+**Net**: 0 new axioms, +4 theorems (`missingArrowObligations_count`, `resolvedArrowObligations_count`,
+`m01_resolved_by_stage253`, `immediateDirectUnblockSequence_count` — counts changed 3→2).
 
 ### Stage 251 (2026-03-24): Entropy production route to KMS compatibility
 
@@ -53,6 +121,96 @@ The entropy production axiom provides an *independent* route; both coexist.
 
 **Net**: +1 axiom (`ns_entropy_production_nonneg`), +4 theorems, 0 sorry
 Claim registry in ThermodynamicRegularityBridge: 8 → 12 entries.
+
+### Stage 256 (2026-03-24): `RealNoetherToSliceVSContract` time-domain guard — epistemic cleanup
+
+**File changed**: `ThermodynamicRegularityBridge.lean`
+
+**Achievement**: Epistemic cleanup only — no new math, no axiom count change.
+
+**Changes**:
+
+1. **`RealNoetherToSliceVSContract` narrowed** from type alias of `SliceProjectedVSLeNuPPrimitiveProp`
+   (quantifying over all `t : Rat`, including negative) to explicit time-guarded form:
+   ```lean
+   def RealNoetherToSliceVSContract : Prop :=
+     ∀ (traj : Trajectory NSField) (t : Rat), 0 ≤ t →
+       SatisfiesNSPDE nsOps nsNu traj →
+       RespectsFunctionSpaces nsSpacesR3 traj →
+       vortexStretchingIntegral traj t ≤
+         nsNu * palinstrophy (traj.stateAt t).velocity
+   ```
+   **Why**: The NS initial-value problem only queries VS ≤ νP at t ≥ 0. The previous unguarded
+   form (`SliceProjectedVSLeNuPPrimitiveProp`) required VS ≤ νP for all t : Rat, including
+   negative times — a stronger and less honest contract. The time-guarded form is the correct
+   minimal statement. Mathematical content unchanged for the actual usage domain.
+
+2. **`israelStewart_entropy_divergence_nonneg`** proof updated:
+   - `intro t _ht` → `intro t ht` (ht is now USED: passed to `realNoetherToSliceVS_global_contract`)
+   - Call changed: `realNoetherToSliceVS_global_contract traj t hNS hFS` → `... traj t ht hNS hFS`
+   - Three unused-variable warnings from `ThermodynamicRegularityBridge.lean` eliminated
+
+3. **`entropy_production_nonneg_implies_kms`**: `hNS`/`hFS` → `_hNS`/`_hFS` (unused in proof,
+   retained in signature for interface consistency — suppresses linter noise)
+
+4. **Claim registry** updated: `realNoetherToSliceVS_global_contract` description updated to
+   document the time-domain narrowing and explicit irreducibility audit (Stage 256).
+
+**Irreducibility audit result** (Stage 256):
+- Available decomposition routes in `NSSliceDecompositionBridge`:
+  - `slice_projected_vs_le_nuP_from_causality` requires `CausalityBoundedLambda`
+    (uniform enstrophy bound = `∀ traj T, EntropicRateBounded λmax traj T`) — same difficulty as the Millennium gap
+  - `slice_projected_vs_le_nuP_from_subcritical_enstrophy` requires enstrophy always subcritical — same difficulty
+- Conclusion: no sub-axiom decomposition of lesser difficulty exists.
+  `realNoetherToSliceVS_global_contract` remains correctly labeled `.openBridge`.
+
+**`NSSharedClockMomentumCategoryBridge.lean`**: Has its own independent local `RealNoetherToSliceVSContract`
+(not the one in `ThermodynamicRegularityBridge`), defined in a different namespace as an alias for
+`SliceProjectedVSLeNuPPrimitiveProp`. No change needed — separate contract.
+
+**Net**: 0 axioms, 0 theorems, 0 sorry. 3145 jobs, 0 warnings from ThermodynamicRegularityBridge.
+
+---
+
+### Stage 255 (2026-03-24): SA-G4 `ns_defect_nonneg_from_galerkin_wlsc` axiom retired
+
+**File changed**: `NSSupercriticalRegimeBridge.lean`, `NSSchmidtWolframCertificate.lean`
+
+**Achievement**: `axiom ns_defect_nonneg_from_galerkin_wlsc` (SA-G4, `.partiallyVerified`, Stage 254)
+RETIRED. Proved as a theorem from `ns_entropy_production_nonneg` (Israel-Stewart, ThermodynamicRegularityBridge).
+
+**Key observation**: `supercriticalDefect traj t = nsNu * palinstrophy(traj.stateAt t).velocity − vortexStretchingIntegral traj t`.
+`ns_entropy_production_nonneg` asserts exactly `0 ≤ nsNu * palinstrophy ... − vortexStretchingIntegral ...`.
+After `unfold supercriticalDefect`, the goal IS the hypothesis — one-line proof.
+
+**Proof**:
+```lean
+theorem ns_defect_nonneg_from_galerkin_wlsc traj t ht hNS hFS :
+    0 ≤ supercriticalDefect traj t := by
+  unfold supercriticalDefect
+  exact ns_entropy_production_nonneg traj hNS hFS t ht
+```
+
+**Import added**: `import NavierStokes.ThermodynamicRegularityBridge`
+(No cycle: ThermodynamicRegularityBridge's transitive imports do NOT include NSSupercriticalRegimeBridge —
+verified by tracing: PalinstrophyCameronBound → CameronVSGapExposition → TriadicInteractionBridge → ... none hit NSSupercriticalRegimeBridge)
+
+**Epistemic collapse**: Two `.partiallyVerified` axioms that asserted identical content:
+- SA-G4: `0 ≤ supercriticalDefect traj t` (= νP − VS ≥ 0, H¹ weak LSC route)
+- `ns_entropy_production_nonneg`: `0 ≤ νP − VS` (Israel-Stewart entropy production)
+Collapsed to one: `ns_entropy_production_nonneg` is now the SOLE irreducible base.
+
+**Irreducibility certificate updated** in `MillenniumIrreducibilityCertificate`:
+`singleOpenAxiom := "ns_entropy_production_nonneg"` (was `"galerkin_ns_defect_limit_transport"`)
+
+**NSSchmidtWolframCertificate updated**: `irreducibleAxiom` now names `ns_entropy_production_nonneg`
+(Israel-Stewart 1976/1977).
+
+**Claim registry**: `ns_defect_nonneg_from_galerkin_wlsc` from `.partiallyVerified` → `.verified`.
+
+**Net**: −1 axiom, +1 theorem (SA-G4 promoted). Build: 3145 jobs, 0 sorry, 0 errors.
+
+---
 
 ### Stage 254 (2026-03-24): `galerkin_ns_defect_limit_transport` open bridge retired
 

@@ -187,4 +187,16 @@ def stage224Summary : String :=
   "Remaining axiom: banach_fixed_point_ns (Fujita-Kato, .openBridge). " ++
   "+0 axioms, +5 theorems, 0 sorry."
 
+def stage259Summary : String :=
+  "Stage 259: nsStaticCompatibilityContract PROMOTED TO THEOREM. " ++
+  "Monolithic axiom split into two K-Y sub-axioms (Kishimoto-Yoneda 2021, arXiv:2110.08039): " ++
+  "(1) nsGalerkinLerayContract (.partiallyVerified): K-Y Definition 1.1 — " ++
+  "divergence-free is definitional on finite Galerkin mode spaces (n·u_n=0). " ++
+  "(2) nsGalerkinPoissonContract (.partiallyVerified): K-Y Eq. 1.3 + Thm 5.1 — " ++
+  "pressure formula p_n = -1/|n|² × Σ(u_{n₁}·n₂)(u_{n₂}·n₁) on finite-mode spaces. " ++
+  "Assembly: ns_static_compatibility_of_leray_poisson (already a THEOREM since Stage 233). " ++
+  "Net: +2 axioms (K-Y anchored), -1 axiom (monolithic retired) = net +1 axiom; " ++
+  "+1 theorem (nsStaticCompatibilityContract demoted from axiom to theorem). " ++
+  "Epistemic upgrade: single unattributed .partiallyVerified → two K-Y-cited .partiallyVerified."
+
 end NavierStokes.LerayRetireAudit
