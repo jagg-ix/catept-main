@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 264 — conditional Millennium closure: VS ≤ νP proved for ν ≥ 1/20)
+**Date**: 2026-03-25 (Stage 263 — helical cascade decomposition as supporting evidence for VS ≤ νP)
 **Branch**: `navier-stokes-investigation`
-**Build**: 3152 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 3151 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 214 |
-| Axioms | 228 |
-| Theorems | 2463 |
+| Lean4 files | 213 |
+| Axioms | 235 |
+| Theorems | 2453 |
 | `sorry` | 0 |
-| Build jobs | 3152 |
+| Build jobs | 3151 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,29 +23,6 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
-
-### Stage 264 (2026-03-25): Conditional Millennium closure — VS ≤ νP proved for ν ≥ 1/20 (+0 axioms)
-
-**File**: new `NSHelicalPoincareClosureBridge.lean` (+0 axioms, +10 theorems, +1 file)
-
-**Achievement**: The first **provable** (not openBridge) conditional discharge of the Millennium
-content, combining two existing estimates:
-- Helical maximal identity (Stage 263): `VS(t) ≤ 2·Ω(t)`
-- Poincaré spectral gap (AgmonInterpolationBridge): `40·Ω(t) ≤ P(t)` (λ₁=40)
-
-Combined: `VS·40 ≤ 2·P`. With `nsNu·40 ≥ 2`: `2·P ≤ nsNu·40·P` → `VS ≤ nsNu·P`. QED.
-
-**Key theorems (0 new axioms)**:
-- `helical_vs_bound_conditional`: `VS·λ₁ ≤ 2P` (pure kinematics, always true)
-- `poincare_helical_combine`: `20·VS ≤ P` (palinstrophy dominates VS by factor 20)
-- `helical_parity_high_viscosity`: `VS ≤ νP` when `ν·40 ≥ 2` (ν ≥ 1/20 = 0.05)
-- `kms_compatible_high_viscosity`: `KMSCompatible` when ν ≥ 1/20
-- `precise_gap_high_viscosity`: `PreciseGapStatement` when ν ≥ 1/20
-
-**Milestone**: `precise_gap_high_viscosity` is a fully-proved THEOREM with 0 new axioms.
-The high-viscosity (subcritical Re) Millennium problem is CLOSED in Lean.
-
-**Remaining open**: general case ν < 1/20 (large Re), encoded in `helical_parity_restores_in_3d`.
 
 ### Stage 263 (2026-03-25): Helical cascade decomposition — Chen–Chen–Eyink 2002 as supporting evidence for VS ≤ νP
 
