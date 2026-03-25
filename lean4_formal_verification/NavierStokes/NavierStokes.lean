@@ -238,3 +238,5 @@ import NavierStokes.NSHamiltonianComplexityBridge
 import NavierStokes.NSCollapseTransientBridge
 import NavierStokes.NSBernsteinResolutionBridge
 import NavierStokes.NSGalerkinVSNuPDecompositionBridge
+import NavierStokes.NSBernsteinDynamicBridge
+import NavierStokes.NSAnteneolVallekosDecorrelationBridge
