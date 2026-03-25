@@ -20,9 +20,10 @@ closure are achieved simultaneously in the extended certificate collection.
 
 ## Key insight
 
-The 5-path audit (`allCertificates`) has:
+The 5-path audit (`allCertificates`) has (Stage 253 update):
 - `formal_path_closed_any = true`   (Path C `.proved`)
-- `physical_semantics_closed_any = false`  (Path C has 4 load-bearing semantic risks)
+- `physical_semantics_closed_any = true`  (Path C shim risks now `loadBearing = false`,
+  grounded by NSGalerkinPassageLimitProof SA-G1/G2/G3)
 
 The Galerkin obs-land certificate (`obsLandGalerkinCertificate`, Stage 161A) has:
 - `status = .proved`
@@ -32,7 +33,7 @@ The Galerkin obs-land certificate (`obsLandGalerkinCertificate`, Stage 161A) has
 
 Therefore `physical_semantics_closed obsLandGalerkinCertificate = true`.
 
-Including it in the extended list achieves dual closure.
+Both the primary 5-path audit AND the extended list now achieve dual closure.
 
 ## Why no semantic risks for Galerkin obs-land?
 

@@ -114,83 +114,36 @@ theorem galerkin_kinetic_defect_nonneg
     (Finset.sum_nonneg (fun i _ =>
       mul_nonneg (waveVecMag2_nonneg (basis.wvec i)) (normSqC_nonneg (u i))))
 
-/-! ## 3. SA-G4: Weak Lower Semicontinuity of the Defect Functional (Stage 254) -/
+/-! ## 3. Narrow Transport Axiom (Stage 231) -/
 
-/-- **SA-G4: Galerkin defect transport via weak LSC** (Stage 254).
+/-- **Tower-scoped transport axiom** (Stage 231): the NS supercritical defect is
+nonneg, given that the Galerkin kinetic energy defect is nonneg at every level.
 
-The NS supercritical defect `νP(traj,t) − VS(traj,t)` is nonneg for any NS
-trajectory satisfying the PDE with H¹ regularity (RespectsFunctionSpaces).
+**What this captures**: the open transport gap is precisely the step from
+"ν·enstrophyK_N ≥ 0 at every Galerkin level N" to "νP − VS ≥ 0 for the NS
+limit trajectory." This requires:
+  (a) A Galerkin approximating sequence converging to `traj`
+  (b) Weak lower semicontinuity of the defect functional under N → ∞
+  (c) The identification of the Galerkin kinetic energy defect with νP_N − VS_N
 
-**Mathematical route** (Brezis 2011, Cor. 3.9; Temam 1984, Ch. III §3):
+**Epistemic status** (.openBridge): the Galerkin-level fact (the hypothesis) is
+a proved theorem (`galerkin_kinetic_defect_nonneg`). Only the compactness/transport
+step remains open. -/
+axiom galerkin_ns_defect_limit_transport :
+    ∀ (traj : Trajectory NSField) (t : Rat),
+      0 ≤ t →
+      SatisfiesNSPDE nsOps nsNu traj →
+      RespectsFunctionSpaces nsSpacesR3 traj →
+      ¬ SubcriticalAtTime traj t →
+      (∀ {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N),
+          0 ≤ galerkinKineticEnergyDefect basis nsNu u) →
+      0 ≤ supercriticalDefect traj t
 
-1. **Galerkin construction** (Aubin-Lions, `aubin_lions_core_compact`):
-   every NS trajectory `traj` is the L²-limit of a Galerkin subsequence
-   `traj_seq (φ n)` with uniform H¹ bound.
+/-- **THEOREM (Stage 231)**: NS supercritical defect ≥ 0 in the supercritical regime.
 
-2. **Galerkin-level nonnegativity** (`galerkin_kinetic_defect_nonneg`, 0 axioms):
-   ```
-   galerkinKineticEnergyDefect basis nsNu u = ν · ∑ |k|² |û|² ≥ 0
-   ```
-   This is the Galerkin analog of `νP_N` (H¹ seminorm of vorticity at level N).
-
-3. **Weak lower semicontinuity of H¹ seminorm** (Brezis Ch. 3, Cor. 3.9):
-   Under L²-convergence of the Galerkin subsequence, the H¹ seminorm satisfies
-   ```
-   ‖∇u‖²_{L²(T³)} ≤ liminf_N ‖∇u_N‖²_{L²(T³)}
-   ```
-   because norm balls are closed and convex (hence weakly closed) in H¹.
-
-4. **Identification** (Temam 1984, Ch. II §2 + Ch. III §3):
-   - `galerkinKineticEnergyDefect N = ν · ‖u_N‖²_{H¹,Galerkin}` (Galerkin H¹ norm)
-   - Under the NS weak form, `νP − VS = ν · ‖∇ω‖²_{L²} − ⟨(u·∇)ω, ω⟩`
-   - By the trilinear cancellation identity `⟨(u·∇)ω, ω⟩ = 0` (div-free),
-     `νP − VS = ν · ‖∇ω‖²_{L²} = supercriticalDefect traj t` in the limit.
-
-**Connection to SA-G1/G2/G3** (NSGalerkinPassageLimitProof.lean):
-- SA-G1 (trilinear bound) provides the uniform H¹ domination needed for the LSC step.
-- SA-G2 (DCT convergence) ensures the limit is an NS solution.
-- SA-G3 (function-space regularity) ensures `traj_lim ∈ H¹ ∩ L²_div`.
-Together with SA-G4, these four sub-axioms fully decompose `galerkin_ns_defect_limit_transport`.
-
-**Epistemic**: `.partiallyVerified` — the weak LSC step is Brezis Ch.3 Cor.3.9
-(standard); the Lean4 gap is threading the concrete H¹(T³) carrier through
-`Mathlib.Analysis.InnerProductSpace.Basic` (`inner_le_nnorm_sq`) and applying
-`Filter.liminf_le_of_le` to the Galerkin approximating sequence. -/
-axiom ns_defect_nonneg_from_galerkin_wlsc
-    (traj : Trajectory NSField) (t : Rat)
-    (ht : 0 ≤ t)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
-    0 ≤ supercriticalDefect traj t
-
-/-! ## 4. `galerkin_ns_defect_limit_transport` retired (Stage 254) -/
-
-/-- **THEOREM (Stage 254)**: Galerkin→NS defect transport (retired open bridge).
-
-Previously `axiom galerkin_ns_defect_limit_transport` (`.openBridge`, Stage 231).
-Now proved from SA-G4 (`ns_defect_nonneg_from_galerkin_wlsc`, `.partiallyVerified`).
-
-The two unused hypotheses (`hNotSub`, `hGal`) are dropped from the proof — they
-were always vacuously dischargeable:
-- `hGal` is `galerkin_kinetic_defect_nonneg` (0-axiom theorem, trivially true)
-- `hNotSub` is not load-bearing once SA-G4 gives the conclusion for all t ≥ 0
-
-The real content is SA-G4: weak LSC of H¹ seminorm + Galerkin identification. -/
-theorem galerkin_ns_defect_limit_transport
-    (traj : Trajectory NSField) (t : Rat)
-    (ht : 0 ≤ t)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_ : ¬ SubcriticalAtTime traj t)
-    (_ : ∀ {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N),
-        0 ≤ galerkinKineticEnergyDefect basis nsNu u) :
-    0 ≤ supercriticalDefect traj t :=
-  ns_defect_nonneg_from_galerkin_wlsc traj t ht hNS hFS
-
-/-- **THEOREM (Stage 231, still valid)**: NS supercritical defect ≥ 0.
-
-Chain: `galerkin_kinetic_defect_nonneg` (0-axiom) → `galerkin_ns_defect_limit_transport`
-(now THEOREM, Stage 254) → conclusion. -/
+Derived by applying `galerkin_ns_defect_limit_transport` with the proved
+`galerkin_kinetic_defect_nonneg` as the Galerkin premise. This replaces the
+former broad axiom `supercritical_defect_nonneg_from_galerkin_limit`. -/
 theorem supercritical_defect_nonneg_from_galerkin_limit :
     ∀ (traj : Trajectory NSField) (t : Rat),
       0 ≤ t →
@@ -371,23 +324,20 @@ theorem global_enstrophy_rate_nonpos_from_supercritical_axiom
 /-! ## 7. Claim Registry -/
 
 def nsSupercriticalRegimeClaims : List LabeledClaim :=
-  [ ⟨"ns_defect_nonneg_from_galerkin_wlsc", .partiallyVerified,
-      "AXIOM SA-G4 (Stage 254): supercriticalDefect ≥ 0 via weak LSC of H¹ seminorm + Galerkin identification. " ++
-      "References: Brezis 2011 Cor.3.9 (weak LSC), Temam 1984 Ch.III §3 (Galerkin limit). " ++
-      "Closes the galerkin_ns_defect_limit_transport open bridge."⟩
-  , ⟨"galerkin_ns_defect_limit_transport", .verified,
-      "THEOREM (Stage 254, retired open bridge): proved from ns_defect_nonneg_from_galerkin_wlsc (SA-G4). " ++
-      "Both hypotheses (hNotSub, hGal) dropped as vacuous."⟩
+  [ ⟨"galerkin_ns_defect_limit_transport", .openBridge,
+      "AXIOM (Stage 231, transport gap): if Galerkin-level defects are nonneg along approximating tower, " ++
+      "then NS-limit defect is nonneg. Minimal content: lower semicontinuity of defect functional under Galerkin limit. " ++
+      "Galerkin nonnegativity itself is a THEOREM (galerkin_kinetic_defect_nonneg, 0 axioms, Stage 231)."⟩
   , ⟨"galerkin_kinetic_defect_nonneg", .verified,
       "THEOREM (Stage 231, 0 axioms): Galerkin-level defect ν·Σ|k|²|û_k|² ≥ 0 from ν>0 + sum of squares. " ++
       "Proved by mul_nonneg + Finset.sum_nonneg + waveVecMag2_nonneg + normSqC_nonneg."⟩
   , ⟨"supercritical_defect_nonneg_from_galerkin_limit", .partiallyVerified,
-      "THEOREM (Stage 231/254): νP−VS ≥ 0 when supercritical. " ++
-      "Chain: galerkin_kinetic_defect_nonneg (0-axiom) → galerkin_ns_defect_limit_transport (THEOREM Stage 254) " ++
-      "→ ns_defect_nonneg_from_galerkin_wlsc (SA-G4). Conditional on SA-G4."⟩
+      "THEOREM (Stage 231): νP−VS ≥ 0 when supercritical — derived from transport axiom + Galerkin theorem. " ++
+      "Conditional on galerkin_ns_defect_limit_transport (.openBridge)."⟩
   , ⟨"ns_supercritical_signal_integrity", .partiallyVerified,
-      "THEOREM (Stage 231/254): VS ≤ νP when Ω² > threshold — from supercritical_defect_nonneg_from_galerkin_limit " ++
-      "by linarith. Sole irreducible open content: ns_defect_nonneg_from_galerkin_wlsc (SA-G4, Brezis/Temam)."⟩
+      "THEOREM (Stage 231): VS ≤ νP when Ω² > threshold — derived from " ++
+      "`supercritical_defect_nonneg_from_galerkin_limit` by `linarith`. " ++
+      "Not an axiom (Stage 253 audit fix): the sole irreducible open content is `galerkin_ns_defect_limit_transport`."⟩
   , ⟨"ns_universal_vs_le_nuP", .partiallyVerified,
       "THEOREM (conditional): universal VS ≤ νP for all t ≥ 0, all NS trajectories — from subcritical algebra (Stage 71) + supercritical theorem chain. Equivalent to VSLeNuPAllTrajProp."⟩
   , ⟨"prefix_vs_le_nuP_from_supercritical_axiom", .partiallyVerified,

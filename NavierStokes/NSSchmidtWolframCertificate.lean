@@ -326,11 +326,11 @@ structure WolframDecisionRecord where
   subcriticalProved           : Bool := true
   /-- Supercritical regime: single open content (unchanged). -/
   supercriticalOpen           : Bool := true
-  /-- Stage 254: galerkin_ns_defect_limit_transport is now a THEOREM, proved from SA-G4.
-      The real remaining open sub-axiom is ns_defect_nonneg_from_galerkin_wlsc (SA-G4).
-      ns_supercritical_signal_integrity is a THEOREM (Stage 231) — not an axiom. -/
+  /-- The real remaining open axiom is galerkin_ns_defect_limit_transport.
+      ns_supercritical_signal_integrity is now a THEOREM (Stage 231), proved from
+      galerkin_kinetic_defect_nonneg + galerkin_ns_defect_limit_transport. -/
   irreducibleAxiom            : String :=
-    "ns_defect_nonneg_from_galerkin_wlsc (SA-G4, Stage 254): H¹ weak LSC + Galerkin identification (Brezis Cor.3.9 + Temam Ch.III §3)"
+    "galerkin_ns_defect_limit_transport (Stage 231): Galerkin-level defect ≥ 0 transports to NS limit via weak LSC"
 
 def canonicalWolframDecision : WolframDecisionRecord := {}
 
