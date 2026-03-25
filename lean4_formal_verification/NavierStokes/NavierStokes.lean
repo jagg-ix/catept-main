@@ -233,4 +233,3 @@ import NavierStokes.NSHelicalCascadeBridge
 import NavierStokes.NSHelicalPoincareClosureBridge
 import NavierStokes.NSHelicalTrichotomyClosureBridge
 import NavierStokes.NSHelicalSmallDataCaseC
-import NavierStokes.NSK41EPTUniversalityBridge

@@ -1,8 +1,8 @@
 # Navier-Stokes Lean4 Formalization — Progress Report
 
-**Date**: 2026-03-25 (Stage 272 — K41 EPT universality bridge, +1 axiom)
+**Date**: 2026-03-25 (Stage 266 — small-data Case C via GN+Poincaré, +1 axiom)
 **Branch**: `navier-stokes-investigation`
-**Build**: 2277 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
+**Build**: 3154 jobs pass, 0 sorry, 0 errors (Mathlib-integrated)
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Lean4 files | 217 |
-| Axioms | 230 |
-| Theorems | 2496 |
+| Lean4 files | 216 |
+| Axioms | 229 |
+| Theorems | 2487 |
 | `sorry` | 0 |
-| Build jobs | 2277 |
+| Build jobs | 3154 |
 
 ### Path C: T³ periodic existence and smoothness — **PROVED**
 
@@ -23,38 +23,6 @@
 
 Proof chain: `unit_torus_route6_closed` (THEOREM) + `bkm_t3_global_existence` (.partiallyVerified,
 BKM 1984 + Fujita-Kato 1964) → `BackwardBridgeObligation T3` → `millennium_C_closed`.
-
-### Stage 272 (2026-03-25): K41 EPT universality bridge (+1 axiom)
-
-**File**: new `NSK41EPTUniversalityBridge.lean` (+1 axiom, +9 theorems, +1 file)
-
-**K41 EPT universality axiom** `k41_ept_universality`:
-> For large-data initial conditions (Ω(0)² > 40·ν⁴), ∃ τ_iso > 0 such that
-> VS(t) ≤ ν·P(t) for all t ≥ 0 with τ_ent(t) ≥ τ_iso.
-
-The threshold τ_iso captures the K41 cascade completion time — after sufficient
-entropic proper time has elapsed, SO(3) isotropy holds at inertial scales and
-vortex stretching cannot exceed νP.
-
-**Dimensional ladder** (τ_iso column):
-| Regime | VS ≤ νP? | τ_iso |
-|---|---|---|
-| 1D (Cole-Hopf) | trivially | 0 |
-| 2D (Lyapunov) | VS=0 | 0 |
-| 3D small data | PROVED (Stage 266) | 0 |
-| 3D large data | after τ_iso | > 0 |
-
-**Structures**: `EPTRegimeData` (unified τ_iso + KMS guarantee), `smallDataRegime`
-and `largeDataRegime` instances. `universalTauIso` total function (= 0 for small,
-= tauIso for large) for categorical diagrams.
-
-**tauIso** extracted via `Classical.choose` from the axiom's existential. Lemmas:
-`tauIso_pos`, `vs_le_nuP_of_ept`, `universalTauIso_nonneg`, `universalTauIso_small_data`.
-
-**Epistemic status**: `.openBridge` — K41 universality (Constantin-E-Titi 1994,
-Eyink-Chen-Chen 2003) in EPT formulation. Pending Lyapunov-function proof.
-
----
 
 ### Stage 266 (2026-03-25): Small-data Case C via Gagliardo-Nirenberg + Poincaré (+1 axiom)
 
