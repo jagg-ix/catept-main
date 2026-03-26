@@ -29,3 +29,12 @@ import NavierStokesClean.Galerkin.VorticityLiminf
 
 -- Phase 6: Complete axiom audit
 import NavierStokesClean.Audit.AxiomAudit
+
+-- Phase 7: CAT/EPT verification (Complex Action / Entropic Time framework)
+import NavierStokesClean.CATEPT.Foundations
+import NavierStokesClean.CATEPT.PathIntegrals
+import NavierStokesClean.CATEPT.QuantumGravity
+import NavierStokesClean.CATEPT.QFTGRClosures
+import NavierStokesClean.CATEPT.WeylYukawa
+import NavierStokesClean.CATEPT.DSLVerification
+import NavierStokesClean.CATEPT.CATEPTBridge
