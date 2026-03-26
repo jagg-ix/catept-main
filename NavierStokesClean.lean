@@ -35,6 +35,5 @@ import NavierStokesClean.CATEPT.Foundations
 import NavierStokesClean.CATEPT.PathIntegrals
 import NavierStokesClean.CATEPT.QuantumGravity
 import NavierStokesClean.CATEPT.QFTGRClosures
-import NavierStokesClean.CATEPT.WeylYukawa
 import NavierStokesClean.CATEPT.DSLVerification
 import NavierStokesClean.CATEPT.CATEPTBridge

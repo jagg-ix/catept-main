@@ -2,7 +2,6 @@ import NavierStokesClean.CATEPT.Foundations
 import NavierStokesClean.CATEPT.PathIntegrals
 import NavierStokesClean.CATEPT.QuantumGravity
 import NavierStokesClean.CATEPT.QFTGRClosures
-import NavierStokesClean.CATEPT.WeylYukawa
 import NavierStokesClean.CATEPT.DSLVerification
 import NavierStokesClean.Core.EnergyFunctionals
 import NavierStokesClean.CameronPopkov.DomainParameters
@@ -157,8 +156,7 @@ theorem ns_incompressibility_brst_analogy
     2. **PathIntegrals** (Eqs 54-76): UV convergence, coercivity, Yukawa damping
     3. **QuantumGravity** (Eqs 46-52, 115-152): BH thermodynamics, Wheeler-DeWitt
     4. **QFTGRClosures**: BRST nilpotency, renormalization, Kuchar six problems
-    5. **WeylYukawa**: Electroweak Yukawa sector, CKM/PMNS diagonalization
-    6. **DSLVerification**: Compiler correctness (6-phase tower, 0 axioms)
+    5. **DSLVerification**: Compiler correctness (6-phase tower, 0 axioms)
     7. **CATEPTBridge**: EPT identity ↔ CATEPT Eq 17 (this file)
 
     The NavierStokesClean Route B (EPT algebraic identity) is exactly
