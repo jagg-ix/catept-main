@@ -26,3 +26,6 @@ import NavierStokesClean.CameronPopkov.SpectralGapCertificate
 -- Phase 5: Galerkin existence + vorticity liminf decompositions
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
+
+-- Phase 6: Complete axiom audit
+import NavierStokesClean.Audit.AxiomAudit

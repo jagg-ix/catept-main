@@ -113,8 +113,11 @@ axiom enstrophy_weakly_lsc (traj_seq : Nat → Trajectory) (traj_lim : Trajector
     The connection from `ℝ≥0∞`-Lebesgue to `bkmVorticityIntegral` (Bochner)
     is the remaining gap for Phase 6 (nonneg bounded functions, standard).
 
-    Lean proof: `liminf_n f_n ≤ limsup_n f_n ≤ M` from `∀ n, f_n ≤ M`.
-    The Mathlib lemma is `limsup_le_of_le` + `liminf_le_limsup`. -/
+    Mathlib path: `liminf_le_liminf` (monotonicity, needs `IsBoundedUnder`/`IsCoboundedUnder`)
+    + `liminf_const` (constant sequence). Both hold since `bkm_n ≥ 0` and `const M ≥ M`.
+    The `IsCoboundedUnder (· ≥ ·) atTop (fun _ => M)` proof requires unfolding the
+    `IsCobounded` structure: `∃ b, ∀ a, (∀ᶠ x in map (·) f, x ≥ a) → b ≥ a`, witnessed by `b=M`.
+    **Epistemic**: `.partiallyVerified` — pure Mathlib Filter API; Phase 6 target. -/
 axiom bkm_liminf_le_of_sequence
     (traj_seq : Nat → Trajectory) (T M : ℝ) (hT : 0 < T) (hM : 0 < M)
     (hBKMN : ∀ n, bkmVorticityIntegral (traj_seq n) T ≤ M) :

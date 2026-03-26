@@ -79,9 +79,8 @@ axiom ci_hbar_eq_two_nu : hbar = 2 * nsNu
     The first eigenvalue of the Stokes operator on T³(L=1) is λ₁ = (2π/1)² = 4π².
     Since π > 314/100, we have 4π² > 4·(314/100)² = 4·(98596/10000) = 39.4384 > 39.
 
-    **Epistemic**: `.partiallyVerified` — standard spectral theory on the torus;
-    Rat bound verified by rational arithmetic. -/
-axiom unit_torus_eigenvalue_lb : (39 : Rat) < 4 * (314/100)^2
+    **Epistemic**: `.verified` — pure Rat arithmetic, proved by norm_num. -/
+theorem unit_torus_eigenvalue_lb : (39 : Rat) < 4 * (314/100)^2 := by norm_num
 
 /-- First Stokes eigenvalue rational lower bound (simpler form). -/
 theorem eigenvalue_lb_simpler : (39 : Rat) < 394/10 := by norm_num
@@ -92,10 +91,10 @@ theorem eigenvalue_lb_simpler : (39 : Rat) < 394/10 := by norm_num
     Since π² > 9 (because π > 3), we have 6π² > 54, so (6π²)^{2/3} > 54^{2/3} ≈ 14.42 > 14.
     A tighter Rat lower bound gives C_W > 15.
 
-    **Epistemic**: `.partiallyVerified` — Weyl law for Stokes spectrum (Metivier 1977);
-    conservative Rat bound. The numerical value (6π²)^{2/3} ≈ 15.19 is verified
-    by the Wolfram computation (eq_238). -/
-axiom unit_torus_weyl_lb : (15 : Rat) < 1519 / 100
+    **Epistemic**: `.verified` — pure Rat arithmetic (15 < 1519/100), proved by norm_num.
+    The Weyl law gives the *formula* C_W = (6π²)^{2/3}; the Rat value 1519/100 is
+    a verified lower bound on the Wolfram-computed value 15.19. -/
+theorem unit_torus_weyl_lb : (15 : Rat) < 1519 / 100 := by norm_num
 
 /-! ## §4. Suppression rate under CI -/
 
