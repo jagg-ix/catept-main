@@ -15,3 +15,6 @@ import NavierStokesClean.Galerkin.ConformanceAnchors
 
 -- Dual route certificate
 import NavierStokesClean.Millennium.DualRouteCertificate
+
+-- Phase 3: PhysLean concrete operator identities
+import NavierStokesClean.PhysLean.DivCurlIdentity
