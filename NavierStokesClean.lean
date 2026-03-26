@@ -21,6 +21,7 @@ import NavierStokesClean.PhysLean.DivCurlIdentity
 
 -- Phase 4: Cameron-Popkov spectral gap (Route A)
 import NavierStokesClean.CameronPopkov.DomainParameters
+import NavierStokesClean.CameronPopkov.NativeSumCertificate
 import NavierStokesClean.CameronPopkov.SpectralGapCertificate
 
 -- Phase 5: Galerkin existence + vorticity liminf decompositions
