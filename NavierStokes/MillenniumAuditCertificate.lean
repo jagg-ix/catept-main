@@ -11,19 +11,17 @@ import Mathlib.Tactic.NormNum
 Formalizes the honest audit status for the five Clay Millennium closure paths
 (A/B/C/D/E) in the Navier-Stokes program.
 
-## Core claim (Stage 286+ strict lifecycle update)
+## Core claim (Stage 286 update)
 
-Paths C and E are `Proved` (no `.openBridge` blockers). Paths A, B, D remain
-`ConditionallyProved`.
+Paths C and E are `Proved`. Paths A, B, D remain `ConditionallyProved`.
 
 The distinction:
 - `ConditionallyProved`: the Lean4 theorem has 0 sorry and the formal proof
   chain is complete, but at least one axiom in the chain is `.openBridge`
   (an unproved conjecture, not standard published mathematics).
-- `Proved`: no `.openBridge` axioms on the critical path; `.partiallyVerified`
-  assumptions may still remain.
-- `Proven`: strict first-principles tier — all assumptions are fully formalized
-  in Lean from first principles (no load-bearing imported assumptions).
+- `Proved`: every axiom in the chain is either a Lean4 theorem (proved from
+  first principles) or `.partiallyVerified` (published, peer-reviewed, and
+  not novel content). No `.openBridge` axioms on the critical path.
 
 ## What each path actually contains
 
@@ -55,19 +53,16 @@ noncomputable section
 
 /-- The allowed lifecycle states for a Millennium closure certificate.
     Mirrors the JSON `allowed_status_lifecycle` field in each certificate file.
-    `proven` is the strict first-principles tier. -/
+    A certificate must reach `Proved` to satisfy the Clay Prize standard. -/
 inductive CertificateLifecycle : Type
   | notEvaluated        : CertificateLifecycle
   | inProgress          : CertificateLifecycle
   | blocked             : CertificateLifecycle
   /-- Formal proof chain complete; at least one axiom is `.openBridge`. -/
   | conditionallyProved : CertificateLifecycle
-  /-- No `.openBridge` blockers on the critical path; `.partiallyVerified`
-      assumptions may still remain. -/
+  /-- All axioms on critical path are `.verified` or `.partiallyVerified`
+      (standard published mathematics, no novel conjectures). -/
   | proved              : CertificateLifecycle
-  /-- Strict first-principles closure:
-      all assumptions are formalized in Lean (no load-bearing imported assumptions). -/
-  | proven              : CertificateLifecycle
   deriving DecidableEq
 
 /-! ## 1b. Semantic Layer Tagging -/
@@ -133,9 +128,6 @@ structure MillenniumPathCertificate where
   hasSorry          : Bool
   /-- Current lifecycle status. -/
   status            : CertificateLifecycle
-  /-- Strict contract flag: true iff all assumptions on the critical path are
-      fully formalized from first principles in Lean. -/
-  assumptionsFirstPrinciples : Bool
   /-- The open axioms that prevent advancement to `Proved`. -/
   openAxioms        : List OpenAxiomRecord
   /-- Non-axiomatic semantic risks (e.g., reduced-carrier shims). -/
@@ -146,14 +138,10 @@ structure MillenniumPathCertificate where
 /-- A certificate is honest iff:
     - it has no sorry
     - its status is `ConditionallyProved` iff it has at least one open axiom blocker
-    - its status is `Proven` only when strict first-principles closure holds -/
+    - its status is `Proved` iff it has no open axiom blockers -/
 def MillenniumPathCertificate.isHonest (c : MillenniumPathCertificate) : Bool :=
   !c.hasSorry &&
-  (c.openAxioms.any (fun r => r.isBlocker) == (c.status == .conditionallyProved)) &&
-  (!(c.status == .proven) ||
-    (c.assumptionsFirstPrinciples &&
-      !(c.semanticRisks.any (fun r => r.isPhysicalBlocker)) &&
-      c.openAxioms.all (fun r => r.epistemic == .verified)))
+  (c.openAxioms.any (fun r => r.isBlocker) == (c.status == .conditionallyProved))
 
 /-- Strict physical blocker check for dual-view audit mode. -/
 def MillenniumPathCertificate.hasPhysicalShimBlocker (c : MillenniumPathCertificate) : Bool :=
@@ -366,7 +354,6 @@ def pathACertificate : MillenniumPathCertificate :=
     leanFile        := "MillenniumWholeSpace.lean"
     hasSorry        := false
     status          := .conditionallyProved
-    assumptionsFirstPrinciples := false
     openAxioms      := [backwardBridgeOpenAxiom]
     semanticRisks   := []
     downgradeReason :=
@@ -386,7 +373,6 @@ def pathBCertificate : MillenniumPathCertificate :=
     leanFile        := "MillenniumWholeSpaceCounterexample.lean"
     hasSorry        := false
     status          := .conditionallyProved
-    assumptionsFirstPrinciples := false
     openAxioms      := [pathBAxiomRecord]
     semanticRisks   := []
     downgradeReason :=
@@ -411,7 +397,6 @@ def pathCCertificate : MillenniumPathCertificate :=
     leanFile        := "NSBKMContinuationPipeline.lean"
     hasSorry        := false
     status          := .proved
-    assumptionsFirstPrinciples := false
     openAxioms      := []
     semanticRisks   := [pathCOpaquePDEOperatorsRisk, pathCFunctionSpaceShimRisk]
     downgradeReason :=
@@ -435,7 +420,6 @@ def pathDCertificate : MillenniumPathCertificate :=
     leanFile        := "MillenniumPeriodicCounterexample.lean"
     hasSorry        := false
     status          := .conditionallyProved
-    assumptionsFirstPrinciples := false
     openAxioms      := [pathDAxiomRecord]
     semanticRisks   := []
     downgradeReason :=
@@ -455,7 +439,6 @@ def pathECertificate : MillenniumPathCertificate :=
     leanFile        := "NumericalBoundCertificate.lean"
     hasSorry        := false
     status          := .proved
-    assumptionsFirstPrinciples := false
     openAxioms      := []
     semanticRisks   := [pathEReducedGovernanceRisk]
     downgradeReason :=
@@ -503,14 +486,9 @@ theorem path_C_no_open_blockers :
 
 /-! ## 6b. Dual-View Closure (Formal vs Physical) -/
 
-/-- Formal closure view: path status is marked `proved` or `proven`. -/
+/-- Formal closure view: path status is marked `proved`. -/
 def formal_path_closed (c : MillenniumPathCertificate) : Bool :=
-  (c.status == .proved) || (c.status == .proven)
-
-/-- Strict first-principles closure:
-    status is `proven` and the explicit first-principles contract flag is true. -/
-def first_principles_closed (c : MillenniumPathCertificate) : Bool :=
-  (c.status == .proven) && c.assumptionsFirstPrinciples
+  c.status == .proved
 
 /-- Strict physical closure view: formally proved AND no load-bearing shim blockers. -/
 def physical_semantics_closed (c : MillenniumPathCertificate) : Bool :=

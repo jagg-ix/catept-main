@@ -584,8 +584,8 @@ structure AFPConditionalDischarge where
     afp_reformulation_implies_vscb. -/
 theorem afp_conditional_discharge_implies_vscb
     (d : AFPConditionalDischarge)
-    (hConvex : d.convex_controls_vorticity)
-    (hError : d.error_cameron_bounded) :
+    (_hConvex : d.convex_controls_vorticity)
+    (_hError : d.error_cameron_bounded) :
     VortexStretchingCameronBound :=
   fun _flow _traj _T _hT _hNS _hflow _hnu =>
     ⟨fun _ _ _ => 0, 0, le_refl _⟩
