@@ -1,5 +1,6 @@
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 import Mathlib.Order.Filter.Basic
+import Mathlib.Order.LiminfLimsup
 import NavierStokesClean.Core.EnergyFunctionals
 
 /-!
@@ -115,13 +116,21 @@ axiom enstrophy_weakly_lsc (traj_seq : Nat → Trajectory) (traj_lim : Trajector
 
     Mathlib path: `liminf_le_liminf` (monotonicity, needs `IsBoundedUnder`/`IsCoboundedUnder`)
     + `liminf_const` (constant sequence). Both hold since `bkm_n ≥ 0` and `const M ≥ M`.
-    The `IsCoboundedUnder (· ≥ ·) atTop (fun _ => M)` proof requires unfolding the
-    `IsCobounded` structure: `∃ b, ∀ a, (∀ᶠ x in map (·) f, x ≥ a) → b ≥ a`, witnessed by `b=M`.
-    **Epistemic**: `.partiallyVerified` — pure Mathlib Filter API; Phase 6 target. -/
-axiom bkm_liminf_le_of_sequence
-    (traj_seq : Nat → Trajectory) (T M : ℝ) (hT : 0 < T) (hM : 0 < M)
+    **Proved from Mathlib**: `liminf_le_of_le` (Phase 8):
+      - Lower bound 0 from `bkm_nonneg` + `isBoundedUnder_of_eventually_ge`
+      - Upper bound M from `h : ∀ b, (∀ᶠ n, b ≤ bkm n) → b ≤ M`
+        (any eventual lower bound b satisfies b ≤ bkm N ≤ M for some N). -/
+theorem bkm_liminf_le_of_sequence
+    (traj_seq : Nat → Trajectory) (T M : ℝ) (hT : 0 < T) (_ : 0 < M)
     (hBKMN : ∀ n, bkmVorticityIntegral (traj_seq n) T ≤ M) :
-    liminf (fun n => bkmVorticityIntegral (traj_seq n) T) atTop ≤ M
+    liminf (fun n => bkmVorticityIntegral (traj_seq n) T) atTop ≤ M :=
+  liminf_le_of_le
+    (hf := isBoundedUnder_of_eventually_ge
+      (Eventually.of_forall fun n => bkm_nonneg (traj_seq n) T (le_of_lt hT)))
+    fun b hb => by
+      rw [Filter.eventually_atTop] at hb
+      obtain ⟨N, hN⟩ := hb
+      exact le_trans (hN N (le_refl N)) (hBKMN N)
 
 /-! ## §5. Bridge: Fatou → abstract BKM bound -/
 

@@ -5,7 +5,7 @@ import NavierStokesClean.Galerkin.VorticityLiminf
 /-!
 # Complete Axiom Audit — NavierStokesClean
 
-## Current axiom inventory (Phase 6 state)
+## Current axiom inventory (Phase 8 state)
 
 | # | Axiom | File | Epistemic | Reference |
 |---|-------|------|-----------|-----------|
@@ -24,17 +24,17 @@ import NavierStokesClean.Galerkin.VorticityLiminf
 | 13 | `galerkin_traj_satisfies_ns` | Galerkin/GalerkinExistence | `.partiallyVerified` | Fourier synthesis |
 | 14 | `galerkin_bkm_measurable` | Galerkin/VorticityLiminf | `.partiallyVerified` | continuity → meas |
 | 15 | `enstrophy_weakly_lsc` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon 1987 Thm 5 |
-| 16 | `bkm_liminf_le_of_sequence` | Galerkin/VorticityLiminf | `.partiallyVerified` | Mathlib liminf |
-| 17 | `bkm_limit_le_of_fatou_simon` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon + Fatou |
+| 16 | `bkm_limit_le_of_fatou_simon` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon + Fatou |
 
-**Total: 17 axioms** (down from 19 after promoting 2 Rat bounds to `norm_num` theorems).
+**Total: 16 axioms** (down from 17 after Phase 8: `bkm_liminf_le_of_sequence` proved from Mathlib).
 
-## Axioms promoted to theorems in Phase 6
+## Axioms promoted to theorems
 
-| Theorem | Proof | Was |
-|---------|-------|-----|
-| `unit_torus_eigenvalue_lb : (39:Rat) < 4*(314/100)²` | `norm_num` | axiom |
-| `unit_torus_weyl_lb : (15:Rat) < 1519/100` | `norm_num` | axiom |
+| Theorem | Proof | Was | Phase |
+|---------|-------|-----|-------|
+| `unit_torus_eigenvalue_lb : (39:Rat) < 4*(314/100)²` | `norm_num` | axiom | 6 |
+| `unit_torus_weyl_lb : (15:Rat) < 1519/100` | `norm_num` | axiom | 6 |
+| `bkm_liminf_le_of_sequence` | `liminf_le_of_le` + `bkm_nonneg` | axiom | 8 |
 
 ## Epistemic classification
 
@@ -70,7 +70,7 @@ import NavierStokesClean.Galerkin.VorticityLiminf
 - `dual_route_pgs_confirmed` — both routes proved simultaneously
 - `galerkin_existence_refined` — Galerkin existence from cascade
 - `vorticity_liminf_bound_refined` — Simon liminf from cascade
-- `bkm_liminf_le_of_sequence` — (target: prove from Mathlib liminf API)
+- `bkm_liminf_le_of_sequence` — **PROVED** (Phase 8: `liminf_le_of_le` + `bkm_nonneg`)
 - `ns_div_curl_zero`, `ns_vorticity_div_free`, `ns_curl_of_curl` — PhysLean
 - `fatou_bkm_from_vorticity_liminf`, `galerkin_bkm_limit_bounded` — le_trans
 
@@ -139,8 +139,8 @@ theorem audit_dual_routes : PreciseGapStatement ∧ PreciseGapStatement :=
 
 /-! ## §3. Axiom count bounds -/
 
-/-- The repo has fewer than 20 irreducible axioms (by manual count: 17). -/
-theorem audit_axiom_count_lt_20 : True := trivial
+/-- The repo has fewer than 17 irreducible axioms (by manual count: 16). -/
+theorem audit_axiom_count_lt_17 : True := trivial
 
 -- Zero sorry in this file.
 
