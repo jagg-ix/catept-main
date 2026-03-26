@@ -65,18 +65,34 @@ namespace NavierStokesClean.Galerkin
 
 open NavierStokesClean MeasureTheory Filter intervalIntegral ENNReal
 
-/-! ## §1. Sub-axiom 1: enstrophy measurability -/
+/-! ## §1. Sub-axiom 0: trajectory continuity (Phase 13) -/
+
+/-- **NS solutions are continuous as maps `ℝ → NSField`.**
+
+    Mathematical content: Galerkin solutions are in C⁰([0,T]; Hₙ) for each n
+    (Temam 1984, Ch.III). In the limit, the NS trajectory inherits this continuity.
+
+    **Epistemic**: `.partiallyVerified` — standard Galerkin regularity;
+    the Picard-Lindelöf theorem (`galerkinODE_local_solution`) gives C¹ solutions,
+    so a fortiori continuous.
+
+    **Phase 13**: single sub-axiom replacing `galerkin_bkm_measurable` (measurability)
+    and `enstrophy_intervalIntegrable` (integrability). Net: 2 axioms → 1 axiom. -/
+axiom ns_traj_continuous (traj : Trajectory) : SatisfiesNSPDE nsNu traj → Continuous traj
+
+/-! ## §1. Sub-axiom 1: enstrophy measurability (Phase 13 — theorem) -/
 
 /-- **BKM integrand is measurable along Galerkin sequences.**
 
-    For any trajectory `traj`, the function `t ↦ enstrophy (traj t)` is
+    For any NS trajectory `traj`, the function `t ↦ enstrophy (traj t)` is
     (Borel-)measurable as a function `ℝ → ℝ`.
 
-    **Epistemic**: `.partiallyVerified` — standard for Galerkin solutions;
-    follows from `traj` being continuous (Galerkin solutions are in C⁰([0,T]; H))
-    and `enstrophy` being norm-squared (continuous on H). -/
-axiom galerkin_bkm_measurable (traj : Trajectory) :
-    Measurable (fun t => enstrophy (traj t))
+    **Phase 13**: proved from `ns_traj_continuous`. Since `enstrophy u = ‖u‖^2`
+    (Phase 11), the map `t ↦ ‖traj t‖^2` is continuous (norm composed with
+    continuous map, then squared), hence measurable. 0 new axioms. -/
+theorem galerkin_bkm_measurable (traj : Trajectory) (h : SatisfiesNSPDE nsNu traj) :
+    Measurable (fun t => enstrophy (traj t)) :=
+  ((ns_traj_continuous traj h).norm.pow 2).measurable
 
 /-! ## §2. Sub-axiom 2: weak semicontinuity of enstrophy (Simon 1987) -/
 
@@ -96,19 +112,20 @@ axiom enstrophy_weakly_lsc (traj_seq : Nat → Trajectory) (traj_lim : Trajector
     ∀ᵐ t : ℝ, ENNReal.ofReal (enstrophy (traj_lim t)) ≤
       atTop.liminf (fun n => ENNReal.ofReal (enstrophy (traj_seq n t)))
 
-/-! ## §3. Sub-axiom 3: enstrophy integrability (Phase 9, new) -/
+/-! ## §3. Sub-axiom 3: enstrophy integrability (Phase 13 — theorem) -/
 
 /-- **Enstrophy is interval-integrable for NS trajectories.**
 
     For any trajectory solving NS with viscosity `nsNu`, the enstrophy
     `t ↦ Ω(traj t)` is Bochner-integrable on `[0, T]`.
 
-    **Epistemic**: `.partiallyVerified` — standard for energy-bounded NS solutions;
-    follows from the energy inequality `‖u(t)‖² ≤ ‖u₀‖²` (Temam Ch. III) combined
-    with Poincaré inequality `∫Ω dt ≤ λ₁⁻¹ · ‖∇u‖²_{L²([0,T])}`, which is finite
-    by the energy dissipation bound. -/
-axiom enstrophy_intervalIntegrable (traj : Trajectory) (T : ℝ) (hT : 0 ≤ T) :
-    IntervalIntegrable (fun t => enstrophy (traj t)) MeasureTheory.volume 0 T
+    **Phase 13**: proved from `ns_traj_continuous`. Since `enstrophy u = ‖u‖^2`
+    (Phase 11), the map `t ↦ ‖traj t‖^2` is continuous, hence interval-integrable
+    on any compact interval by `Continuous.intervalIntegrable`. 0 new axioms. -/
+theorem enstrophy_intervalIntegrable (traj : Trajectory) (T : ℝ) (_hT : 0 ≤ T)
+    (h : SatisfiesNSPDE nsNu traj) :
+    IntervalIntegrable (fun t => enstrophy (traj t)) MeasureTheory.volume 0 T :=
+  ((ns_traj_continuous traj h).norm.pow 2).intervalIntegrable 0 T
 
 /-! ## §4. Phase 8 theorem: liminf bound from Mathlib -/
 
@@ -132,13 +149,14 @@ theorem bkm_liminf_le_of_sequence
 /-- **ENNReal.ofReal of BKM integral equals lintegral of ENNReal.ofReal of enstrophy.**
 
     Uses `intervalIntegral.integral_of_le` + `ofReal_integral_eq_lintegral_ofReal`. -/
-private theorem bkm_ofReal_eq_lintegral (traj : Trajectory) (T : ℝ) (hT : 0 ≤ T) :
+private theorem bkm_ofReal_eq_lintegral (traj : Trajectory) (T : ℝ) (hT : 0 ≤ T)
+    (hns : SatisfiesNSPDE nsNu traj) :
     ENNReal.ofReal (bkmVorticityIntegral traj T) =
     ∫⁻ t in Set.Ioc 0 T, ENNReal.ofReal (enstrophy (traj t)) ∂MeasureTheory.volume := by
   unfold bkmVorticityIntegral integratedEnstrophy
   rw [intervalIntegral.integral_of_le hT]
   exact ofReal_integral_eq_lintegral_ofReal
-    (enstrophy_intervalIntegrable traj T hT).1
+    (enstrophy_intervalIntegrable traj T hT hns).1
     (ae_of_all _ (fun t => enstrophy_nonneg _))
 
 /-! ## §6. Phase 9 theorem: Fatou closes the bootstrap -/
@@ -157,7 +175,7 @@ private theorem bkm_ofReal_eq_lintegral (traj : Trajectory) (T : ℝ) (hT : 0 �
 theorem bkm_limit_le_of_fatou_simon
     (traj_seq : Nat → Trajectory) (traj_lim : Trajectory) (T M : ℝ)
     (hT : 0 < T) (hM : 0 < M)
-    (_hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
     (_hLim : SatisfiesNSPDE nsNu traj_lim)
     (hBKMN : ∀ N, bkmVorticityIntegral (traj_seq N) T ≤ M)
     (hlsc : ∀ᵐ t : ℝ, ENNReal.ofReal (enstrophy (traj_lim t)) ≤
@@ -165,7 +183,7 @@ theorem bkm_limit_le_of_fatou_simon
     bkmVorticityIntegral traj_lim T ≤ M := by
   -- Lift to ENNReal: prove ENNReal.ofReal(BKM(lim,T)) ≤ ENNReal.ofReal M
   have key : ENNReal.ofReal (bkmVorticityIntegral traj_lim T) ≤ ENNReal.ofReal M := by
-    rw [bkm_ofReal_eq_lintegral traj_lim T (le_of_lt hT)]
+    rw [bkm_ofReal_eq_lintegral traj_lim T (le_of_lt hT) _hLim]
     -- Step 1: lintegral_mono_ae using ENNReal hlsc directly
     have step1 : ∫⁻ t in Set.Ioc 0 T,
         ENNReal.ofReal (enstrophy (traj_lim t)) ∂MeasureTheory.volume ≤
@@ -181,13 +199,13 @@ theorem bkm_limit_le_of_fatou_simon
       atTop.liminf (fun n => ∫⁻ t in Set.Ioc 0 T,
         ENNReal.ofReal (enstrophy (traj_seq n t)) ∂MeasureTheory.volume) :=
       lintegral_liminf_le (fun n =>
-        (galerkin_bkm_measurable (traj_seq n)).ennreal_ofReal)
+        (galerkin_bkm_measurable (traj_seq n) (hConv n)).ennreal_ofReal)
     -- Step 3: convert back to BKM
     have step3 : atTop.liminf (fun n => ∫⁻ t in Set.Ioc 0 T,
         ENNReal.ofReal (enstrophy (traj_seq n t)) ∂MeasureTheory.volume) =
       atTop.liminf (fun n => ENNReal.ofReal (bkmVorticityIntegral (traj_seq n) T)) := by
       congr 1; ext n
-      exact (bkm_ofReal_eq_lintegral (traj_seq n) T (le_of_lt hT)).symm
+      exact (bkm_ofReal_eq_lintegral (traj_seq n) T (le_of_lt hT) (hConv n)).symm
     -- Step 4: liminf of ENNReal.ofReal(BKM n T) ≤ ENNReal.ofReal M
     -- hf: ENNReal values are ≥ 0, so the sequence is bounded below by 0
     have step4 : atTop.liminf (fun n => ENNReal.ofReal (bkmVorticityIntegral (traj_seq n) T)) ≤
