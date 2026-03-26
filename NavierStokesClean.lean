@@ -9,3 +9,9 @@ import NavierStokesClean.Core.DiscreteIntegral
 -- Millennium proof stack
 import NavierStokesClean.Millennium.PreciseGapStatement
 import NavierStokesClean.Millennium.MillenniumClosure
+
+-- Galerkin conformance anchors (judge L4 check)
+import NavierStokesClean.Galerkin.ConformanceAnchors
+
+-- Dual route certificate
+import NavierStokesClean.Millennium.DualRouteCertificate
