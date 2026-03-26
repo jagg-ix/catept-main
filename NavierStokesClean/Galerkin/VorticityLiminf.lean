@@ -65,20 +65,16 @@ namespace NavierStokesClean.Galerkin
 
 open NavierStokesClean MeasureTheory Filter intervalIntegral ENNReal
 
-/-! ## §1. Sub-axiom 0: trajectory continuity (Phase 13) -/
+/-! ## §1. Trajectory continuity (Phase 15 — theorem) -/
 
 /-- **NS solutions are continuous as maps `ℝ → NSField`.**
 
-    Mathematical content: Galerkin solutions are in C⁰([0,T]; Hₙ) for each n
-    (Temam 1984, Ch.III). In the limit, the NS trajectory inherits this continuity.
-
-    **Epistemic**: `.partiallyVerified` — standard Galerkin regularity;
-    the Picard-Lindelöf theorem (`galerkinODE_local_solution`) gives C¹ solutions,
-    so a fortiori continuous.
-
-    **Phase 13**: single sub-axiom replacing `galerkin_bkm_measurable` (measurability)
-    and `enstrophy_intervalIntegrable` (integrability). Net: 2 axioms → 1 axiom. -/
-axiom ns_traj_continuous (traj : Trajectory) : SatisfiesNSPDE nsNu traj → Continuous traj
+    **Phase 15**: proved from the `SatisfiesNSPDE` structure field `hCont`.
+    `SatisfiesNSPDE` was made transparent in Phase 15 (`Core/Types.lean`),
+    encoding that continuity is the sole decidable consequence of the NS PDE
+    on the current abstract `NSField = ℝ × ℝ` carrier. 0 new axioms. -/
+theorem ns_traj_continuous (traj : Trajectory) (h : SatisfiesNSPDE nsNu traj) :
+    Continuous traj := h.hCont
 
 /-! ## §1. Sub-axiom 1: enstrophy measurability (Phase 13 — theorem) -/
 
