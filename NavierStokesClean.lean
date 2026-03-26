@@ -18,3 +18,7 @@ import NavierStokesClean.Millennium.DualRouteCertificate
 
 -- Phase 3: PhysLean concrete operator identities
 import NavierStokesClean.PhysLean.DivCurlIdentity
+
+-- Phase 4: Cameron-Popkov spectral gap (Route A)
+import NavierStokesClean.CameronPopkov.DomainParameters
+import NavierStokesClean.CameronPopkov.SpectralGapCertificate
