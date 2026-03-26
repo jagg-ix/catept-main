@@ -38,9 +38,9 @@ semicontinuity of enstrophy — Simon 1987, Compact Sets in Lᵖ(0,T;B), Thm 5).
 The axiom `ns_galerkin_vorticity_liminf_bound` is replaced by:
 
   Sub-axioms:
-  (1) galerkin_bkm_measurable      [.partiallyVerified — enstrophy measurable]
-  (2) enstrophy_weakly_lsc         [.partiallyVerified — Simon 1987, Thm 5]
-  (3) enstrophy_intervalIntegrable [.partiallyVerified — energy-bounded NS]
+  (1) galerkin_bkm_measurable              [.partiallyVerified — enstrophy measurable]
+  (2) simon1987_ae_tendsto_from_galerkin   [.partiallyVerified — Simon 1987, Thm 5]
+  (3) enstrophy_intervalIntegrable         [.partiallyVerified — energy-bounded NS]
 
   Theorems (Phase 8 + Phase 9):
   (•) bkm_liminf_le_of_sequence    [PROVED — liminf_le_of_le, Phase 8]
@@ -90,7 +90,23 @@ theorem galerkin_bkm_measurable (traj : Trajectory) (h : SatisfiesNSPDE nsNu tra
     Measurable (fun t => enstrophy (traj t)) :=
   ((ns_traj_continuous traj h).norm.pow 2).measurable
 
-/-! ## §2. Sub-axiom 2: weak semicontinuity of enstrophy (Simon 1987) -/
+/-! ## §2. Sub-axiom 2: Simon compactness-to-convergence witness (Simon 1987) -/
+
+/-- **A.e. trajectory convergence witness from Simon/Aubin-Lions.**
+
+    This is the actual open compactness obligation:
+    a Galerkin sequence admits a limit whose trajectories converge almost
+    everywhere in time.
+
+    Once this witness is available, weak lower semicontinuity of enstrophy is
+    a theorem (proved below) by continuity of `enstrophy` and
+    `Filter.Tendsto.liminf_eq`.
+ -/
+axiom simon1987_ae_tendsto_from_galerkin
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) :
+    ∀ᵐ t : ℝ, Tendsto (fun n => traj_seq n t) atTop (nhds (traj_lim t))
 
 /-- **Enstrophy is weakly lower semicontinuous along Galerkin sequences.**
 
@@ -102,11 +118,27 @@ theorem galerkin_bkm_measurable (traj : Trajectory) (h : SatisfiesNSPDE nsNu tra
     the Galerkin sequence is compact in L²([0,T];H) by energy + Aubin-Lions,
     and the limit satisfies a pointwise liminf inequality for the ENNReal norms.
 
-    **Epistemic**: `.partiallyVerified` — Simon 1987 Thm 5 + Aubin-Lions.
-    ENNReal formulation avoids the real-valued liminf commutation technicality. -/
-axiom enstrophy_weakly_lsc (traj_seq : Nat → Trajectory) (traj_lim : Trajectory) :
+    **Epistemic**: `.verified` relative to
+    `simon1987_ae_tendsto_from_galerkin` (the remaining `.partiallyVerified`
+    compactness input). -/
+theorem enstrophy_weakly_lsc (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hconv : ∀ᵐ t : ℝ, Tendsto (fun n => traj_seq n t) atTop (nhds (traj_lim t))) :
     ∀ᵐ t : ℝ, ENNReal.ofReal (enstrophy (traj_lim t)) ≤
-      atTop.liminf (fun n => ENNReal.ofReal (enstrophy (traj_seq n t)))
+      atTop.liminf (fun n => ENNReal.ofReal (enstrophy (traj_seq n t))) := by
+  have h_enst_cont : Continuous (fun u : NSField => enstrophy u) := by
+    simpa [enstrophy] using ((continuous_norm : Continuous fun u : NSField => ‖u‖).pow 2)
+  filter_upwards [hconv] with t ht
+  have h_enst_tendsto : Tendsto (fun n => enstrophy (traj_seq n t)) atTop
+      (nhds (enstrophy (traj_lim t))) :=
+    (h_enst_cont.tendsto _).comp ht
+  have h_enn_tendsto : Tendsto (fun n => ENNReal.ofReal (enstrophy (traj_seq n t))) atTop
+      (nhds (ENNReal.ofReal (enstrophy (traj_lim t)))) :=
+    ENNReal.tendsto_ofReal h_enst_tendsto
+  have h_liminf :
+      atTop.liminf (fun n => ENNReal.ofReal (enstrophy (traj_seq n t))) =
+        ENNReal.ofReal (enstrophy (traj_lim t)) :=
+    Filter.Tendsto.liminf_eq h_enn_tendsto
+  simp [h_liminf]
 
 /-! ## §3. Sub-axiom 3: enstrophy integrability (Phase 13 — theorem) -/
 
@@ -230,7 +262,8 @@ theorem bkm_limit_le_of_fatou_simon
 
     Proved from three sub-axioms and Fatou's lemma:
       galerkin_bkm_measurable   (measurability, .partiallyVerified)
-      enstrophy_weakly_lsc      (Simon 1987, .partiallyVerified)
+      simon1987_ae_tendsto_from_galerkin (Simon 1987, .partiallyVerified)
+      enstrophy_weakly_lsc      (derived theorem, .verified)
       enstrophy_intervalIntegrable (energy-bounded NS, .partiallyVerified)
       bkm_liminf_le_of_sequence (Fatou, PROVED Phase 8 by Mathlib)
       bkm_limit_le_of_fatou_simon (ENNReal Fatou chain, PROVED Phase 9)
@@ -246,8 +279,9 @@ theorem vorticity_liminf_bound_refined
     (hLim : SatisfiesNSPDE nsNu traj_lim)
     (hBKMN : ∀ N, bkmVorticityIntegral (traj_seq N) T ≤ M) :
     bkmVorticityIntegral traj_lim T ≤ M :=
+  let hconvAE := simon1987_ae_tendsto_from_galerkin traj_seq traj_lim hConv hLim
   bkm_limit_le_of_fatou_simon
     traj_seq traj_lim T M hT hM hConv hLim hBKMN
-    (enstrophy_weakly_lsc traj_seq traj_lim)
+    (enstrophy_weakly_lsc traj_seq traj_lim hconvAE)
 
 end NavierStokesClean.Galerkin

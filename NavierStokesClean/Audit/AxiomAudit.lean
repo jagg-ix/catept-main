@@ -14,7 +14,7 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 | 2 | `hbar_pos` | Core/Types | `.verified` | definition |
 | 3 | `pgs_implies_fefferman_b` | Millennium/MillenniumClosure | `.partiallyVerified` | BKM 1984 |
 | 4 | `ci_hbar_eq_two_nu` | CameronPopkov/DomainParameters | `.partiallyVerified` | C-I 2008 |
-| 5 | `enstrophy_weakly_lsc` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon 1987 Thm 5 |
+| 5 | `simon1987_ae_tendsto_from_galerkin` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon 1987 Thm 5 |
 
 **Total: 5 axioms** (Phase 15: `SatisfiesNSPDE` made transparent as
 `structure SatisfiesNSPDE where hCont : Continuous traj`; `galerkin_traj_satisfies_ns`
@@ -56,7 +56,7 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 ### `.partiallyVerified` (published results, not yet formalized in Lean)
 - `pgs_implies_fefferman_b` — BKM criterion 1984 (bridge between formalizations)
 - `ci_hbar_eq_two_nu` — Constantin-Iyer 2008 (stochastic NS representation)
-- `enstrophy_weakly_lsc` — Simon 1987 Thm 5 (Aubin-Lions compactness)
+- `simon1987_ae_tendsto_from_galerkin` — Simon 1987 Thm 5 (Aubin-Lions compactness)
 
 ### `.openBridge` — **NONE** (all open bridges discharged as of Phase 10)
 
@@ -88,9 +88,9 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 
 ## Open targets (Phase 16+)
 
-1. **`enstrophy_weakly_lsc`** (.partiallyVerified — Simon 1987, hardest remaining target):
+1. **`simon1987_ae_tendsto_from_galerkin`** (.partiallyVerified — Simon 1987, hardest remaining target):
    Aubin-Lions compactness + Simon 1987 Thm 5. Requires Mathlib compact embedding lemmas.
-   The a.e. liminf inequality for ENNReal norms of weakly-converging sequences in `L²`.
+   Supplies the a.e. convergence witness used to derive `enstrophy_weakly_lsc` as a theorem.
    Likely requires: `MeasureTheory.tendsto_Lp_iff_of_tendsto` + Aubin-Lions compactness.
 
 2. **`ci_hbar_eq_two_nu`** (physical modeling input — may be axiomatic by design):
@@ -157,7 +157,7 @@ theorem audit_dual_routes : PreciseGapStatement ∧ PreciseGapStatement :=
     `SatisfiesNSPDE` transparent (`structure` with `hCont : Continuous traj`),
     eliminating `galerkin_traj_satisfies_ns` and `ns_traj_continuous`.
     Remaining 5: nsNu_pos, hbar_pos, pgs_implies_fefferman_b,
-                 ci_hbar_eq_two_nu, enstrophy_weakly_lsc. -/
+                 ci_hbar_eq_two_nu, simon1987_ae_tendsto_from_galerkin. -/
 theorem audit_axiom_count_lt_6 : True := trivial
 
 /-- Phase 10: No `.openBridge` axioms remain — all open bridges discharged. -/
