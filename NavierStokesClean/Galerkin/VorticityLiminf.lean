@@ -39,7 +39,7 @@ The axiom `ns_galerkin_vorticity_liminf_bound` is replaced by:
 
   Sub-axioms:
   (1) galerkin_bkm_measurable              [.partiallyVerified — enstrophy measurable]
-  (2) simon1987_ae_tendsto_from_galerkin   [.partiallyVerified — Simon 1987, Thm 5]
+  (2) simon1987_ae_tendsto_from_galerkin   [.partiallyVerified — Simon 1987 Thm 5; Nikitaeva 2025 Lemma B.9 + App A.2.1]
   (3) enstrophy_intervalIntegrable         [.partiallyVerified — energy-bounded NS]
 
   Theorems (Phase 8 + Phase 9):
@@ -90,13 +90,19 @@ theorem galerkin_bkm_measurable (traj : Trajectory) (h : SatisfiesNSPDE nsNu tra
     Measurable (fun t => enstrophy (traj t)) :=
   ((ns_traj_continuous traj h).norm.pow 2).measurable
 
-/-! ## §2. Sub-axiom 2: Simon compactness-to-convergence witness (Simon 1987) -/
+/-! ## §2. Sub-axiom 2: Aubin-Lions compactness-to-convergence witness (Simon 1987 / Nikitaeva 2025) -/
 
-/-- **A.e. trajectory convergence witness from Simon/Aubin-Lions.**
+/-- **A.e. trajectory convergence witness from Aubin-Lions compactness.**
 
     This is the actual open compactness obligation:
     a Galerkin sequence admits a limit whose trajectories converge almost
     everywhere in time.
+
+    Published references for this step in the current project context:
+    - Simon (1987), Thm 5 (compactness in `Lᵖ(0,T;B)`),
+    - Nikitaeva (2025), arXiv:2507.13356v1:
+      Appendix A.2.1 (Galerkin + Aubin-Lions passage),
+      Lemma B.9 (Aubin-Lions statement `X ↪↪ B ↪ Y` with time derivative bound).
 
     Once this witness is available, weak lower semicontinuity of enstrophy is
     a theorem (proved below) by continuity of `enstrophy` and
@@ -107,6 +113,20 @@ axiom simon1987_ae_tendsto_from_galerkin
     (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
     (hLim : SatisfiesNSPDE nsNu traj_lim) :
     ∀ᵐ t : ℝ, Tendsto (fun n => traj_seq n t) atTop (nhds (traj_lim t))
+
+/-- Contract wrapper for the Galerkin convergence witness used by Simon/Aubin-Lions
+lower-semicontinuity arguments. -/
+def IsGalerkinLimit (traj_seq : Nat → Trajectory) (traj_lim : Trajectory) : Prop :=
+  ∀ᵐ t : ℝ, Tendsto (fun n => traj_seq n t) atTop (nhds (traj_lim t))
+
+/-- The current Simon compactness axiom discharges the packaged Galerkin-limit
+contract. -/
+theorem isGalerkinLimit_from_simon
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) :
+    IsGalerkinLimit traj_seq traj_lim :=
+  simon1987_ae_tendsto_from_galerkin traj_seq traj_lim hConv hLim
 
 /-- **Enstrophy is weakly lower semicontinuous along Galerkin sequences.**
 
@@ -139,6 +159,25 @@ theorem enstrophy_weakly_lsc (traj_seq : Nat → Trajectory) (traj_lim : Traject
         ENNReal.ofReal (enstrophy (traj_lim t)) :=
     Filter.Tendsto.liminf_eq h_enn_tendsto
   simp [h_liminf]
+
+/-- Contracted form: enstrophy lower-semicontinuity requires a Galerkin-limit
+convergence witness.
+
+This is the honest hypothesis surface (no statement over arbitrary trajectory pairs). -/
+theorem enstrophy_weakly_lsc_of_galerkin_limit
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hGalerkin : IsGalerkinLimit traj_seq traj_lim) :
+    ∀ᵐ t : ℝ, ENNReal.ofReal (enstrophy (traj_lim t)) ≤
+      atTop.liminf (fun n => ENNReal.ofReal (enstrophy (traj_seq n t))) :=
+  enstrophy_weakly_lsc traj_seq traj_lim hGalerkin
+
+/-- Simon/Nikitaeva-labeled alias for the contracted enstrophy liminf statement. -/
+theorem simon1987_enstrophy_lsc_galerkin
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hGalerkin : IsGalerkinLimit traj_seq traj_lim) :
+    ∀ᵐ t : ℝ, ENNReal.ofReal (enstrophy (traj_lim t)) ≤
+      atTop.liminf (fun n => ENNReal.ofReal (enstrophy (traj_seq n t))) :=
+  enstrophy_weakly_lsc_of_galerkin_limit traj_seq traj_lim hGalerkin
 
 /-! ## §3. Sub-axiom 3: enstrophy integrability (Phase 13 — theorem) -/
 
@@ -279,9 +318,10 @@ theorem vorticity_liminf_bound_refined
     (hLim : SatisfiesNSPDE nsNu traj_lim)
     (hBKMN : ∀ N, bkmVorticityIntegral (traj_seq N) T ≤ M) :
     bkmVorticityIntegral traj_lim T ≤ M :=
-  let hconvAE := simon1987_ae_tendsto_from_galerkin traj_seq traj_lim hConv hLim
+  let hGal : IsGalerkinLimit traj_seq traj_lim :=
+    isGalerkinLimit_from_simon traj_seq traj_lim hConv hLim
   bkm_limit_le_of_fatou_simon
     traj_seq traj_lim T M hT hM hConv hLim hBKMN
-    (enstrophy_weakly_lsc traj_seq traj_lim hconvAE)
+    (simon1987_enstrophy_lsc_galerkin traj_seq traj_lim hGal)
 
 end NavierStokesClean.Galerkin

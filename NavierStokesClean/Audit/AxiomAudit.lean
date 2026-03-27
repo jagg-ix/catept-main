@@ -14,7 +14,7 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 | 2 | `hbar_pos` | Core/Types | `.verified` | definition |
 | 3 | `pgs_implies_fefferman_b` | Millennium/MillenniumClosure | `.partiallyVerified` | BKM 1984 |
 | 4 | `ci_hbar_eq_two_nu` | CameronPopkov/DomainParameters | `.partiallyVerified` | C-I 2008 |
-| 5 | `simon1987_ae_tendsto_from_galerkin` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon 1987 Thm 5 |
+| 5 | `simon1987_ae_tendsto_from_galerkin` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon 1987 Thm 5; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
 
 **Total: 5 axioms** (Phase 15: `SatisfiesNSPDE` made transparent as
 `structure SatisfiesNSPDE where hCont : Continuous traj`; `galerkin_traj_satisfies_ns`
@@ -56,7 +56,7 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 ### `.partiallyVerified` (published results, not yet formalized in Lean)
 - `pgs_implies_fefferman_b` — BKM criterion 1984 (bridge between formalizations)
 - `ci_hbar_eq_two_nu` — Constantin-Iyer 2008 (stochastic NS representation)
-- `simon1987_ae_tendsto_from_galerkin` — Simon 1987 Thm 5 (Aubin-Lions compactness)
+- `simon1987_ae_tendsto_from_galerkin` — Simon 1987 Thm 5 + Nikitaeva 2025 (Lemma B.9, App A.2.1)
 
 ### `.openBridge` — **NONE** (all open bridges discharged as of Phase 10)
 
@@ -88,9 +88,9 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 
 ## Open targets (Phase 16+)
 
-1. **`simon1987_ae_tendsto_from_galerkin`** (.partiallyVerified — Simon 1987, hardest remaining target):
-   Aubin-Lions compactness + Simon 1987 Thm 5. Requires Mathlib compact embedding lemmas.
-   Supplies the a.e. convergence witness used to derive `enstrophy_weakly_lsc` as a theorem.
+1. **`simon1987_ae_tendsto_from_galerkin`** (.partiallyVerified — Simon 1987 + Nikitaeva 2025, hardest remaining target):
+   Aubin-Lions compactness witness (Simon 1987 Thm 5; Nikitaeva 2025 Lemma B.9 and App A.2.1).
+   Supplies the Galerkin-limit a.e. convergence contract used to derive enstrophy liminf (`enstrophy_weakly_lsc_of_galerkin_limit`).
    Likely requires: `MeasureTheory.tendsto_Lp_iff_of_tendsto` + Aubin-Lions compactness.
 
 2. **`ci_hbar_eq_two_nu`** (physical modeling input — may be axiomatic by design):
@@ -115,7 +115,7 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 The clean repo achieves the same mathematical result (NavierStokesMillenniumSolved)
 with fewer axioms and 14x fewer files. Phase 15 makes `SatisfiesNSPDE` transparent,
 reducing axiom count to 5 (7x fewer than reference). Remaining 5: 2 physical constants,
-BKM bridge, ħ=2ν identification, and Simon 1987 Aubin-Lions compactness.
+BKM bridge, ħ=2ν identification, and Simon/Nikitaeva Aubin-Lions compactness.
 
 ## Zero sorry, zero warnings.
 -/
