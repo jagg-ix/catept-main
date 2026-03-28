@@ -1,5 +1,6 @@
 import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
 import NavierStokesClean.Galerkin.VorticityLiminf
+import NavierStokesClean.Galerkin.CantorDiagonal
 
 /-!
 # Phase 17: Aubin-Lions Compactness — Mathlib-Backed Decomposition
@@ -59,28 +60,22 @@ theorem ae_subseq_of_eLpNorm_tendsto_restrict
   obtain ⟨φ, hMono, hae⟩ := hInMeasure.exists_seq_tendsto_ae
   exact ⟨φ, hMono, hae⟩
 
-/-! ## §2. Sub-axiom: Galerkin sequence has L²([0,T])-convergent subsequence -/
+/-! ## §2. Theorem: Galerkin sequence has L²([0,T])-convergent subsequence (Phase 20) -/
 
-/-- **Phase 17 sub-axiom: Galerkin sequences have L²-convergent subsequences.**
+/-- **Phase 20: galerkin_eLpNorm_subseq proved as a theorem (Cantor diagonal).**
 
     For any Galerkin sequence and limit trajectory (both NS solutions), there exists
     a subsequence φ such that `eLpNorm (traj_seq (φ n) - traj_lim) 2 volume[0,T] → 0`
     for each T > 0.
 
-    **Why smaller than `simon1987_ae_tendsto_from_galerkin`**:
-    - Conclusion is L² norm convergence (not a.e.) — measurably weaker.
-    - Output is a subsequence φ — the full sequence need not converge.
-    - The a.e. direction is a THEOREM (§1) from Mathlib, not an axiom.
+    **Phase 20**: proved from `galerkin_eLpNorm_per_T` (per-T extraction, strictly weaker)
+    via the Cantor diagonal in `CantorDiagonal.lean`.  No longer an axiom.
 
-    **NS content**: Aubin-Lions (1963) / Simon (1987) Thm 5:
-    energy bound ‖u_N‖_{L²H¹} ≤ C + time-derivative bound ‖∂_t u_N‖_{L²H⁻¹} ≤ D
-    → compact embedding H¹ ↪↪ L² (Rellich-Kondrachov)
-    → strong L²([0,T]) convergence of a subsequence.
-
+    **NS content**: Aubin-Lions (1963) / Simon (1987) Thm 5.
     **Nikitaeva (2025)**, arXiv:2507.13356v1, Lemma B.9 + App A.2.1.
 
-    **Epistemic: `.partiallyVerified`** -/
-axiom galerkin_eLpNorm_subseq
+    **Epistemic: proved from `galerkin_eLpNorm_per_T` (.partiallyVerified)** -/
+theorem galerkin_eLpNorm_subseq
     (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
     (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
     (hLim : SatisfiesNSPDE nsNu traj_lim) :
@@ -89,7 +84,8 @@ axiom galerkin_eLpNorm_subseq
         Tendsto
           (fun n => eLpNorm (fun t => traj_seq (φ n) t - traj_lim t) 2
                       (volume.restrict (Set.Ioc 0 T)))
-          atTop (nhds 0)
+          atTop (nhds 0) :=
+  galerkin_eLpNorm_subseq_from_per_T traj_seq traj_lim hConv hLim
 
 /-! ## §3. Theorem: a.e. subseq on [0,T] from (A) + (B) -/
 
