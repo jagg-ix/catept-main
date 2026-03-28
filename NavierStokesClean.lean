@@ -21,11 +21,16 @@ import NavierStokesClean.PhysLean.DivCurlIdentity
 
 -- Phase 4: Cameron-Popkov spectral gap (Route A)
 import NavierStokesClean.CameronPopkov.DomainParameters
+import NavierStokesClean.CameronPopkov.NativeSumCertificate
 import NavierStokesClean.CameronPopkov.SpectralGapCertificate
 
 -- Phase 5: Galerkin existence + vorticity liminf decompositions
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
+
+-- Phase 17+20: Aubin-Lions compactness decomposition (L² → a.e. via Mathlib)
+import NavierStokesClean.Galerkin.CantorDiagonal
+import NavierStokesClean.Galerkin.AubinLionsCompact
 
 -- Phase 6: Complete axiom audit
 import NavierStokesClean.Audit.AxiomAudit

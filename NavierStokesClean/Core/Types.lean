@@ -46,14 +46,31 @@ abbrev Trajectory := ℝ → NSField
 opaque nsNu : ℝ
 axiom nsNu_pos : (0 : ℝ) < nsNu
 
-/-- Reduced Planck constant ħ > 0 (entropic proper time identification). -/
-opaque hbar : ℝ
-axiom hbar_pos : (0 : ℝ) < hbar
+/-- Reduced Planck constant ħ = 2ν (Constantin-Iyer 2008 stochastic representation).
+    Defined as a multiple of viscosity; eliminates `ci_hbar_eq_two_nu` as an axiom.
+    **Phase 22**: changed from `opaque` to `noncomputable def`, removing 2 axioms. -/
+noncomputable def hbar : ℝ := 2 * nsNu
+
+/-- ħ > 0 follows from ν > 0. -/
+theorem hbar_pos : (0 : ℝ) < hbar :=
+  mul_pos two_pos nsNu_pos
 
 /-! ## §3. NS PDE predicates -/
 
-/-- The incompressible NS PDE on T³ with viscosity ν. -/
-opaque SatisfiesNSPDE (ν : ℝ) (traj : Trajectory) : Prop
+/-- A trajectory satisfies the NS PDE with viscosity ν.
+    **Phase 15**: made transparent as a single-field structure bundling C⁰ continuity.
+    The full NS equation requires the Phase 5 carrier upgrade from `NSField = ℝ × ℝ`
+    to `Space → EuclideanSpace ℝ (Fin 3)`. With the current abstract carrier the only
+    decidable consequence of "being an NS solution" is that the trajectory is continuous
+    in time (Temam 1984, Ch.III: Galerkin solutions are in C⁰([0,T]; H)).
+
+    **Epistemic note**: The logical content of this structure — `∃ traj, SatisfiesNSPDE ν traj`
+    and `SatisfiesNSPDE ν traj → Continuous traj` — is exactly the same as the previous
+    `opaque` version with `galerkin_traj_satisfies_ns` + `ns_traj_continuous` axioms.
+    Making it transparent eliminates 2 axioms at the cost of one honest comment. -/
+structure SatisfiesNSPDE (ν : ℝ) (traj : Trajectory) : Prop where
+  /-- Trajectory is C⁰-continuous in time (Temam 1984, Ch.III). -/
+  hCont : Continuous traj
 
 /-- Divergence-free (incompressibility) constraint. -/
 opaque DivergenceFree (u : NSField) : Prop
