@@ -28,6 +28,9 @@ import NavierStokesClean.CameronPopkov.SpectralGapCertificate
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
 
+-- Phase 17: Aubin-Lions compactness decomposition (L² → a.e. via Mathlib)
+import NavierStokesClean.Galerkin.AubinLionsCompact
+
 -- Phase 6: Complete axiom audit
 import NavierStokesClean.Audit.AxiomAudit
 

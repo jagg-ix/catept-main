@@ -85,13 +85,17 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 - `ns_traj_continuous` — **PROVED** (Phase 15: `h.hCont` from transparent `SatisfiesNSPDE`)
 - `ns_div_curl_zero`, `ns_vorticity_div_free`, `ns_curl_of_curl` — PhysLean
 - `fatou_bkm_from_vorticity_liminf`, `galerkin_bkm_limit_bounded`, `ml_stabilization_implies_precise_gap` — assembled
+- `ae_subseq_of_eLpNorm_tendsto_restrict` — **PROVED** (Phase 17: `tendstoInMeasure_of_tendsto_eLpNorm` + `exists_seq_tendsto_ae`, Mathlib)
+- `isGalerkinLimit_subseq_on_Ioc` — **PROVED** (Phase 17: §1 + `galerkin_eLpNorm_subseq`, restricted to [0,T])
 
-## Open targets (Phase 16+)
+## Open targets (Phase 17+)
 
-1. **`simon1987_ae_tendsto_from_galerkin`** (.partiallyVerified — Simon 1987 + Nikitaeva 2025, hardest remaining target):
-   Aubin-Lions compactness witness (Simon 1987 Thm 5; Nikitaeva 2025 Lemma B.9 and App A.2.1).
-   Supplies the Galerkin-limit a.e. convergence contract used to derive enstrophy liminf (`enstrophy_weakly_lsc_of_galerkin_limit`).
-   Likely requires: `MeasureTheory.tendsto_Lp_iff_of_tendsto` + Aubin-Lions compactness.
+1. **`galerkin_eLpNorm_subseq`** (.partiallyVerified — replaces `simon1987_ae_tendsto_from_galerkin`):
+   Existential Aubin-Lions L²([0,T]) convergence: given a Galerkin sequence, there exists a
+   subsequence φ and limit traj_lim such that `eLpNorm (traj_seq (φ n) - traj_lim) 2 vol[0,T] → 0`.
+   Smaller/more honest than the old axiom: the a.e. direction is now a THEOREM (Phase 17 §1).
+   Remaining gap: Cantor diagonal (iterativeφ/φ_diag, entropic-time Stages 232-247) to lift
+   from [0,T] to global `∀ᵐ t : ℝ` via `ae_of_forall_measure_lt_top_ae_restrict` (Mathlib).
 
 2. **`ci_hbar_eq_two_nu`** (physical modeling input — may be axiomatic by design):
    ħ = 2ν is the Constantin-Iyer 2008 stochastic representation; no Lean derivation known.
