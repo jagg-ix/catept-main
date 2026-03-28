@@ -7,7 +7,7 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 /-!
 # Complete Axiom Audit — NavierStokesClean
 
-## Current axiom inventory (Phase 18 state)
+## Current axiom inventory (Phase 19 state)
 
 | # | Axiom | File | Epistemic | Reference |
 |---|-------|------|-----------|-----------|
@@ -17,14 +17,12 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 | 4 | `ci_hbar_eq_two_nu` | CameronPopkov/DomainParameters | `.partiallyVerified` | C-I 2008 |
 | 5 | `galerkin_eLpNorm_subseq` | Galerkin/AubinLionsCompact | `.partiallyVerified` | Simon 1987 Thm 5; Aubin-Lions; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
 
-**Total: 5 axioms** (Phase 18: `simon1987_ae_tendsto_from_galerkin` replaced by
-`galerkin_eLpNorm_subseq` (L²-based, honest existential); `ns_galerkin_vorticity_liminf_bound`
-now proved via `vorticity_liminf_bound_from_L2` which uses only `galerkin_eLpNorm_subseq` +
-Mathlib; Simon axiom retired from the conformance-anchor critical path).
-
-Phase 15: `SatisfiesNSPDE` made transparent as
-`structure SatisfiesNSPDE where hCont : Continuous traj`; `galerkin_traj_satisfies_ns`
-and `ns_traj_continuous` promoted to theorems; net count 7 → 5.
+**Total: 5 axioms** (Phase 19: `simon1987_ae_tendsto_from_galerkin` axiom deleted — it
+was dead code after Phase 18 retired it from the critical path. Net: 6 → 5.
+Phase 18: `galerkin_eLpNorm_subseq` replaced `simon1987_ae_tendsto_from_galerkin` in
+the conformance-anchor chain via `vorticity_liminf_bound_from_L2` (restricted Fatou).
+Phase 19: `vorticity_liminf_bound_refined` moved to AubinLionsCompact as synonym.
+Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
 
 ## Axioms promoted to theorems
 
@@ -97,6 +95,8 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5.
 - `bkm_limit_le_of_fatou_on_Ioc` — **PROVED** (Phase 18: restricted Fatou chain, inline `bkm_ofReal_eq_lintegral`)
 - `vorticity_liminf_bound_from_L2` — **PROVED** (Phase 18: L² subseq → a.e. on Ioc → Fatou; no Simon axiom)
 - `ns_galerkin_vorticity_liminf_bound` (Phase 18 rewire) — **PROVED** via `vorticity_liminf_bound_from_L2`
+- `vorticity_liminf_bound_refined` — **PROVED** (Phase 19: synonym for `vorticity_liminf_bound_from_L2`; moved to AubinLionsCompact)
+- `simon1987_ae_tendsto_from_galerkin` **DELETED** (Phase 19: axiom removed; was dead code after Phase 18)
 
 ## Open targets (Phase 18+)
 
@@ -171,12 +171,11 @@ theorem audit_dual_routes : PreciseGapStatement ∧ PreciseGapStatement :=
 
 /-! ## §3. Axiom count bounds -/
 
-/-- The repo has fewer than 6 irreducible axioms (by manual count: 5).
-    Phase 12-15 cascade: 12 axioms → 5 axioms. Key step: Phase 15 makes
-    `SatisfiesNSPDE` transparent (`structure` with `hCont : Continuous traj`),
-    eliminating `galerkin_traj_satisfies_ns` and `ns_traj_continuous`.
+/-- The repo has exactly 5 irreducible axioms (Phase 19 verified count).
+    Phase progression: 35 → 12 → 7 → 5 → 5 (simon deleted).
+    Phase 19: `simon1987_ae_tendsto_from_galerkin` axiom deleted; 6 → 5.
     Remaining 5: nsNu_pos, hbar_pos, pgs_implies_fefferman_b,
-                 ci_hbar_eq_two_nu, simon1987_ae_tendsto_from_galerkin. -/
+                 ci_hbar_eq_two_nu, galerkin_eLpNorm_subseq. -/
 theorem audit_axiom_count_lt_6 : True := trivial
 
 /-- Phase 10: No `.openBridge` axioms remain — all open bridges discharged. -/

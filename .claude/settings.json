@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Read(//Users/macbookpro/.elan/toolchains/**)",
+      "Bash(echo 'searching mathlib cache...' find ~/.elan ~/.lake -name *.olean)",
+      "Bash(find .lake/packages -name ConvergenceInMeasure* -o -name AEMeasurable*)",
+      "Bash(find .lake/packages/mathlib -path */Function/L2* -o -path */Lp*)",
+      "Bash(grep \"\\\\.lean$\")",
+      "Bash(grep -r \"exists_seq_tendsto_ae\\\\|TendstoInMeasure\\\\|tendstoInMeasure\" .lake/packages/mathlib --include=*.lean -l)",
+      "Bash(grep -r \"ae_of_forall\\\\|ae_restrict.*Ioc\\\\|ae_iff.*iUnion\\\\|ae_of_ae_restrict\" .lake/packages/mathlib/Mathlib/MeasureTheory/ --include=*.lean -l)",
+      "Bash(grep -rn \"def.*canonicalPositiveRatEnumeration\\\\|theorem.*aubin_lions_core_compact_stage237\\\\|def.*aubin_lions_core_compact\" .lake/packages/mathlib/Mathlib/ .lake/packages/ --include=*.lean)",
+      "Bash(grep -rn \"theorem ae_of_forall_mem_Ioc\\\\|theorem.*ae.*Ioc\\\\|ae_restrict_iff\\\\|ae_of_ae_restrict_iUnion\\\\|eventually_atTop_restrict\" .lake/packages/mathlib/Mathlib/MeasureTheory/ --include=*.lean)",
+      "Bash(grep -rn \"theorem.*ae_iUnion\\\\|ae_restrict_union\\\\|measure_null_of_locally_null\\\\|ae_of_forall\" .lake/packages/mathlib/Mathlib/MeasureTheory/ --include=*.lean)",
+      "Bash(grep -rn \"diag\\\\|diagonal\\\\|exists_subseq.*ae\\\\|ae.*subseq\\\\|subsequence.*ae\" .lake/packages/mathlib/Mathlib/MeasureTheory/ --include=*.lean)",
+      "Bash(lake build:*)",
+      "Bash(grep -r ofReal_integral .lake/packages/mathlib --include=*.lean -l)",
+      "Bash(grep -r ofReal_integral_eq_lintegral .lake/packages/mathlib --include=*.lean -l)"
+    ]
+  }
+}

@@ -278,7 +278,28 @@ theorem vorticity_liminf_bound_from_L2
     (fun n => traj_seq (φ (ψ n))) traj_lim T M hT hM
     (fun N => hConv (φ (ψ N))) hLim hBKMN' hlsc
 
-/-! ## §5. Gap note: Cantor diagonal to global a.e. -/
+/-! ## §5. Phase 19: vorticity_liminf_bound_refined synonym -/
+
+/-- **Phase 19: vorticity_liminf_bound_refined — synonym for vorticity_liminf_bound_from_L2.**
+
+    This theorem was previously in `VorticityLiminf.lean` where it was proved via
+    `simon1987_ae_tendsto_from_galerkin` (global a.e., `.partiallyVerified`).
+
+    Phase 19 moves it here and re-proves it from the restricted Fatou chain (Phase 18),
+    which uses only `galerkin_eLpNorm_subseq` + Mathlib.
+    `simon1987_ae_tendsto_from_galerkin` is retired (axiom deleted).
+
+    Net: **6 axioms → 5** (simon removed). -/
+theorem vorticity_liminf_bound_refined
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory) (T M : ℝ)
+    (hT : 0 < T) (hM : 0 < M)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim)
+    (hBKMN : ∀ N, bkmVorticityIntegral (traj_seq N) T ≤ M) :
+    bkmVorticityIntegral traj_lim T ≤ M :=
+  vorticity_liminf_bound_from_L2 traj_seq traj_lim T M hT hM hConv hLim hBKMN
+
+/-! ## §6. Gap note: Cantor diagonal to global a.e. -/
 
 /-- **Phase 17 gap: Cantor diagonal lifting [0,T] → global `∀ᵐ t : ℝ`.**
 
