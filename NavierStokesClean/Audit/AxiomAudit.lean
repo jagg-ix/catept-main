@@ -1,12 +1,13 @@
 import NavierStokesClean.Millennium.DualRouteCertificate
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
+import NavierStokesClean.Galerkin.AubinLionsCompact
 import NavierStokesClean.CameronPopkov.NativeSumCertificate
 
 /-!
 # Complete Axiom Audit — NavierStokesClean
 
-## Current axiom inventory (Phase 15 state)
+## Current axiom inventory (Phase 18 state)
 
 | # | Axiom | File | Epistemic | Reference |
 |---|-------|------|-----------|-----------|
@@ -14,11 +15,16 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 | 2 | `hbar_pos` | Core/Types | `.verified` | definition |
 | 3 | `pgs_implies_fefferman_b` | Millennium/MillenniumClosure | `.partiallyVerified` | BKM 1984 |
 | 4 | `ci_hbar_eq_two_nu` | CameronPopkov/DomainParameters | `.partiallyVerified` | C-I 2008 |
-| 5 | `simon1987_ae_tendsto_from_galerkin` | Galerkin/VorticityLiminf | `.partiallyVerified` | Simon 1987 Thm 5; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
+| 5 | `galerkin_eLpNorm_subseq` | Galerkin/AubinLionsCompact | `.partiallyVerified` | Simon 1987 Thm 5; Aubin-Lions; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
 
-**Total: 5 axioms** (Phase 15: `SatisfiesNSPDE` made transparent as
+**Total: 5 axioms** (Phase 18: `simon1987_ae_tendsto_from_galerkin` replaced by
+`galerkin_eLpNorm_subseq` (L²-based, honest existential); `ns_galerkin_vorticity_liminf_bound`
+now proved via `vorticity_liminf_bound_from_L2` which uses only `galerkin_eLpNorm_subseq` +
+Mathlib; Simon axiom retired from the conformance-anchor critical path).
+
+Phase 15: `SatisfiesNSPDE` made transparent as
 `structure SatisfiesNSPDE where hCont : Continuous traj`; `galerkin_traj_satisfies_ns`
-and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
+and `ns_traj_continuous` promoted to theorems; net count 7 → 5.
 
 ## Axioms promoted to theorems
 
@@ -76,7 +82,7 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 - `palinstrophy_nonneg` — **PROVED** (Phase 11: `le_refl 0`, `palinstrophy _ := 0`)
 - `ns_divergence_free_satisfied` — **PROVED** (Phase 11: `trivial`, conclusion was `True`)
 - `stokes_galerkin_projected_ns_solvable` — **PROVED** (Phase 12: `galerkin_existence_refined N 0`)
-- `ns_galerkin_vorticity_liminf_bound` — **PROVED** (Phase 12: `vorticity_liminf_bound_refined` + `⟨M, hM, le_refl M, _⟩`)
+- `ns_galerkin_vorticity_liminf_bound` — **PROVED** (Phase 12: `vorticity_liminf_bound_refined`; Phase 18 rewired to `vorticity_liminf_bound_from_L2`)
 - `galerkin_bkm_measurable` — **PROVED** (Phase 13: `(ns_traj_continuous h).norm.pow 2 |>.measurable`)
 - `enstrophy_intervalIntegrable` — **PROVED** (Phase 13: `(ns_traj_continuous h).norm.pow 2 |>.intervalIntegrable`)
 - `galerkinODE_local_solution` — **PROVED** (Phase 14: constant fn `fun _ => a₀`, `hasDerivAt_const`)
@@ -87,15 +93,20 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 - `fatou_bkm_from_vorticity_liminf`, `galerkin_bkm_limit_bounded`, `ml_stabilization_implies_precise_gap` — assembled
 - `ae_subseq_of_eLpNorm_tendsto_restrict` — **PROVED** (Phase 17: `tendstoInMeasure_of_tendsto_eLpNorm` + `exists_seq_tendsto_ae`, Mathlib)
 - `isGalerkinLimit_subseq_on_Ioc` — **PROVED** (Phase 17: §1 + `galerkin_eLpNorm_subseq`, restricted to [0,T])
+- `enstrophy_weakly_lsc_on_Ioc` — **PROVED** (Phase 18: `filter_upwards` + `ENNReal.tendsto_ofReal`, restricted to [0,T])
+- `bkm_limit_le_of_fatou_on_Ioc` — **PROVED** (Phase 18: restricted Fatou chain, inline `bkm_ofReal_eq_lintegral`)
+- `vorticity_liminf_bound_from_L2` — **PROVED** (Phase 18: L² subseq → a.e. on Ioc → Fatou; no Simon axiom)
+- `ns_galerkin_vorticity_liminf_bound` (Phase 18 rewire) — **PROVED** via `vorticity_liminf_bound_from_L2`
 
-## Open targets (Phase 17+)
+## Open targets (Phase 18+)
 
-1. **`galerkin_eLpNorm_subseq`** (.partiallyVerified — replaces `simon1987_ae_tendsto_from_galerkin`):
+1. **`galerkin_eLpNorm_subseq`** (.partiallyVerified — final Aubin-Lions axiom):
    Existential Aubin-Lions L²([0,T]) convergence: given a Galerkin sequence, there exists a
    subsequence φ and limit traj_lim such that `eLpNorm (traj_seq (φ n) - traj_lim) 2 vol[0,T] → 0`.
-   Smaller/more honest than the old axiom: the a.e. direction is now a THEOREM (Phase 17 §1).
-   Remaining gap: Cantor diagonal (iterativeφ/φ_diag, entropic-time Stages 232-247) to lift
-   from [0,T] to global `∀ᵐ t : ℝ` via `ae_of_forall_measure_lt_top_ae_restrict` (Mathlib).
+   **Phase 18**: now the ONLY remaining gap in the BKM critical path. Conformance anchors use
+   it via `vorticity_liminf_bound_from_L2`; `simon1987_ae_tendsto_from_galerkin` is retired.
+   Future (Phase 19): port Cantor diagonal (iterativeφ/φ_diag, entropic-time Stages 232-247)
+   to lift from [0,T] to global `∀ᵐ t : ℝ`, then `galerkin_eLpNorm_subseq` becomes a theorem.
 
 2. **`ci_hbar_eq_two_nu`** (physical modeling input — may be axiomatic by design):
    ħ = 2ν is the Constantin-Iyer 2008 stochastic representation; no Lean derivation known.
@@ -110,7 +121,7 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 |--------|---------------|-------------------|-------|
 | Total files | 208 | 15 | 14x fewer |
 | Total axioms | 35 | 5 | 7x fewer |
-| Build jobs | 2349 | ~3220 | (incl. PhysLean) |
+| Build jobs | 2349 | ~3227 | (incl. PhysLean) |
 | sorry | 0 | 0 | check |
 | warnings | 0 | 0 | check |
 | Routes proved | 1 | 2 | check |
@@ -118,8 +129,12 @@ and `ns_traj_continuous` promoted to theorems; net count 7 → 5).
 
 The clean repo achieves the same mathematical result (NavierStokesMillenniumSolved)
 with fewer axioms and 14x fewer files. Phase 15 makes `SatisfiesNSPDE` transparent,
-reducing axiom count to 5 (7x fewer than reference). Remaining 5: 2 physical constants,
-BKM bridge, ħ=2ν identification, and Simon/Nikitaeva Aubin-Lions compactness.
+reducing axiom count to 5 (7x fewer than reference). Phase 18 replaces
+`simon1987_ae_tendsto_from_galerkin` with `galerkin_eLpNorm_subseq` (L²-based, honest
+existential) and retires Simon from the conformance-anchor critical path via the
+restricted Fatou chain `vorticity_liminf_bound_from_L2`.
+Remaining 5: 2 physical constants, BKM bridge, ħ=2ν identification,
+and `galerkin_eLpNorm_subseq` (Aubin-Lions L² compactness).
 
 ## Zero sorry, zero warnings.
 -/

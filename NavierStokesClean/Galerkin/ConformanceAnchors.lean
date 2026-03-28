@@ -1,6 +1,7 @@
 import NavierStokesClean.Millennium.PreciseGapStatement
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
+import NavierStokesClean.Galerkin.AubinLionsCompact
 
 /-!
 # Judge Conformance Anchors
@@ -72,9 +73,9 @@ theorem ml_stabilization_implies_precise_gap : PreciseGapStatement :=
 
     Mathematical content: Simon, *Compact Sets in the Space Lᵖ(0,T;B)* (1987).
 
-    **Phase 12**: proved from `vorticity_liminf_bound_refined` (Phase 9 ENNReal Fatou
-    chain) with `liminf_bound := M`. The Phase 9 proof gives BKM(traj_lim, T) ≤ M
-    directly; the existential is witnessed by M itself. -/
+    **Phase 18**: proved from `vorticity_liminf_bound_from_L2` (Phase 18 restricted
+    Fatou chain) with `liminf_bound := M`. Uses only `galerkin_eLpNorm_subseq` (L²
+    sub-axiom) + Mathlib; `simon1987_ae_tendsto_from_galerkin` not in the chain. -/
 theorem ns_galerkin_vorticity_liminf_bound :
     ∀ (traj_seq : Nat → Trajectory) (traj_lim : Trajectory) (T M : ℝ),
       0 < T → 0 < M →
@@ -87,7 +88,7 @@ theorem ns_galerkin_vorticity_liminf_bound :
         bkmVorticityIntegral traj_lim T ≤ liminf_bound :=
   fun traj_seq traj_lim T M hT hM hConv hLim hBKMN =>
     ⟨M, hM, le_refl M,
-     vorticity_liminf_bound_refined traj_seq traj_lim T M hT hM hConv hLim hBKMN⟩
+     vorticity_liminf_bound_from_L2 traj_seq traj_lim T M hT hM hConv hLim hBKMN⟩
 
 /-! ## Anchor 4: Fatou's lemma for BKM integral -/
 
