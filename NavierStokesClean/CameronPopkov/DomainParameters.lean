@@ -68,9 +68,9 @@ def unitTorusT3 : PeriodicDomainT3 := {}
     involves an expectation over Brownian paths with diffusivity ν. The natural
     quantum of circulation (action per unit mass) is ħ = 2ν.
 
-    **Epistemic**: `.partiallyVerified` — published result (C-I 2008);
-    the bridge to our abstract `hbar` is the identification of action units. -/
-axiom ci_hbar_eq_two_nu : hbar = 2 * nsNu
+    **Phase 22**: promoted to theorem — `hbar` is now `noncomputable def hbar := 2 * nsNu`
+    in `Core/Types.lean`, so this holds by `rfl`. Axiom count 5 → 3. -/
+theorem ci_hbar_eq_two_nu : hbar = 2 * nsNu := rfl
 
 /-! ## §3. Spectral lower bounds (Rat-valued, conservative) -/
 

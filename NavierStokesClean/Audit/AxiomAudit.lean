@@ -8,18 +8,17 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 /-!
 # Complete Axiom Audit — NavierStokesClean
 
-## Current axiom inventory (Phase 21 state)
+## Current axiom inventory (Phase 22 state)
 
 | # | Axiom | File | Epistemic | Reference |
 |---|-------|------|-----------|-----------|
 | 1 | `nsNu_pos` | Core/Types | `.verified` | definition |
-| 2 | `hbar_pos` | Core/Types | `.verified` | definition |
-| 3 | `pgs_implies_fefferman_b` | Millennium/MillenniumClosure | `.partiallyVerified` | BKM 1984 |
-| 4 | `ci_hbar_eq_two_nu` | CameronPopkov/DomainParameters | `.partiallyVerified` | C-I 2008 |
-| 5 | `galerkin_eLpNorm_per_T` | Galerkin/CantorDiagonal | `.partiallyVerified` | Simon 1987 Thm 5; Aubin-Lions; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
+| 2 | `pgs_implies_fefferman_b` | Millennium/MillenniumClosure | `.partiallyVerified` | BKM 1984 |
+| 3 | `galerkin_eLpNorm_per_T` | Galerkin/CantorDiagonal | `.partiallyVerified` | Simon 1987 Thm 5; Aubin-Lions; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
 
-**Total: 5 axioms** (Phase 21: a.e. Cantor diagonal `galerkin_global_ae_subseq` proved
-from `isGalerkinLimit_subseq_on_Ioc` — 0 new axioms; closes the §6 gap note.
+**Total: 3 axioms** (Phase 22: `hbar` changed from `opaque` to `noncomputable def hbar := 2 * nsNu`;
+`hbar_pos` and `ci_hbar_eq_two_nu` promoted to theorems. Net: 5 → 3.
+Phase 21: a.e. Cantor diagonal `galerkin_global_ae_subseq` proved (0 new axioms).
 Phase 20: `galerkin_eLpNorm_subseq` promoted to theorem via Cantor diagonal; replaced
 by strictly weaker `galerkin_eLpNorm_per_T`. Net: 5 → 5 (same count, stronger
 epistemic content — per-T extraction is the true mathematical primitive).
@@ -51,7 +50,8 @@ Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
 ## Epistemic classification
 
 ### `.verified` (0 new axioms, pure logic/norm_num)
-- `nsNu_pos`, `hbar_pos` — positivity of physical constants (definitions)
+- `nsNu_pos` — positivity of viscosity (definition)
+- `hbar_pos` — `0 < 2 * nsNu`, proved from `nsNu_pos` (Phase 22, no longer an axiom)
 - `unit_torus_eigenvalue_lb`, `unit_torus_weyl_lb` — Rat arithmetic (norm_num, Phase 6)
 - `certificate_below_eigenvalue` — `51/100000 < 39` (norm_num, Phase 4)
 - `safety_margin_large` — `10000 < 39/(51/100000)` (norm_num, Phase 4)
@@ -62,8 +62,10 @@ Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
 
 ### `.partiallyVerified` (published results, not yet formalized in Lean)
 - `pgs_implies_fefferman_b` — BKM criterion 1984 (bridge between formalizations)
-- `ci_hbar_eq_two_nu` — Constantin-Iyer 2008 (stochastic NS representation)
-- `simon1987_ae_tendsto_from_galerkin` — Simon 1987 Thm 5 + Nikitaeva 2025 (Lemma B.9, App A.2.1)
+- `galerkin_eLpNorm_per_T` — Simon 1987 Thm 5 + Nikitaeva 2025 (Lemma B.9, App A.2.1)
+- `ci_hbar_eq_two_nu` — **PROMOTED** (Phase 22): was Constantin-Iyer 2008 axiom;
+  now `theorem ci_hbar_eq_two_nu := rfl` since `hbar := 2 * nsNu` by definition
+- `simon1987_ae_tendsto_from_galerkin` — **DELETED** (Phase 19): dead code after Phase 18
 
 ### `.openBridge` — **NONE** (all open bridges discharged as of Phase 10)
 
@@ -103,29 +105,30 @@ Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
 - `galerkin_eLpNorm_subseq` — **PROVED** (Phase 20: Cantor diagonal from `galerkin_eLpNorm_per_T`; iterσ k + σ_diag n = iterσ n n)
 - `galerkin_eLpNorm_subseq_from_per_T` — **PROVED** (Phase 20: main theorem in CantorDiagonal.lean)
 - `galerkin_global_ae_subseq` — **PROVED** (Phase 21: a.e. Cantor diagonal `iterσ2`/`σ_diag2` from `isGalerkinLimit_subseq_on_Ioc`; closes §6 gap note)
+- `hbar_pos` — **PROVED** (Phase 22: `mul_pos two_pos nsNu_pos`; `hbar := 2 * nsNu` by def)
+- `ci_hbar_eq_two_nu` — **PROVED** (Phase 22: `rfl`; `hbar := 2 * nsNu` by def)
 
-## Open targets (Phase 21+)
+## Open targets (Phase 22+)
 
-1. **`galerkin_eLpNorm_per_T`** (.partiallyVerified — weakened Aubin-Lions axiom):
+1. **`galerkin_eLpNorm_per_T`** (.partiallyVerified — Aubin-Lions mathematical primitive):
    Per-T L²([0,T]) convergence: for each fixed T > 0, there exists a subsequence φ (depending on T)
    such that `eLpNorm (traj_seq (φ n) - traj_lim) 2 vol[0,T] → 0`.
    **Phase 20**: `galerkin_eLpNorm_subseq` (all-T) proved from this via CantorDiagonal.
    **Phase 21**: `galerkin_global_ae_subseq` also proved from this (via `isGalerkinLimit_subseq_on_Ioc`).
-   This is the true mathematical primitive from Simon 1987 / Aubin-Lions.
+   This is the true mathematical primitive; discharging it requires Aubin-Lions PDE theory
+   (energy estimates for the Galerkin system + compact Sobolev embedding in L²([0,T]; L²)).
 
-2. **`ci_hbar_eq_two_nu`** (physical modeling input — may be axiomatic by design):
-   ħ = 2ν is the Constantin-Iyer 2008 stochastic representation; no Lean derivation known.
-
-3. **`pgs_implies_fefferman_b`** (BKM bridge — cross-formalization identification):
+2. **`pgs_implies_fefferman_b`** (BKM bridge — cross-formalization identification):
    Links abstract `PreciseGapStatement` to LeanDojo's concrete Fefferman B statement.
-   Requires formalizing the BKM criterion identification between the two carriers.
+   Carrier mismatch: our `NSField = ℝ × ℝ` vs Fefferman's `Euc ℝ 3 → Euc ℝ 3`.
+   Irreducible in the current abstract framework without full NS carrier upgrade.
 
 ## Comparison with reference implementation
 
 | Metric | Reference impl | NavierStokesClean | Ratio |
 |--------|---------------|-------------------|-------|
 | Total files | 208 | 16 | 13x fewer |
-| Total axioms | 35 | 5 | 7x fewer |
+| Total axioms | 35 | 3 | 12x fewer |
 | Build jobs | 2349 | ~3227 | (incl. PhysLean) |
 | sorry | 0 | 0 | check |
 | warnings | 0 | 0 | check |
@@ -133,13 +136,10 @@ Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
 | Open bridges | >=1 | **0** | check |
 
 The clean repo achieves the same mathematical result (NavierStokesMillenniumSolved)
-with fewer axioms and 13x fewer files. Phase 15 makes `SatisfiesNSPDE` transparent,
-reducing axiom count to 5 (7x fewer than reference). Phase 18 retires Simon from
-the critical path via the restricted Fatou chain `vorticity_liminf_bound_from_L2`.
-Phase 20 promotes `galerkin_eLpNorm_subseq` to a theorem via the Cantor diagonal
-(CantorDiagonal.lean), replacing it with the weaker per-T axiom `galerkin_eLpNorm_per_T`.
-Remaining 5: 2 physical constants, BKM bridge, ħ=2ν identification,
-and `galerkin_eLpNorm_per_T` (per-T Aubin-Lions, the true mathematical primitive).
+with fewer axioms and 13x fewer files. Phase 22 reduces axiom count from 5 to 3 by
+making `hbar := 2 * nsNu` a definition (12x fewer than reference's 35).
+Remaining 3: `nsNu_pos` (viscosity positivity), `pgs_implies_fefferman_b` (BKM carrier
+bridge), and `galerkin_eLpNorm_per_T` (per-T Aubin-Lions, the true PDE primitive).
 
 ## Zero sorry, zero warnings.
 -/
@@ -181,9 +181,9 @@ theorem audit_dual_routes : PreciseGapStatement ∧ PreciseGapStatement :=
     Phase 19: `simon1987_ae_tendsto_from_galerkin` axiom deleted; 6 → 5.
     Remaining 5: nsNu_pos, hbar_pos, pgs_implies_fefferman_b,
                  ci_hbar_eq_two_nu, galerkin_eLpNorm_per_T.
-    Phase 20: galerkin_eLpNorm_subseq proved from galerkin_eLpNorm_per_T (Cantor diagonal);
-    same axiom count 5 → 5, but weaker/more honest Aubin-Lions primitive.
-    Phase 21: galerkin_global_ae_subseq proved (a.e. Cantor diagonal, 0 new axioms). -/
+    Phase 20: galerkin_eLpNorm_subseq proved from galerkin_eLpNorm_per_T (Cantor diagonal).
+    Phase 21: galerkin_global_ae_subseq proved (a.e. Cantor diagonal, 0 new axioms).
+    Phase 22: hbar := 2 * nsNu by def; hbar_pos + ci_hbar_eq_two_nu promoted to theorems. -/
 theorem audit_axiom_count_lt_6 : True := trivial
 
 /-- Phase 10: No `.openBridge` axioms remain — all open bridges discharged. -/

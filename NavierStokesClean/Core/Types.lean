@@ -46,9 +46,14 @@ abbrev Trajectory := ℝ → NSField
 opaque nsNu : ℝ
 axiom nsNu_pos : (0 : ℝ) < nsNu
 
-/-- Reduced Planck constant ħ > 0 (entropic proper time identification). -/
-opaque hbar : ℝ
-axiom hbar_pos : (0 : ℝ) < hbar
+/-- Reduced Planck constant ħ = 2ν (Constantin-Iyer 2008 stochastic representation).
+    Defined as a multiple of viscosity; eliminates `ci_hbar_eq_two_nu` as an axiom.
+    **Phase 22**: changed from `opaque` to `noncomputable def`, removing 2 axioms. -/
+noncomputable def hbar : ℝ := 2 * nsNu
+
+/-- ħ > 0 follows from ν > 0. -/
+theorem hbar_pos : (0 : ℝ) < hbar :=
+  mul_pos two_pos nsNu_pos
 
 /-! ## §3. NS PDE predicates -/
 
