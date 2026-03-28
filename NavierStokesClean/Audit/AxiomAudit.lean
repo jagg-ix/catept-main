@@ -8,7 +8,7 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 /-!
 # Complete Axiom Audit — NavierStokesClean
 
-## Current axiom inventory (Phase 20 state)
+## Current axiom inventory (Phase 21 state)
 
 | # | Axiom | File | Epistemic | Reference |
 |---|-------|------|-----------|-----------|
@@ -18,9 +18,11 @@ import NavierStokesClean.CameronPopkov.NativeSumCertificate
 | 4 | `ci_hbar_eq_two_nu` | CameronPopkov/DomainParameters | `.partiallyVerified` | C-I 2008 |
 | 5 | `galerkin_eLpNorm_per_T` | Galerkin/CantorDiagonal | `.partiallyVerified` | Simon 1987 Thm 5; Aubin-Lions; Nikitaeva 2025 Lemma B.9 + App A.2.1 |
 
-**Total: 5 axioms** (Phase 20: `galerkin_eLpNorm_subseq` promoted to theorem via Cantor
-diagonal; replaced by strictly weaker `galerkin_eLpNorm_per_T`. Net: 5 → 5 (same
-count, stronger epistemic content — per-T extraction is the true mathematical primitive).
+**Total: 5 axioms** (Phase 21: a.e. Cantor diagonal `galerkin_global_ae_subseq` proved
+from `isGalerkinLimit_subseq_on_Ioc` — 0 new axioms; closes the §6 gap note.
+Phase 20: `galerkin_eLpNorm_subseq` promoted to theorem via Cantor diagonal; replaced
+by strictly weaker `galerkin_eLpNorm_per_T`. Net: 5 → 5 (same count, stronger
+epistemic content — per-T extraction is the true mathematical primitive).
 Phase 19: `simon1987_ae_tendsto_from_galerkin` axiom deleted; 6 → 5.
 Phase 18: restricted Fatou chain retires Simon from the critical path.
 Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
@@ -100,14 +102,15 @@ Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
 - `simon1987_ae_tendsto_from_galerkin` **DELETED** (Phase 19: axiom removed; was dead code after Phase 18)
 - `galerkin_eLpNorm_subseq` — **PROVED** (Phase 20: Cantor diagonal from `galerkin_eLpNorm_per_T`; iterσ k + σ_diag n = iterσ n n)
 - `galerkin_eLpNorm_subseq_from_per_T` — **PROVED** (Phase 20: main theorem in CantorDiagonal.lean)
+- `galerkin_global_ae_subseq` — **PROVED** (Phase 21: a.e. Cantor diagonal `iterσ2`/`σ_diag2` from `isGalerkinLimit_subseq_on_Ioc`; closes §6 gap note)
 
-## Open targets (Phase 18+)
+## Open targets (Phase 21+)
 
 1. **`galerkin_eLpNorm_per_T`** (.partiallyVerified — weakened Aubin-Lions axiom):
    Per-T L²([0,T]) convergence: for each fixed T > 0, there exists a subsequence φ (depending on T)
    such that `eLpNorm (traj_seq (φ n) - traj_lim) 2 vol[0,T] → 0`.
-   **Phase 20**: `galerkin_eLpNorm_subseq` (all-T) is now a theorem proved from this weaker form
-   via the Cantor diagonal (CantorDiagonal.lean: iterσ k, σ_diag n = iterσ n n).
+   **Phase 20**: `galerkin_eLpNorm_subseq` (all-T) proved from this via CantorDiagonal.
+   **Phase 21**: `galerkin_global_ae_subseq` also proved from this (via `isGalerkinLimit_subseq_on_Ioc`).
    This is the true mathematical primitive from Simon 1987 / Aubin-Lions.
 
 2. **`ci_hbar_eq_two_nu`** (physical modeling input — may be axiomatic by design):
@@ -179,7 +182,8 @@ theorem audit_dual_routes : PreciseGapStatement ∧ PreciseGapStatement :=
     Remaining 5: nsNu_pos, hbar_pos, pgs_implies_fefferman_b,
                  ci_hbar_eq_two_nu, galerkin_eLpNorm_per_T.
     Phase 20: galerkin_eLpNorm_subseq proved from galerkin_eLpNorm_per_T (Cantor diagonal);
-    same axiom count 5 → 5, but weaker/more honest Aubin-Lions primitive. -/
+    same axiom count 5 → 5, but weaker/more honest Aubin-Lions primitive.
+    Phase 21: galerkin_global_ae_subseq proved (a.e. Cantor diagonal, 0 new axioms). -/
 theorem audit_axiom_count_lt_6 : True := trivial
 
 /-- Phase 10: No `.openBridge` axioms remain — all open bridges discharged. -/

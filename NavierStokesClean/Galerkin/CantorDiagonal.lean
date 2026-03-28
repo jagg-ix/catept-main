@@ -98,7 +98,7 @@ private theorem iterσ_succ
 
 /-! ## §4. Monotonicity and growth -/
 
-private theorem nat_le_of_strictMono_nat {f : ℕ → ℕ} (hf : StrictMono f) (n : ℕ) :
+theorem nat_le_of_strictMono_nat {f : ℕ → ℕ} (hf : StrictMono f) (n : ℕ) :
     n ≤ f n := by
   induction n with
   | zero => exact Nat.zero_le _

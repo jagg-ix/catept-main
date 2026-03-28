@@ -295,35 +295,260 @@ theorem vorticity_liminf_bound_refined
     bkmVorticityIntegral traj_lim T ≤ M :=
   vorticity_liminf_bound_from_L2 traj_seq traj_lim T M hT hM hConv hLim hBKMN
 
-/-! ## §6. Gap note: Cantor diagonal to global a.e. -/
+/-! ## §6. Gap note: Cantor diagonal to global a.e. (RESOLVED Phase 21) -/
 
-/-- **Phase 17 gap: Cantor diagonal lifting [0,T] → global `∀ᵐ t : ℝ`.**
+/-- **Phase 21: gap resolved — a.e. Cantor diagonal proved in §7 below.**
 
-    `isGalerkinLimit_subseq_on_Ioc` gives a (possibly different) subsequence for each T.
-    A single subsequence valid for ALL T requires the Cantor diagonal:
+    Phase 17 identified the gap: `isGalerkinLimit_subseq_on_Ioc` gives a different
+    subsequence for each T; a single φ valid for all T required the Cantor diagonal.
 
-      iterativeφ k  := subsequence refined at [0, k+1]  (nested Rellich extractions)
-      φ_diag n      := iterativeφ n n                   (diagonal)
-
-    The diagonal satisfies `StrictMono φ_diag` and `φ_diag` eventually lands in the
-    [0,k]-subsequence for each k.
-
-    **Mathlib tool for the final lift**:
-    `ae_of_forall_measure_lt_top_ae_restrict` (`Mathlib.MeasureTheory.Measure.Typeclasses.SFinite`):
-      [σ-finite μ] ∀ s measurable, μ s < ∞ → ∀ᵐ x ∂μ.restrict s, P x
-      ⟹  ∀ᵐ x ∂μ, P x
-
-    Once the diagonal is implemented, `simon1987_ae_tendsto_from_galerkin` follows as a theorem
-    from `galerkin_eLpNorm_subseq` alone (0 additional axioms).
-
-    **Reference**: entropic-time repo, `AubinLionsMathlib.lean`, Stages 232-247:
-      `iterativeφ`, `rellichDataFull`, `φ_diag`, `φ_diag_strictMono`,
-      `φ_diag_converges`, `aubin_lions_core_compact_from_init_bound`. -/
+    Phase 21 closes this: `galerkin_global_ae_subseq` (§7) builds `iterσ2`/`σ_diag2`
+    (the a.e.-level Cantor diagonal) from `isGalerkinLimit_subseq_on_Ioc` iteratively,
+    proving a single StrictMono subsequence φ such that for every T > 0,
+    `traj_seq (φ n) t → traj_lim t` a.e. on [0,T].  0 new axioms. -/
 def phase17GapNote : String :=
-  "Phase 17: ae_subseq_of_eLpNorm_tendsto_restrict PROVED (Mathlib). " ++
-  "galerkin_eLpNorm_subseq AXIOM (replaces simon1987_ae_tendsto_from_galerkin). " ++
-  "isGalerkinLimit_subseq_on_Ioc PROVED (combines both for fixed T). " ++
-  "Remaining gap: Cantor diagonal (iterativeφ/φ_diag pattern, " ++
-  "entropic-time Stages 232-247) to lift from [0,T] to global ∀ᵐ t : ℝ."
+  "Phase 21: RESOLVED. galerkin_global_ae_subseq proved (a.e. Cantor diagonal). " ++
+  "Single StrictMono φ with a.e. convergence on [0,T] for every T > 0. " ++
+  "0 new axioms — uses galerkin_eLpNorm_per_T (via isGalerkinLimit_subseq_on_Ioc) + Mathlib."
+
+/-! ## §7. Phase 21: A.e. Cantor diagonal — single φ for all T -/
+
+/-- Iterative nested a.e.-convergent subsequences (a.e. analogue of `iterσ` in CantorDiagonal).
+
+    `iterσ2 k` is the composition of (k+1) a.e. extractions via
+    `isGalerkinLimit_subseq_on_Ioc`:
+    - `iterσ2 0` = a.e.-convergent subsequence on [0,1]
+    - `iterσ2 (k+1)` = `iterσ2 k` ∘ (new a.e. extraction for `traj_seq ∘ iterσ2 k` on [0,k+2])
+
+    Invariant: `traj_seq ∘ iterσ2 k` converges a.e. on [0, k+1] (proved in `iterσ2_ae_self`). -/
+private noncomputable def iterσ2
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) :
+    ℕ → (ℕ → ℕ) :=
+  Nat.rec
+    (Classical.choose
+      (isGalerkinLimit_subseq_on_Ioc traj_seq traj_lim hConv hLim 1 one_pos))
+    (fun k σk =>
+      σk ∘ Classical.choose
+        (isGalerkinLimit_subseq_on_Ioc (fun N => traj_seq (σk N)) traj_lim
+          (fun N => hConv (σk N)) hLim (↑(k + 2))
+          (by exact_mod_cast Nat.succ_pos (k + 1))))
+
+private theorem iterσ2_zero
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) :
+    iterσ2 traj_seq traj_lim hConv hLim 0 =
+    Classical.choose
+      (isGalerkinLimit_subseq_on_Ioc traj_seq traj_lim hConv hLim 1 one_pos) := rfl
+
+private theorem iterσ2_succ
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) (k : ℕ) :
+    iterσ2 traj_seq traj_lim hConv hLim (k + 1) =
+    iterσ2 traj_seq traj_lim hConv hLim k ∘
+    Classical.choose
+      (isGalerkinLimit_subseq_on_Ioc
+        (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k N)) traj_lim
+        (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim k N)) hLim
+        (↑(k + 2)) (by exact_mod_cast Nat.succ_pos (k + 1))) := rfl
+
+private theorem iterσ2_strictMono
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) (k : ℕ) :
+    StrictMono (iterσ2 traj_seq traj_lim hConv hLim k) := by
+  induction k with
+  | zero =>
+    rw [iterσ2_zero]
+    exact (Classical.choose_spec
+      (isGalerkinLimit_subseq_on_Ioc traj_seq traj_lim hConv hLim 1 one_pos)).1
+  | succ k ih =>
+    rw [iterσ2_succ]
+    exact ih.comp (Classical.choose_spec
+      (isGalerkinLimit_subseq_on_Ioc
+        (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k N)) traj_lim
+        (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim k N)) hLim
+        (↑(k + 2)) (by exact_mod_cast Nat.succ_pos (k + 1)))).1
+
+/-- Convergence invariant: `traj_seq ∘ iterσ2 k` converges a.e. on [0, k+1].
+
+    Proof by induction:
+    - k=0: direct from per-[0,1] extraction.
+    - k+1: the extraction at step k+1 was applied to `traj_seq ∘ iterσ2 k` at T=k+2,
+            so `choose_spec` gives a.e. convergence on [0, k+2] = [0, (k+1)+1]. -/
+private theorem iterσ2_ae_self
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) (k : ℕ) :
+    ∀ᵐ t ∂(volume.restrict (Set.Ioc 0 (↑(k + 1)))),
+      Tendsto (fun n => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k n) t)
+        atTop (nhds (traj_lim t)) := by
+  induction k with
+  | zero =>
+    simp only [iterσ2_zero, Nat.zero_add, Nat.cast_one]
+    exact (Classical.choose_spec
+      (isGalerkinLimit_subseq_on_Ioc traj_seq traj_lim hConv hLim 1 one_pos)).2
+  | succ k _ih =>
+    simp only [iterσ2_succ, Function.comp_apply]
+    have key :=
+      (Classical.choose_spec
+        (isGalerkinLimit_subseq_on_Ioc
+          (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k N)) traj_lim
+          (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim k N)) hLim
+          (↑(k + 2)) (by exact_mod_cast Nat.succ_pos (k + 1)))).2
+    convert key using 2
+
+/-- For j ≤ k, every value of `iterσ2 k` lies in the range of `iterσ2 j` with a larger index.
+
+    Proof mirrors `iterσ_refines_point` in CantorDiagonal, with
+    `isGalerkinLimit_subseq_on_Ioc` in place of `galerkin_eLpNorm_per_T`. -/
+private theorem iterσ2_refines_point
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) (j : ℕ) :
+    ∀ k, j ≤ k → ∀ p, ∃ q, p ≤ q ∧
+      iterσ2 traj_seq traj_lim hConv hLim k p =
+      iterσ2 traj_seq traj_lim hConv hLim j q := by
+  intro k hjk
+  induction k with
+  | zero =>
+    obtain rfl := Nat.le_zero.mp hjk
+    intro p; exact ⟨p, le_rfl, rfl⟩
+  | succ k' ih =>
+    intro p
+    rcases Nat.eq_or_lt_of_le hjk with rfl | hlt
+    · exact ⟨p, le_rfl, rfl⟩
+    · have hjk' : j ≤ k' := Nat.lt_succ_iff.mp hlt
+      have hψ_SM : StrictMono (Classical.choose
+          (isGalerkinLimit_subseq_on_Ioc
+            (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k' N)) traj_lim
+            (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim k' N)) hLim
+            (↑(k' + 2)) (by exact_mod_cast Nat.succ_pos (k' + 1)))) :=
+        (Classical.choose_spec
+          (isGalerkinLimit_subseq_on_Ioc
+            (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k' N)) traj_lim
+            (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim k' N)) hLim
+            (↑(k' + 2)) (by exact_mod_cast Nat.succ_pos (k' + 1)))).1
+      obtain ⟨q, hge_q, hq_eq⟩ := ih hjk'
+        (Classical.choose
+          (isGalerkinLimit_subseq_on_Ioc
+            (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim k' N)) traj_lim
+            (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim k' N)) hLim
+            (↑(k' + 2)) (by exact_mod_cast Nat.succ_pos (k' + 1))) p)
+      exact ⟨q, (nat_le_of_strictMono_nat hψ_SM p).trans hge_q, hq_eq⟩
+
+/-- The a.e. Cantor diagonal: `σ_diag2 n = iterσ2 n n`. -/
+private noncomputable def σ_diag2
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) : ℕ → ℕ :=
+  fun n => iterσ2 traj_seq traj_lim hConv hLim n n
+
+private theorem σ_diag2_strictMono
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) :
+    StrictMono (σ_diag2 traj_seq traj_lim hConv hLim) := by
+  apply strictMono_nat_of_lt_succ
+  intro n
+  show iterσ2 traj_seq traj_lim hConv hLim n n <
+       iterσ2 traj_seq traj_lim hConv hLim (n + 1) (n + 1)
+  rw [iterσ2_succ, Function.comp_apply]
+  let ψ := Classical.choose
+    (isGalerkinLimit_subseq_on_Ioc
+      (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim n N)) traj_lim
+      (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim n N)) hLim
+      (↑(n + 2)) (by exact_mod_cast Nat.succ_pos (n + 1)))
+  have hψ_SM : StrictMono ψ :=
+    (Classical.choose_spec
+      (isGalerkinLimit_subseq_on_Ioc
+        (fun N => traj_seq (iterσ2 traj_seq traj_lim hConv hLim n N)) traj_lim
+        (fun N => hConv (iterσ2 traj_seq traj_lim hConv hLim n N)) hLim
+        (↑(n + 2)) (by exact_mod_cast Nat.succ_pos (n + 1)))).1
+  have hle : n + 1 ≤ ψ (n + 1) := nat_le_of_strictMono_nat hψ_SM (n + 1)
+  exact (iterσ2_strictMono traj_seq traj_lim hConv hLim n (Nat.lt_succ_self n)).trans_le
+    ((iterσ2_strictMono traj_seq traj_lim hConv hLim n).monotone hle)
+
+/-- For each j : ℕ, `σ_diag2` converges a.e. on [0, j+1].
+
+    Proof: same selection-function argument as `σ_diag_tendsto_nat` in CantorDiagonal
+    but for pointwise a.e. convergence instead of eLpNorm convergence.
+    For n ≥ j: `σ_diag2 n = iterσ2 j (selF n)`, `selF n → ∞`, and convergence
+    at t follows by `Tendsto.comp` + `Tendsto.congr'`. -/
+private theorem σ_diag2_ae_tendsto_nat
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) (j : ℕ) :
+    ∀ᵐ t ∂(volume.restrict (Set.Ioc 0 (↑(j + 1)))),
+      Tendsto (fun n => traj_seq (σ_diag2 traj_seq traj_lim hConv hLim n) t)
+        atTop (nhds (traj_lim t)) := by
+  have hbase := iterσ2_ae_self traj_seq traj_lim hConv hLim j
+  -- Selection function: for n ≥ j, pick the index in iterσ2 j representing σ_diag2 n
+  let selF : ℕ → ℕ := fun n =>
+    if h : j ≤ n then
+      Classical.choose (iterσ2_refines_point traj_seq traj_lim hConv hLim j n h n)
+    else n
+  have hselF_ge : ∀ n, j ≤ n → n ≤ selF n := fun n hjn => by
+    simp only [selF, dif_pos hjn]
+    exact (Classical.choose_spec
+      (iterσ2_refines_point traj_seq traj_lim hConv hLim j n hjn n)).1
+  have hselF_eq : ∀ n, j ≤ n →
+      σ_diag2 traj_seq traj_lim hConv hLim n =
+      iterσ2 traj_seq traj_lim hConv hLim j (selF n) := fun n hjn => by
+    simp only [selF, dif_pos hjn, σ_diag2]
+    exact (Classical.choose_spec
+      (iterσ2_refines_point traj_seq traj_lim hConv hLim j n hjn n)).2
+  -- selF is cofinal: selF n ≥ n → ∞
+  have hcofinal : Tendsto selF atTop atTop :=
+    Filter.tendsto_atTop_atTop.mpr fun N =>
+      ⟨max j N, fun n hn =>
+        (Nat.le_max_right _ _).trans (hn.trans (hselF_ge n ((Nat.le_max_left _ _).trans hn)))⟩
+  -- For a.e. t: compose the base convergence with the cofinal selection
+  filter_upwards [hbase] with t ht
+  have htail : ∀ᶠ n in atTop,
+      traj_seq (σ_diag2 traj_seq traj_lim hConv hLim n) t =
+      traj_seq (iterσ2 traj_seq traj_lim hConv hLim j (selF n)) t :=
+    Filter.eventually_atTop.mpr ⟨j, fun n hjn => by
+      congr 1; exact hselF_eq n hjn⟩
+  exact (ht.comp hcofinal).congr' (htail.mono (fun _ h => h.symm))
+
+/-- **Phase 21: Single a.e.-convergent subsequence for all T > 0 (0 new axioms).**
+
+    Second Cantor diagonal — at the a.e. level. The construction `iterσ2`/`σ_diag2`
+    mirrors the L²-level diagonal `iterσ`/`σ_diag` in `CantorDiagonal.lean`, but uses
+    `isGalerkinLimit_subseq_on_Ioc` (a.e. convergence on [0,T]) in place of
+    `galerkin_eLpNorm_per_T` (L² convergence on [0,T]).
+
+    Result: a single StrictMono φ such that for every T > 0,
+    `traj_seq (φ n) t → traj_lim t` for a.e. t ∈ [0,T].
+
+    **Proof**: per-level convergence (§7, `iterσ2_ae_self`) + diagonal (§7,
+    `σ_diag2_ae_tendsto_nat`) + monotone lift from [0,j+1] to [0,T] via
+    `Measure.ae_mono` + `Measure.restrict_mono`. -/
+theorem galerkin_global_ae_subseq
+    (traj_seq : Nat → Trajectory) (traj_lim : Trajectory)
+    (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
+    (hLim : SatisfiesNSPDE nsNu traj_lim) :
+    ∃ (φ : Nat → Nat), StrictMono φ ∧
+      ∀ T : ℝ, 0 < T →
+        ∀ᵐ t ∂(volume.restrict (Set.Ioc 0 T)),
+          Tendsto (fun n => traj_seq (φ n) t) atTop (nhds (traj_lim t)) := by
+  refine ⟨σ_diag2 traj_seq traj_lim hConv hLim,
+          σ_diag2_strictMono traj_seq traj_lim hConv hLim,
+          fun T hT => ?_⟩
+  -- Pick j : ℕ with T ≤ j+1 (Archimedean)
+  obtain ⟨j, hTj⟩ := exists_nat_ge T
+  have hTj1 : T ≤ ↑(j + 1) := hTj.trans (by exact_mod_cast Nat.le_succ j)
+  -- vol[0,T] ≤ vol[0,j+1]; hence their a.e. filters satisfy ae_mono
+  have hmu_le : volume.restrict (Set.Ioc 0 T) ≤
+      volume.restrict (Set.Ioc 0 (↑(j + 1))) :=
+    Measure.restrict_mono (Set.Ioc_subset_Ioc_right hTj1) le_rfl
+  -- Transfer a.e. convergence from [0,j+1] to [0,T] via the finer ae-filter
+  -- vol[0,T] ≪ vol[0,j+1] (absolute continuity from ≤), so ae_[0,j+1] ≤ ae_[0,T]
+  exact (σ_diag2_ae_tendsto_nat traj_seq traj_lim hConv hLim j).filter_mono
+    ((Measure.absolutelyContinuous_of_le hmu_le).ae_le)
 
 end NavierStokesClean.Galerkin
