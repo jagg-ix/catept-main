@@ -12,6 +12,7 @@ add_remote() {
   fi
 }
 
+add_remote physlib              https://github.com/leanprover-community/physlib.git
 add_remote bochner              https://github.com/mrdouglasny/bochner.git
 add_remote hille-yosida         https://github.com/mrdouglasny/hille-yosida.git
 add_remote pphi2                https://github.com/mrdouglasny/pphi2.git

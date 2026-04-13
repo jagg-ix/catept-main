@@ -8,7 +8,7 @@ package CATEPTMain where
 
 -- 4.29-compatible local dependencies (pinned by commit for reproducibility).
 require «Physlib» from git
-  "file:///Users/macbookpro/lab/tau/tau-information-dynamics/physlib" @ "9ca1ee1d0cac"
+  "https://github.com/leanprover-community/physlib.git" @ "9ca1ee1d0cac43391399fcdc9e9fca8c94c17057"
 
 require «BochnerMinlos» from git
   "file:///Users/macbookpro/lab/tau/tau-information-dynamics/bochner" @ "1b56973aff9b"
