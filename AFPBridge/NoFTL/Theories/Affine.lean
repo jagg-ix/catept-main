@@ -11,7 +11,7 @@ Theorem name: lemTranslationPartIsUnique
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTranslationPartIsUnique (T1 : NoFTLObj) (T : NoFTLObj) (h1 : isTranslationPart A T1) (h2 : isTranslationPart A T^2) : T1 = T^2 := by
+theorem lemTranslationPartIsUnique (T1 : NoFTLObj) (T : NoFTLObj) (h1 : isTranslationPart A T1) (h2 : isTranslationPart A T2) : T1 = T2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -25,7 +25,7 @@ Theorem name: lemLinearPartIsUnique
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLinearPartIsUnique (L1 : NoFTLObj) (L : NoFTLObj) (h1 : isLinearPart A L1) (h2 : isLinearPart A L^2) : L1 = L^2 := by
+theorem lemLinearPartIsUnique (L1 : NoFTLObj) (L : NoFTLObj) (h1 : isLinearPart A L1) (h2 : isLinearPart A L2) : L1 = L2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

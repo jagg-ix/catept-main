@@ -319,7 +319,7 @@ Theorem name: lemMNorm2OfSum
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemMNorm2OfSum (u : NoFTLObj) (v : NoFTLObj) (m : NoFTLObj → NoFTLObj) : mNorm^2 (u + v) = mNorm^2 u + 2*(u *m v) + mNorm^2 v := by
+theorem lemMNorm2OfSum (u : NoFTLObj) (v : NoFTLObj) (m : NoFTLObj → NoFTLObj) : mNorm2 (u + v) = mNorm2 u + 2*(u *m v) + mNorm2 v := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -333,7 +333,7 @@ Theorem name: lemMNorm2OfDiff
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemMNorm2OfDiff (u : NoFTLObj) (v : NoFTLObj) (m : NoFTLObj → NoFTLObj) : mNorm^2 (u - v) = mNorm^2 u - 2*(u *m v) + mNorm^2 v := by
+theorem lemMNorm2OfDiff (u : NoFTLObj) (v : NoFTLObj) (m : NoFTLObj → NoFTLObj) : mNorm2 (u - v) = mNorm2 u - 2*(u *m v) + mNorm2 v := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -347,7 +347,7 @@ Theorem name: lemMNorm2Decomposition
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemMNorm2Decomposition (p : NoFTLObj) (m : NoFTLObj → NoFTLObj) : mNorm^2 p = (p *m p) := by
+theorem lemMNorm2Decomposition (p : NoFTLObj) (m : NoFTLObj → NoFTLObj) : mNorm2 p = (p *m p) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -361,7 +361,7 @@ Theorem name: lemMDecomposition
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemMDecomposition (u : NoFTLObj) (up : NoFTLObj) (uo : NoFTLObj) (parallel : NoFTLObj → NoFTLObj) (v : NoFTLObj) (orthogm : NoFTLObj → NoFTLObj) (m : NoFTLObj → NoFTLObj) (h1 : (u m v) ≠ 0) (h2 : mNorm^2 v ≠ 0) (h3 : a = (u m v)/(mNorm^2 v)) (h4 : up = (a v)) (h5 : uo = (u up)) : u = (up + uo) ∧(parallel up = v)∧(orthogm uo = v)∧ (up *m v) = (u *m v) := by
+theorem lemMDecomposition (u : NoFTLObj) (up : NoFTLObj) (uo : NoFTLObj) (parallel : NoFTLObj → NoFTLObj) (v : NoFTLObj) (orthogm : NoFTLObj → NoFTLObj) (m : NoFTLObj → NoFTLObj) (h1 : (u m v) ≠ 0) (h2 : mNorm2 v ≠ 0) (h3 : a = (u m v)/(mNorm2 v)) (h4 : up = (a v)) (h5 : uo = (u up)) : u = (up + uo) ∧(parallel up = v)∧(orthogm uo = v)∧ (up *m v) = (u *m v) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Vectors

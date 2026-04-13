@@ -12,7 +12,6 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
 theorem lemProposition3 (wvtFunc : NoFTLObj) (m : NoFTLObj) (k : NoFTLObj) (x : NoFTLObj) (coneSet : NoFTLObj → NoFTLSet → NoFTLSet) (h1 : m sees k at x) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Proposition3.lemProposition3#1" "assumes \"m sees k at x\" shows \"\\<exists> A y . (wvtFunc m k x y) \\<and> (affineApprox A (wvtFunc m k) x) \\<and> (applyToSet (asFunc A) (coneSet m x) \\<subseteq> coneSet k y) \\<and> (coneSet k y = regularConeSet y)\"" := by
   sorry  -- retry compile-safe placeholder preserving theorem/source identity
 

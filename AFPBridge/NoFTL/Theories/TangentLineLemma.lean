@@ -123,7 +123,7 @@ Theorem name: lemTangentLineUnique
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTangentLineUnique (l1 : NoFTLObj) (h1 : tl l1 m k x) (h2 : tl l^2 m k x) (h3 : affineApprox A (wvtFunc m k) x) (h4 : wvtFunc m k x y) (h5 : x ∈ wline m k) : l1 = l^2 := by
+theorem lemTangentLineUnique (l1 : NoFTLObj) (h1 : tl l1 m k x) (h2 : tl l2 m k x) (h3 : affineApprox A (wvtFunc m k) x) (h4 : wvtFunc m k x y) (h5 : x ∈ wline m k) : l1 = l2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.TangentLineLemma

@@ -166,7 +166,6 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
 theorem lemRegularCone (x : NoFTLObj) (p : NoFTLObj) (onRegularCone : NoFTLObj → NoFTLObj) (regularCone : NoFTLObj) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemRegularCone#1" "shows \"((x = p) \\<or> onRegularCone x p) \\<longleftrightarrow> regularCone x p\"" := by
   sorry  -- retry compile-safe placeholder preserving theorem/source identity
 
@@ -196,7 +195,6 @@ Lean tactic class: needs_human
 -/
 
 
-def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
 theorem lemClassification (x : NoFTLObj) (p : NoFTLObj) (vertex : NoFTLObj → NoFTLObj) (outsideRegularCone : NoFTLObj → NoFTLObj) (onRegularCone : NoFTLObj → NoFTLObj → Prop) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemClassification#1" "shows \"(insideRegularCone x p) \\<or> (vertex x p \\<or> outsideRegularCone x p \\<or> onRegularCone x p)\"" := by
   sorry  -- compile-safe placeholder preserving theorem/source identity
 
@@ -211,7 +209,7 @@ Theorem name: lemQuadCoordinates
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemQuadCoordinates (tval : NoFTLObj → NoFTLObj) (p : NoFTLObj) (x : NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (h1 : p = (B ( D))) (h2 : a = mNorm^2 D) (h3 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h4 : c = mNorm^2 (Bx)) : sqr (tval (p-x)) - sNorm2 (sComponent (p-x)) = a*(sqr α) + b*α + c := by
+theorem lemQuadCoordinates (tval : NoFTLObj → NoFTLObj) (p : NoFTLObj) (x : NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (h1 : p = (B ( D))) (h2 : a = mNorm2 D) (h3 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h4 : c = mNorm2 (Bx)) : sqr (tval (p-x)) - sNorm2 (sComponent (p-x)) = a*(sqr α) + b*α + c := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -226,7 +224,6 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
 theorem lemConeCoordinates (onRegularCone : NoFTLObj → NoFTLObj) (x : NoFTLObj) (p : NoFTLObj) (tval : NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (outsideRegularCone : NoFTLObj → NoFTLObj) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemConeCoordinates#1" "shows \"(onRegularCone x p \\<longleftrightarrow> sqr (tval p - tval x) = sNorm2 (sComponent (p\\<ominus>x))) \\<and> (insideRegularCone x p \\<longleftrightarrow> sqr (tval p - tval x) > sNorm2 (sComponent (p\\<ominus>x))) \\<and> (outsideRegu..." := by
   sorry  -- retry compile-safe placeholder preserving theorem/source identity
 
@@ -255,7 +252,7 @@ Theorem name: lemWhereLineMeetsCone
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemWhereLineMeetsCone (qroot : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (regularCone : NoFTLObj → NoFTLObj → Prop) (x : NoFTLObj) (B : NoFTLObj) (D : NoFTLObj) (h1 : a = mNorm^2 D) (h2 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h3 : c = mNorm^2 (Bx)) : qroot a b c α ↔ regularCone x (B + (α*D)) := by
+theorem lemWhereLineMeetsCone (qroot : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (regularCone : NoFTLObj → NoFTLObj → Prop) (x : NoFTLObj) (B : NoFTLObj) (D : NoFTLObj) (h1 : a = mNorm2 D) (h2 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h3 : c = mNorm2 (Bx)) : qroot a b c α ↔ regularCone x (B + (α*D)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -269,7 +266,7 @@ Theorem name: lemLineMeetsCone1
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone1 (qcase1 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm^2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = mNorm^2 X) : (qcase1 a b c → S = setOf' (fun q => q = B)) := by
+theorem lemLineMeetsCone1 (qcase1 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = mNorm2 X) : (qcase1 a b c → S = setOf' (fun q => q = B)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -283,7 +280,7 @@ Theorem name: lemLineMeetsCone2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone2 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (h4 : a = mNorm^2 D) (h5 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h6 : c = mNorm^2 (Bx)) : qcase^2 a b c → S = {} := by
+theorem lemLineMeetsCone2 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (h4 : a = mNorm2 D) (h5 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h6 : c = mNorm2 (Bx)) : qcase2 a b c → S = {} := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -297,7 +294,7 @@ Theorem name: lemLineMeetsCone3
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone3 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm^2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (y3 : y^3 = (B ((-c/b)D))) : qcase^3 a b c → S = setOf' (fun q => q = y^3) := by
+theorem lemLineMeetsCone3 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (_hy3 : y3 = (B ((-c/b)D))) : qcase3 a b c → S = setOf' (fun q => q = y3) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -311,7 +308,7 @@ Theorem name: lemLineMeetsCone4
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone4 (qcase4 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm^2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) : (qcase4 a b c → S = {}) := by
+theorem lemLineMeetsCone4 (qcase4 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) : (qcase4 a b c → S = {}) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -325,7 +322,7 @@ Theorem name: lemLineMeetsCone5
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone5 (qcase5 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (y5 : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm^2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (y5 : y5 = (B ((-b/(2*a))D))) : (qcase5 a b c → S = setOf' (fun q => q = y5)) := by
+theorem lemLineMeetsCone5 (qcase5 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (y5 : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (y5 : y5 = (B ((-b/(2*a))D))) : (qcase5 a b c → S = setOf' (fun q => q = y5)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -340,8 +337,7 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
-theorem lemLineMeetsCone6 (qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (ym : NoFTLObj) (yp : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm^2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (ym : ym = (B (((-b - (sqrt (discriminant a b c))) / (2*a)) D))) (yp : yp = (B (((-b + (sqrt (discriminant a b c))) / (2*a)) D))) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemLineMeetsCone6#1" "assumes \"\\<not> (x \\<in> l)\" and \"isLine l\" and \"S = l \\<inter> regularConeSet x\" and l: \"l = line B D\" and X: \"X = (B \\<ominus> x)\" and a: \"a = mNorm2 D\" and b: \"b = 2*(tval X)*(tval D) - 2*((sComponent D) \\<odot>s (sComponent X))\" and ..." := by
+theorem lemLineMeetsCone6 (qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (ym : NoFTLObj) (yp : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (ym : ym = (B (((-b - (sqrt (discriminant a b c))) / (2*a)) D))) (yp : yp = (B (((-b + (sqrt (discriminant a b c))) / (2*a)) D))) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemLineMeetsCone6#1" "assumes \"\\<not> (x \\<in> l)\" and \"isLine l\" and \"S = l \\<inter> regularConeSet x\" and l: \"l = line B D\" and X: \"X = (B \\<ominus> x)\" and a: \"a = mNorm2 D\" and b: \"b = 2*(tval X)*(tval D) - 2*((sComponent D) \\<odot>s (sComponent X))\" and ..." := by
   sorry  -- retry compile-safe placeholder preserving theorem/source identity
 
 
@@ -412,7 +408,6 @@ Lean tactic class: needs_human
 -/
 
 
-def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
 theorem lemInsideCone (x : NoFTLObj) (p : NoFTLObj) (vertex : NoFTLObj → NoFTLObj) (outsideRegularCone : NoFTLObj → NoFTLObj) (onRegularCone : NoFTLObj → NoFTLObj → Prop) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemInsideCone#1" "shows \"insideRegularCone x p \\<longleftrightarrow> \\<not>(vertex x p \\<or> outsideRegularCone x p \\<or> onRegularCone x p)\"" := by
   sorry  -- compile-safe placeholder preserving theorem/source identity
 

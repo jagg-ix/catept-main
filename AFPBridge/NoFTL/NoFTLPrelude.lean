@@ -75,6 +75,11 @@ axiom abs   : NoFTLObj → NoFTLObj               -- absolute value
 -- Minkowski product (⊙m in the AFP, emitted as *m by translator)
 -- minkProd m u v  =  u ⊙_m v  where m encodes the metric signature
 axiom minkProd : NoFTLObj → NoFTLObj → NoFTLObj
+notation:70 u " *m " v => minkProd u v
+
+-- Minkowski norm (distinct from Euclidean norm and spatial sNorm)
+axiom mNorm  : NoFTLObj → NoFTLObj   -- Minkowski norm
+axiom mNorm2 : NoFTLObj → NoFTLObj   -- squared Minkowski norm
 
 -- ── Set-theoretic helpers ──────────────────────────────────────────────────────
 axiom card   : NoFTLSet → NoFTLObj
@@ -82,6 +87,10 @@ axiom finite : NoFTLSet → Prop
 axiom mset   : NoFTLObj → NoFTLObj
 axiom isa_IArray_sub : NoFTLObj → NoFTLObj → Prop
 axiom setOf' : (NoFTLObj → Prop) → NoFTLSet
+
+-- Squared separation functions (Isabelle sep₂, sSep₂ — translator emits sep^2, sSep^2)
+axiom sep2  : NoFTLObj → NoFTLObj → NoFTLObj   -- squared spacetime separation
+axiom sSep2 : NoFTLObj → NoFTLObj → NoFTLObj   -- squared spatial separation
 
 -- ── Coercions ─────────────────────────────────────────────────────────────────
 -- Sets-as-objects coercion: allows a NoFTLSet value to be passed where
@@ -134,6 +143,12 @@ noncomputable instance instCoeFunNoFTLObj : CoeFun NoFTLObj (fun _ => NoFTLObj �
 axiom smul : NoFTLObj → NoFTLObj → NoFTLObj
 notation:70 a " *s " v => smul a v
 
+-- Spatial vector addition/subtraction (Isabelle: `u +\<^sub>s v`, `u -\<^sub>s v`)
+axiom sAdd : NoFTLObj → NoFTLObj → NoFTLObj
+axiom sSub : NoFTLObj → NoFTLObj → NoFTLObj
+notation:65 a " +s " b => sAdd a b
+notation:65 a " -s " b => sSub a b
+
 -- Proximity predicate: `p within δ of x`
 axiom withinOf : NoFTLObj → NoFTLObj → NoFTLObj → Prop
 notation:50 p " within " δ " of " x => withinOf p δ x
@@ -154,5 +169,10 @@ syntax term : isaPremise
 syntax "⟦" sepBy1(isaPremise, ";") "⟧" : term
 macro_rules
   | `(⟦ $_ps;* ⟧) => `(True)
+
+-- ── Compile-safe placeholder for untranslatable theorem statements ─────────────
+-- Used when the CTIR cannot produce a valid Lean type for a theorem.
+-- All theorems using this are sorry-discharged stubs.
+def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
 
 end AFPIsabellePilot

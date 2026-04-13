@@ -95,7 +95,7 @@ Theorem name: lemTranslationPreservesSep2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTranslationPreservesSep2 (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) (T : NoFTLObj) (h1 : translation T) : sep^2 p q = sep^2 (T p) (T q) := by
+theorem lemTranslationPreservesSep2 (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) (T : NoFTLObj) (h1 : translation T) : sep2 p q = sep2 (T p) (T q) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -207,7 +207,7 @@ Theorem name: lemBallTranslationWithBoundary
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemBallTranslationWithBoundary (T : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (e : NoFTLObj) (h1 : translation T) (h2 : sep^2 x y ≤ sqr e) : sep^2 (T x) (T y) ≤ sqr e := by
+theorem lemBallTranslationWithBoundary (T : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (e : NoFTLObj) (h1 : translation T) (h2 : sep2 x y ≤ sqr e) : sep2 (T x) (T y) ≤ sqr e := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

@@ -137,7 +137,7 @@ Theorem name: lemMNorm2OfScaled
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemMNorm2OfScaled (scaleBy : NoFTLObj) (p : NoFTLObj) : mNorm^2 (scaleBy α p) = (sqr α) * mNorm^2 p := by
+theorem lemMNorm2OfScaled (scaleBy : NoFTLObj) (p : NoFTLObj) : mNorm2 (scaleBy α p) = (sqr α) * mNorm2 p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -179,7 +179,7 @@ Theorem name: lemScaleSep2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemScaleSep2 (a : NoFTLObj) (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : (sqr a) * (sep^2 p q) = sep^2 (a * p) (a * q) := by
+theorem lemScaleSep2 (a : NoFTLObj) (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : (sqr a) * (sep2 p q) = sep2 (a * p) (a * q) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -221,7 +221,7 @@ Theorem name: lemScaleBallAndBoundary
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemScaleBallAndBoundary (a : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (e : NoFTLObj) (h1 : sep^2 x y ≤ sqr e) (h2 : a ≠ 0) : sep^2 (a * x) (a * y) ≤ sqr (a * e) := by
+theorem lemScaleBallAndBoundary (a : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (e : NoFTLObj) (h1 : sep2 x y ≤ sqr e) (h2 : a ≠ 0) : sep2 (a * x) (a * y) ≤ sqr (a * e) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -263,7 +263,7 @@ Theorem name: lemSSep2Symmetry
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSSep2Symmetry (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : sSep^2 p q = sSep^2 q p := by
+theorem lemSSep2Symmetry (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : sSep2 p q = sSep2 q p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -277,7 +277,7 @@ Theorem name: lemSep2Symmetry
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSep2Symmetry (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : sep^2 p q = sep^2 q p := by
+theorem lemSep2Symmetry (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : sep2 p q = sep2 q p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -347,7 +347,7 @@ Theorem name: lemNotEqualImpliesSep2Pos
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNotEqualImpliesSep2Pos (y : NoFTLObj → NoFTLObj) (x : NoFTLObj) (h1 : y ≠ x) : sep^2 y x > 0 := by
+theorem lemNotEqualImpliesSep2Pos (y : NoFTLObj → NoFTLObj) (x : NoFTLObj) (h1 : y ≠ x) : sep2 y x > 0 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -361,7 +361,7 @@ Theorem name: lemBallContainsCentre
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemBallContainsCentre (x : NoFTLObj) (h1 : > 0) : withinOf x ε x := by
+theorem lemBallContainsCentre (x : NoFTLObj) (h1 : ε > 0) : withinOf x ε x := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -375,7 +375,7 @@ Theorem name: lemPointLimit
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemPointLimit (v : NoFTLObj) (u : NoFTLObj) (h1 : ∀ > 0, (v within of u)) : v = u := by
+theorem lemPointLimit (v : NoFTLObj) (u : NoFTLObj) (h1 : ∀ ε > 0, (v within ε of u)) : v = u := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -459,7 +459,7 @@ Theorem name: lemLineDefinedByPair
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineDefinedByPair (l1 : NoFTLSet) (h1 : x ≠ p) (h2 : (onLine p l1) ∧ (onLine x l1)) (h3 : (onLine p l^2) ∧ (onLine x l^2)) : l1 = l^2 := by
+theorem lemLineDefinedByPair (l1 : NoFTLSet) (h1 : x ≠ p) (h2 : (onLine p l1) ∧ (onLine x l1)) (h3 : (onLine p l2) ∧ (onLine x l2)) : l1 = l2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -473,7 +473,7 @@ Theorem name: lemDrtn
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemDrtn (d2 : NoFTLObj) (d1 : NoFTLObj) (h1 : { d1, d^2 } ⊆ drtn l) : ∃ α ≠ 0, d2 = (α * d1) := by
+theorem lemDrtn (d2 : NoFTLObj) (d1 : NoFTLObj) (h1 : { d1, d2 } ⊆ drtn l) : ∃ α ≠ 0, d2 = (α * d1) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -487,7 +487,7 @@ Theorem name: lemLineDeterminedByPointAndDrtn
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineDeterminedByPointAndDrtn (l1 : NoFTLSet) (h1 : (x ≠ p) ∧ (p ∈ l1) ∧ (onLine x l1) ∧ (onLine x l^2)) (h2 : drtn l1 = drtn l^2) : l1 = l^2 := by
+theorem lemLineDeterminedByPointAndDrtn (l1 : NoFTLSet) (h1 : (x ≠ p) ∧ (p ∈ l1) ∧ (onLine x l1) ∧ (onLine x l2)) (h2 : drtn l1 = drtn l2) : l1 = l2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Points

@@ -53,7 +53,7 @@ Theorem name: lemReverseCauchySchwarz
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemReverseCauchySchwarz (X : NoFTLObj) (m : NoFTLObj) (D : NoFTLObj) (h1 : timelike X ∧ timelike D) : sqr (X *m D) ≥ (mNorm^2 X)*(mNorm^2 D) := by
+theorem lemReverseCauchySchwarz (X : NoFTLObj) (m : NoFTLObj) (D : NoFTLObj) (h1 : timelike X ∧ timelike D) : sqr (X *m D) ≥ (mNorm2 X)*(mNorm2 D) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.ReverseCauchySchwarz

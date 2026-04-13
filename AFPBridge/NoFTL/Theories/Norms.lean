@@ -95,7 +95,7 @@ Theorem name: lemDistancesAdd
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemDistancesAdd (r : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (p : NoFTLObj) (triangle : axTriangleInequality (qp) (rq)) (distances : (x > 0) ∧ (y > 0) ∧ (sep^2 p q < sqr x) ∧ (sep^2 r q < sqr y)) : withinOf r (x+y) p := by
+theorem lemDistancesAdd (r : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (p : NoFTLObj) (triangle : axTriangleInequality (qp) (rq)) (distances : (x > 0) ∧ (y > 0) ∧ (sep2 p q < sqr x) ∧ (sep2 r q < sqr y)) : withinOf r (x+y) p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -109,7 +109,7 @@ Theorem name: lemDistancesAddStrictR
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemDistancesAddStrictR (r : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (p : NoFTLObj) (triangle : axTriangleInequality (qp) (rq)) (distances : (x > 0) ∧ (y > 0) ∧ (sep^2 p q ≤ sqr x) ∧ (sep^2 r q < sqr y)) : withinOf r (x+y) p := by
+theorem lemDistancesAddStrictR (r : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (p : NoFTLObj) (triangle : axTriangleInequality (qp) (rq)) (distances : (x > 0) ∧ (y > 0) ∧ (sep2 p q ≤ sqr x) ∧ (sep2 r q < sqr y)) : withinOf r (x+y) p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Norms
