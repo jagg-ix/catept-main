@@ -23,6 +23,7 @@ add_remote kolmogorov-lean      https://github.com/AlexeyMilovanov/kolmogorov-co
 add_remote lean-quantuminfo     https://github.com/Timeroot/Lean-QuantumInfo.git
 add_remote cslib                https://github.com/Timeroot/cslib.git
 add_remote hopf-lean            https://github.com/al-ramsey/hopf-lean.git
+add_remote lean-mwe             git@github.com:a-bekheet/lean-mwe.git
 
 echo "Done. Current remotes:"
 git remote -v
