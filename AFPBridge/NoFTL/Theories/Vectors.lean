@@ -11,7 +11,7 @@ Theorem name: lemDotDecomposition
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemDotDecomposition (u : NoFTLObj) (v : NoFTLObj) (tval : NoFTLObj → NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (s : NoFTLObj → NoFTLObj) : (u * v) = (tval u * tval v) + ((sComponent u) *s (sComponent v)) := by
+theorem lemDotDecomposition (u : NoFTLObj) (v : NoFTLObj) : dot u v = (tval u * tval v) + sdot (sComponent u) (sComponent v) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -123,7 +123,7 @@ Theorem name: lemNorm2OfSum
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNorm2OfSum (u : NoFTLObj) (v : NoFTLObj) : norm2 (u + v) = norm2 u + 2*(u * v) + norm2 v := by
+theorem lemNorm2OfSum (u : NoFTLObj) (v : NoFTLObj) : norm2 (u + v) = norm2 u + 2*(dot u v) + norm2 v := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -151,7 +151,7 @@ Theorem name: lemSDotScaleLeft
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSDotScaleLeft (a : NoFTLObj) (s : NoFTLObj) (u : NoFTLObj) (v : NoFTLObj) : sdot (a *s u) v = a * (sdot u v) := by
+theorem lemSDotScaleLeft (a : NoFTLObj) (u : NoFTLObj) (v : NoFTLObj) : sdot (a *s u) v = a * (sdot u v) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -165,7 +165,7 @@ Theorem name: lemSDotScaleRight
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSDotScaleRight (u : NoFTLObj) (a : NoFTLObj) (s : NoFTLObj) (v : NoFTLObj) : sdot u (a *s v) = a * (sdot u v) := by
+theorem lemSDotScaleRight (u : NoFTLObj) (a : NoFTLObj) (v : NoFTLObj) : sdot u (a *s v) = a * (sdot u v) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -179,7 +179,7 @@ Theorem name: lemSDotSumLeft
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSDotSumLeft (u : NoFTLObj) (s : NoFTLObj) (v : NoFTLObj) (w : NoFTLObj) : sdot (u +s v) w = (sdot u w) + (sdot v w) := by
+theorem lemSDotSumLeft (u : NoFTLObj) (v : NoFTLObj) (w : NoFTLObj) : sdot (u +s v) w = (sdot u w) + (sdot v w) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -193,7 +193,7 @@ Theorem name: lemSDotSumRight
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSDotSumRight (u : NoFTLObj) (v : NoFTLObj) (s : NoFTLObj) (w : NoFTLObj) : sdot u ( v+s w) = (sdot u v) + (sdot u w) := by
+theorem lemSDotSumRight (u : NoFTLObj) (v : NoFTLObj) (w : NoFTLObj) : sdot u (v +s w) = (sdot u v) + (sdot u w) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -207,7 +207,7 @@ Theorem name: lemSDotDiffLeft
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSDotDiffLeft (u : NoFTLObj) (s : NoFTLObj) (v : NoFTLObj) (w : NoFTLObj) : sdot (u -s v) w = (sdot u w) - (sdot v w) := by
+theorem lemSDotDiffLeft (u : NoFTLObj) (v : NoFTLObj) (w : NoFTLObj) : sdot (u -s v) w = (sdot u w) - (sdot v w) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -221,7 +221,7 @@ Theorem name: lemSDotDiffRight
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSDotDiffRight (u : NoFTLObj) (v : NoFTLObj) (s : NoFTLObj) (w : NoFTLObj) : sdot u ( v-s w) = (sdot u v) - (sdot u w) := by
+theorem lemSDotDiffRight (u : NoFTLObj) (v : NoFTLObj) (w : NoFTLObj) : sdot u (v -s w) = (sdot u v) - (sdot u w) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

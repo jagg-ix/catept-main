@@ -11,7 +11,7 @@ Theorem name: lemNorm2Decomposition
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNorm2Decomposition (u : NoFTLObj) (tval : NoFTLObj) (sComponent : NoFTLObj) : norm2 u = sqr (tval u) + sNorm2 (sComponent u) := by
+theorem lemNorm2Decomposition (u : NoFTLObj) : norm2 u = sqr (tval u) + sNorm2 (sComponent u) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

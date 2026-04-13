@@ -11,7 +11,7 @@ Theorem name: lemTimelikeNotZeroTime
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTimelikeNotZeroTime (tval : NoFTLObj → NoFTLObj) (v : NoFTLObj) (h1 : timelike v) : tval v ≠ 0 := by
+theorem lemTimelikeNotZeroTime (v : NoFTLObj) (h1 : timelike v) : tval v ≠ 0 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -25,7 +25,7 @@ Theorem name: lemOrthogmToTimelike
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemOrthogmToTimelike (spacelike : NoFTLObj → Prop) (v : NoFTLObj) (h1 : timelike u) (h2 : orthogm u v) (h3 : v ≠ origin) : spacelike v := by
+theorem lemOrthogmToTimelike (v : NoFTLObj) (h1 : timelike u) (h2 : orthogm u v) (h3 : v ≠ origin) : spacelike v := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -39,7 +39,7 @@ Theorem name: lemNormaliseTimelike
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNormaliseTimelike (s : NoFTLObj) (tval : NoFTLObj → NoFTLObj) (v : NoFTLObj) (h1 : timelike v) (h2 : s = sComponent ((1/tval v)v)) : ((0 ≤ sNorm2 s) ∧ (sNorm2 s < 1)) ∧ (tval ((1/tval v) * v) = 1) := by
+theorem lemNormaliseTimelike (v : NoFTLObj) (h1 : timelike v) : let s := sComponent ((1 / tval v) * v); ((0 ≤ sNorm2 s) ∧ (sNorm2 s < 1)) ∧ (tval ((1 / tval v) * v) = 1) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

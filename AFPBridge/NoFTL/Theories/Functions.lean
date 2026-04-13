@@ -11,7 +11,7 @@ Theorem name: lemBijInv
 Lean tactic class: needs_human
 -/
 
-theorem lemBijInv (bijective : (NoFTLObj → NoFTLObj) → Prop) (f : NoFTLObj) : bijective (asFunc f) ↔ invertible f := by
+theorem lemBijInv (f : NoFTLObj) : bijective (asFunc f) ↔ invertible f := by
   first | exact rfl | rfl | ring | norm_num | omega | simp_all | decide | congr 1 | sorry
 
 
@@ -67,7 +67,7 @@ Theorem name: lemInverseComposition
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemInverseComposition (invFunc : NoFTLObj → NoFTLObj) (h : NoFTLObj) (f : NoFTLObj) (g : NoFTLObj) (h1 : h = composeRel g f) : (invFunc h) = composeRel (invFunc f) (invFunc g) := by
+theorem lemInverseComposition (h : NoFTLObj) (f : NoFTLObj) (g : NoFTLObj) (h1 : h = composeRel g f) : (invFunc h) = composeRel (invFunc f) (invFunc g) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -81,7 +81,7 @@ Theorem name: lemToFuncAsFunc
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemToFuncAsFunc (toFunc : NoFTLObj) (f : NoFTLObj) (h1 : isFunction f) (h2 : total f) : asFunc (toFunc f) = f := by
+theorem lemToFuncAsFunc (f : NoFTLObj) (h1 : isFunction f) (h2 : total f) : asFunc (toFunc f) = f := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -95,7 +95,7 @@ Theorem name: lemAsFuncToFunc
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemAsFuncToFunc (toFunc : (NoFTLObj → NoFTLObj) → NoFTLObj) (f : NoFTLObj) : toFunc (asFunc f) = f := by
+theorem lemAsFuncToFunc (f : NoFTLObj) : toFunc (asFunc f) = f := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Functions

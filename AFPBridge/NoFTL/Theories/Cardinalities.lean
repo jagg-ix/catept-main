@@ -81,7 +81,7 @@ Theorem name: lemCardOfLineIsBig
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemCardOfLineIsBig (l : NoFTLSet) (h1 : x ≠ p) (h2 : onLine x l ∧ onLine p l) : ∃ p1 p^2 p^3, (onLine p1 l ∧ onLine p^2 l ∧ onLine p^3 l) ∧ (p1≠p^2 ∧ p^2≠p^3 ∧ p^3≠p1) := by
+theorem lemCardOfLineIsBig (l : NoFTLSet) (h1 : x ≠ p) (h2 : onLine x l ∧ onLine p l) : ∃ p1 p2 p3, (onLine p1 l ∧ onLine p2 l ∧ onLine p3 l) ∧ (p1≠p2 ∧ p2≠p3 ∧ p3≠p1) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Cardinalities

@@ -264,8 +264,8 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-theorem lemSqrMonoStrict : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Sorts.lemSqrMonoStrict#1" "assumes \"(0 \\<le> u) \\<and> (u < v)\"" := by
-  sorry  -- retry compile-safe placeholder preserving theorem/source identity
+theorem lemSqrMonoStrict (u : NoFTLObj) (v : NoFTLObj) (h1 : (0 ≤ u) ∧ (u < v)) : sqr u < sqr v := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 

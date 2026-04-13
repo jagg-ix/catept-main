@@ -46,6 +46,11 @@ axiom invertible     : NoFTLObj → Prop
 axiom injective      : NoFTLObj → Prop
 axiom isFunction     : NoFTLObj → Prop
 axiom isTotalFunction : NoFTLObj → Prop
+axiom bijective      : (NoFTLObj → NoFTLObj) → Prop   -- Isabelle bijective: \<open>('a\<Rightarrow>'a)\<Rightarrow>bool\<close>
+axiom total          : NoFTLObj → Prop                -- total relation predicate
+axiom domain         : NoFTLObj → NoFTLSet            -- domain of a relation
+axiom toFunc         : (NoFTLObj → NoFTLObj) → NoFTLObj  -- embed Lean fn as NoFTLObj relation
+axiom diffApprox     : (NoFTLObj → NoFTLObj) → (NoFTLObj → NoFTLObj) → NoFTLObj → Prop  -- differentiable approximation
 axiom affineApprox   : NoFTLObj → NoFTLObj → NoFTLObj → Prop
 axiom cts            : NoFTLObj → NoFTLObj → Prop
 axiom onLine         : NoFTLObj → NoFTLSet → Prop
@@ -58,8 +63,42 @@ axiom lineJoining    : NoFTLObj → NoFTLObj → NoFTLSet
 axiom applyToSet     : (NoFTLObj → NoFTLObj) → NoFTLSet → NoFTLSet
 axiom asFunc         : NoFTLObj → (NoFTLObj → NoFTLObj)
 axiom composeRel     : NoFTLObj → NoFTLObj → NoFTLObj
+-- World-view / observer predicates
+axiom sees     : NoFTLObj → NoFTLObj → NoFTLObj → Prop  -- m sees k at x
+axiom wvtFunc  : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj → Prop  -- world-view transformation
+axiom coneSet  : NoFTLObj → NoFTLObj → NoFTLSet          -- cone set for observer at point
+axiom invFunc  : NoFTLObj → NoFTLObj                     -- inverse of a relation/function
+axiom wline    : NoFTLObj → NoFTLObj → NoFTLSet          -- world line of observer b in m's coords
+axiom ball     : NoFTLObj → NoFTLObj → NoFTLSet          -- ball(centre, radius)
+-- Additional helpers
+axiom mkTranslation    : NoFTLObj → NoFTLObj             -- construct translation from vector
+axiom discriminant     : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj  -- b²-4ac
+axiom sqrt             : NoFTLObj → NoFTLObj             -- square root
+axiom velocityJoining  : NoFTLObj → NoFTLObj → NoFTLObj  -- join velocity
+axiom lineVelocity     : NoFTLSet → NoFTLSet             -- velocity set of a line
+axiom origin           : NoFTLObj                        -- spacetime origin
+-- Vector classification predicates (Isabelle abbreviations in class Vectors)
+def timelike   (p : NoFTLObj) : Prop := mNorm2 p > 0
+def lightlike  (p : NoFTLObj) : Prop := p ≠ origin ∧ mNorm2 p = 0
+def spacelike  (p : NoFTLObj) : Prop := mNorm2 p < 0
+def causal     (p : NoFTLObj) : Prop := timelike p ∨ lightlike p
+def orthog     (p q : NoFTLObj) : Prop := dot p q = 0
+def orthogm    (p q : NoFTLObj) : Prop := (p *m q) = 0
+-- Isabelle's slopeFinite predicate (used in Classification)
+axiom slopeFinite : NoFTLObj → NoFTLObj → Prop
+-- Isabelle's lineSlopeFinite predicate
+axiom lineSlopeFinite : NoFTLSet → Prop
+-- wvt (world-view transformation function, takes 2 observers → function)
+axiom wvt : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj
 axiom regularConeSet : NoFTLObj → NoFTLSet
 axiom insideRegularCone : NoFTLObj → NoFTLObj → Prop
+-- Classification cone predicates (Isabelle abbreviations, axiomatized here)
+axiom regularCone        : NoFTLObj → NoFTLObj → Prop  -- Isabelle: regularCone x p
+def  onRegularCone (x p : NoFTLObj) : Prop := regularCone x p ∧ x ≠ p
+def  vertex        (x p : NoFTLObj) : Prop := x = p
+def  outsideRegularCone (x p : NoFTLObj) : Prop := ¬ regularCone x p
+-- Line direction set (Isabelle: drtn :: 'a Point set ⇒ 'a Point set)
+axiom drtn         : NoFTLSet → NoFTLSet
 
 -- ── Metric / norm operators ────────────────────────────────────────────────────
 -- Euclidean / Lorentzian inner products and norms
@@ -71,6 +110,15 @@ axiom sdot  : NoFTLObj → NoFTLObj → NoFTLObj   -- spatial dot product
 axiom sNorm  : NoFTLObj → NoFTLObj              -- spatial norm
 axiom sNorm2 : NoFTLObj → NoFTLObj             -- squared spatial norm
 axiom abs   : NoFTLObj → NoFTLObj               -- absolute value
+-- 4-vector component accessors (Isabelle: tval, xval, yval, zval, sComponent)
+axiom tval       : NoFTLObj → NoFTLObj   -- time component of a Point
+axiom sComponent : NoFTLObj → NoFTLObj   -- spatial 3-vector component of a Point
+axiom xval       : NoFTLObj → NoFTLObj   -- x spatial component
+axiom yval       : NoFTLObj → NoFTLObj   -- y spatial component
+axiom zval       : NoFTLObj → NoFTLObj   -- z spatial component
+axiom svalx      : NoFTLObj → NoFTLObj   -- x component of a Space vector
+axiom svaly      : NoFTLObj → NoFTLObj   -- y component of a Space vector
+axiom svalz      : NoFTLObj → NoFTLObj   -- z spatial component of a Space vector
 
 -- Minkowski product (⊙m in the AFP, emitted as *m by translator)
 -- minkProd m u v  =  u ⊙_m v  where m encodes the metric signature

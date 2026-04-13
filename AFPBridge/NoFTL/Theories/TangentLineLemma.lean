@@ -39,7 +39,7 @@ Theorem name: lemWVTInverse
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemWVTInverse (invFunc : NoFTLObj → NoFTLObj) (wvtFunc : NoFTLObj) (k : NoFTLObj) (h : NoFTLObj) : invFunc (wvtFunc k h) = wvtFunc h k := by
+theorem lemWVTInverse (wvtFunc : NoFTLObj) (k : NoFTLObj) (h : NoFTLObj) : invFunc (wvtFunc k h) = wvtFunc h k := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

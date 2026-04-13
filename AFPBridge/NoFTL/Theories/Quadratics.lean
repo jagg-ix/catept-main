@@ -110,8 +110,8 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-theorem lemQCase6 (rp : NoFTLObj) (rm : NoFTLObj) (qroots : NoFTLObj → NoFTLObj → NoFTLSet → NoFTLSet) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLSet) (h1 : qcase6 a b c) (h2 : rd = sqrt (discriminant a b c)) (h3 : rp = ((-b) + rd) / (2*a)) (h4 : rm = ((-b) - rd) / (2*a)) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Quadratics.lemQCase6#1" "assumes \"qcase6 a b c\" and \"rd = sqrt (discriminant a b c)\" and \"rp = ((-b) + rd) / (2*a)\" and \"rm = ((-b) - rd) / (2*a)\" shows \"(rp \\<noteq> rm) \\<and> qroots a b c = { rp, rm }\"" := by
-  sorry  -- retry compile-safe placeholder preserving theorem/source identity
+theorem lemQCase6 (rp : NoFTLObj) (rm : NoFTLObj) (qroots : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLSet) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (h1 : qcase6 a b c) (h2 : rd = sqrt (discriminant a b c)) (h3 : rp = ((-b) + rd) / (2*a)) (h4 : rm = ((-b) - rd) / (2*a)) : (rp ≠ rm) ∧ qroots a b c = { rp, rm } := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 

@@ -11,7 +11,7 @@ Theorem name: lemMkTrans
 Lean tactic class: needs_human
 -/
 
-theorem lemMkTrans (mkTranslation : NoFTLObj) : ∀ t, translation (mkTranslation t) := by
+theorem lemMkTrans : ∀ t, translation (mkTranslation t) := by
   first | intro _ | simp_all | tauto | omega | decide | trivial | sorry
 
 
@@ -25,7 +25,7 @@ Theorem name: lemInverseTranslation
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemInverseTranslation (T' : NoFTLObj) (T : NoFTLObj) (id : NoFTLObj) (h1 : (T = mkTranslation t) ∧ (T' = mkTranslation (origin t))) : (composeRel T' T = id) ∧ (composeRel T T' = id) := by
+theorem lemInverseTranslation (T' : NoFTLObj) (T : NoFTLObj) (id : NoFTLObj) (h1 : (T = mkTranslation t) ∧ (T' = mkTranslation (origin - t))) : (composeRel T' T = id) ∧ (composeRel T T' = id) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

@@ -95,7 +95,7 @@ Theorem name: lemSNorm2VelocityJoining
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSNorm2VelocityJoining (tval : NoFTLObj) (p : NoFTLObj) (x : NoFTLObj) (v : NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (h1 : slopeFinite x p) (h2 : v = velocityJoining x p) : sqr (tval p - tval x) * sNorm2 v = sNorm2 (sComponent (p-x)) := by
+theorem lemSNorm2VelocityJoining (p : NoFTLObj) (x : NoFTLObj) (v : NoFTLObj) (h1 : slopeFinite x p) (h2 : v = velocityJoining x p) : sqr (tval p - tval x) * sNorm2 v = sNorm2 (sComponent (p-x)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -166,8 +166,8 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-theorem lemRegularCone (x : NoFTLObj) (p : NoFTLObj) (onRegularCone : NoFTLObj → NoFTLObj) (regularCone : NoFTLObj) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemRegularCone#1" "shows \"((x = p) \\<or> onRegularCone x p) \\<longleftrightarrow> regularCone x p\"" := by
-  sorry  -- retry compile-safe placeholder preserving theorem/source identity
+theorem lemRegularCone (x : NoFTLObj) (p : NoFTLObj) : ((x = p) ∨ onRegularCone x p) ↔ regularCone x p := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 
@@ -195,8 +195,8 @@ Lean tactic class: needs_human
 -/
 
 
-theorem lemClassification (x : NoFTLObj) (p : NoFTLObj) (vertex : NoFTLObj → NoFTLObj) (outsideRegularCone : NoFTLObj → NoFTLObj) (onRegularCone : NoFTLObj → NoFTLObj → Prop) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemClassification#1" "shows \"(insideRegularCone x p) \\<or> (vertex x p \\<or> outsideRegularCone x p \\<or> onRegularCone x p)\"" := by
-  sorry  -- compile-safe placeholder preserving theorem/source identity
+theorem lemClassification (x : NoFTLObj) (p : NoFTLObj) : (insideRegularCone x p) ∨ (vertex x p ∨ outsideRegularCone x p ∨ onRegularCone x p) := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 
@@ -224,8 +224,8 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-theorem lemConeCoordinates (onRegularCone : NoFTLObj → NoFTLObj) (x : NoFTLObj) (p : NoFTLObj) (tval : NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (outsideRegularCone : NoFTLObj → NoFTLObj) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemConeCoordinates#1" "shows \"(onRegularCone x p \\<longleftrightarrow> sqr (tval p - tval x) = sNorm2 (sComponent (p\\<ominus>x))) \\<and> (insideRegularCone x p \\<longleftrightarrow> sqr (tval p - tval x) > sNorm2 (sComponent (p\\<ominus>x))) \\<and> (outsideRegu..." := by
-  sorry  -- retry compile-safe placeholder preserving theorem/source identity
+theorem lemConeCoordinates (x : NoFTLObj) (p : NoFTLObj) : (onRegularCone x p ↔ sqr (tval p - tval x) = sNorm2 (sComponent (p - x))) ∧ (insideRegularCone x p ↔ sqr (tval p - tval x) > sNorm2 (sComponent (p - x))) ∧ (outsideRegularCone x p ↔ sqr (tval p - tval x) < sNorm2 (sComponent (p - x))) := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 
@@ -238,7 +238,7 @@ Theorem name: lemConeCoordinates1
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemConeCoordinates1 (p : NoFTLObj) (x : NoFTLObj) (tval : NoFTLObj) : p ∈ regularConeSet x ↔ norm2 (p-x) = 2 * sqr (tval p - tval x) := by
+theorem lemConeCoordinates1 (p : NoFTLObj) (x : NoFTLObj) : p ∈ regularConeSet x ↔ norm2 (p-x) = 2 * sqr (tval p - tval x) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -337,8 +337,8 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-theorem lemLineMeetsCone6 (qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (ym : NoFTLObj) (yp : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (ym : ym = (B (((-b - (sqrt (discriminant a b c))) / (2*a)) D))) (yp : yp = (B (((-b + (sqrt (discriminant a b c))) / (2*a)) D))) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemLineMeetsCone6#1" "assumes \"\\<not> (x \\<in> l)\" and \"isLine l\" and \"S = l \\<inter> regularConeSet x\" and l: \"l = line B D\" and X: \"X = (B \\<ominus> x)\" and a: \"a = mNorm2 D\" and b: \"b = 2*(tval X)*(tval D) - 2*((sComponent D) \\<odot>s (sComponent X))\" and ..." := by
-  sorry  -- retry compile-safe placeholder preserving theorem/source identity
+theorem lemLineMeetsCone6 (qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (ym : NoFTLObj) (yp : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (ym : ym = (B (((-b - (sqrt (discriminant a b c))) / (2*a)) D))) (yp : yp = (B (((-b + (sqrt (discriminant a b c))) / (2*a)) D))) : (qcase6 a b c → (ym ≠ yp) ∧ S = {ym, yp}) := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 
@@ -408,8 +408,8 @@ Lean tactic class: needs_human
 -/
 
 
-theorem lemInsideCone (x : NoFTLObj) (p : NoFTLObj) (vertex : NoFTLObj → NoFTLObj) (outsideRegularCone : NoFTLObj → NoFTLObj) (onRegularCone : NoFTLObj → NoFTLObj → Prop) : wolframStatementPlaceholder "No_FTL_observers_Gen_Rel.Classification.lemInsideCone#1" "shows \"insideRegularCone x p \\<longleftrightarrow> \\<not>(vertex x p \\<or> outsideRegularCone x p \\<or> onRegularCone x p)\"" := by
-  sorry  -- compile-safe placeholder preserving theorem/source identity
+theorem lemInsideCone (x : NoFTLObj) (p : NoFTLObj) : insideRegularCone x p ↔ ¬(vertex x p ∨ outsideRegularCone x p ∨ onRegularCone x p) := by
+  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
 

@@ -11,7 +11,7 @@ Theorem name: lemTranslationPartIsUnique
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTranslationPartIsUnique (T1 : NoFTLObj) (T : NoFTLObj) (h1 : isTranslationPart A T1) (h2 : isTranslationPart A T2) : T1 = T2 := by
+theorem lemTranslationPartIsUnique (T1 : NoFTLObj) (h1 : isTranslationPart A T1) (h2 : isTranslationPart A T2) : T1 = T2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -25,7 +25,7 @@ Theorem name: lemLinearPartIsUnique
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLinearPartIsUnique (L1 : NoFTLObj) (L : NoFTLObj) (h1 : isLinearPart A L1) (h2 : isLinearPart A L2) : L1 = L2 := by
+theorem lemLinearPartIsUnique (L1 : NoFTLObj) (h1 : isLinearPart A L1) (h2 : isLinearPart A L2) : L1 = L2 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -67,7 +67,7 @@ Theorem name: lemAffineDiff
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemAffineDiff (A : NoFTLObj) (p : NoFTLObj) (q : NoFTLObj) (L : NoFTLObj) (h1 : linear L) (h2 : ∃ T, ((translation T) ∧ (A = T L))) : ((A p) - (A q)) = L (p - q) := by
+theorem lemAffineDiff (A : NoFTLObj) (p : NoFTLObj) (q : NoFTLObj) (L : NoFTLObj) (h1 : linear L) (h2 : ∃ T, ((translation T) ∧ (A = composeRel T L))) : ((A p) - (A q)) = L (p - q) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -109,7 +109,7 @@ Theorem name: lemAffineOfPointOnLine
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemAffineOfPointOnLine (A : NoFTLObj) (x : NoFTLObj) (b : NoFTLObj) (a : NoFTLObj) (L : NoFTLObj) (d : NoFTLObj) (h1 : (linear L) ∧ (translation T) ∧ (A = T L)) (h2 : x = (b (ad))) : A x = ((A b) + (a * (L d))) := by
+theorem lemAffineOfPointOnLine (A : NoFTLObj) (x : NoFTLObj) (b : NoFTLObj) (a : NoFTLObj) (L : NoFTLObj) (d : NoFTLObj) (h1 : (linear L) ∧ (translation T) ∧ (A = composeRel T L)) (h2 : x = b + a * d) : A x = ((A b) + (a * (L d))) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
