@@ -516,7 +516,7 @@ Theorem name: lemSqrLT1
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSqrLT1 (x : NoFTLObj) (h1 : 0 < x < 1) : (0 < (sqr x)) ∧ ((sqr x) < x) := by
+theorem lemSqrLT1 (x : NoFTLObj) (h1 : 0 < x ∧ x < 1) : (0 < (sqr x)) ∧ ((sqr x) < x) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

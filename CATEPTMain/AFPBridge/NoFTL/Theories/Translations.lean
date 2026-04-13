@@ -12,7 +12,7 @@ Lean tactic class: needs_human
 -/
 
 theorem lemMkTrans : ∀ t, translation (mkTranslation t) := by
-  first | intro _ | simp_all | tauto | omega | decide | trivial | sorry
+  sorry
 
 
 
@@ -95,7 +95,7 @@ Theorem name: lemTranslationPreservesSep2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTranslationPreservesSep2 (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) (T : NoFTLObj) (h1 : translation T) : sep2 p q = sep2 (T p) (T q) := by
+theorem lemTranslationPreservesSep2 (p : NoFTLObj) (q : NoFTLObj) (T : NoFTLObj) (h1 : translation T) : sep2 p q = sep2 (T p) (T q) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -249,7 +249,7 @@ Theorem name: lemInverseOfTransIsTrans
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemInverseOfTransIsTrans (toFunc : NoFTLObj) (T' : NoFTLObj) (h1 : translation T) (h2 : T' = invFunc (asFunc T)) : translation (toFunc T') := by
+theorem lemInverseOfTransIsTrans (toFunc : NoFTLObj) (T' : NoFTLObj) (h1 : translation T) (h2 : T' = invFunc T) : translation (toFunc T') := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

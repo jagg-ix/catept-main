@@ -11,7 +11,7 @@ Theorem name: lemInjectiveValueUnique
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemInjectiveValueUnique (q : NoFTLObj) (f : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (h1 : injective f) (h2 : isFunction f) (h3 : f x y) : setOf' (fun q => f x = q) = setOf' (fun q => q = y) := by
+theorem lemInjectiveValueUnique (q : NoFTLObj) (f : NoFTLObj) (x : NoFTLObj) (y : NoFTLObj) (h1 : injective f) (h2 : isFunction f) (h3 : f x = y) : setOf' (fun q => f x = q) = setOf' (fun q => q = y) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -67,7 +67,7 @@ Theorem name: lemSmallCardUnderInvertible
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSmallCardUnderInvertible (S : NoFTLSet) (f : NoFTLObj) (h1 : invertible f) (h2 : 0 < card S ≤ 2) : card S = card (applyToSet (asFunc f) S) := by
+theorem lemSmallCardUnderInvertible (S : NoFTLSet) (f : NoFTLObj) (h1 : invertible f) (h2 : 0 < card S ∧ card S ≤ 2) : card S = card (applyToSet (asFunc f) S) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

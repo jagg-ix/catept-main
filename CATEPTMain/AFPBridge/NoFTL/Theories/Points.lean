@@ -179,7 +179,7 @@ Theorem name: lemScaleSep2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemScaleSep2 (a : NoFTLObj) (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : (sqr a) * (sep2 p q) = sep2 (a * p) (a * q) := by
+theorem lemScaleSep2 (a : NoFTLObj) (p : NoFTLObj) (q : NoFTLObj) : (sqr a) * (sep2 p q) = sep2 (a * p) (a * q) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -263,7 +263,7 @@ Theorem name: lemSSep2Symmetry
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSSep2Symmetry (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : sSep2 p q = sSep2 q p := by
+theorem lemSSep2Symmetry (p : NoFTLObj) (q : NoFTLObj) : sSep2 p q = sSep2 q p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -277,7 +277,7 @@ Theorem name: lemSep2Symmetry
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemSep2Symmetry (p : NoFTLObj → NoFTLObj) (q : NoFTLObj) : sep2 p q = sep2 q p := by
+theorem lemSep2Symmetry (p : NoFTLObj) (q : NoFTLObj) : sep2 p q = sep2 q p := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -347,7 +347,7 @@ Theorem name: lemNotEqualImpliesSep2Pos
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNotEqualImpliesSep2Pos (y : NoFTLObj → NoFTLObj) (x : NoFTLObj) (h1 : y ≠ x) : sep2 y x > 0 := by
+theorem lemNotEqualImpliesSep2Pos (y : NoFTLObj) (x : NoFTLObj) (h1 : y ≠ x) : sep2 y x > 0 := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -403,7 +403,7 @@ Theorem name: lemBallInBall
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemBallInBall (p : NoFTLObj) (y : NoFTLObj) (q : NoFTLObj) (h1 : p within x of q) (h2 : 0 < x ≤ y) : withinOf p y q := by
+theorem lemBallInBall (p : NoFTLObj) (y : NoFTLObj) (q : NoFTLObj) (h1 : p within x of q) (h2 : 0 < x ∧ x ≤ y) : withinOf p y q := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

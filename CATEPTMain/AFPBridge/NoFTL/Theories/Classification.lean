@@ -25,7 +25,7 @@ Theorem name: lemVelocityLineJoining
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemVelocityLineJoining (v : NoFTLObj) (lineVelocity : NoFTLSet → NoFTLSet) (l : NoFTLSet) (h1 : l = lineJoining x p) (h2 : v = velocityJoining origin (p x)) (h3 : x ≠ p) : v ∈ lineVelocity l := by
+theorem lemVelocityLineJoining (v : NoFTLObj) (lineVelocity : NoFTLSet → NoFTLSet) (l : NoFTLSet) (h1 : l = lineJoining x p) (h2 : v = velocityJoining origin (p - x)) (h3 : x ≠ p) : v ∈ lineVelocity l := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -67,7 +67,7 @@ Theorem name: lemLineVelocityNonZeroImpliesFinite
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineVelocityNonZeroImpliesFinite (lineSlopeFinite : NoFTLObj → Prop) (l : NoFTLObj) (h1 : u ∈ lineVelocity l) (h2 : sNorm2 u ≠ 0) : lineSlopeFinite l := by
+theorem lemLineVelocityNonZeroImpliesFinite (l : NoFTLSet) (h1 : u ∈ lineVelocity l) (h2 : sNorm2 u ≠ 0) : lineSlopeFinite l := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -81,7 +81,7 @@ Theorem name: lemLineVelocityUsingPoints
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineVelocityUsingPoints (lineVelocity : NoFTLSet → NoFTLSet) (l : NoFTLSet) (velocityJoining : NoFTLObj) (p : NoFTLObj) (q : NoFTLObj) (h1 : slopeFinite p q) (h2 : onLine p l ∧ onLine q l) : lineVelocity l = { velocityJoining p q } := by
+theorem lemLineVelocityUsingPoints (l : NoFTLSet) (p : NoFTLObj) (q : NoFTLObj) (h1 : slopeFinite p q) (h2 : onLine p l ∧ onLine q l) : lineVelocity l = { velocityJoining p q } := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -123,7 +123,7 @@ Theorem name: lemNonParallelVectorsExist
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNonParallelVectorsExist (origin : NoFTLObj) (tval : NoFTLObj → NoFTLObj) (v : NoFTLObj) : ∃ w, ((w ≠ origin) ∧ (tval v = tval w)) ∧ (¬ (∃ α, (α ≠ 0) ∧ v = (α * w))) := by
+theorem lemNonParallelVectorsExist (v : NoFTLObj) : ∃ w, ((w ≠ origin) ∧ (tval v = tval w)) ∧ (¬ (∃ α, (α ≠ 0) ∧ v = (α * w))) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -209,7 +209,7 @@ Theorem name: lemQuadCoordinates
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemQuadCoordinates (tval : NoFTLObj → NoFTLObj) (p : NoFTLObj) (x : NoFTLObj) (sComponent : NoFTLObj → NoFTLObj) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (h1 : p = (B ( D))) (h2 : a = mNorm2 D) (h3 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h4 : c = mNorm2 (Bx)) : sqr (tval (p-x)) - sNorm2 (sComponent (p-x)) = a*(sqr α) + b*α + c := by
+theorem lemQuadCoordinates (p : NoFTLObj) (x : NoFTLObj) (B : NoFTLObj) (D : NoFTLObj) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (h1 : p = B + α * D) (h2 : a = mNorm2 D) (h3 : b = 2*(tval (B - x))*(tval D) - 2*(sdot (sComponent D) (sComponent (B - x)))) (h4 : c = mNorm2 (B - x)) : sqr (tval (p-x)) - sNorm2 (sComponent (p-x)) = a*(sqr α) + b*α + c := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -252,7 +252,7 @@ Theorem name: lemWhereLineMeetsCone
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemWhereLineMeetsCone (qroot : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (regularCone : NoFTLObj → NoFTLObj → Prop) (x : NoFTLObj) (B : NoFTLObj) (D : NoFTLObj) (h1 : a = mNorm2 D) (h2 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h3 : c = mNorm2 (Bx)) : qroot a b c α ↔ regularCone x (B + (α*D)) := by
+theorem lemWhereLineMeetsCone (qroot : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (x : NoFTLObj) (B : NoFTLObj) (D : NoFTLObj) (h1 : a = mNorm2 D) (h2 : b = 2*(tval (B - x))*(tval D) - 2*(sdot (sComponent D) (sComponent (B - x)))) (h3 : c = mNorm2 (B - x)) : qroot a b c α ↔ regularCone x (B + (α*D)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -266,7 +266,7 @@ Theorem name: lemLineMeetsCone1
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone1 (qcase1 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = mNorm2 X) : (qcase1 a b c → S = setOf' (fun q => q = B)) := by
+theorem lemLineMeetsCone1 (qcase1 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (D : NoFTLObj) (X : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (hl : l = lineJoining B D) (hX : X = B - x) (ha : a = mNorm2 D) (hb : b = 2*(tval X)*(tval D) - 2*(sdot (sComponent D) (sComponent X))) (hc : c = mNorm2 X) : (qcase1 a b c → S = setOf' (fun q => q = B)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -280,7 +280,7 @@ Theorem name: lemLineMeetsCone2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone2 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (h4 : a = mNorm2 D) (h5 : b = 2*(tval (Bx))*(tval D) - 2*((sComponent D) s (sComponent (Bx)))) (h6 : c = mNorm2 (Bx)) : qcase2 a b c → S = {} := by
+theorem lemLineMeetsCone2 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (D : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (hl : l = lineJoining B D) (h4 : a = mNorm2 D) (h5 : b = 2*(tval (B - x))*(tval D) - 2*(sdot (sComponent D) (sComponent (B - x)))) (h6 : c = mNorm2 (B - x)) : qcase2 a b c → S = {} := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -294,7 +294,7 @@ Theorem name: lemLineMeetsCone3
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone3 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (_hy3 : y3 = (B ((-c/b)D))) : qcase3 a b c → S = setOf' (fun q => q = y3) := by
+theorem lemLineMeetsCone3 (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (D : NoFTLObj) (X : NoFTLObj) (y3 : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (hl : l = lineJoining B D) (hX : X = B - x) (ha : a = mNorm2 D) (hb : b = 2*(tval X)*(tval D) - 2*(sdot (sComponent D) (sComponent X))) (hc : c = sqr (tval X) - sNorm2 (sComponent X)) (hy3 : y3 = B + (-c/b) * D) : qcase3 a b c → S = setOf' (fun q => q = y3) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -308,7 +308,7 @@ Theorem name: lemLineMeetsCone4
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone4 (qcase4 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) : (qcase4 a b c → S = {}) := by
+theorem lemLineMeetsCone4 (qcase4 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (D : NoFTLObj) (X : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (hl : l = lineJoining B D) (hX : X = B - x) (ha : a = mNorm2 D) (hb : b = 2*(tval X)*(tval D) - 2*(sdot (sComponent D) (sComponent X))) (hc : c = sqr (tval X) - sNorm2 (sComponent X)) : (qcase4 a b c → S = {}) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -322,7 +322,7 @@ Theorem name: lemLineMeetsCone5
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemLineMeetsCone5 (qcase5 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (y5 : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (y5 : y5 = (B ((-b/(2*a))D))) : (qcase5 a b c → S = setOf' (fun q => q = y5)) := by
+theorem lemLineMeetsCone5 (qcase5 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (S : NoFTLSet) (y5 : NoFTLObj) (B : NoFTLObj) (D : NoFTLObj) (X : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (hl : l = lineJoining B D) (hX : X = B - x) (ha : a = mNorm2 D) (hb : b = 2*(tval X)*(tval D) - 2*(sdot (sComponent D) (sComponent X))) (hc : c = sqr (tval X) - sNorm2 (sComponent X)) (hy5 : y5 = B + (-b/(2*a)) * D) : (qcase5 a b c → S = setOf' (fun q => q = y5)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 
@@ -337,7 +337,7 @@ Lean tactic class: arithmetic_norm_num
 -/
 
 
-theorem lemLineMeetsCone6 (qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (ym : NoFTLObj) (yp : NoFTLObj) (S : NoFTLSet) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (l : l = line B D) (X : X = (B x)) (a : a = mNorm2 D) (b : b = 2*(tval X)*(tval D) - 2*((sComponent D) s (sComponent X))) (c : c = sqr (tval X) - sNorm2 (sComponent X)) (ym : ym = (B (((-b - (sqrt (discriminant a b c))) / (2*a)) D))) (yp : yp = (B (((-b + (sqrt (discriminant a b c))) / (2*a)) D))) : (qcase6 a b c → (ym ≠ yp) ∧ S = {ym, yp}) := by
+theorem lemLineMeetsCone6 (qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (a : NoFTLObj) (b : NoFTLObj) (c : NoFTLObj) (ym : NoFTLObj) (yp : NoFTLObj) (S : NoFTLSet) (B : NoFTLObj) (D : NoFTLObj) (X : NoFTLObj) (h1 : ¬ (x ∈ l)) (h2 : isLine l) (h3 : S = l ∩ regularConeSet x) (hl : l = lineJoining B D) (hX : X = B - x) (ha : a = mNorm2 D) (hb : b = 2*(tval X)*(tval D) - 2*(sdot (sComponent D) (sComponent X))) (hc : c = sqr (tval X) - sNorm2 (sComponent X)) (hym : ym = B + ((-b - (sqrt (discriminant a b c))) / (2*a)) * D) (hyp : yp = B + ((-b + (sqrt (discriminant a b c))) / (2*a)) * D) : (qcase6 a b c → (ym ≠ yp) ∧ S = {ym, yp}) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

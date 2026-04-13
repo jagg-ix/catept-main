@@ -25,7 +25,7 @@ Theorem name: sublemma3Translation
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem sublemma3Translation (x : NoFTLObj) (wl : NoFTLSet) (p : NoFTLObj) (h1 : onLine p l) (h2 : norm2 (px) = 1) (h3 : tangentLine l wl x) : ∀ ε, ε > 0 →  ∃ δ, δ > 0 ∧  ∀ y nyx, ((y within δ of x) ∧ (y ≠ x) ∧ (y ∈ wl) ∧ (norm (y-x) = nyx)) → (((1/nyx)*(y-x)) within ε of (p-x)) ∨ (((-1/nyx)*(y-x)) within ε of (p-x)) := by
+theorem sublemma3Translation (x : NoFTLObj) (wl : NoFTLSet) (p : NoFTLObj) (h1 : onLine p l) (h2 : norm2 (p - x) = 1) (h3 : tangentLine l wl x) : ∀ ε, ε > 0 →  ∃ δ, δ > 0 ∧  ∀ y nyx, ((y within δ of x) ∧ (y ≠ x) ∧ (y ∈ wl) ∧ (norm (y-x) = nyx)) → (((1/nyx)*(y-x)) within ε of (p-x)) ∨ (((-1/nyx)*(y-x)) within ε of (p-x)) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Sublemma3

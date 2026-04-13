@@ -95,7 +95,7 @@ Theorem name: lemAffineEqualAtBase
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemAffineEqualAtBase (f : NoFTLObj → NoFTLObj) (x : NoFTLObj) (A : NoFTLObj) (h1 : affineApprox A f x) : ∀ y, (f x = y) ↔ (y = A x) := by
+theorem lemAffineEqualAtBase (f : NoFTLObj → NoFTLObj) (x : NoFTLObj) (A : NoFTLObj) (h1 : affineApprox A (toFunc f) x) : ∀ y, (f x = y) ↔ (y = A x) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

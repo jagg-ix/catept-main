@@ -11,7 +11,7 @@ Theorem name: lemNoFTLGR
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemNoFTLGR (lineSlopeFinite : NoFTLObj → Prop) (l : NoFTLObj) (v : NoFTLObj) (ass1 : x ∈ wline m m ∩ wline m k) (ass2 : tl l m k x) (ass3 : v ∈ lineVelocity l) (ass4 : ∃ p, (p ≠ x) ∧ (p ∈ l)) : (lineSlopeFinite l) ∧ (sNorm2 v < 1) := by
+theorem lemNoFTLGR (l : NoFTLSet) (v : NoFTLObj) (ass1 : x ∈ wline m m ∩ wline m k) (ass2 : tl l m k x) (ass3 : v ∈ lineVelocity l) (ass4 : ∃ p, (p ≠ x) ∧ (p ∈ l)) : (lineSlopeFinite l) ∧ (sNorm2 v < 1) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.NoFTLGR

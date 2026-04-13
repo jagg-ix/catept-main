@@ -39,7 +39,7 @@ Theorem name: lemCtsOfCtsIsCts
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemCtsOfCtsIsCts (g : NoFTLObj) (f : NoFTLObj) (x : NoFTLObj) (h1 : cts f x) (h2 : ∀ y, (f x y) → (cts g y)) : cts (composeRel g f) x := by
+theorem lemCtsOfCtsIsCts (g : NoFTLObj) (f : NoFTLObj) (x : NoFTLObj) (h1 : cts f x) (h2 : ∀ y, (f x = y) → (cts g y)) : cts (composeRel g f) x := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

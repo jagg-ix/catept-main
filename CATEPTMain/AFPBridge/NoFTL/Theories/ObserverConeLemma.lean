@@ -11,7 +11,7 @@ Theorem name: lemConeOfObserved
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemConeOfObserved (coneSet : NoFTLObj → NoFTLObj → NoFTLSet) (k : NoFTLObj) (A : NoFTLObj) (x : NoFTLObj) (h1 : affineApprox A (wvtFunc m k) x) (h2 : m sees k at x) : coneSet k (A x) = regularConeSet (A x) := by
+theorem lemConeOfObserved (coneSet : NoFTLObj → NoFTLObj → NoFTLSet) (k : NoFTLObj) (A : NoFTLObj) (x : NoFTLObj) (h1 : affineApprox A (toFunc (wvt m k)) x) (h2 : sees m k x) : coneSet k (A x) = regularConeSet (A x) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.ObserverConeLemma

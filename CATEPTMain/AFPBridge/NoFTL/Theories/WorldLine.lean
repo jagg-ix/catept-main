@@ -11,7 +11,7 @@ Theorem name: lemWorldLineUnderWVT
 Lean tactic class: needs_human
 -/
 
-theorem lemWorldLineUnderWVT (wvtFunc : NoFTLObj) (m : NoFTLObj) (k : NoFTLObj) (wline : NoFTLObj → NoFTLObj → NoFTLSet) (b : NoFTLObj) : applyToSet (wvtFunc m k) (wline m b) ⊆ wline k b := by
+theorem lemWorldLineUnderWVT (m : NoFTLObj) (k : NoFTLObj) (b : NoFTLObj) : applyToSet (wvt m k) (wline m b) ⊆ wline k b := by
   first | simp_all [Set.mem_setOf_eq, Set.subset_def] | tauto | omega | decide | sorry
 
 

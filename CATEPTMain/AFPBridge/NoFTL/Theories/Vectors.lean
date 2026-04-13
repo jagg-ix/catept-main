@@ -361,7 +361,7 @@ Theorem name: lemMDecomposition
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemMDecomposition (u : NoFTLObj) (up : NoFTLObj) (uo : NoFTLObj) (parallel : NoFTLObj → NoFTLObj) (v : NoFTLObj) (orthogm : NoFTLObj → NoFTLObj) (m : NoFTLObj → NoFTLObj) (h1 : (u m v) ≠ 0) (h2 : mNorm2 v ≠ 0) (h3 : a = (u m v)/(mNorm2 v)) (h4 : up = (a v)) (h5 : uo = (u up)) : u = (up + uo) ∧(parallel up = v)∧(orthogm uo = v)∧ (up *m v) = (u *m v) := by
+theorem lemMDecomposition (u : NoFTLObj) (up : NoFTLObj) (uo : NoFTLObj) (parallel : NoFTLObj → NoFTLObj) (v : NoFTLObj) (h1 : (u *m v) ≠ 0) (h2 : mNorm2 v ≠ 0) (h3 : a = (u *m v) / (mNorm2 v)) (h4 : up = a * v) (h5 : uo = u - up) : u = (up + uo) ∧ (parallel up = v) ∧ orthogm uo v ∧ (up *m v) = (u *m v) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Vectors

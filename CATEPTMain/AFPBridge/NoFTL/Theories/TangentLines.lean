@@ -25,7 +25,7 @@ Theorem name: lemTangentLineA
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemTangentLineA (tangentLineA : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (l : NoFTLObj) (s : NoFTLObj) (x : NoFTLObj) (h1 : tangentLine l s x) : tangentLineA l s x := by
+theorem lemTangentLineA (tangentLineA : NoFTLObj → NoFTLObj → NoFTLObj → Prop) (l : NoFTLSet) (s : NoFTLSet) (x : NoFTLObj) (h1 : tangentLine l s x) : tangentLineA l s x := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 

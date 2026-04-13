@@ -11,7 +11,7 @@ Theorem name: lemProposition2
 Lean tactic class: arithmetic_norm_num
 -/
 
-theorem lemProposition2 (A : NoFTLObj) (coneSet : NoFTLObj → NoFTLObj → NoFTLSet) (m : NoFTLObj) (x : NoFTLObj) (k : NoFTLObj) (h1 : affineApprox A (wvtFunc m k) x) : applyToSet (asFunc A) (coneSet m x) ⊆ coneSet k (A x) := by
+theorem lemProposition2 (A : NoFTLObj) (coneSet : NoFTLObj → NoFTLObj → NoFTLSet) (m : NoFTLObj) (x : NoFTLObj) (k : NoFTLObj) (h1 : affineApprox A (toFunc (wvt m k)) x) : applyToSet (asFunc A) (coneSet m x) ⊆ coneSet k (A x) := by
   first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
 
 end AFPIsabellePilot.Proposition2

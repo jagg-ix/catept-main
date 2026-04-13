@@ -60,6 +60,8 @@ axiom definedAt      : NoFTLObj → NoFTLObj → Prop
 
 -- ── Geometric constructors ─────────────────────────────────────────────────────
 axiom lineJoining    : NoFTLObj → NoFTLObj → NoFTLSet
+-- Isabelle `line` = our lineJoining
+noncomputable abbrev line := lineJoining
 axiom applyToSet     : (NoFTLObj → NoFTLObj) → NoFTLSet → NoFTLSet
 axiom asFunc         : NoFTLObj → (NoFTLObj → NoFTLObj)
 axiom composeRel     : NoFTLObj → NoFTLObj → NoFTLObj
@@ -77,13 +79,6 @@ axiom sqrt             : NoFTLObj → NoFTLObj             -- square root
 axiom velocityJoining  : NoFTLObj → NoFTLObj → NoFTLObj  -- join velocity
 axiom lineVelocity     : NoFTLSet → NoFTLSet             -- velocity set of a line
 axiom origin           : NoFTLObj                        -- spacetime origin
--- Vector classification predicates (Isabelle abbreviations in class Vectors)
-def timelike   (p : NoFTLObj) : Prop := mNorm2 p > 0
-def lightlike  (p : NoFTLObj) : Prop := p ≠ origin ∧ mNorm2 p = 0
-def spacelike  (p : NoFTLObj) : Prop := mNorm2 p < 0
-def causal     (p : NoFTLObj) : Prop := timelike p ∨ lightlike p
-def orthog     (p q : NoFTLObj) : Prop := dot p q = 0
-def orthogm    (p q : NoFTLObj) : Prop := (p *m q) = 0
 -- Isabelle's slopeFinite predicate (used in Classification)
 axiom slopeFinite : NoFTLObj → NoFTLObj → Prop
 -- Isabelle's lineSlopeFinite predicate
@@ -218,9 +213,45 @@ syntax "⟦" sepBy1(isaPremise, ";") "⟧" : term
 macro_rules
   | `(⟦ $_ps;* ⟧) => `(True)
 
+-- ── Additional axioms required by theory files ────────────────────────────────
+-- Sorts predicates
+axiom hasRoot          : NoFTLObj → Prop
+-- Norms / triangle inequality
+axiom axTriangleInequality : NoFTLObj → NoFTLObj → Prop
+-- Classification predicates
+axiom slopeInfinite    : NoFTLObj → NoFTLObj → Prop
+-- Quadratics case predicates (Isabelle abbreviations qcase1..6)
+axiom qcase1 : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+axiom qcase2 : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+axiom qcase3 : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+axiom qcase4 : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+axiom qcase5 : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+axiom qcase6 : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+-- Tangent Line predicate (Isabelle: tl observer observer observer → bool)
+axiom tl : NoFTLSet → NoFTLObj → NoFTLObj → NoFTLObj → Prop
+-- Affine decomposition predicates
+axiom isTranslationPart : NoFTLObj → NoFTLObj → Prop
+axiom isLinearPart      : NoFTLObj → NoFTLObj → Prop
+-- Tangent-line predicates
+axiom tangentLine  : NoFTLSet → NoFTLSet → NoFTLObj → Prop
+axiom tangentLineA : NoFTLObj → NoFTLObj → NoFTLObj → Prop
+-- Membership of NoFTLObj in NoFTLObj (for l : NoFTLObj used as a set)
+axiom instMembershipNoFTLObjObj : Membership NoFTLObj NoFTLObj
+attribute [instance] instMembershipNoFTLObjObj
+
 -- ── Compile-safe placeholder for untranslatable theorem statements ─────────────
 -- Used when the CTIR cannot produce a valid Lean type for a theorem.
 -- All theorems using this are sorry-discharged stubs.
 def wolframStatementPlaceholder (_theoremId : String) (_sourceStatement : String) : Prop := True
+
+-- ── Vector classification predicates ──────────────────────────────────────────
+-- Isabelle abbreviations from class Vectors — placed here so mNorm2, dot,
+-- *m notation and OfNat instances are all in scope.
+def timelike   (p : NoFTLObj) : Prop := mNorm2 p > 0
+def lightlike  (p : NoFTLObj) : Prop := p ≠ origin ∧ mNorm2 p = 0
+def spacelike  (p : NoFTLObj) : Prop := mNorm2 p < 0
+def causal     (p : NoFTLObj) : Prop := timelike p ∨ lightlike p
+def orthog     (p q : NoFTLObj) : Prop := dot p q = 0
+def orthogm    (p q : NoFTLObj) : Prop := (p *m q) = 0
 
 end AFPIsabellePilot
