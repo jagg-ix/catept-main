@@ -1,16 +1,47 @@
 # CATEPT Main (Lean 4.29 Clean Migration)
 
-This repository is a clean Lean 4.29 migration target.
+This repository is a clean Lean 4.29 integration hub.
 
-## Included compatible module lane
+## Integrated repositories
 
-- `physlib` (local pin)
-- `bochner` / `BochnerMinlos` (local pin)
-- `hille-yosida` (local pin)
-- `cslib-inspect` (local pin)
-- `pphi2` (local pin)
+### Direct 4.29 lane (wired in `lakefile.lean`)
 
-## Notes
+- `bochner`
+- `hille-yosida`
+- `pphi2`
+- `cslib-inspect`
 
-- Dependencies are pinned by commit in `lakefile.lean` for reproducibility.
-- Legacy or RC packages are intentionally excluded from the initial clean lane.
+### CAT/EPT Maxwell-CurveSpace + pphi2 bridge
+
+- `CATEPTMain/Integration/MaxwellCurveSpacePphi2Bridge.lean`
+	- adds an interface-level integration contract between CAT/EPT curved Maxwell/CurveSpace
+		assumptions and a pphi2 OS/reconstruction witness.
+
+### Bridge or upgrade lane (tracked in integration matrix)
+
+- `lean-quantuminfo-inspect`
+- `brownian-motion-inspect`
+- `kolmogorov-complexity-lean-inspect`
+
+### Legacy port-required lane (tracked in integration matrix)
+
+- `ThermodynamicsLean-inspect`
+- `carleson-inspect`
+- `gibbsmeasure-inspect`
+- `hopf-lean-4.26-port`
+
+## How integration is represented
+
+- `lakefile.lean`: active direct 4.29 dependencies with pinned commits.
+- `integration/repos.yaml`: full registry for all requested repositories.
+- `CATEPTMain/External/Registry.lean`: Lean-side registry for integration visibility.
+- `scripts/sync_repo_matrix.sh`: emits current local commit/toolchain snapshot.
+- `scripts/build_direct_lane.sh`: builds the direct 4.29 lane.
+
+## Commands
+
+```bash
+cd /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main
+bash scripts/sync_repo_matrix.sh
+bash scripts/build_direct_lane.sh
+```

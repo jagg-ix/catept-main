@@ -1,0 +1,58 @@
+repositories:
+  - name: bochner
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/bochner
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: direct_4_29
+    package: BochnerMinlos
+  - name: hille-yosida
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/hille-yosida
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: direct_4_29
+    package: HilleYosida
+  - name: pphi2
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/pphi2
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: direct_4_29
+    package: pphi2
+  - name: cslib-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/cslib-inspect
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: direct_4_29
+    package: cslib
+
+  - name: lean-quantuminfo-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/lean-quantuminfo-inspect
+    toolchain: leanprover/lean4:v4.28.0
+    integration_mode: bridge_upgrade_required
+    package: quantumInfo
+  - name: brownian-motion-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/brownian-motion-inspect
+    toolchain: leanprover/lean4:v4.28.0-rc1
+    integration_mode: bridge_upgrade_required
+    package: BrownianMotion
+  - name: kolmogorov-complexity-lean-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/kolmogorov-complexity-lean-inspect
+    toolchain: leanprover/lean4:v4.29.0-rc8
+    integration_mode: bridge_upgrade_required
+    package: logic
+
+  - name: ThermodynamicsLean-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/ThermodynamicsLean-inspect
+    toolchain: leanprover/lean4:v4.24.0-rc1
+    integration_mode: legacy_port_required
+    package: LY
+  - name: carleson-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/carleson-inspect
+    toolchain: leanprover/lean4:v4.15.0
+    integration_mode: legacy_port_required
+    package: carleson
+  - name: gibbsmeasure-inspect
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/gibbsmeasure-inspect
+    toolchain: leanprover/lean4:v4.22.0
+    integration_mode: legacy_port_required
+    package: GibbsMeasure
+  - name: hopf-lean-4.26-port
+    path: /Users/macbookpro/lab/tau/tau-information-dynamics/hopf-lean-4.26-port
+    toolchain: leanprover/lean4:v4.26.0
+    integration_mode: legacy_port_required
+    package: hopf_lean
