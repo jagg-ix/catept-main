@@ -1,0 +1,10 @@
+-- Opt-in bridge surface for AFP-derived modules.
+-- Intentionally not imported by NavierStokesClean.lean yet.
+
+import NavierStokesClean.AFPBridge.Units.PhysicalQuantitiesBridge
+import NavierStokesClean.AFPBridge.QuantumOps.ComplexBoundedOperatorsBridge
+import NavierStokesClean.AFPBridge.QuantumOps.HilbertTensorProductBridge
+import NavierStokesClean.AFPBridge.QuantumOps.MatrixTensorBridge
+import NavierStokesClean.AFPBridge.Transforms.LaplaceTransformBridge
+import NavierStokesClean.AFPBridge.Spacetime.SchutzSpacetimeBridge
+import NavierStokesClean.AFPBridge.Geometry.SmoothManifoldsBridge

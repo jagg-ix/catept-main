@@ -1,0 +1,36 @@
+-- Default CATEPT surface used by NavierStokesClean.lean.
+-- Keeps extracted experimental modules out of the default import path.
+
+import NavierStokesClean.CATEPT.Foundations
+import NavierStokesClean.CATEPT.PathIntegrals
+import NavierStokesClean.CATEPT.MeasurePathIntegral
+import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
+import NavierStokesClean.CATEPT.LatticeQCDBridge
+import NavierStokesClean.CATEPT.QuantumGravity
+import NavierStokesClean.CATEPT.QFTGRClosures
+import NavierStokesClean.CATEPT.CATEPTBridge
+import NavierStokesClean.CATEPT.Basic
+import NavierStokesClean.CATEPT.WeylYukawaContracts
+import NavierStokesClean.CATEPT.WeylYukawaContractsAudit
+
+import NavierStokesClean.CATEPT.ComplexEinsteinMTPIBridge
+import NavierStokesClean.CATEPT.BianchiComplexEFEContracts
+import NavierStokesClean.CATEPT.LeanMWEInteropBridge
+import NavierStokesClean.CATEPT.MTPIEinsteinDerivationBridge
+import NavierStokesClean.CATEPT.ComplexEFEQFTCompatibility
+import NavierStokesClean.CATEPT.GRTensorKernel
+import NavierStokesClean.CATEPT.SchwarzschildCurvatureIdentities
+import NavierStokesClean.CATEPT.ModularFlowKucharBridge
+import NavierStokesClean.CATEPT.PaperEqAliases
+
+import NavierStokesClean.CATEPT.CovariantDerivative
+import NavierStokesClean.CATEPT.CurvedMaxwellUnified
+import NavierStokesClean.CATEPT.CurvedMaxwellPhysLeanBridge
+import NavierStokesClean.CATEPT.CurvedMaxwellEinsteinDerivation
+import NavierStokesClean.CATEPT.CurvedSpacetimeAFPLeanMWEBridge
+import NavierStokesClean.CATEPT.CurvedSpacetimeAFPLeanMWECompositionBridge
+import NavierStokesClean.CATEPT.MaxwellWaveEntropicTimePublic
+import NavierStokesClean.CATEPT.CFLClockEntropicBridge
+import NavierStokesClean.CATEPT.FLRWMetric
+import NavierStokesClean.CATEPT.KerrMetric
+import NavierStokesClean.CATEPT.IRDerivedStubs
