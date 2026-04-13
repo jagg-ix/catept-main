@@ -1,0 +1,21 @@
+import NavierStokesClean.AxiomaticEstimates
+import NavierStokesClean.BKMMinimalBridge
+import NavierStokesClean.NSDualSphereFiberDecomposition
+import NavierStokesClean.NSVSNuPEquivalenceGraph
+import NavierStokesClean.NSGalerkinConvDef
+import NavierStokesClean.SubcriticalConditionalRegularity
+import NavierStokesClean.NSObservableInterface
+import NavierStokesClean.NSRouteFClosureCertificate
+import NavierStokesClean.NSCATEPTModularFlowQFTKucharBridge
+import NavierStokesClean.NST3SobolevSupplement
+import NavierStokesClean.NSSemanticFidelityGapAudit
+import NavierStokesClean.NSGalerkinDefectSplitBridge
+import NavierStokesClean.NSGalerkinDefectConvergenceClosure
+import NavierStokesClean.NSDefectContractEquivalence
+import NavierStokesClean.NSGalerkinPalFourierBridge
+import NavierStokesClean.NSGalerkinVSDefectBridge
+
+/-!
+Aggregate import for the second legacy leverage wave (tracked + manual-lane set).
+Kept as an opt-in surface so contributors can inspect and port incrementally.
+-/
