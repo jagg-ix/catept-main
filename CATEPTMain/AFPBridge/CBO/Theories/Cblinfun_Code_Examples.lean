@@ -60,11 +60,22 @@ theorem hadamard_sq_eq_id :
                 Matrix.one_apply, RCLike.real_smul_eq_coe_mul]
   -- Step 2: factor the ℝ-scalar prefactor through the product
   simp only [hadamard_mat, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, hMM]
-  -- Step 3: collapse the ℝ-smul chain; prove scalar coefficient = 1 in ℝ, then one_smul.
-  have hcoeff : (1 / Real.sqrt 2 : ℝ) * (1 / Real.sqrt 2 : ℝ) * 2 = 1 := by
+  -- Step 3: entry-wise — sidesteps the Algebra/Module SMul instance diamond that blocks smul_smul.
+  -- After Step 2, goal is: (1/√2) • (1/√2) • 2 • (1:Matrix) = 1
+  -- smul_smul can't fire because • uses Algebra.toSMul, not Module.toSMul after Algebra.smul_mul_assoc.
+  -- Fix: ext+fin_cases reduces to scalar ℂ entries; RCLike.real_smul_eq_coe_mul converts • to *;
+  --   off-diagonal closes via mul_zero; diagonal via exact_mod_cast with right-assoc hcoeff.
+  have hcoeff : (1 / Real.sqrt 2 : ℝ) * ((1 / Real.sqrt 2 : ℝ) * 2) = 1 := by
     field_simp [hne]
     nlinarith [Real.sq_sqrt (show (0:ℝ) ≤ 2 by norm_num)]
-  simp only [smul_smul, ← mul_assoc, hcoeff, one_smul]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    -- Fin.ext_iff converts ⟨a,h⟩ = ⟨b,h'⟩ → a.val = b.val so ↓reduceIte can evaluate.
+    -- if_false/if_true must stay: ↓reduceIte needs them to discharge the ite even though
+    -- the linter incorrectly reports them as unused (Lean 4 ↓ discharge interaction).
+    simp only [Matrix.smul_apply, Matrix.one_apply, Fin.ext_iff, ↓reduceIte, if_false, if_true,
+               smul_zero, RCLike.real_smul_eq_coe_mul, mul_zero, mul_one] <;>
+    exact_mod_cast hcoeff
 
 -- ── Trace computations ────────────────────────────────────────────────────────
 -- Tr(σ_X) = 0
