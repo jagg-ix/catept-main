@@ -1,12 +1,17 @@
 import Mathlib
-import Physlib
 import Bochner
-import Minlos
 import HilleYosida
 import Cslib
-import Pphi2
 import CATEPTMain.External.Registry
 import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
+import CATEPTMain.Integration.EntropicProperTimeCoreBridge
+import CATEPTMain.Integration.Pphi2CATEPTEPTBridge
+import CATEPTMain.Integration.ComplexDimensionalModularBridge
+import CATEPTMain.Integration.AlphaDivergencePathIntegralBridge
+import CATEPTMain.Integration.YoshidaFreeFisherBridge
+import CATEPTMain.Integration.QuantumFisherBridge
+import CATEPTMain.Integration.InformationDimensionalFrameworkBridge
+import CATEPTMain.Gravitas
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.
