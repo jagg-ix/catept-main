@@ -68,7 +68,7 @@ private def hamiltonianConstraint
   let R3   := spatialRicciScalar adm
   let ρ    := decomp.energyDensity
   let π    := .var "π"
-  simplify (.sub (.add (.sub R3 (.mul K K)) kSq)
+  simplify (.sub (.sub (.add R3 (.mul K K)) kSq)
                  (.mul (.mul (.mul (.lit 16) π) G_N) ρ))
 
 /-- Momentum constraint M_i = ∇^j K_{ij} - ∇_i K - 8πG j_i.

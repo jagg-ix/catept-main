@@ -251,8 +251,6 @@ def MetricTensor.kruskalSzekeres (mass : String := "M")
   -- r is implicitly defined by T²-X² = (1-r/2M)e^{r/2M}; we leave it symbolic
   let r := .var "r"  -- implicit r(T,X)
   let M := .var mass
-  let factor := .mul (.div (.mul (.lit 32) (.mul (.pow M (.lit 3)) (.exp (.neg (.div r (.mul (.lit 2) M))))))
-                          (.pow r (.lit 0))) (.lit 1)
   -- ds² = (32M³/r) e^{-r/2M} (-dT²+dX²) + r² dΩ²
   let fac32 := .div (.mul (.lit 32) (.mul (.pow M (.lit 3)) (.exp (.div (.neg r) (.mul (.lit 2) M))))) r
   let gCov := matBuild 4 (fun i j =>
@@ -358,8 +356,9 @@ def MetricTensor.godel (ω : String := "ω")
     (idx1 idx2 : IndexKind := co) : MetricTensor :=
   let x := coords[1]!
   let ω_ := .var ω
-  let ex := .exp (.mul (.mul (.lit 2) (.sqrt (.lit 2))) (.mul ω_ (.var x)))
-  let ex2 := .exp (.mul (.mul (.lit 2) (.sqrt (.lit 2))) (.mul ω_ (.var x)))
+  -- g_{tz} = -e^{√2 ω x},  g_{zz} = -½ e^{2√2 ω x}
+  let ex  := .exp (.mul (.sqrt (.lit 2)) (.mul ω_ (.var x)))         -- e^{√2 ω x}
+  let ex2 := .exp (.mul (.mul (.lit 2) (.sqrt (.lit 2))) (.mul ω_ (.var x)))  -- e^{2√2 ω x}
   let gCov := matBuild 4 (fun i j =>
     match i, j with
     | 0, 0 => .lit (-1)

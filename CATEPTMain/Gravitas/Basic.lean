@@ -57,8 +57,8 @@ instance : Mul Expr where
 instance : Div Expr where
   div := .div
 
-/-- Shorthand for a rational literal. -/
-def q (p q : Int) : Expr := .lit (p : Rat) / (q : Rat)
+/-- Shorthand for a rational literal p/d. -/
+def q (num den : Int) : Expr := .div (.lit (num : Rat)) (.lit (den : Rat))
 
 -- ---------------------------------------------------------------------------
 -- Basic simplification

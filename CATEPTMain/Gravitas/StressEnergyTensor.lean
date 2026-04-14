@@ -48,6 +48,13 @@ private def toIndexed (gCov gInv tcov : Mat) (idx1 idx2 : IndexKind) : Mat :=
       matBuild n (fun i j =>
         sumN n (fun k => simplify (.mul (matGet gInv i k) (matGet tcov k j))))
 
+/-- Lower a contravariant T^{μν} to covariant T_{μν} = g_{μα} g_{νβ} T^{αβ}. -/
+private def lowerBoth (gCov tCon : Mat) : Mat :=
+  let n := gCov.size
+  matBuild n (fun μ ν =>
+    sumN n (fun α => sumN n (fun β =>
+      simplify (.mul (.mul (matGet gCov μ α) (matGet gCov ν β)) (matGet tCon α β)))))
+
 /-- All named matter models. -/
 def allNames : List String :=
   ["Symmetric", "SymmetricField", "Asymmetric", "AsymmetricField",
@@ -66,14 +73,14 @@ def symmetric (g : MetricTensor) (idx1 idx2 : IndexKind := con) : StressEnergyTe
     .var s!"T{ij.1}{ij.2}")
   let gCov := g.covariantMatrix
   let gInv := g.inverseMatrix
-  { metric := g, components := toIndexed gCov gInv tCon idx1 idx2, idx1, idx2 }
+  { metric := g, components := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2, idx1, idx2 }
 
 def asymmetric (g : MetricTensor) (idx1 idx2 : IndexKind := con) : StressEnergyTensor :=
   let n := g.dim
   let tCon := matBuild n (fun i j => .var s!"T{i}{j}")
   let gCov := g.covariantMatrix
   let gInv := g.inverseMatrix
-  { metric := g, components := toIndexed gCov gInv tCon idx1 idx2, idx1, idx2 }
+  { metric := g, components := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2, idx1, idx2 }
 
 -- ---------------------------------------------------------------------------
 -- Perfect Fluid:  T^{μν} = (ρ+P) u^μ u^ν + P g^{μν}
@@ -90,9 +97,7 @@ def perfectFluid (g : MetricTensor) (ρ P : Expr) (u : Array Expr)
   let tCon := matBuild n (fun μ ν =>
     simplify (.add (.mul (.add ρ P) (.mul (u.get! μ) (u.get! ν)))
                    (.mul P (matGet gInv μ ν))))
-  -- lower to covariant via metric
-  let tcov := toIndexed gCov gInv tCon true true
-  let comps := toIndexed gCov gInv (if idx1 && idx2 then tcov else tCon) idx1 idx2
+  let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
 
 /-- Default perfect fluid with symbolic variables. -/
@@ -115,7 +120,7 @@ def dust (g : MetricTensor) (ρ : Expr) (u : Array Expr)
   let gInv := g.inverseMatrix
   let tCon := matBuild n (fun μ ν =>
     simplify (.mul ρ (.mul (u.get! μ) (u.get! ν))))
-  let comps := toIndexed gCov gInv tCon idx1 idx2
+  let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
 
 def dustSymbolic (g : MetricTensor) (idx1 idx2 : IndexKind := co) : StressEnergyTensor :=
@@ -135,7 +140,7 @@ def radiation (g : MetricTensor) (ρ : Expr) (u : Array Expr)
     simplify (.mul (.div ρ (.lit 3))
                    (.add (.mul (.lit 4) (.mul (u.get! μ) (u.get! ν)))
                          (matGet gInv μ ν))))
-  let comps := toIndexed gCov gInv tCon idx1 idx2
+  let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
 
 def radiationSymbolic (g : MetricTensor) (idx1 idx2 : IndexKind := co) : StressEnergyTensor :=
@@ -167,7 +172,7 @@ def electromagneticField (g : MetricTensor) (F : Mat) (μ₀ : Expr)
                      (sumN n (fun β => simplify (.mul (matGet gCov α β) (matGet fUp ν β))))))
     simplify (.mul (.div (.lit 1) μ₀)
                    (.sub term1 (.mul (.mul (.lit (1/4)) (matGet gInv μ ν)) fSq))))
-  let comps := toIndexed gCov gInv tCon idx1 idx2
+  let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
 
 -- ---------------------------------------------------------------------------
