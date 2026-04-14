@@ -20,6 +20,264 @@ repositories:
     integration_mode: direct_4_29
     package: cslib
 
+  - name: isabelle-marries-dirac-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: IMD
+    afp_entry: Isabelle_Marries_Dirac
+    afp_url: https://www.isa-afp.org/entries/Isabelle_Marries_Dirac.html
+    prior_version: v0_scrapped
+    target_module_root: CATEPTMain.AFPBridge.IMD
+    worklog: CATEPTMain/AFPBridge/IMD/IMD_WORKLOG.lean
+    theories:
+      - Basics
+      - Binary_Nat
+      - Complex_Vectors
+      - Quantum
+      - Tensor
+      - More_Tensor
+      - Measurement
+      - Entanglement
+      - Quantum_Teleportation
+      - Deutsch
+      - Deutsch_Jozsa
+      - No_Cloning
+      - Quantum_Prisoners_Dilemma
+    afp_deps:
+      - Jordan_Normal_Form
+      - Matrix_Tensor
+      - VectorSpace
+    afp_used_by:
+      - Projective_Measurements
+      - Quantum_Fourier_Transform
+    pre_generation_gates:
+      - IMD-PRE-001  # AFP dependency bridge
+      - IMD-PRE-002  # Prelude-first strategy
+      - IMD-PRE-003  # Concrete type map
+      - IMD-PRE-004  # Binder analysis pre-pass
+      - IMD-PRE-005  # Name recovery
+      - IMD-PRE-006  # No autoImplicit
+
+  - name: projective-measurements-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: PM
+    afp_entry: Projective_Measurements
+    afp_url: https://www.isa-afp.org/entries/Projective_Measurements.html
+    target_module_root: CATEPTMain.AFPBridge.PM
+    worklog: CATEPTMain/AFPBridge/PM/PM_WORKLOG.lean
+    theories:
+      - Linear_Algebra_Complements
+      - Projective_Measurements
+      - CHSH_Inequality
+    afp_deps:
+      - Isabelle_Marries_Dirac
+      - QHLProver
+    afp_used_by: []
+    pre_generation_gates:
+      - PM-PRE-001  # IMD + QHLProver bridge
+      - PM-PRE-002  # Prelude-first (PMPrelude.lean)
+      - PM-PRE-003  # Type map
+      - PM-PRE-004  # Binder analysis
+
+  - name: quantum-fourier-transform-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: QFT
+    afp_entry: Quantum_Fourier_Transform
+    afp_url: https://www.isa-afp.org/entries/Quantum_Fourier_Transform.html
+    target_module_root: CATEPTMain.AFPBridge.QFT
+    worklog: CATEPTMain/AFPBridge/QFT/QFT_WORKLOG.lean
+    theories:
+      - QFT
+    afp_deps:
+      - Isabelle_Marries_Dirac
+    afp_used_by: []
+    pre_generation_gates:
+      - QFT-PRE-001  # IMD bridge
+      - QFT-PRE-002  # Prelude-first (QFTPrelude.lean)
+      - QFT-PRE-003  # Type map
+      - QFT-PRE-004  # Binder analysis
+
+  - name: complex-bounded-operators-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: CBO
+    afp_entry: Complex_Bounded_Operators
+    afp_url: https://www.isa-afp.org/entries/Complex_Bounded_Operators.html
+    target_module_root: CATEPTMain.AFPBridge.CBO
+    worklog: CATEPTMain/AFPBridge/CBO/CBO_WORKLOG.lean
+    theories:
+      - Extra_Pretty_Code_Examples
+      - Extra_General
+      - Extra_Vector_Spaces
+      - Extra_Ordered_Fields
+      - Extra_Operator_Norm
+      - Complex_Vector_Spaces0
+      - Complex_Vector_Spaces
+      - Complex_Inner_Product0
+      - Complex_Inner_Product
+      - One_Dimensional_Spaces
+      - Complex_Euclidean_Space0
+      - Complex_Bounded_Linear_Function0
+      - Complex_Bounded_Linear_Function
+      - Complex_L2
+      - Extra_Jordan_Normal_Form
+      - Cblinfun_Matrix
+      - Cblinfun_Code
+      - Cblinfun_Code_Examples
+    afp_deps:
+      - Banach_Steinhaus
+      - Jordan_Normal_Form
+      - Real_Impl
+      - Wlog
+    afp_used_by:
+      - Hilbert_Space_Tensor_Product
+    pre_generation_gates:
+      - CBO-PRE-001  # AFP dep bridge
+      - CBO-PRE-002  # Prelude-first (CBOPrelude.lean)
+      - CBO-PRE-003  # Type map (cblinfun → CBOSpace)
+      - CBO-PRE-004  # Binder analysis
+
+  - name: hilbert-space-tensor-product-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: HSTP
+    afp_entry: Hilbert_Space_Tensor_Product
+    afp_url: https://www.isa-afp.org/entries/Hilbert_Space_Tensor_Product.html
+    target_module_root: CATEPTMain.AFPBridge.HSTP
+    worklog: CATEPTMain/AFPBridge/HSTP/HSTP_WORKLOG.lean
+    theories:
+      - Misc_Tensor_Product
+      - Strong_Operator_Topology
+      - Positive_Operators
+      - HS2Ell2
+      - Weak_Operator_Topology
+      - Misc_Tensor_Product_TTS
+      - Eigenvalues
+      - Compact_Operators
+      - Spectral_Theorem
+      - Trace_Class
+      - Weak_Star_Topology
+      - Hilbert_Space_Tensor_Product
+      - Partial_Trace
+      - Von_Neumann_Algebras
+      - Tensor_Product_Code
+    afp_deps:
+      - Complex_Bounded_Operators
+      - Ordinary_Differential_Equations
+      - With_Type
+      - Wlog
+    afp_used_by: []
+    pre_generation_gates:
+      - HSTP-PRE-001  # CBO + With_Type bridge
+      - HSTP-PRE-002  # Prelude-first (HSTPPrelude.lean)
+      - HSTP-PRE-003  # Type map (tensor Hilbert ≠ Kronecker)
+      - HSTP-PRE-004  # Binder analysis
+
+  - name: smooth-manifolds-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: SM
+    afp_entry: Smooth_Manifolds
+    afp_url: https://www.isa-afp.org/entries/Smooth_Manifolds.html
+    target_module_root: CATEPTMain.AFPBridge.SM
+    worklog: CATEPTMain/AFPBridge/SM/SM_WORKLOG.lean
+    theories:
+      - Analysis_More
+      - Smooth
+      - Bump_Function
+      - Chart
+      - Topological_Manifold
+      - Differentiable_Manifold
+      - Partition_Of_Unity
+      - Tangent_Space
+      - Cotangent_Space
+      - Product_Manifold
+      - Sphere
+      - Projective_Space
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by: []
+    pre_generation_gates:
+      - SM-PRE-001  # HOL-Analysis bridge + TTS strategy
+      - SM-PRE-002  # Prelude-first (SMPrelude.lean)
+      - SM-PRE-003  # Type map (AFP chart vs Mathlib LocalHomeomorph)
+      - SM-PRE-004  # Binder analysis (manifold typeclass)
+
+  - name: fourier-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: FOU
+    afp_entry: Fourier
+    afp_url: https://www.isa-afp.org/entries/Fourier.html
+    target_module_root: CATEPTMain.AFPBridge.FOU
+    worklog: CATEPTMain/AFPBridge/FOU/FOU_WORKLOG.lean
+    theories:
+      - Periodic
+      - Lspace
+      - Square_Integrable
+      - Confine
+      - Fourier_Aux2
+      - Fourier
+    afp_deps:
+      - Lp
+    afp_used_by: []
+    pre_generation_gates:
+      - FOU-PRE-001  # Lp dep bridge
+      - FOU-PRE-002  # Prelude-first (FOUPrelude.lean)
+      - FOU-PRE-003  # Type map (sq_integrable → Memℒp f 2)
+
+  - name: coproduct-measure-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: CPM
+    afp_entry: Coproduct_Measure
+    afp_url: https://www.isa-afp.org/entries/Coproduct_Measure.html
+    target_module_root: CATEPTMain.AFPBridge.CPM
+    worklog: CATEPTMain/AFPBridge/CPM/CPM_WORKLOG.lean
+    theories:
+      - Lemmas_Coproduct_Measure
+      - Coproduct_Measure
+      - Coproduct_Measure_Additional
+    afp_deps:
+      - S_Finite_Measure_Monad
+    afp_used_by: []
+    pre_generation_gates:
+      - CPM-PRE-001  # S_Finite_Measure_Monad bridge
+      - CPM-PRE-002  # Prelude-first (CPMPrelude.lean)
+      - CPM-PRE-003  # Type map (coproduct vs product measure)
+      - CPM-PRE-004  # Binder analysis (indexed family)
+
+  - name: lebesgue-stieltjes-integral-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: LSI
+    afp_entry: Lebesgue_Stieltjes_Integral
+    afp_url: https://www.isa-afp.org/entries/Lebesgue_Stieltjes_Integral.html
+    target_module_root: CATEPTMain.AFPBridge.LSI
+    worklog: CATEPTMain/AFPBridge/LSI/LSI_WORKLOG.lean
+    theories:
+      - Preliminaries_LSI
+      - Lebesgue_Stieltjes_Integral
+    afp_deps:
+      - Wlog
+    afp_used_by: []
+    pre_generation_gates:
+      - LSI-PRE-001  # Wlog + StieltjesFunction bridge
+      - LSI-PRE-002  # Prelude-first (LSIPrelude.lean)
+      - LSI-PRE-003  # Type map (Stieltjes measure types)
+      - LSI-PRE-004  # Binder analysis (monotone function binders)
+
   - name: lean-quantuminfo-inspect
     path: /Users/macbookpro/lab/tau/tau-information-dynamics/lean-quantuminfo-inspect
     toolchain: leanprover/lean4:v4.28.0

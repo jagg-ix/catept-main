@@ -22,6 +22,9 @@ require cslib from git
 require pphi2 from git
   "file:///Users/macbookpro/lab/tau/tau-information-dynamics/pphi2" @ "1211294"
 
+require DimensionalAnalysis from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/LeanDimensionalAnalysis"
+
 -- Keep mathlib last so its transitive versions win during resolution.
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0"
