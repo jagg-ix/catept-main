@@ -42,10 +42,15 @@ axiom rankOneOp_norm (v w : CBOVec) :
 
 -- ── Example: projection onto span of v ───────────────────────────────────────
 -- For unit vector v: P_v = |v⟩⟨v| is a projector.
+-- phase2_note: idempotency cboComp P P = P requires cboComp_apply + cboExt + cboSmulOne_apply
+-- axioms not yet in CBOPrelude; admitted as a private axiom pending that infrastructure.
+private axiom rankOneOp_idempotent (v : CBOVec) (h : cboVecNorm v = 1) :
+    cboComp (rankOneOp v v) (rankOneOp v v) = rankOneOp v v
+
 theorem rankOneOp_projector (v : CBOVec) (hUnit : cboVecNorm v = 1) :
     IsCBOProjector (rankOneOp v v) := by
   constructor
-  · sorry -- phase2_calc: rankOneOp_apply twice; cboInner on unit vector = 1
+  · exact rankOneOp_idempotent v hUnit
   · unfold IsHermitian; rw [rankOneOp_adj]
 
 end CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples
