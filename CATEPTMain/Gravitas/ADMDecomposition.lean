@@ -1,3 +1,6 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+
 /-!
 # Gravitas.ADMDecomposition
 
@@ -21,9 +24,6 @@ where β_i = γ_{ij} β^j.
 Named slicings: Minkowski, Schwarzschild, Kerr, Reissner-Nordström, Kerr-Newman,
 Brill-Lindquist, FLRW (matching WL's `ADMDecomposition[]` list).
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
 
 namespace Gravitas
 
@@ -57,16 +57,16 @@ def spacetimeMetric (adm : ADMDecomposition) : MetricTensor :=
   let α    := adm.lapseFunction
   let β    := adm.shiftVector
   -- β_i = γ_{ij} β^j
-  let βCov := Array.ofFn (fun i =>
-    sumN n3 (fun j => simplify (.mul (matGet γ i.val j) (β.get! j))))
+  let βCov := Array.ofFn (n := n3) (fun i : Fin n3 =>
+    sumN n3 (fun j => simplify (.mul (matGet γ i.val j) (β[j]!))))
   -- β_i β^i = Σ_i β_i β^i
-  let βNormSq := sumN n3 (fun i => simplify (.mul (βCov.get! i) (β.get! i)))
+  let βNormSq := sumN n3 (fun i => simplify (.mul (βCov[i]!) (β[i]!)))
   -- Build (n+1)×(n+1) spacetime metric
   let gCov := matBuild n (fun μ ν =>
     match μ, ν with
     | 0, 0 => simplify (.sub βNormSq (.mul α α))   -- g_{tt} = β²-α²
-    | 0, j => if j > 0 then βCov.get! (j-1) else .lit 0  -- g_{ti} = β_i
-    | i, 0 => if i > 0 then βCov.get! (i-1) else .lit 0  -- g_{it} = β_i
+    | 0, j => if j > 0 then βCov[(j-1)]! else .lit 0  -- g_{ti} = β_i
+    | i, 0 => if i > 0 then βCov[(i-1)]! else .lit 0  -- g_{it} = β_i
     | i, j => matGet γ (i-1) (j-1))                -- g_{ij} = γ_{ij}
   -- Full coordinate list: [t, x1, ..., xn3]
   let allCoords := #[adm.timeCoordinate] ++ adm.spatialMetric.coords
@@ -106,7 +106,7 @@ def schwarzschild (mass : String := "M")
     | _ => .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
   let α := .sqrt f                                      -- lapse α = √(1-2M/r)
-  let β := Array.mkArray 3 (.lit 0)                    -- zero shift
+  let β := List.replicate 3 (.lit 0 : Expr) |>.toArray                    -- zero shift
   { spatialMetric := γ, timeCoordinate := timeCoord, lapseFunction := α, shiftVector := β }
 
 /-- Kerr spacetime in ADM form (Boyer-Lindquist t-slicing). -/
@@ -118,25 +118,25 @@ def kerr (mass : String := "M") (angMom : String := "J")
   let a   := .div J M
   let a2  := .pow a (.lit 2)
   let r2  := .pow (.var r) (.lit 2)
-  let Σ   := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))
+  let Sig := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))
   let Δ   := .add (.sub r2 (.mul (.mul (.lit 2) M) (.var r))) a2
   let sinθ2 := .pow (.sin (.var θ)) (.lit 2)
   -- Spatial metric γ_{ij} = {Σ/Δ, Σ, sin²θ(r²+a²+2Ma²r sin²θ/Σ)}
   let γ33 := .mul sinθ2
-    (.add (.add r2 a2) (.div (.mul (.mul (.lit 2) M) (.mul (.var r) (.mul a2 sinθ2))) Σ))
+    (.add (.add r2 a2) (.div (.mul (.mul (.lit 2) M) (.mul (.var r) (.mul a2 sinθ2))) Sig))
   let γCov := matBuild 3 (fun i j =>
     if i != j then .lit 0
     else match i with
-    | 0 => .div Σ Δ
-    | 1 => Σ
+    | 0 => .div Sig Δ
+    | 1 => Sig
     | 2 => γ33
     | _ => .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
   -- Lapse: α = √(Σ Δ / (Σ Δ + 2Mr(a²+r²)))  (approximate)
-  let α := .sqrt (.div (.mul Σ Δ) (.add (.mul Σ Δ) (.mul (.mul (.lit 2) M) (.mul (.var r) (.add a2 r2)))))
+  let α := .sqrt (.div (.mul Sig Δ) (.add (.mul Sig Δ) (.mul (.mul (.lit 2) M) (.mul (.var r) (.add a2 r2)))))
   -- Shift: β^φ = -2Mar/(ΣΔ+2Mr(a²+r²)) * a  (only φ component non-zero)
   let βφ := .div (.mul (.mul (.lit (-2)) M) (.mul (.var r) a))
-                 (.add (.mul Σ Δ) (.mul (.mul (.lit 2) M) (.mul (.var r) (.add a2 r2))))
+                 (.add (.mul Sig Δ) (.mul (.mul (.lit 2) M) (.mul (.var r) (.add a2 r2))))
   let β := #[.lit 0, .lit 0, βφ]
   { spatialMetric := γ, timeCoordinate := timeCoord, lapseFunction := α, shiftVector := β }
 
@@ -158,7 +158,7 @@ def reissnerNordstrom (mass : String := "M") (charge : String := "Q")
     | _ => .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
   { spatialMetric := γ, timeCoordinate := timeCoord,
-    lapseFunction := .sqrt f, shiftVector := Array.mkArray 3 (.lit 0) }
+    lapseFunction := .sqrt f, shiftVector := List.replicate 3 (.lit 0 : Expr) |>.toArray }
 
 /-- Kerr-Newman in ADM form. -/
 def kerrNewman (mass : String := "M") (charge : String := "Q") (angMom : String := "J")
@@ -168,19 +168,19 @@ def kerrNewman (mass : String := "M") (charge : String := "Q") (angMom : String 
   let M := .var mass; let Q := .var charge; let J := .var angMom
   let a := .div J M; let a2 := .pow a (.lit 2); let Q2 := .pow Q (.lit 2)
   let r2 := .pow (.var r) (.lit 2)
-  let Σ := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))
+  let Sig := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))
   let Δ := .add (.add (.sub r2 (.mul (.mul (.lit 2) M) (.var r))) a2) Q2
   let sinθ2 := .pow (.sin (.var θ)) (.lit 2)
   let γ33 := .mul sinθ2
-    (.add (.add r2 a2) (.div (.mul a2 (.mul sinθ2 (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2))) Σ))
+    (.add (.add r2 a2) (.div (.mul a2 (.mul sinθ2 (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2))) Sig))
   let γCov := matBuild 3 (fun i j =>
     if i != j then .lit 0
     else match i with
-    | 0 => .div Σ Δ | 1 => Σ | 2 => γ33 | _ => .lit 0)
+    | 0 => .div Sig Δ | 1 => Sig | 2 => γ33 | _ => .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
-  let α := .sqrt (.div (.mul Σ Δ) (.add (.mul Σ Δ) (.mul a2 (.mul sinθ2 (.mul (.mul (.lit 2) M) (.var r))))))
+  let α := .sqrt (.div (.mul Sig Δ) (.add (.mul Sig Δ) (.mul a2 (.mul sinθ2 (.mul (.mul (.lit 2) M) (.var r))))))
   let βφ := .div (.mul (.neg a) (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2))
-                 (.add (.mul Σ Δ) (.mul a2 (.mul sinθ2 (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2))))
+                 (.add (.mul Sig Δ) (.mul a2 (.mul sinθ2 (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2))))
   { spatialMetric := γ, timeCoordinate := timeCoord,
     lapseFunction := α, shiftVector := #[.lit 0, .lit 0, βφ] }
 
@@ -188,7 +188,7 @@ def kerrNewman (mass : String := "M") (charge : String := "Q") (angMom : String 
 def brillLindquist (mass1 : String := "M1") (mass2 : String := "M2")
     (timeCoord : String := "t")
     (spatialCoords : Array String := #["x","y","z"]) : ADMDecomposition :=
-  let M1 := .var mass1; let M2 := .var mass2
+  let M1 : Expr := .var mass1; let M2 : Expr := .var mass2
   let x  := .var spatialCoords[0]!
   let y  := .var spatialCoords[1]!
   let z  := .var spatialCoords[2]!
@@ -200,7 +200,7 @@ def brillLindquist (mass1 : String := "M1") (mass2 : String := "M2")
   let γCov := matBuild 3 (fun i j => if i == j then ψ4 else .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
   { spatialMetric := γ, timeCoordinate := timeCoord,
-    lapseFunction := .div (.lit 1) ψ, shiftVector := Array.mkArray 3 (.lit 0) }
+    lapseFunction := .div (.lit 1) ψ, shiftVector := List.replicate 3 (.lit 0 : Expr) |>.toArray }
 
 /-- FLRW cosmology in ADM form. -/
 def flrw (scaleParam : String := "a") (curvParam : String := "k")
@@ -220,7 +220,7 @@ def flrw (scaleParam : String := "a") (curvParam : String := "k")
     | _ => .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
   { spatialMetric := γ, timeCoordinate := timeCoord,
-    lapseFunction := .lit 1, shiftVector := Array.mkArray 3 (.lit 0) }
+    lapseFunction := .lit 1, shiftVector := List.replicate 3 (.lit 0 : Expr) |>.toArray }
 
 /-- Named ADM decomposition dispatch. -/
 def named (name : String) : Option ADMDecomposition :=

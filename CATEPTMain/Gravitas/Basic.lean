@@ -39,7 +39,7 @@ inductive Expr : Type where
   | diff : Expr → String → Expr   -- formal partial derivative
   deriving Repr, BEq, Inhabited
 
-instance : OfNat Expr (n : Nat) where
+instance (n : Nat) : OfNat Expr n where
   ofNat := .lit n
 
 instance : Neg Expr where
@@ -192,11 +192,11 @@ abbrev Mat := Array (Array Expr)
 
 /-- Build an n×n matrix from a function (row, col) → Expr.  0-indexed. -/
 def matBuild (n : Nat) (f : Nat → Nat → Expr) : Mat :=
-  Array.ofFn (fun i => Array.ofFn (fun j => f i.val j.val))
+  Array.ofFn (n := n) (fun i : Fin n => Array.ofFn (n := n) (fun j : Fin n => f i.val j.val))
 
 /-- Get element at (i, j). Returns 0 on out-of-bounds. -/
 def matGet (m : Mat) (i j : Nat) : Expr :=
-  m.get? i |>.bind (·.get? j) |>.getD (.lit 0)
+  (m[i]?.bind (·[j]?)).getD (.lit 0)
 
 /-- Number of rows (= cols for square matrices). -/
 def matSize (m : Mat) : Nat := m.size
@@ -245,8 +245,8 @@ def matInv (m : Mat) : Option Mat :=
   let n := m.size
   -- Augmented matrix [m | I], represented as Array (Array Expr)
   let aug0 : Array (Array Expr) :=
-    Array.ofFn (fun i =>
-      Array.ofFn (fun j =>
+    Array.ofFn (n := n) (fun i : Fin n =>
+      Array.ofFn (n := 2 * n) (fun j : Fin (2 * n) =>
         if j.val < n then matGet m i.val j.val
         else if j.val - n == i.val then .lit 1 else .lit 0))
   let aug1 := (List.range n).foldl (fun (aug : Option (Array (Array Expr))) col =>
@@ -255,15 +255,15 @@ def matInv (m : Mat) : Option Mat :=
     | some rows =>
       -- Find pivot row (first non-zero in column `col` from row `col` down)
       let pivot? := (List.range (n - col)).find? (fun k =>
-        simplify (rows[col + k]!.get! col) != .lit 0)
+        simplify (rows[col + k]![col]!) != .lit 0)
       match pivot? with
       | none => none
       | some rel =>
         let pivotRow := col + rel
         -- Swap rows col ↔ pivotRow
         let rows := if pivotRow == col then rows
-                    else rows.set! col (rows.get! pivotRow) |>.set! pivotRow (rows.get! col)
-        let pivotVal := simplify (rows[col]!.get! col)
+                    else rows.set! col rows[pivotRow]! |>.set! pivotRow rows[col]!
+        let pivotVal := simplify (rows[col]![col]!)
         -- Scale pivot row by 1/pivot
         let rows := rows.set! col
           (rows[col]!.map (fun e => simplify (.div e pivotVal)))
@@ -271,11 +271,11 @@ def matInv (m : Mat) : Option Mat :=
         let rows := (List.range n).foldl (fun rows row =>
           if row == col then rows
           else
-            let factor := simplify (rows[row]!.get! col)
+            let factor := simplify (rows[row]![col]!)
             rows.set! row
               ((List.range (2 * n)).foldl (fun row_arr j =>
-                row_arr.set! j (simplify (.sub (row_arr.get! j)
-                  (.mul factor (rows[col]!.get! j))))) rows[row]!)
+                row_arr.set! j (simplify (.sub (row_arr[j]!)
+                  (.mul factor (rows[col]![j]!))))) rows[row]!)
         ) rows
         some rows
   ) (some aug0)
@@ -283,8 +283,8 @@ def matInv (m : Mat) : Option Mat :=
   | none => none
   | some rows =>
     -- Extract the right half (columns n..2n-1)
-    some (Array.ofFn (fun i =>
-      Array.ofFn (fun j => simplify (rows[i.val]!.get! (n + j.val))))  )
+    some (Array.ofFn (n := n) (fun i : Fin n =>
+      Array.ofFn (n := n) (fun j : Fin n => simplify (rows[i.val]![(n + j.val)]!))))
 
 /-- Compute matrix inverse, panicking on failure (for use when invertibility
     is guaranteed by construction). -/
@@ -315,13 +315,13 @@ abbrev con : IndexKind := false
     Result_i = g_{ij} v^j. -/
 def lowerIndex (g : Mat) (v : Array Expr) : Array Expr :=
   let n := g.size
-  Array.ofFn (fun i => sumN n (fun j => simplify (.mul (matGet g i.val j) (v.get! j))))
+  Array.ofFn (n := n) (fun i : Fin n => sumN n (fun j => simplify (.mul (matGet g i.val j) (v[j]!))))
 
 /-- Raise a 1-index covariant tensor using the inverse metric.
     Result^i = g^{ij} v_j. -/
 def raiseIndex (gInv : Mat) (v : Array Expr) : Array Expr :=
   let n := gInv.size
-  Array.ofFn (fun i => sumN n (fun j => simplify (.mul (matGet gInv i.val j) (v.get! j))))
+  Array.ofFn (n := n) (fun i : Fin n => sumN n (fun j => simplify (.mul (matGet gInv i.val j) (v[j]!))))
 
 -- ---------------------------------------------------------------------------
 -- Tensor coordinate substitution
@@ -371,7 +371,7 @@ def matSubst (m : Mat) (subs : List (String × Expr)) : Mat :=
 /-- Apply a coordinate relabeling (old strings → new strings) to a matrix. -/
 def matRelabel (m : Mat) (oldCoords newCoords : Array String) : Mat :=
   let subs := (List.range oldCoords.size).filterMap (fun i =>
-    match oldCoords.get? i, newCoords.get? i with
+    match oldCoords[i]?, newCoords[i]? with
     | some o, some n => if o == n then none else some (o, .var n)
     | _, _           => none)
   matSubst m subs

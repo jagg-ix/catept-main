@@ -1,3 +1,9 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ChristoffelSymbols
+import CATEPTMain.Gravitas.WeylTensor
+import CATEPTMain.Gravitas.SchoutenTensor
+
 /-!
 # Gravitas.BachTensor
 
@@ -23,12 +29,6 @@ second covariant divergence.  Matches the WL `covariantDerivatives` block exactl
   B_{μν} = Σ_{ρσ} S_{ρσ} W^ρ_μ^σ_ν
           + g^{αβ}(∇_β ∇_α S_{μν} - ∇_μ ∇_α S_{νβ})
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ChristoffelSymbols
-import CATEPTMain.Gravitas.WeylTensor
-import CATEPTMain.Gravitas.SchoutenTensor
 
 namespace Gravitas
 

@@ -1,3 +1,27 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ChristoffelSymbols
+import CATEPTMain.Gravitas.RiemannTensor
+import CATEPTMain.Gravitas.RicciTensor
+import CATEPTMain.Gravitas.EinsteinTensor
+import CATEPTMain.Gravitas.WeylTensor
+import CATEPTMain.Gravitas.SchoutenTensor
+import CATEPTMain.Gravitas.BachTensor
+import CATEPTMain.Gravitas.ElectrograviticTensor
+import CATEPTMain.Gravitas.StressEnergyTensor
+import CATEPTMain.Gravitas.ElectromagneticTensor
+import CATEPTMain.Gravitas.AngularMomentumTensor
+import CATEPTMain.Gravitas.AngularMomentumDensityTensor
+import CATEPTMain.Gravitas.ADMDecomposition
+import CATEPTMain.Gravitas.ExtrinsicCurvatureTensor
+import CATEPTMain.Gravitas.ADMStressEnergyDecomposition
+import CATEPTMain.Gravitas.DiscreteHypersurfaceDecomposition
+import CATEPTMain.Gravitas.DiscreteHypersurfaceGeodesic
+import CATEPTMain.Gravitas.SolveEinsteinEquations
+import CATEPTMain.Gravitas.SolveVacuumEinsteinEquations
+import CATEPTMain.Gravitas.SolveElectrovacuumEinsteinEquations
+import CATEPTMain.Gravitas.SolveADMEquations
+import CATEPTMain.Gravitas.SolveVacuumADMEquations
 /-!
 # CATEPTMain.Gravitas
 
@@ -48,32 +72,4 @@ Lean 4 port of the Gravitas general-relativity package
 
 - **Index convention**: `true` = covariant (lower), `false` = contravariant (upper),
   exactly matching WL's `True/False` boolean index flags.
-
-- **No build until authorised**: this file simply re-exports all sub-modules.
-  Do not attempt to build until the user confirms.
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ChristoffelSymbols
-import CATEPTMain.Gravitas.RiemannTensor
-import CATEPTMain.Gravitas.RicciTensor
-import CATEPTMain.Gravitas.EinsteinTensor
-import CATEPTMain.Gravitas.WeylTensor
-import CATEPTMain.Gravitas.SchoutenTensor
-import CATEPTMain.Gravitas.BachTensor
-import CATEPTMain.Gravitas.ElectrograviticTensor
-import CATEPTMain.Gravitas.StressEnergyTensor
-import CATEPTMain.Gravitas.ElectromagneticTensor
-import CATEPTMain.Gravitas.AngularMomentumTensor
-import CATEPTMain.Gravitas.AngularMomentumDensityTensor
-import CATEPTMain.Gravitas.ADMDecomposition
-import CATEPTMain.Gravitas.ExtrinsicCurvatureTensor
-import CATEPTMain.Gravitas.ADMStressEnergyDecomposition
-import CATEPTMain.Gravitas.DiscreteHypersurfaceDecomposition
-import CATEPTMain.Gravitas.DiscreteHypersurfaceGeodesic
-import CATEPTMain.Gravitas.SolveEinsteinEquations
-import CATEPTMain.Gravitas.SolveVacuumEinsteinEquations
-import CATEPTMain.Gravitas.SolveElectrovacuumEinsteinEquations
-import CATEPTMain.Gravitas.SolveADMEquations
-import CATEPTMain.Gravitas.SolveVacuumADMEquations

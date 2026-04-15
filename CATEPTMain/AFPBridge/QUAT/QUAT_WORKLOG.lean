@@ -49,3 +49,16 @@ BINDER RULES:
 Phase record (cumulative):
   TH001–TH022: QUAT theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## QUAT-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.QUAT.QUATPrelude added to CATEPTSelfConsistency.lean
+  - quat_rotation_consistent field added to CATEPTAFPConsistencyWitness
+  - QUATConsistency section + catept_quat_unit_consistent theorem added
+    (non-sorry: directly proves unitQuat_inv_eq_conj q h : q⁻¹ = star q)
+  - CATEPTSelfConsistencyContract extended with w.quat_rotation_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: quaternions-afp (afp_transpile_lean4)

@@ -1,3 +1,7 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RiemannTensor
+
 /-!
 # Gravitas.RicciTensor
 
@@ -13,10 +17,6 @@ Ricci scalar:
 
 Default storage convention: `(true, true)` = R_{μν} (fully covariant).
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RiemannTensor
 
 namespace Gravitas
 

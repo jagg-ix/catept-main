@@ -9,5 +9,6 @@
   {"name":"kolmogorov-complexity-lean-inspect","path":"/Users/macbookpro/lab/tau/tau-information-dynamics/kolmogorov-complexity-lean-inspect","toolchain":"leanprover/lean4:v4.29.0-rc8","commit":"5107ec8e0cdd"},
   {"name":"lean-quantuminfo-inspect","path":"/Users/macbookpro/lab/tau/tau-information-dynamics/lean-quantuminfo-inspect","toolchain":"leanprover/lean4:v4.28.0","commit":"9b74fd907c97"},
   {"name":"cslib-inspect","path":"/Users/macbookpro/lab/tau/tau-information-dynamics/cslib-inspect","toolchain":"leanprover/lean4:v4.29.0","commit":"0d37cc7fcc98"},
-  {"name":"hopf-lean-4.26-port","path":"/Users/macbookpro/lab/tau/tau-information-dynamics/hopf-lean-4.26-port","toolchain":"leanprover/lean4:v4.26.0","commit":"9f6e456ccf81"}
+  {"name":"hopf-lean-4.26-port","path":"/Users/macbookpro/lab/tau/tau-information-dynamics/hopf-lean-4.26-port","toolchain":"leanprover/lean4:v4.26.0","commit":"9f6e456ccf81"},
+  {"name":"Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem","path":"/Users/macbookpro/lab/tau/tau-information-dynamics/Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem","toolchain":"leanprover/lean4:v4.24.0","commit":"5c018de4866b"}
 ]

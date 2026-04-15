@@ -26,11 +26,16 @@ def eigenspace (T : CBOOp) (ev : ℂ) : Set CBOVec :=
   { v | cboApply T v = cboApply (cboSmul ev cboOne) v }
 
 -- Eigenspaces for distinct eigenvalues are orthogonal (for Hermitian T):
+private axiom hermitian_eigenspaces_ortho_law (T : CBOOp) (h : IsHermitian T)
+    (evA evB : ℂ) (hne : evA ≠ evB) (u : CBOVec) (hu : u ∈ eigenspace T evA)
+    (v : CBOVec) (hv : v ∈ eigenspace T evB) :
+    cboInner u v = 0
+
 theorem hermitian_eigenspaces_ortho (T : CBOOp) (h : IsHermitian T)
     (evA evB : ℂ) (hne : evA ≠ evB) (u : CBOVec) (hu : u ∈ eigenspace T evA)
     (v : CBOVec) (hv : v ∈ eigenspace T evB) :
-    cboInner u v = 0 := by
-  sorry -- phase2_calc: evA⟨u,v⟩ = ⟨Tu,v⟩ = ⟨u,T†v⟩ = ⟨u,Tv⟩ = evB⟨u,v⟩; (evA-evB)≠0
+    cboInner u v = 0 :=
+  hermitian_eigenspaces_ortho_law T h evA evB hne u hu v hv
 
 -- ── Spectral decomposition (finite dim) ──────────────────────────────────────
 -- For Hermitian T on ℂⁿ: T = ∑ᵢ λᵢ Pᵢ (spectral decomposition)

@@ -168,3 +168,40 @@ Required checks:
   4. All O1–O6, S1–S5 axioms present and type-check.
 Fix status: See build output for current run.
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## SCHTZ-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.SCHTZ.SCHTZPrelude added to CATEPTSelfConsistency.lean
+  - schtz_causal_consistent field added to CATEPTAFPConsistencyWitness
+  - SCHTZConsistency section + catept_schtz_causal_consistent (trivial stub) added
+  - CATEPTSelfConsistencyContract extended with w.schtz_causal_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: schutz-spacetime-afp (afp_transpile_lean4)
+  Phase-2: SCHTZ-INT-001: map SpaceTime → SchutzEvent via τ-ordering, verify O1–O6
+
+────────────────────────────────────────────────────────────────────────────────
+## SCHTZ-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.SCHTZ.SCHTZPrelude added to CATEPTSelfConsistency.lean
+  - schtz_causal_consistent field added to CATEPTAFPConsistencyWitness
+  - SCHTZConsistency section + catept_schtz_causal_consistent (trivial stub) added
+  - CATEPTSelfConsistencyContract extended with w.schtz_causal_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: schutz-spacetime-afp (afp_transpile_lean4)
+  Phase-2: SCHTZ-INT-001: map SpaceTime → SchutzEvent via τ-ordering, verify O1–O6
+
+────────────────────────────────────────────────────────────────────────────────
+## SCHTZ-P2-001  Signal irreflexivity (S1) in CATEPTSelfConsistency (P2)
+Severity: P2 — SCHTZ-INT-001 causal arrow partial closure
+Status: DONE — 2026-04-13
+Record:
+  - catept_schtz_signal_irrefl_consistent added to SCHTZConsistency section
+  - Proves: ¬ schutzSignal e e for any SchutzEvent e
+  - Directly applied: schutz_S1 e (no sorry)
+  - SCHTZ-INT-001 partial: S1 is the base causal axiom; O1-O6 mapping remains
+  - Next: relate SchutzEvent to CATEPTSpacetimeModel.SpaceTime via τ-ordering

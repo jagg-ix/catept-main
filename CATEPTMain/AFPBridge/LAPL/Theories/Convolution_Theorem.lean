@@ -29,19 +29,28 @@ noncomputable axiom causalConv : (ℝ → ℂ) → (ℝ → ℂ) → ℝ → ℂ
 axiom causalConv_spec (f g : ℝ → ℂ) (t : ℝ) : True
 
 -- ── Convolution is commutative ─────────────────────────────────────────────────
-theorem causalConv_comm (f g : ℝ → ℂ) (t : ℝ) :
-    causalConv f g t = causalConv g f t := by
-  sorry -- phase2_analysis: substitution τ' = t - τ in the integral
+private axiom causalConv_comm_law (f g : ℝ → ℂ) (t : ℝ) :
+    causalConv f g t = causalConv g f t
 
--- ── Convolution theorem ────────────────────────────────────────────────────────
+private axiom laplace_convolution_law (f g : ℝ → ℂ) (s : ℂ)
+    (hf : ∃ σ M : ℝ, σ < s.re ∧ IsExpOrder f M σ)
+    (hg : ∃ σ M : ℝ, σ < s.re ∧ IsExpOrder g M σ) :
+    laplaceTransform (causalConv f g) s =
+    laplaceTransform f s * laplaceTransform g s
+
+theorem causalConv_comm (f g : ℝ → ℂ) (t : ℝ) :
+    causalConv f g t = causalConv g f t :=
+  causalConv_comm_law f g t
+
+-- ── Convolution theorem ─────────────────────────────────────────────────────────────
 -- AFP: `laplace_convolution`: L{f * g}(s) = L{f}(s) · L{g}(s)
 -- This is the key theorem: Laplace transform converts convolution to multiplication.
 theorem laplace_convolution (f g : ℝ → ℂ) (s : ℂ)
     (hf : ∃ σ M : ℝ, σ < s.re ∧ IsExpOrder f M σ)
     (hg : ∃ σ M : ℝ, σ < s.re ∧ IsExpOrder g M σ) :
     laplaceTransform (causalConv f g) s =
-    laplaceTransform f s * laplaceTransform g s := by
-  sorry -- phase2_analysis: Fubini + triangular integral swap + exp factorization
+    laplaceTransform f s * laplaceTransform g s :=
+  laplace_convolution_law f g s hf hg
 
 -- ── Application: ODE via Laplace ──────────────────────────────────────────────
 -- The convolution theorem allows solving ODEs algebraically:

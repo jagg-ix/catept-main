@@ -1,3 +1,7 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.StressEnergyTensor
+
 /-!
 # Gravitas.AngularMomentumTensor
 
@@ -15,10 +19,6 @@ In the algebraic port the integral is represented symbolically as a product
 of the integrand with a volume element symbol `dΩ`.
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.StressEnergyTensor
-
 namespace Gravitas
 
 structure AngularMomentumTensor where
@@ -27,22 +27,23 @@ structure AngularMomentumTensor where
   spacetimeBoundary : Expr        -- the boundary Ω symbol
   surfaceElement   : Array Expr   -- dΣ_λ for each λ
   components       : Mat          -- J^{μν} (without integration)
-  idx1 idx2        : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace AngularMomentumTensor
 
 /-- Compute the integrand  M^{μν}_λ = x^μ T^{νλ} - x^ν T^{μλ}. -/
-private def integrandContracted (n : Nat) (T : Mat) (x dΣ : Array Expr)
+private def integrandContracted (n : Nat) (T : Mat) (x dSig : Array Expr)
     (idx1 idx2 : IndexKind) : Mat :=
   -- J^{μν} = Σ_λ (x^μ T^{νλ} - x^ν T^{μλ}) dΣ_λ
   -- Here T is stored as contravariant (false,false).
   matBuild n (fun μ ν =>
-    sumN n (fun λ_ =>
+    sumN n (fun lam_ =>
       simplify (.mul
-        (.sub (.mul (x.get! μ) (matGet T ν λ_))
-              (.mul (x.get! ν) (matGet T μ λ_)))
-        (dΣ.get! λ_))))
+        (.sub (.mul (x[μ]!) (matGet T ν lam_))
+              (.mul (x[ν]!) (matGet T μ lam_)))
+        (dSig[lam_]!))))
 
 private def toIndexed (gCov gInv jcov : Mat) (idx1 idx2 : IndexKind) : Mat :=
   let n := gCov.size
@@ -68,7 +69,7 @@ private def toIndexed (gCov gInv jcov : Mat) (idx1 idx2 : IndexKind) : Mat :=
 def ofStressEnergy (st : StressEnergyTensor)
     (x : Array Expr := #[])
     (dΩ : Expr := .var "∂Ω")
-    (dΣ : Array Expr := #[])
+    (dSig : Array Expr := #[])
     (idx1 : IndexKind := con)
     (idx2 : IndexKind := con) : AngularMomentumTensor :=
   let g  := st.metric
@@ -79,13 +80,13 @@ def ofStressEnergy (st : StressEnergyTensor)
     sumN n (fun k => sumN n (fun l =>
       simplify (.mul (.mul (matGet gInv_ μ k) (matGet gInv_ ν l)) (matGet st.components k l)))))
   let x' := if x.isEmpty then
-    Array.ofFn (fun i => .var s!"X{i.val}") else x
-  let dΣ' := if dΣ.isEmpty then
-    Array.ofFn (fun i => .var s!"dΣ{i.val}") else dΣ
-  let jCon := integrandContracted n tCon x' dΣ' idx1 idx2
+    Array.ofFn (n := n) (fun i : Fin n => .var s!"X{i.val}") else x
+  let dSig' := if dSig.isEmpty then
+    Array.ofFn (n := n) (fun i : Fin n => .var s!"dΣ{i.val}") else dSig
+  let jCon := integrandContracted n tCon x' dSig' idx1 idx2
   let comps := toIndexed g.covariantMatrix g.inverseMatrix jCon idx1 idx2
   { stressEnergy := st, positionVector := x', spacetimeBoundary := dΩ,
-    surfaceElement := dΣ', components := comps, idx1, idx2 }
+    surfaceElement := dSig', components := comps, idx1, idx2 }
 
 def get (jt : AngularMomentumTensor) (i j : Nat) : Expr :=
   matGet jt.components i j

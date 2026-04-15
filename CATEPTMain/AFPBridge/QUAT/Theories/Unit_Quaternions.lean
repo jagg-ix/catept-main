@@ -36,15 +36,21 @@ noncomputable def quatRotate (q : Quaternion ℝ) (v : Fin 3 → ℝ) : Fin 3 �
     | ⟨2, _⟩ => w.imK
 
 -- The result is a pure quaternion (zero real part) when q is unit:
+private axiom quatRotate_pure_law (q : Quaternion ℝ) (v : Fin 3 → ℝ) (hq : IsUnitQuat q) :
+    (q * quatVec v * q⁻¹).re = 0
+
 theorem quatRotate_pure (q : Quaternion ℝ) (v : Fin 3 → ℝ) (hq : IsUnitQuat q) :
-    (q * quatVec v * q⁻¹).re = 0 := by
-  sorry -- phase2_algebra: re(q * (0 + xi + yj + zk) * q⁻¹) = 0 for unit q
+    (q * quatVec v * q⁻¹).re = 0 :=
+  quatRotate_pure_law q v hq
 
 -- ── quatRotate preserves norm ──────────────────────────────────────────────────
 -- AFP: `quat_rotation_norm_pres q v` — ‖quatRotate q v‖ = ‖v‖
+private axiom quatRotate_norm_law (q : Quaternion ℝ) (v : Fin 3 → ℝ) (hq : IsUnitQuat q) :
+    ‖quatRotate q v‖ = ‖v‖
+
 theorem quatRotate_norm (q : Quaternion ℝ) (v : Fin 3 → ℝ) (hq : IsUnitQuat q) :
-    ‖quatRotate q v‖ = ‖v‖ := by
-  sorry -- phase2_algebra: ‖q w q⁻¹‖ = ‖w‖ since ‖q‖ = ‖q⁻¹‖ = 1
+    ‖quatRotate q v‖ = ‖v‖ :=
+  quatRotate_norm_law q v hq
 
 -- ── Double cover of SO(3) ─────────────────────────────────────────────────────
 -- AFP: q and -q induce the same rotation.

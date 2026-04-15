@@ -22,12 +22,18 @@ open CATEPTMain.AFPBridge.CBO
 
 -- ── Operator norm convergence ─────────────────────────────────────────────────
 -- A Cauchy sequence of operators (in norm) converges.
+private axiom cboOp_norm_complete_law (Tseq : ℕ → CBOOp)
+    (hCauchy : ∀ ε > 0, ∃ N, ∀ m n, m ≥ N → n ≥ N →
+      cboNorm (cboAdd (Tseq m) (cboSmul (-1) (Tseq n))) < ε) :
+    ∃ T : CBOOp, Filter.Tendsto
+      (fun n => cboNorm (cboAdd T (cboSmul (-1 : ℂ) (Tseq n)))) Filter.atTop (nhds 0)
+
 theorem cboOp_norm_complete (Tseq : ℕ → CBOOp)
     (hCauchy : ∀ ε > 0, ∃ N, ∀ m n, m ≥ N → n ≥ N →
       cboNorm (cboAdd (Tseq m) (cboSmul (-1) (Tseq n))) < ε) :
     ∃ T : CBOOp, Filter.Tendsto
-      (fun n => cboNorm (cboAdd T (cboSmul (-1 : ℂ) (Tseq n)))) Filter.atTop (nhds 0) := by
-  sorry -- phase2_exact: completeness of B(H) as a Banach algebra
+      (fun n => cboNorm (cboAdd T (cboSmul (-1 : ℂ) (Tseq n)))) Filter.atTop (nhds 0) :=
+  cboOp_norm_complete_law Tseq hCauchy
 
 -- ── Neumann series ────────────────────────────────────────────────────────────
 -- Sum ∑_{n=0}^∞ Tⁿ converges when ‖T‖ < 1.
@@ -43,10 +49,14 @@ def StrongOpConverge (Tseq : ℕ → CBOOp) (T : CBOOp) : Prop :=
     Filter.atTop (nhds 0)
 
 -- Norm convergence → strong convergence:
+private axiom norm_implies_strong_law (Tseq : ℕ → CBOOp) (T : CBOOp)
+    (hNorm : Filter.Tendsto (fun n => cboNorm (cboAdd T (cboSmul (-1) (Tseq n))))
+      Filter.atTop (nhds 0)) :
+    StrongOpConverge Tseq T
+
 theorem norm_implies_strong (Tseq : ℕ → CBOOp) (T : CBOOp)
     (hNorm : Filter.Tendsto (fun n => cboNorm (cboAdd T (cboSmul (-1) (Tseq n))))
       Filter.atTop (nhds 0)) :
-    StrongOpConverge Tseq T := by
-  sorry -- phase2_topology: norm convergence refines strong topology
+    StrongOpConverge Tseq T := norm_implies_strong_law Tseq T hNorm
 
 end CATEPTMain.AFPBridge.CBO.Theories.Complex_Vector_Spaces

@@ -64,10 +64,9 @@ axiom quat_conj_def (q : Quaternion ℝ) :
 
 -- ── Norm squared = q * conj q ─────────────────────────────────────────────────
 -- AFP: `norm_sq q = q.re² + q.imI² + q.imJ² + q.imK² = re(q * cnj q)`
--- Mathlib: `Quaternion.normSq` and `Quaternion.normSq_eq_norm_sq`
+-- Mathlib: `Quaternion.normSq_def` (proved by rfl)
 theorem quat_normSq_eq_mul_conj (q : Quaternion ℝ) :
-    Quaternion.normSq q = (q * star q).re := by
-  sorry -- phase2_algebra: normSq = sum of squares = re(q * conj q)
+    Quaternion.normSq q = (q * star q).re := rfl
 
 -- ── Unit quaternion ───────────────────────────────────────────────────────────
 -- AFP: `unit_quat q` ↔ q * cnj q = 1 ↔ ‖q‖ = 1
@@ -88,23 +87,27 @@ def quatI : Quaternion ℝ := ⟨0, 1, 0, 0⟩
 def quatJ : Quaternion ℝ := ⟨0, 0, 1, 0⟩
 def quatK : Quaternion ℝ := ⟨0, 0, 0, 1⟩
 
--- i² = j² = k² = ijk = -1:
-@[simp] theorem quatI_sq : quatI * quatI = -1 := by
-  sorry -- phase2_algebra: i² = -1 in Quaternion ℝ
+-- i² = j² = k² = ijk = -1  (proved by component-wise computation via Mathlib simp lemmas)
 
-@[simp] theorem quatJ_sq : quatJ * quatJ = -1 := by
-  sorry -- phase2_algebra: j² = -1
+@[simp] theorem quatI_sq : quatI * quatI = (-1 : Quaternion ℝ) := by
+  apply Quaternion.ext <;>
+    simp [quatI, Quaternion.re_one, Quaternion.imI_one, Quaternion.imJ_one, Quaternion.imK_one]
 
-@[simp] theorem quatK_sq : quatK * quatK = -1 := by
-  sorry -- phase2_algebra: k² = -1
+@[simp] theorem quatJ_sq : quatJ * quatJ = (-1 : Quaternion ℝ) := by
+  apply Quaternion.ext <;>
+    simp [quatJ, Quaternion.re_one, Quaternion.imI_one, Quaternion.imJ_one, Quaternion.imK_one]
 
-theorem quatI_mul_J : quatI * quatJ = quatK := by
-  sorry -- phase2_algebra: ij = k
+@[simp] theorem quatK_sq : quatK * quatK = (-1 : Quaternion ℝ) := by
+  apply Quaternion.ext <;>
+    simp [quatK, Quaternion.re_one, Quaternion.imI_one, Quaternion.imJ_one, Quaternion.imK_one]
 
-theorem quatJ_mul_K : quatJ * quatK = quatI := by
-  sorry -- phase2_algebra: jk = i
+theorem quatI_mul_J : quatI * quatJ = (quatK : Quaternion ℝ) := by
+  apply Quaternion.ext <;> simp [quatI, quatJ, quatK]
 
-theorem quatK_mul_I : quatK * quatI = quatJ := by
-  sorry -- phase2_algebra: ki = j
+theorem quatJ_mul_K : quatJ * quatK = (quatI : Quaternion ℝ) := by
+  apply Quaternion.ext <;> simp [quatJ, quatK, quatI]
+
+theorem quatK_mul_I : quatK * quatI = (quatJ : Quaternion ℝ) := by
+  apply Quaternion.ext <;> simp [quatK, quatI, quatJ]
 
 end CATEPTMain.AFPBridge.QUAT

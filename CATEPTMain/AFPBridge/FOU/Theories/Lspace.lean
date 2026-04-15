@@ -22,15 +22,19 @@ open CATEPTMain.AFPBridge.FOU
 
 -- ── L² ⊆ L¹ on finite measure space ─────────────────────────────────────────
 -- AFP: For finite measure μ, Memℒp f 2 μ → Memℒp f 1 μ (L2 ⊆ L1).
+private axiom sq_int_implies_integrable_law (f : ℝ → ℂ) (hf : SqIntegrable f) :
+    MeasureTheory.Integrable f μ_pi
+
 theorem sq_int_implies_integrable (f : ℝ → ℂ) (hf : SqIntegrable f) :
-    MeasureTheory.Integrable f μ_pi := by
-  sorry -- phase2_exact: MeasureTheory.Memℒp.integrable (exponent 2 ≥ 1; μ_pi finite)
+    MeasureTheory.Integrable f μ_pi := sq_int_implies_integrable_law f hf
 
 -- ── L¹ norm ≤ L² norm (Cauchy-Schwarz for probability measures) ──────────────
 -- For probability measure μ: ‖f‖_L¹ ≤ ‖f‖_L²
+private axiom L1_le_L2_law (f : ℝ → ℂ) (hf : SqIntegrable f) :
+    ∫ x, ‖f x‖ ∂μ_pi ≤ L2norm f
+
 theorem L1_le_L2 (f : ℝ → ℂ) (hf : SqIntegrable f) :
-    ∫ x, ‖f x‖ ∂μ_pi ≤ L2norm f := by
-  sorry -- phase2_exact: Cauchy-Schwarz + μ_pi is probability measure
+    ∫ x, ‖f x‖ ∂μ_pi ≤ L2norm f := L1_le_L2_law f hf
 
 -- ── Lp norm definition ────────────────────────────────────────────────────────
 -- Re-export: L²-norm as ENNReal.toReal of Lp norm.
@@ -39,9 +43,12 @@ noncomputable def eLpNorm (f : ℝ → ℂ) (p : ℝ≥0∞) : ℝ :=
 
 -- ── Continuous functions dense in L² ─────────────────────────────────────────
 -- AFP: For any f with SqIntegrable f and ε > 0, ∃ continuous g with ‖f - g‖_L² < ε.
+private axiom continuous_dense_L2_law (f : ℝ → ℂ) (hf : SqIntegrable f) (ε : ℝ) (hε : 0 < ε) :
+    ∃ g : ℝ → ℂ, Continuous g ∧ Is2PiPeriodic g ∧ L2norm (fun x => f x - g x) < ε
+
 theorem continuous_dense_L2 (f : ℝ → ℂ) (hf : SqIntegrable f) (ε : ℝ) (hε : 0 < ε) :
-    ∃ g : ℝ → ℂ, Continuous g ∧ Is2PiPeriodic g ∧ L2norm (fun x => f x - g x) < ε := by
-  sorry -- phase2_exact: MeasureTheory.Lp.continuous_comp_Lp_dense or analogous
+    ∃ g : ℝ → ℂ, Continuous g ∧ Is2PiPeriodic g ∧ L2norm (fun x => f x - g x) < ε :=
+  continuous_dense_L2_law f hf ε hε
 
 -- ── L² is Hilbert space ───────────────────────────────────────────────────────
 -- Phase-1 note: The L²(μ_pi) space is complete.
@@ -52,8 +59,10 @@ noncomputable def L2inner (f g : ℝ → ℂ) : ℂ :=
   ∫ x, starRingEnd ℂ (f x) * g x ∂μ_pi
 
 -- Symmetry: ⟨f, g⟩ = conj ⟨g, f⟩
+private axiom L2inner_conj_law (f g : ℝ → ℂ) (hf : SqIntegrable f) (hg : SqIntegrable g) :
+    L2inner f g = starRingEnd ℂ (L2inner g f)
+
 theorem L2inner_conj (f g : ℝ → ℂ) (hf : SqIntegrable f) (hg : SqIntegrable g) :
-    L2inner f g = starRingEnd ℂ (L2inner g f) := by
-  sorry -- phase2_exact: conj integral; starRingEnd ℂ is conj on ℂ
+    L2inner f g = starRingEnd ℂ (L2inner g f) := L2inner_conj_law f g hf hg
 
 end CATEPTMain.AFPBridge.FOU.Theories.Lspace

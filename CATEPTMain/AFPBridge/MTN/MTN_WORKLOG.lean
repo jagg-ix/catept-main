@@ -50,3 +50,16 @@ Phase-2 upgrade path:
 Phase record (cumulative):
   TH001–TH019: MTN theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## MTN-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.MTN.MTNPrelude added to CATEPTSelfConsistency.lean
+  - mtn_kronecker_consistent field added to CATEPTAFPConsistencyWitness
+  - MTNConsistency section + catept_mtn_kronecker_consistent theorem added (trivial stub)
+  - CATEPTSelfConsistencyContract extended with w.mtn_kronecker_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: matrix-tensor-afp (afp_transpile_lean4)
+  Phase-2: kronecker_assoc + kronecker_transpose → C*-algebra for multi-qubit gates.

@@ -11,6 +11,9 @@ import CATEPTMain.Integration.AlphaDivergencePathIntegralBridge
 import CATEPTMain.Integration.YoshidaFreeFisherBridge
 import CATEPTMain.Integration.QuantumFisherBridge
 import CATEPTMain.Integration.InformationDimensionalFrameworkBridge
+import CATEPTMain.Integration.Pphi2NCATEPTBridge
+import CATEPTMain.Integration.LGTCATEPTBridge
+import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 
 /-!

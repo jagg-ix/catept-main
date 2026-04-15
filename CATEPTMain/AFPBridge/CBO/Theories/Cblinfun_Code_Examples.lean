@@ -50,6 +50,9 @@ theorem pauliX_sq_eq_id :
 --   inline ![![...]...] uses Pi.instMul (pointwise), named defs use Mul (Matrix n n α).
 --   Solution: use a named inner matrix + norm_num [def, Matrix.mul_apply, Fin.sum_univ_two].
 -- Note: push_cast triggers a Lean simproc PANIC on this goal; avoided via hMM + ofReal_div.
+-- After Algebra.smul_mul_assoc / mul_smul_comm in step 2, the outer • uses Algebra.toSMul
+-- (not MulAction.toHasSmul), so smul_smul fails even for ℝ•ℂ. Fix: convert • to * via
+-- RCLike.real_smul_eq_coe_mul, then recombine coercions via ← ofReal_mul and hcoeff.
 theorem hadamard_sq_eq_id :
     hadamard_mat * hadamard_mat = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   have hne : Real.sqrt 2 ≠ 0 := Real.sqrt_pos.mpr (by norm_num) |>.ne'
@@ -60,22 +63,22 @@ theorem hadamard_sq_eq_id :
                 Matrix.one_apply, RCLike.real_smul_eq_coe_mul]
   -- Step 2: factor the ℝ-scalar prefactor through the product
   simp only [hadamard_mat, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, hMM]
-  -- Step 3: entry-wise — sidesteps the Algebra/Module SMul instance diamond that blocks smul_smul.
-  -- After Step 2, goal is: (1/√2) • (1/√2) • 2 • (1:Matrix) = 1
-  -- smul_smul can't fire because • uses Algebra.toSMul, not Module.toSMul after Algebra.smul_mul_assoc.
-  -- Fix: ext+fin_cases reduces to scalar ℂ entries; RCLike.real_smul_eq_coe_mul converts • to *;
-  --   off-diagonal closes via mul_zero; diagonal via exact_mod_cast with right-assoc hcoeff.
+  -- Step 3: entry-wise — unpacks Matrix smul to ℝ-on-ℂ scalar goals.  After Step 2 the goal
+  -- is (1/√2) • (1/√2) • 2 • (1:Matrix) = 1.  ↓reduceIte reduces diagonal ite to 1 (kernel
+  -- evaluates (0:Fin 2)=(0:Fin 2) → True).  Off-diagonal still has ite → norm_num closes.
+  -- Diagonal: RCLike.real_smul_eq_coe_mul converts • to ↑r * z; ← ofReal_mul folds coercions;
+  -- hcoeff provides 1/√2*(1/√2*2)=1 in ℝ; norm_cast closes ↑(1:ℝ)=(1:ℂ).
   have hcoeff : (1 / Real.sqrt 2 : ℝ) * ((1 / Real.sqrt 2 : ℝ) * 2) = 1 := by
     field_simp [hne]
     nlinarith [Real.sq_sqrt (show (0:ℝ) ≤ 2 by norm_num)]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    -- Fin.ext_iff converts ⟨a,h⟩ = ⟨b,h'⟩ → a.val = b.val so ↓reduceIte can evaluate.
-    -- if_false/if_true must stay: ↓reduceIte needs them to discharge the ite even though
-    -- the linter incorrectly reports them as unused (Lean 4 ↓ discharge interaction).
-    simp only [Matrix.smul_apply, Matrix.one_apply, Fin.ext_iff, ↓reduceIte, if_false, if_true,
-               smul_zero, RCLike.real_smul_eq_coe_mul, mul_zero, mul_one] <;>
-    exact_mod_cast hcoeff
+    simp only [Matrix.smul_apply, Matrix.one_apply, ↓reduceIte] <;>
+    first
+    | (norm_num; done)
+    | (simp only [RCLike.real_smul_eq_coe_mul, mul_one];
+       rw [← RCLike.ofReal_mul, ← RCLike.ofReal_mul, hcoeff];
+       norm_cast)
 
 -- ── Trace computations ────────────────────────────────────────────────────────
 -- Tr(σ_X) = 0

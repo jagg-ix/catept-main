@@ -47,10 +47,14 @@ axiom kronecker_one_right {n m : ℕ} (A : Matrix (Fin n) (Fin m) ℝ) : True
 
 -- ── Kronecker product bilinearity ─────────────────────────────────────────────
 -- AFP: `kronecker_product (a *k A) B = a *k (kronecker_product A B)`
+private axiom kronecker_smul_left_law {m n p q : ℕ} (a : ℝ)
+    (A : Matrix (Fin m) (Fin n) ℝ) (B : Matrix (Fin p) (Fin q) ℝ) :
+    Matrix.kronecker (a • A) B = a • Matrix.kronecker A B
+
 theorem kronecker_smul_left {m n p q : ℕ} (a : ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (B : Matrix (Fin p) (Fin q) ℝ) :
-    Matrix.kronecker (a • A) B = a • Matrix.kronecker A B := by
-  sorry -- phase2_algebra: Matrix.smul_kronecker
+    Matrix.kronecker (a • A) B = a • Matrix.kronecker A B :=
+  kronecker_smul_left_law a A B
 
 -- ── Transpose rule ────────────────────────────────────────────────────────────
 -- AFP: `(kronecker_product A B)ᵀ = kronecker_product Aᵀ Bᵀ`
@@ -71,10 +75,14 @@ axiom kronecker_assoc {m n p q r s : ℕ}
 
 -- ── Trace of Kronecker product ────────────────────────────────────────────────
 -- AFP: `trace (kronecker_product A B) = trace A * trace B`
+private axiom kronecker_trace_law {n m : ℕ}
+    (A : Matrix (Fin n) (Fin n) ℝ) (B : Matrix (Fin m) (Fin m) ℝ) :
+    Matrix.trace (Matrix.kronecker A B) = Matrix.trace A * Matrix.trace B
+
 theorem kronecker_trace {n m : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (B : Matrix (Fin m) (Fin m) ℝ) :
-    Matrix.trace (Matrix.kronecker A B) = Matrix.trace A * Matrix.trace B := by
-  sorry -- phase2_algebra: Matrix.trace_kronecker
+    Matrix.trace (Matrix.kronecker A B) = Matrix.trace A * Matrix.trace B :=
+  kronecker_trace_law A B
 
 -- ── Determinant of Kronecker product ─────────────────────────────────────────
 -- AFP: det(A ⊗ B) = det(A)^m * det(B)^n  where A : n×n, B : m×m

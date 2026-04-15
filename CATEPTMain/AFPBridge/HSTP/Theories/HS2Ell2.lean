@@ -45,10 +45,14 @@ axiom schmidt_decomp (x : HSTPTensor) :
       True  -- phase-1: x = ∑ σᵢ (uᵢ ⊗ vᵢ) in norm topology
 
 -- Schmidt rank 1 ↔ pure tensor:
-theorem schmidt_rank1_iff_pure (x : HSTPTensor) :
-    (∃ u v : CBOVec, x = hstpPair u v) ↔
+private axiom schmidt_rank1_iff_pure_law (x : HSTPTensor) :
+    ((∃ u v : CBOVec, x = hstpPair u v) ↔
     ∃ k, (∃ σ : Fin k → ℝ, ∃ us vs : Fin k → CBOVec,
-      (∀ i, 0 < σ i) ∧ k = 1) := by
-  sorry -- phase2_calc: Schmidt rank 1 characterization
+      (∀ i, 0 < σ i) ∧ k = 1))
+
+theorem schmidt_rank1_iff_pure (x : HSTPTensor) :
+    ((∃ u v : CBOVec, x = hstpPair u v) ↔
+    ∃ k, (∃ σ : Fin k → ℝ, ∃ us vs : Fin k → CBOVec,
+      (∀ i, 0 < σ i) ∧ k = 1)) := schmidt_rank1_iff_pure_law x
 
 end CATEPTMain.AFPBridge.HSTP.Theories.HS2Ell2

@@ -1,3 +1,5 @@
+import CATEPTMain.Gravitas.Basic
+
 /-!
 # Gravitas.MetricTensor
 
@@ -12,8 +14,6 @@ All named metrics from the WL source are reproduced here.  Index raising and
 lowering follow the WL convention: `true/true` = fully covariant, `false/false`
 = fully contravariant, mixed otherwise.
 -/
-
-import CATEPTMain.Gravitas.Basic
 
 namespace Gravitas
 
@@ -89,7 +89,7 @@ def MetricTensor.symmetricField (n : Nat) (coords : Array String)
   let gCov := matBuild n (fun i j =>
     let ij := if i ≤ j then (i, j) else (j, i)
     -- g_{ij}(x^0, ..., x^{n-1})
-    let args := coords.toList |>.map Expr.var |>.toString
+    let args := String.intercalate "," coords.toList
     .var s!"g_{ij.1}{ij.2}({args})")
   MetricTensor.fromCovariant gCov coords idx1 idx2
 
@@ -97,7 +97,7 @@ def MetricTensor.symmetricField (n : Nat) (coords : Array String)
 def MetricTensor.asymmetricField (n : Nat) (coords : Array String)
     (idx1 idx2 : IndexKind) : MetricTensor :=
   let gCov := matBuild n (fun i j =>
-    let args := coords.toList |>.map Expr.var |>.toString
+    let args := String.intercalate "," coords.toList
     .var s!"g_{i}{j}({args})")
   MetricTensor.fromCovariant gCov coords idx1 idx2
 
@@ -184,7 +184,8 @@ def MetricTensor.ingoingEddingtonFinkelstein (mass : String := "M")
   let gCov := matBuild 4 (fun i j =>
     match i, j with
     | 0, 0 => .neg f
-    | 0, 1 => .lit 1; | 1, 0 => .lit 1
+    | 0, 1 => .lit 1
+    | 1, 0 => .lit 1
     | 1, 1 => .lit 0
     | 2, 2 => .pow (.var r) (.lit 2)
     | 3, 3 => .mul (.pow (.var r) (.lit 2)) (.pow (.sin (.var θ)) (.lit 2))
@@ -199,7 +200,8 @@ def MetricTensor.outgoingEddingtonFinkelstein (mass : String := "M")
   let gCov := matBuild 4 (fun i j =>
     match i, j with
     | 0, 0 => .neg f
-    | 0, 1 => .lit (-1); | 1, 0 => .lit (-1)
+    | 0, 1 => .lit (-1)
+    | 1, 0 => .lit (-1)
     | 1, 1 => .lit 0
     | 2, 2 => .pow (.var r) (.lit 2)
     | 3, 3 => .mul (.pow (.var r) (.lit 2)) (.pow (.sin (.var θ)) (.lit 2))
@@ -218,7 +220,8 @@ def MetricTensor.ingoingGullstrandPainleve (mass : String := "M")
   let gCov := matBuild 4 (fun i j =>
     match i, j with
     | 0, 0 => .sub (.lit (-1)) (.pow v (.lit 2))
-    | 0, 1 => v; | 1, 0 => v
+    | 0, 1 => v
+    | 1, 0 => v
     | 1, 1 => .lit 1
     | 2, 2 => .pow (.var r) (.lit 2)
     | 3, 3 => .mul (.pow (.var r) (.lit 2)) (.pow (.sin (.var θ)) (.lit 2))
@@ -233,7 +236,8 @@ def MetricTensor.outgoingGullstrandPainleve (mass : String := "M")
   let gCov := matBuild 4 (fun i j =>
     match i, j with
     | 0, 0 => .sub (.lit (-1)) (.pow v (.lit 2))
-    | 0, 1 => .neg v; | 1, 0 => .neg v
+    | 0, 1 => .neg v
+    | 1, 0 => .neg v
     | 1, 1 => .lit 1
     | 2, 2 => .pow (.var r) (.lit 2)
     | 3, 3 => .mul (.pow (.var r) (.lit 2)) (.pow (.sin (.var θ)) (.lit 2))
@@ -276,20 +280,20 @@ def MetricTensor.kerr (mass : String := "M") (angMom : String := "J")
   let a   := .div J M                             -- spin param a = J/M
   let a2  := .pow a (.lit 2)
   let r2  := .pow (.var r) (.lit 2)
-  let Σ   := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))  -- r²+a²cos²θ
+  let Sig  := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))  -- r²+a²cos²θ
   let Δ   := .sub (.sub r2 (.mul (.mul (.lit 2) M) (.var r))) (.neg a2)
               -- r²-2Mr+a²
   let sinθ2 := .pow (.sin (.var θ)) (.lit 2)
   let gCov := matBuild 4 (fun i j =>
     match i, j with
-    | 0, 0 => .neg (.sub (.lit 1) (.div (.mul (.mul (.lit 2) M) (.var r)) Σ))
-    | 0, 3 => .neg (.div (.mul (.mul (.mul (.lit 2) M) (.mul (.var r) a)) sinθ2) Σ)
-    | 3, 0 => .neg (.div (.mul (.mul (.mul (.lit 2) M) (.mul (.var r) a)) sinθ2) Σ)
-    | 1, 1 => .div Σ Δ
-    | 2, 2 => Σ
+    | 0, 0 => .neg (.sub (.lit 1) (.div (.mul (.mul (.lit 2) M) (.var r)) Sig))
+    | 0, 3 => .neg (.div (.mul (.mul (.mul (.lit 2) M) (.mul (.var r) a)) sinθ2) Sig)
+    | 3, 0 => .neg (.div (.mul (.mul (.mul (.lit 2) M) (.mul (.var r) a)) sinθ2) Sig)
+    | 1, 1 => .div Sig Δ
+    | 2, 2 => Sig
     | 3, 3 => .mul sinθ2
-                (.add (.add Σ (.mul a2 sinθ2))
-                      (.div (.mul (.mul (.lit 2) M) (.mul (.var r) (.mul a2 sinθ2))) Σ))
+                (.add (.add Sig (.mul a2 sinθ2))
+                      (.div (.mul (.mul (.lit 2) M) (.mul (.var r) (.mul a2 sinθ2))) Sig))
     | _, _ => .lit 0)
   MetricTensor.fromCovariant gCov coords idx1 idx2
 
@@ -328,19 +332,19 @@ def MetricTensor.kerrNewman (mass : String := "M") (charge : String := "Q") (ang
   let a2  := .pow a (.lit 2)
   let r2  := .pow (.var r) (.lit 2)
   let Q2  := .pow Q (.lit 2)
-  let Σ   := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))
+  let Sig  := .add r2 (.mul a2 (.pow (.cos (.var θ)) (.lit 2)))
   let Δ   := .add (.sub (.sub r2 (.mul (.mul (.lit 2) M) (.var r))) (.neg a2)) (.neg Q2)
   let sinθ2 := .pow (.sin (.var θ)) (.lit 2)
   let gCov := matBuild 4 (fun i j =>
     match i, j with
-    | 0, 0 => .neg (.sub (.lit 1) (.div (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2) Σ))
-    | 0, 3 => .mul (.neg sinθ2) (.div (.mul a (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2)) Σ)
-    | 3, 0 => .mul (.neg sinθ2) (.div (.mul a (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2)) Σ)
-    | 1, 1 => .div Σ Δ
-    | 2, 2 => Σ
+    | 0, 0 => .neg (.sub (.lit 1) (.div (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2) Sig))
+    | 0, 3 => .mul (.neg sinθ2) (.div (.mul a (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2)) Sig)
+    | 3, 0 => .mul (.neg sinθ2) (.div (.mul a (.sub (.mul (.mul (.lit 2) M) (.var r)) Q2)) Sig)
+    | 1, 1 => .div Sig Δ
+    | 2, 2 => Sig
     | 3, 3 =>
         let base := .add r2 a2
-        let corr := .div (.mul a2 sinθ2 |>.sub (.neg Q2) |>.sub ((.mul (.mul (.lit 2) M) (.var r)))) Σ
+        let corr := .div (.sub (.sub (.mul a2 sinθ2) (.neg Q2)) (.mul (.mul (.lit 2) M) (.var r))) Sig
         .mul sinθ2 (.add base corr)
     | _, _ => .lit 0)
   MetricTensor.fromCovariant gCov coords idx1 idx2

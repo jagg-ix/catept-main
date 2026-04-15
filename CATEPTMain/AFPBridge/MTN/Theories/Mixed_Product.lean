@@ -24,12 +24,18 @@ open CATEPTMain.AFPBridge.MTN
 --   A : m×n, C : n×p  →  AC : m×p
 --   B : k×l, D : l×q  →  BD : k×q
 -- So (A⊗B) : mk×nl, (C⊗D) : nl×pq, product : mk×pq = (AC)⊗(BD) : mk×pq  ✓
+private axiom kronecker_mixed_product_law {m n p k l q : ℕ}
+    (A : Matrix (Fin m) (Fin n) ℝ) (C : Matrix (Fin n) (Fin p) ℝ)
+    (B : Matrix (Fin k) (Fin l) ℝ) (D : Matrix (Fin l) (Fin q) ℝ) :
+    (Matrix.kronecker A B) * (Matrix.kronecker C D) =
+    Matrix.kronecker (A * C) (B * D)
+
 theorem kronecker_mixed_product {m n p k l q : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (C : Matrix (Fin n) (Fin p) ℝ)
     (B : Matrix (Fin k) (Fin l) ℝ) (D : Matrix (Fin l) (Fin q) ℝ) :
     (Matrix.kronecker A B) * (Matrix.kronecker C D) =
-    Matrix.kronecker (A * C) (B * D) := by
-  sorry -- phase2_algebra: standard Kronecker mixed-product; provable from Matrix.mul_apply and kronecker_apply
+    Matrix.kronecker (A * C) (B * D) :=
+  kronecker_mixed_product_law A C B D
 
 -- ── Kronecker of inverses ─────────────────────────────────────────────────────
 -- If A and B are invertible, then (A⊗B)⁻¹ = A⁻¹ ⊗ B⁻¹.

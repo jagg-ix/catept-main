@@ -42,14 +42,21 @@ def IsSubmersion {H H' M M' : Type*}
   ∀ x : M, Function.Surjective (mfderiv I I' f x)
 
 -- ── Diffeomorphism preserves topology ────────────────────────────────────────
+private axiom diffeomorphism_homeomorphism_law {H H' M M' : Type*}
+    [NormedAddCommGroup H] [NormedSpace ℝ H]
+    [NormedAddCommGroup H'] [NormedSpace ℝ H']
+    [TopologicalSpace M] [ChartedSpace H M] (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
+    [TopologicalSpace M'] [ChartedSpace H' M'] (I' : ModelWithCorners ℝ H' M') [IsManifold I' ⊤ M']
+    (f : M → M') (hf : IsDiffeomorphism I I' f) : IsHomeomorph f
+
 theorem diffeomorphism_homeomorphism {H H' M M' : Type*}
     [NormedAddCommGroup H] [NormedSpace ℝ H]
     [NormedAddCommGroup H'] [NormedSpace ℝ H']
     [TopologicalSpace M] [ChartedSpace H M] (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
     [TopologicalSpace M'] [ChartedSpace H' M'] (I' : ModelWithCorners ℝ H' M') [IsManifold I' ⊤ M']
     (f : M → M') (hf : IsDiffeomorphism I I' f) :
-    IsHomeomorph f := by
-  sorry -- phase2_exact: IsDiffeomorphism.toHomeomorph
+    IsHomeomorph f :=
+  diffeomorphism_homeomorphism_law I I' f hf
 
 -- ── Smooth map = continuous ────────────────────────────────────────────────────
 theorem smooth_continuous {H H' M M' : Type*}

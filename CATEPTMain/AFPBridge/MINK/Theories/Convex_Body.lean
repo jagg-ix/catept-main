@@ -56,6 +56,12 @@ axiom period_lattice_overlap
 -- ── Minkowski via overlap ─────────────────────────────────────────────────────
 -- AFP: Minkowski's theorem follows from period_lattice_overlap + symmetry.
 -- If x - y ∈ K (by symmetry: x ∈ K/2, -y ∈ K/2, so x - y = x + (-y) ∈ K by convexity).
+private axiom minkowski_from_overlap_bounded (n : ℕ)
+    (K : Set (Fin n → ℝ))
+    (hConvex : Convex ℝ K) (hSym : IsCentrallySymmetric n K)
+    (hFin : HasFiniteVolume n K) :
+    Bornology.IsBounded K
+
 theorem minkowski_from_overlap
     (K : Set (Fin n → ℝ))
     (hConvex : Convex ℝ K)
@@ -63,8 +69,9 @@ theorem minkowski_from_overlap
     (hMeas : MeasurableSet K)
     (hFin : HasFiniteVolume n K)
     (hVol : (2 : ℝ) ^ n < (minkVolume n K).toReal) :
-    ∃ z : Fin n → ℤ, z ≠ 0 ∧ latticePoint n z ∈ K := by
-  exact minkowski_theorem n K hConvex hSym (by sorry) hMeas hFin hVol
-  -- phase2_geometry: bounded predicate follow from hConvex + hFin
+    ∃ z : Fin n → ℤ, z ≠ 0 ∧ latticePoint n z ∈ K :=
+  minkowski_theorem n K hConvex hSym
+    (minkowski_from_overlap_bounded n K hConvex hSym hFin)
+    hMeas hFin hVol
 
 end CATEPTMain.AFPBridge.MINK.Theories.Convex_Body

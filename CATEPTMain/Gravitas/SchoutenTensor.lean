@@ -1,3 +1,7 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RicciTensor
+
 /-!
 # Gravitas.SchoutenTensor
 
@@ -9,10 +13,6 @@ Schouten tensor (trace-adjusted Ricci):
 
 Default storage: `(co, co)` = S_{μν} (fully covariant).
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RicciTensor
 
 namespace Gravitas
 

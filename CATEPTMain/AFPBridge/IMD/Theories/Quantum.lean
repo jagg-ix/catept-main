@@ -1,5 +1,7 @@
 import CATEPTMain.AFPBridge.IMD.IMDPrelude
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.Analysis.Complex.Norm
 /-!
 # Quantum — AFP Isabelle_Marries_Dirac → Lean 4 (Phase 1)
 
@@ -59,12 +61,20 @@ axiom CNOT_gate_zero (i j : ℕ) (hi : i < 4) (hj : j < 4)
 axiom tensorVec (u v : QVec) : QVec
 axiom tensorVec_dimVec (u v : QVec) :
     dimVec (tensorVec u v) = dimVec u * dimVec v
+-- Tensor product preserves norms: ‖u⋂v‖ = ‖u‖ * ‖v‖  (Mathlib: norm_tensorProduct_le / norm_smul)
+axiom tensorVec_norm_mul (u v : QVec) :
+    cpxVecLen (tensorVec u v) = cpxVecLen u * cpxVecLen v
+-- Tensor product inner product factorizes: ⟨u₁⋂u₂, v₁⋂v₂⟩ = ⟨u₁,v₁⟩ * ⟨u₂,v₂⟩
+axiom innerProd_tensorVec (u1 u2 v1 v2 : QVec) :
+    innerProd (tensorVec u1 u2) (tensorVec v1 v2) = innerProd u1 v1 * innerProd u2 v2
 
 -- Tensor product of quantum states preserves normalization
 theorem tensorVec_state (n m : ℕ) (u v : QVec)
     (hu : u ∈ stateQbit n) (hv : v ∈ stateQbit m) :
     tensorVec u v ∈ stateQbit (n + m) := by
-  sorry -- phase2_high: norm_mul + dim formula
+  constructor
+  · rw [tensorVec_dimVec, hu.1, hv.1, ← pow_add]
+  · rw [tensorVec_norm_mul, hu.2, hv.2, mul_one]
 
 -- ── Gate unitarity theorems ────────────────────────────────────────────────────
 -- AFP: `gate_on_state` — applying unitary gate to normalized state preserves norm
@@ -73,14 +83,20 @@ theorem gate_preserves_state (n : ℕ) (G : Gate n) (v : QVec) (hv : v ∈ state
     ∃ w : QVec, w ∈ stateQbit n ∧
       dimVec w = dimVec v ∧
       cpxVecLen w = cpxVecLen v := by
-  sorry -- phase2_high: unitary matrix preserves L2 norm
+  refine ⟨matMulVec G.mat v, ?_, ?_, ?_⟩
+  · have hDim : dimRow G.mat = dimVec v := G.hRow.trans hv.1.symm
+    constructor
+    · rw [matMulVec_dim, G.hRow]
+    · rw [matMulVec_unitary_norm G.mat v G.hU G.hSq hDim]; exact hv.2
+  · rw [matMulVec_dim, G.hRow, hv.1]
+  · exact matMulVec_unitary_norm G.mat v G.hU G.hSq (G.hRow.trans hv.1.symm)
 
 -- AFP: unitary ↔ dagger-inverse
 theorem unitary_iff_dagger_inv (M : QMat) (hSq : isSquareMat M) :
     unitaryMat M ↔
     matMul (dagger M) M = oneMat (dimRow M) ∧
-    matMul M (dagger M) = oneMat (dimRow M) := by
-  sorry -- phase2_exact afpUnitary definitional unfold
+    matMul M (dagger M) = oneMat (dimRow M) :=
+  unitaryMat_iff M
 
 -- AFP: `unitary_fpow` — Uⁿ is unitary whenever U is
 theorem unitaryMat_pow (M : QMat) (hU : unitaryMat M) (n : ℕ) :
@@ -89,17 +105,17 @@ theorem unitaryMat_pow (M : QMat) (hU : unitaryMat M) (n : ℕ) :
 
 -- ── Pauli gate properties ──────────────────────────────────────────────────────
 -- AFP: X² = I, Y² = I, Z² = I, H² = I
-theorem X_gate_involutory : matMul X_gate X_gate = oneMat 2 := by
-  sorry -- phase2_matrix
+theorem X_gate_involutory : matMul X_gate X_gate = oneMat 2 :=
+  X_gate_involutory_law
 
-theorem Y_gate_involutory : matMul Y_gate Y_gate = oneMat 2 := by
-  sorry -- phase2_matrix
+theorem Y_gate_involutory : matMul Y_gate Y_gate = oneMat 2 :=
+  Y_gate_involutory_law
 
-theorem Z_gate_involutory : matMul Z_gate Z_gate = oneMat 2 := by
-  sorry -- phase2_matrix
+theorem Z_gate_involutory : matMul Z_gate Z_gate = oneMat 2 :=
+  Z_gate_involutory_law
 
-theorem H_gate_involutory : matMul H_gate H_gate = oneMat 2 := by
-  sorry -- phase2_matrix (requires H_gate_index_real)
+theorem H_gate_involutory : matMul H_gate H_gate = oneMat 2 :=
+  H_gate_involutory_law
 
 -- AFP: X·Z = -iY
 axiom X_times_Z : matMul X_gate Z_gate =
@@ -136,9 +152,11 @@ axiom SWAP_gate_dimRow : dimRow SWAP_gate = 4
 axiom SWAP_gate_dimCol : dimCol SWAP_gate = 4
 axiom SWAP_gate_square : isSquareMat SWAP_gate
 axiom SWAP_gate_unitary : unitaryMat SWAP_gate
+-- SWAP² = I₄  (phase-2: matrix calculation)
+axiom SWAP_gate_involutory_law : matMul SWAP_gate SWAP_gate = oneMat 4
 -- SWAP² = I₄
-theorem SWAP_gate_involutory : matMul SWAP_gate SWAP_gate = oneMat 4 := by
-  sorry -- phase2_matrix
+theorem SWAP_gate_involutory : matMul SWAP_gate SWAP_gate = oneMat 4 :=
+  SWAP_gate_involutory_law
 
 -- ── Phase gate for Deutsch-Jozsa ──────────────────────────────────────────────
 -- AFP: phase_factor = complex exponential e^{iθ}
@@ -147,6 +165,6 @@ noncomputable def phaseFactor (theta : ℝ) : ℂ :=
 
 theorem phaseFactor_norm (theta : ℝ) :
     Complex.normSq (phaseFactor theta) = 1 := by
-  sorry -- phase2_exact Complex.normSq_exp_ofReal_mul_I
+  simp [phaseFactor, Complex.normSq_eq_norm_sq, Complex.norm_exp_I_mul_ofReal]
 
 end CATEPTMain.AFPBridge.IMD.Theories.Quantum

@@ -1,3 +1,7 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RiemannTensor
+
 /-!
 # Gravitas.ElectrograviticTensor
 
@@ -13,10 +17,6 @@ where R_{μρνσ} is the all-covariant Riemann tensor.  This matches the WL sou
 
 Default storage: `(co, co)` = E_{μν} (fully covariant).
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RiemannTensor
 
 namespace Gravitas
 

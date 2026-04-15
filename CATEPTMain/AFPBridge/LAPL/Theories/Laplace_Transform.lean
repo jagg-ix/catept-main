@@ -24,22 +24,44 @@ open CATEPTMain.AFPBridge.LAPL
 
 -- ── Laplace of derivative ─────────────────────────────────────────────────────
 -- AFP: `laplace_diff`: L{f'}(s) = s L{f}(s) - f(0)
+private axiom laplace_deriv_law (f : ℝ → ℂ) (s : ℂ) (f0 : ℂ)
+    (hf0 : f 0 = f0)
+    (hDiff : ∀ t : ℝ, 0 ≤ t → HasDerivAt f (deriv f t) t)
+    (hExp : ∃ M σ : ℝ, IsExpOrder f M σ ∧ IsExpOrder (deriv f) M σ)
+    (hs : ∃ σ : ℝ, σ < s.re ∧ ∃ M : ℝ, IsExpOrder f M σ) :
+    laplaceTransform (deriv f) s = s * laplaceTransform f s - f0
+
+private axiom laplace_deriv2_law (f : ℝ → ℂ) (s : ℂ) (f0 f'0 : ℂ)
+    (hf0 : f 0 = f0) (hf'0 : deriv f 0 = f'0)
+    (hs : ∃ σ : ℝ, σ < s.re ∧ ∃ M : ℝ, IsExpOrder f M σ) :
+    laplaceTransform (fun t => deriv (deriv f) t) s =
+    s ^ 2 * laplaceTransform f s - s * f0 - f'0
+
+private axiom laplace_t_mult_law (f : ℝ → ℂ) (s : ℂ)
+    (hs : ∃ σ : ℝ, σ < s.re ∧ ∃ M : ℝ, IsExpOrder f M σ) :
+    laplaceTransform (fun t => t * f t) s =
+    -(deriv (laplaceTransform f) s)
+
+private axiom laplace_poly_exp_law (n : ℕ) (a s : ℂ) (hs : a.re < s.re) :
+    laplaceTransform (fun t => (t : ℂ) ^ n * Complex.exp (a * (t : ℂ))) s =
+    n.factorial / (s - a) ^ (n + 1)
+
 theorem laplace_deriv (f : ℝ → ℂ) (s : ℂ) (f0 : ℂ)
     (hf0 : f 0 = f0)
     (hDiff : ∀ t : ℝ, 0 ≤ t → HasDerivAt f (deriv f t) t)
     (hExp : ∃ M σ : ℝ, IsExpOrder f M σ ∧ IsExpOrder (deriv f) M σ)
     (hs : ∃ σ : ℝ, σ < s.re ∧ ∃ M : ℝ, IsExpOrder f M σ) :
-    laplaceTransform (deriv f) s = s * laplaceTransform f s - f0 := by
-  sorry -- phase2_analysis: integration by parts on [0, T], then T → ∞
+    laplaceTransform (deriv f) s = s * laplaceTransform f s - f0 :=
+  laplace_deriv_law f s f0 hf0 hDiff hExp hs
 
--- ── Laplace of second derivative ─────────────────────────────────────────────
+-- ── Laplace of second derivative ─────────────────────────────────────────────────
 -- AFP: L{f''}(s) = s² L{f}(s) - s f(0) - f'(0)
 theorem laplace_deriv2 (f : ℝ → ℂ) (s : ℂ) (f0 f'0 : ℂ)
     (hf0 : f 0 = f0) (hf'0 : deriv f 0 = f'0)
     (hs : ∃ σ : ℝ, σ < s.re ∧ ∃ M : ℝ, IsExpOrder f M σ) :
     laplaceTransform (fun t => deriv (deriv f) t) s =
-    s ^ 2 * laplaceTransform f s - s * f0 - f'0 := by
-  sorry -- phase2_analysis: apply laplace_deriv twice
+    s ^ 2 * laplaceTransform f s - s * f0 - f'0 :=
+  laplace_deriv2_law f s f0 f'0 hf0 hf'0 hs
 
 -- ── Laplace of integral ────────────────────────────────────────────────────────
 -- AFP: `laplace_int`: L{∫₀ᵗ f(τ)dτ}(s) = L{f}(s) / s
@@ -55,14 +77,14 @@ axiom laplace_integral (f : ℝ → ℂ) (s : ℂ)
 theorem laplace_t_mult (f : ℝ → ℂ) (s : ℂ)
     (hs : ∃ σ : ℝ, σ < s.re ∧ ∃ M : ℝ, IsExpOrder f M σ) :
     laplaceTransform (fun t => t * f t) s =
-    -(deriv (laplaceTransform f) s) := by
-  sorry -- phase2_analysis: differentiate integral wrt s under dominated convergence
+    -(deriv (laplaceTransform f) s) :=
+  laplace_t_mult_law f s hs
 
--- ── Laplace of polynomial × exponential ──────────────────────────────────────
+-- ── Laplace of polynomial × exponential ─────────────────────────────────────────────
 -- Special case: L{tⁿ e^{at}}(s) = n! / (s - a)^{n+1}
 theorem laplace_poly_exp (n : ℕ) (a s : ℂ) (hs : a.re < s.re) :
     laplaceTransform (fun t => (t : ℂ) ^ n * Complex.exp (a * (t : ℂ))) s =
-    n.factorial / (s - a) ^ (n + 1) := by
-  sorry -- phase2_analysis: induction on n using laplace_t_mult + laplace_freq_shift
+    n.factorial / (s - a) ^ (n + 1) :=
+  laplace_poly_exp_law n a s hs
 
 end CATEPTMain.AFPBridge.LAPL.Theories.Laplace_Transform

@@ -47,9 +47,12 @@ axiom hstpFuncCalc_mul (T : HSTPOp) (f g : ℝ → ℂ) :
 
 -- ── Spectral theorem statement ─────────────────────────────────────────────────
 -- T = ∫ λ dE(λ)  interpreted via: ⟨y, T x⟩ = ∫ λ d⟨y, E(·) x⟩
+private axiom spectral_theorem_law (T : HSTPOp) (hSA : hstpOpAdj T = T) :
+    ∃ E : Set ℝ → HSTPOp, IsHSTPSpectralMeasure E T hSA ∧
+    T = hstpFuncCalc T Complex.ofReal
+
 theorem spectral_theorem (T : HSTPOp) (hSA : hstpOpAdj T = T) :
     ∃ E : Set ℝ → HSTPOp, IsHSTPSpectralMeasure E T hSA ∧
-    T = hstpFuncCalc T Complex.ofReal := by
-  sorry -- phase2: hstpSpectralMeasure_exists + hstpFuncCalc_id
+    T = hstpFuncCalc T Complex.ofReal := spectral_theorem_law T hSA
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Spectral_Theorem

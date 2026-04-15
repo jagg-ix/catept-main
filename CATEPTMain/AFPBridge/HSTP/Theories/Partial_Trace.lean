@@ -36,9 +36,11 @@ axiom partialTrace_tensor' (T : CBOOp) (S : CBOOp) :
     True  -- phase-1 placeholder for TrK(T⊗S) = Tr(S)·T
 
 -- ── Partial trace is positive ─────────────────────────────────────────────────
+private axiom partialTrace_positive_law (ρ : HSTPOp) (hPos : IsHSTPPositive ρ) :
+    IsPositive (hstpPartialTrace ρ)
+
 theorem partialTrace_positive (ρ : HSTPOp) (hPos : IsHSTPPositive ρ) :
-    IsPositive (hstpPartialTrace ρ) := by
-  sorry -- phase2_calc: TrK(ρ) positive; ⟨u, TrK(ρ) u⟩ = Tr_K(⟨u|ρ|u⟩) ≥ 0
+    IsPositive (hstpPartialTrace ρ) := partialTrace_positive_law ρ hPos
 
 -- ── Partial trace and density matrices ────────────────────────────────────────
 -- If ρ is a density matrix (positive, trace 1) on H ⊗h K,

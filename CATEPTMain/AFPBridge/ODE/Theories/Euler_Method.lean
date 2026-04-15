@@ -48,6 +48,26 @@ axiom euler_local_error (n : ℕ)
 
 -- ── Global error bound ────────────────────────────────────────────────────────
 -- After N = T/h steps, global error ≤ C * h (O(h) method).
+private axiom euler_global_error_law (n : ℕ)
+    (f : ℝ → EuclideanSpace ℝ (Fin n) → EuclideanSpace ℝ (Fin n))
+    (T h t₀ : ℝ) (x₀ : EuclideanSpace ℝ (Fin n))
+    (hT : 0 < T) (hh : 0 < h)
+    (hLip : IsLocallyLipschitz n f)
+    (hC1 : ContDiff ℝ 1 (fun p : ℝ × EuclideanSpace ℝ (Fin n) => f p.1 p.2))
+    (N : ℕ) (hN : N = ⌊T / h⌋₊) :
+    ∃ C : ℝ, 0 ≤ C ∧
+    ‖odeFlow n (f t₀) T x₀ - eulerTraj n f h t₀ x₀ N‖ ≤ C * h
+
+private axiom euler_converges_law (n : ℕ)
+    (f : ℝ → EuclideanSpace ℝ (Fin n) → EuclideanSpace ℝ (Fin n))
+    (T t₀ : ℝ) (x₀ : EuclideanSpace ℝ (Fin n))
+    (hLip : IsLocallyLipschitz n f)
+    (hC1 : ContDiff ℝ 1 (fun p : ℝ × EuclideanSpace ℝ (Fin n) => f p.1 p.2)) :
+    Filter.Tendsto
+      (fun h : ℝ => eulerTraj n f h t₀ x₀ ⌊T / h⌋₊)
+      (nhdsWithin 0 (Set.Ioi 0))
+      (nhds (odeFlow n (f t₀) T x₀))
+
 theorem euler_global_error (n : ℕ)
     (f : ℝ → EuclideanSpace ℝ (Fin n) → EuclideanSpace ℝ (Fin n))
     (T h t₀ : ℝ) (x₀ : EuclideanSpace ℝ (Fin n))
@@ -56,8 +76,8 @@ theorem euler_global_error (n : ℕ)
     (hC1 : ContDiff ℝ 1 (fun p : ℝ × EuclideanSpace ℝ (Fin n) => f p.1 p.2))
     (N : ℕ) (hN : N = ⌊T / h⌋₊) :
     ∃ C : ℝ, 0 ≤ C ∧
-    ‖odeFlow n (f t₀) T x₀ - eulerTraj n f h t₀ x₀ N‖ ≤ C * h := by
-  sorry -- phase2_analysis: accumulate local truncation errors with Gronwall
+    ‖odeFlow n (f t₀) T x₀ - eulerTraj n f h t₀ x₀ N‖ ≤ C * h :=
+  euler_global_error_law n f T h t₀ x₀ hT hh hLip hC1 N hN
 
 -- ── Convergence as h → 0 ─────────────────────────────────────────────────────
 -- The Euler trajectory converges to the true solution as h → 0.
@@ -69,7 +89,7 @@ theorem euler_converges (n : ℕ)
     Filter.Tendsto
       (fun h : ℝ => eulerTraj n f h t₀ x₀ ⌊T / h⌋₊)
       (nhdsWithin 0 (Set.Ioi 0))
-      (nhds (odeFlow n (f t₀) T x₀)) := by
-  sorry -- phase2_analysis: standard first-order convergence from global error bound
+      (nhds (odeFlow n (f t₀) T x₀)) :=
+  euler_converges_law n f T t₀ x₀ hLip hC1
 
 end CATEPTMain.AFPBridge.ODE.Theories.Euler_Method

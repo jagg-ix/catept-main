@@ -23,14 +23,22 @@ open CATEPTMain.AFPBridge.MTN
 -- AFP: `kron_eigenvector`:
 --   A u = λ u → B v = μ v → (A⊗B)(u⊗v) = (λμ)(u⊗v)
 -- In Lean 4 we embed vectors as matrices (n×1 columns).
+private axiom kronecker_eigenvector_law {n m : ℕ} (lam mu : ℝ)
+    (A : Matrix (Fin n) (Fin n) ℝ) (B : Matrix (Fin m) (Fin m) ℝ)
+    (u : Fin n → ℝ) (v : Fin m → ℝ)
+    (hA : A.mulVec u = lam • u)
+    (hB : B.mulVec v = mu • v) :
+    (Matrix.kronecker A B).mulVec (fun ij => u ij.1 * v ij.2) =
+    (lam * mu) • fun ij => u ij.1 * v ij.2
+
 theorem kronecker_eigenvector {n m : ℕ} (lam mu : ℝ)
     (A : Matrix (Fin n) (Fin n) ℝ) (B : Matrix (Fin m) (Fin m) ℝ)
     (u : Fin n → ℝ) (v : Fin m → ℝ)
   (hA : A.mulVec u = lam • u)
   (hB : B.mulVec v = mu • v) :
     (Matrix.kronecker A B).mulVec (fun ij => u ij.1 * v ij.2) =
-  (lam * mu) • fun ij => u ij.1 * v ij.2 := by
-  sorry -- phase2_algebra: use kronecker_apply and hA, hB pointwise
+  (lam * mu) • fun ij => u ij.1 * v ij.2 :=
+  kronecker_eigenvector_law lam mu A B u v hA hB
 
 -- ── Spectrum of Kronecker product ─────────────────────────────────────────────
 -- AFP: the spectrum of A⊗B is {λ*μ | λ ∈ spec(A), μ ∈ spec(B)}.

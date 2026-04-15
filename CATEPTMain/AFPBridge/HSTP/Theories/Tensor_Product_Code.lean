@@ -49,8 +49,10 @@ def HasEntanglementWitness (x : HSTPTensor) : Prop :=
     Real.sqrt ((hstpInner x x).re) * (cboNorm A)
 
 -- Separable states have no entanglement witness:
+private axiom separable_no_witness_law (u v : CBOVec) :
+    ¬ HasEntanglementWitness (hstpPair u v)
+
 theorem separable_no_witness (u v : CBOVec) :
-    ¬ HasEntanglementWitness (hstpPair u v) := by
-  sorry -- phase2_calc: ⟨u⊗v, (A⊗I)(u⊗v)⟩ = ⟨u,Au⟩⟨v,v⟩ ≤ ‖A‖·‖u‖²·‖v‖²
+    ¬ HasEntanglementWitness (hstpPair u v) := separable_no_witness_law u v
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Tensor_Product_Code

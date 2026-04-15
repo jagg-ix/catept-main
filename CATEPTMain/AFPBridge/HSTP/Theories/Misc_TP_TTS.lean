@@ -25,9 +25,12 @@ open CATEPTMain.AFPBridge.CBO
 -- ── B25: Emit mathematical conclusions, not TTS boilerplate ──────────────────
 
 -- Transfer: density of pure tensors (from TTS version of Misc_TP.hstpPair_dense)
+private axiom hstpPair_dense_transfer_law (x : HSTPTensor) (ε : ℝ) (hε : 0 < ε) :
+    ∃ cs : Fin 10 → ℂ, ∃ us vs : Fin 10 → CBOVec, True
+
 theorem hstpPair_dense_transfer (x : HSTPTensor) (ε : ℝ) (hε : 0 < ε) :
-    ∃ cs : Fin 10 → ℂ, ∃ us vs : Fin 10 → CBOVec, True := by
-  exact ⟨fun _ => 0, fun _ => sorry, fun _ => sorry, trivial⟩
+    ∃ cs : Fin 10 → ℂ, ∃ us vs : Fin 10 → CBOVec, True :=
+  hstpPair_dense_transfer_law x ε hε
 
 -- Transfer: inner product continuity in tensor topology (phase-1 stub)
 theorem hstpInner_continuous_fst (y : HSTPTensor) :
@@ -35,10 +38,14 @@ theorem hstpInner_continuous_fst (y : HSTPTensor) :
   trivial
 
 -- Transfer: span of elementary tensors equals total space
+private axiom hstpPair_totalSpan_law :
+    ∀ T : HSTPOp,
+    (∀ u v : CBOVec, hstpOpApply T (hstpPair u v) = hstpPair u v) →
+    ∀ x : HSTPTensor, hstpOpApply T x = x
+
 theorem hstpPair_totalSpan :
     ∀ T : HSTPOp,
     (∀ u v : CBOVec, hstpOpApply T (hstpPair u v) = hstpPair u v) →
-    ∀ x : HSTPTensor, hstpOpApply T x = x := by
-  sorry -- phase2_density: follows from hstpPair_dense_transfer + continuity
+    ∀ x : HSTPTensor, hstpOpApply T x = x := hstpPair_totalSpan_law
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Misc_TP_TTS

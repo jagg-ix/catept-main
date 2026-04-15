@@ -1,3 +1,10 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ElectromagneticTensor
+import CATEPTMain.Gravitas.StressEnergyTensor
+import CATEPTMain.Gravitas.EinsteinTensor
+import CATEPTMain.Gravitas.SolveEinsteinEquations
+
 /-!
 # Gravitas.SolveElectrovacuumEinsteinEquations
 
@@ -13,13 +20,6 @@ where the electromagnetic stress-energy is:
 
   T_{μν}^{EM} = (1/μ₀) [F_{μα} F^α_ν - (1/4) g_{μν} F_{αβ} F^{αβ}]
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ElectromagneticTensor
-import CATEPTMain.Gravitas.StressEnergyTensor
-import CATEPTMain.Gravitas.EinsteinTensor
-import CATEPTMain.Gravitas.SolveEinsteinEquations
 
 namespace Gravitas
 

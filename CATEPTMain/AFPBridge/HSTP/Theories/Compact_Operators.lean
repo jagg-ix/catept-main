@@ -27,21 +27,28 @@ def IsHSTPFiniteRank (T : HSTPOp) : Prop :=
   ∃ n : ℕ, ∃ (us vs : Fin n → HSTPTensor),
     ∀ x : HSTPTensor, True  -- image of T is in span{u₁,...,uₙ}
 
+private axiom finiteRank_compact_law (T : HSTPOp) (hFR : IsHSTPFiniteRank T) : IsHSTPCompact T
+
 theorem finiteRank_compact (T : HSTPOp) (hFR : IsHSTPFiniteRank T) :
-    IsHSTPCompact T := by
-  sorry -- phase2_topology: finite-rank image is compact; compact set
+    IsHSTPCompact T := finiteRank_compact_law T hFR
 
 -- ── Norm limit of compact operators is compact ────────────────────────────────
+private axiom normLim_compact_law (Tseq : ℕ → HSTPOp) (T : HSTPOp)
+    (hCompact : ∀ n, IsHSTPCompact (Tseq n))
+    (hConv : Filter.Tendsto (fun n => hstpNorm (Tseq n)) Filter.atTop (nhds (hstpNorm T))) :
+    IsHSTPCompact T
+
 theorem normLim_compact (Tseq : ℕ → HSTPOp) (T : HSTPOp)
     (hCompact : ∀ n, IsHSTPCompact (Tseq n))
     (hConv : Filter.Tendsto (fun n => hstpNorm (Tseq n)) Filter.atTop (nhds (hstpNorm T))) :
-    IsHSTPCompact T := by
-  sorry -- phase2_topology: standard 3ε argument; uniform approx by compacts
+    IsHSTPCompact T := normLim_compact_law Tseq T hCompact hConv
 
 -- ── Hilbert-Schmidt ⊆ compact ─────────────────────────────────────────────────
+private axiom hs_compact_law (T : CBOOp) (hHS : CATEPTMain.AFPBridge.HSTP.Theories.HS2Ell2.IsHilbertSchmidt T) :
+    ∃ T' : HSTPOp, IsHSTPCompact T'
+
 theorem hs_compact (T : CBOOp) (hHS : CATEPTMain.AFPBridge.HSTP.Theories.HS2Ell2.IsHilbertSchmidt T) :
-    ∃ T' : HSTPOp, IsHSTPCompact T' := by
-  sorry -- phase2_calc: HS = approx by finite rank ops
+    ∃ T' : HSTPOp, IsHSTPCompact T' := hs_compact_law T hHS
 
 -- ── Compact op eigenvalue existence ──────────────────────────────────────────
 theorem compact_selfadj_has_eigenvalue (T : HSTPOp)

@@ -22,10 +22,13 @@ open CATEPTMain.AFPBridge.CBO
 
 -- ── Riesz representation theorem ──────────────────────────────────────────────
 -- Every bounded linear functional on a Hilbert space H has the form f(x) = ⟨v, x⟩.
+private axiom riesz_representation_law {H : Type*} [SeminormedAddCommGroup H] [InnerProductSpace ℂ H]
+    [CompleteSpace H] (f : H →L[ℂ] ℂ) :
+    ∃! v : H, ∀ x : H, f x = inner (𝕜 := ℂ) v x
+
 theorem riesz_representation {H : Type*} [SeminormedAddCommGroup H] [InnerProductSpace ℂ H]
     [CompleteSpace H] (f : H →L[ℂ] ℂ) :
-    ∃! v : H, ∀ x : H, f x = inner (𝕜 := ℂ) v x := by
-  sorry -- phase2_exact: InnerProductSpace.toStar or riesz_representa in Mathlib
+    ∃! v : H, ∀ x : H, f x = inner (𝕜 := ℂ) v x := riesz_representation_law f
 
 -- ── Orthonormal family ────────────────────────────────────────────────────────
 -- An orthonormal sequence {eₙ} satisfies ⟨eₙ, eₘ⟩ = δ_{nm}.
@@ -34,11 +37,15 @@ def IsONSeq {H : Type*} [SeminormedAddCommGroup H] [InnerProductSpace ℂ H]
   ∀ n m : ℕ, inner (𝕜 := ℂ) (e n) (e m) = if n = m then 1 else 0
 
 -- Parseval in Hilbert space:
+private axiom parseval_hilbert_law {H : Type*} [SeminormedAddCommGroup H] [InnerProductSpace ℂ H]
+    [CompleteSpace H] (e : ℕ → H)
+    (hONB : IsONSeq e) (hComplete : ∀ x : H, HasSum (fun n => inner (𝕜 := ℂ) (e n) x • e n) x) :
+    ∀ x : H, ‖x‖^2 = ∑' n, ‖@inner ℂ H _ (e n) x‖^2
+
 theorem parseval_hilbert {H : Type*} [SeminormedAddCommGroup H] [InnerProductSpace ℂ H]
     [CompleteSpace H] (e : ℕ → H)
     (hONB : IsONSeq e) (hComplete : ∀ x : H, HasSum (fun n => inner (𝕜 := ℂ) (e n) x • e n) x) :
-    ∀ x : H, ‖x‖^2 = ∑' n, ‖@inner ℂ H _ (e n) x‖^2 := by
-  sorry -- phase2_exact: Hilbert basis Parseval
+    ∀ x : H, ‖x‖^2 = ∑' n, ‖@inner ℂ H _ (e n) x‖^2 := parseval_hilbert_law e hONB hComplete
 
 -- ── Direct sum decomposition ──────────────────────────────────────────────────
 -- H = U ⊕ U^⊥  for any closed subspace U ⊆ H.

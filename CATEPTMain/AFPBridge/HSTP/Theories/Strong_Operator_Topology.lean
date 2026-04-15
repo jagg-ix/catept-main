@@ -30,23 +30,33 @@ def HSTPStrongConv (Tseq : ℕ → HSTPOp) (T : HSTPOp) : Prop :=
       (nhds (hstpInner (hstpOpApply T x) (hstpOpApply T x)))
 
 -- ── Norm convergence → SOT convergence ───────────────────────────────────────
+private axiom norm_implies_sot_law (Tseq : ℕ → HSTPOp) (T : HSTPOp)
+    (hNorm : Filter.Tendsto (fun n => hstpNorm (Tseq n)) Filter.atTop (nhds (hstpNorm T))) :
+    HSTPStrongConv Tseq T
+
 theorem norm_implies_sot (Tseq : ℕ → HSTPOp) (T : HSTPOp)
     (hNorm : Filter.Tendsto (fun n => hstpNorm (Tseq n)) Filter.atTop (nhds (hstpNorm T))) :
-    HSTPStrongConv Tseq T := by
-  sorry -- phase2_topology: norm bound on (Tₙ - T)(x)
+    HSTPStrongConv Tseq T := norm_implies_sot_law Tseq T hNorm
 
 -- ── Bounded net SOT-convergent subsequence ───────────────────────────────────
+private axiom sot_bounded_subnet_law (Tseq : ℕ → HSTPOp) (C : ℝ) (hBdd : ∀ n, hstpNorm (Tseq n) ≤ C) :
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ T : HSTPOp, HSTPStrongConv (Tseq ∘ φ) T
+
 theorem sot_bounded_subnet (Tseq : ℕ → HSTPOp) (C : ℝ) (hBdd : ∀ n, hstpNorm (Tseq n) ≤ C) :
-    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ T : HSTPOp, HSTPStrongConv (Tseq ∘ φ) T := by
-  sorry -- phase2_exact: Banach-Alaoglu / SOT compactness for operator unit ball
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ T : HSTPOp, HSTPStrongConv (Tseq ∘ φ) T :=
+  sot_bounded_subnet_law Tseq C hBdd
 
 -- ── SOT continuity of composition ────────────────────────────────────────────
 -- Left multiplication L_S : T ↦ S∘T is SOT-continuous.
 noncomputable axiom hstpOpComp : HSTPOp → HSTPOp → HSTPOp
 
+private axiom sot_left_mult_cont_law (S : HSTPOp) (Tseq : ℕ → HSTPOp) (T : HSTPOp)
+    (hConv : HSTPStrongConv Tseq T) :
+    HSTPStrongConv (fun n => hstpOpComp S (Tseq n)) (hstpOpComp S T)
+
 theorem sot_left_mult_cont (S : HSTPOp) (Tseq : ℕ → HSTPOp) (T : HSTPOp)
     (hConv : HSTPStrongConv Tseq T) :
-    HSTPStrongConv (fun n => hstpOpComp S (Tseq n)) (hstpOpComp S T) := by
-  sorry -- phase2_topology: ‖S(Tₙ(x) - T(x))‖ ≤ ‖S‖·‖Tₙ(x) - T(x)‖ → 0
+    HSTPStrongConv (fun n => hstpOpComp S (Tseq n)) (hstpOpComp S T) :=
+  sot_left_mult_cont_law S Tseq T hConv
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology

@@ -16,6 +16,7 @@ repos=(
   "lean-quantuminfo-inspect"
   "cslib-inspect"
   "hopf-lean-4.26-port"
+  "Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem"
 )
 
 printf "[\n" > "$OUT"

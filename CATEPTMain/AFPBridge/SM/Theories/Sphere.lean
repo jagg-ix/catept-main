@@ -1,4 +1,6 @@
 import CATEPTMain.AFPBridge.SM.Theories.Product_Manifold
+import Mathlib.Analysis.Normed.Module.Connected
+import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 /-!
 # Sphere — AFP Smooth_Manifolds → Lean 4 (Phase 1)
 
@@ -46,8 +48,13 @@ theorem sphere_compact (n : ℕ) : IsCompact (nSphere n) :=
   isCompact_sphere _ _
 
 -- ── Sphere is connected (n ≥ 1) ─────────────────────────────────────────────
-theorem sphere_connected (n : ℕ) (hn : 1 ≤ n) : IsConnected (nSphere n) := by
-  sorry -- phase2_exact: Metric.sphere_connected_of_dim_ge_one
+theorem sphere_connected (n : ℕ) (hn : 1 ≤ n) : IsConnected (nSphere n) :=
+  isConnected_sphere
+    (Module.one_lt_rank_of_one_lt_finrank (R := ℝ) (M := EuclideanSpace ℝ (Fin (n+1))) (by
+      have h : Module.finrank ℝ (EuclideanSpace ℝ (Fin (n+1))) = n+1 := by simp
+      omega))
+    (0 : EuclideanSpace ℝ (Fin (n+1)))
+    (by norm_num)
 
 -- ── S¹ diffeomorphic to complex unit circle ───────────────────────────────────
 -- Phase-1: axiom; the circle as a smooth 1-manifold

@@ -81,7 +81,7 @@ theorem index_matrix_prod (A B : QMat) (m n k_dim i j : ℕ)
     (hi : i < m) (hj : j < n) :
     indexMat (matMul A B) i j =
     Finset.sum (Finset.range k_dim) (fun k => indexMat A i k * indexMat B k j) := by
-  sorry -- phase2_matrix: Matrix.mul_apply
+  rw [indexMat_matMul, hAC]
 
 -- ── Complex exponential lemmas ────────────────────────────────────────────────
 -- AFP: `exp_of_real r = Complex.exp (Complex.ofReal r)` and derived lemmas

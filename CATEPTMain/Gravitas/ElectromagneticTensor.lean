@@ -1,3 +1,6 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+
 /-!
 # Gravitas.ElectromagneticTensor
 
@@ -12,9 +15,6 @@ where A_μ = g_{μν} A^ν is the covariant 4-potential derived from A^μ = (Φ,
 Default storage: `(co, co)` = F_{μν} (fully covariant/antisymmetric).
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-
 namespace Gravitas
 
 structure ElectromagneticTensor where
@@ -22,7 +22,8 @@ structure ElectromagneticTensor where
   electromagneticPotential : Array Expr  -- A^μ (contravariant), length = dim
   vacuumPermeability   : Expr            -- μ₀
   components           : Mat
-  idx1 idx2            : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace ElectromagneticTensor
@@ -33,12 +34,12 @@ private def computeCovariant (g : MetricTensor) (A : Array Expr) : Mat :=
   let gCov   := g.covariantMatrix
   let coords := g.coords
   -- Covariant potential A_μ = g_{μν} A^ν
-  let aCov := Array.ofFn (fun μ =>
-    sumN n (fun ν => simplify (.mul (matGet gCov μ.val ν) (A.get! ν))))
+  let aCov := Array.ofFn (n := n) (fun μ : Fin n =>
+    sumN n (fun ν => simplify (.mul (matGet gCov μ.val ν) (A[ν]!))))
   -- F_{μν} = ∂_μ A_ν - ∂_ν A_μ
   matBuild n (fun μ ν =>
-    let d_μ_ν := symDiff (aCov.get! ν) (coords.get! μ)
-    let d_ν_μ := symDiff (aCov.get! μ) (coords.get! ν)
+    let d_μ_ν := symDiff (aCov[ν]!) (coords[μ]!)
+    let d_ν_μ := symDiff (aCov[μ]!) (coords[ν]!)
     simplify (.sub d_μ_ν d_ν_μ))
 
 private def toIndexed (gCov gInv fcov : Mat) (idx1 idx2 : IndexKind) : Mat :=
@@ -63,7 +64,7 @@ def ofMetric (g : MetricTensor) (A : Array Expr := #[]) (μ₀ : Expr := .var "�
     (idx1 : IndexKind := co) (idx2 : IndexKind := co) : ElectromagneticTensor :=
   let n := g.dim
   let A' := if A.isEmpty then
-    Array.ofFn (fun i =>
+    Array.ofFn (n := n) (fun i : Fin n =>
       if i.val == 0 then .var "Φ"
       else .var s!"A{i.val}")
   else A
@@ -95,12 +96,12 @@ def maxwellEquations (et : ElectromagneticTensor) (J : Array Expr) : Array Expr 
   -- (a full symbolic determinant would require Leibniz expansion; we keep it symbolic)
   let sqrtDetG : Expr := .var "√|g|"
   -- ∇_μ F^{μν} = (1/√|g|) ∂_μ(√|g| F^{μν})
-  Array.ofFn (fun ν =>
+  Array.ofFn (n := n) (fun ν : Fin n =>
     let divergence := sumN n (fun μ =>
-      simplify (symDiff (.mul sqrtDetG (matGet fCon μ ν.val)) (coords.get! μ)))
+      simplify (symDiff (.mul sqrtDetG (matGet fCon μ ν.val)) (coords[μ]!)))
     simplify (.sub
       (.mul (.div (.lit 1) sqrtDetG) divergence)
-      (.mul et.vacuumPermeability (J.get! ν.val))))
+      (.mul et.vacuumPermeability (J[ν.val]!))))
 
 end ElectromagneticTensor
 end Gravitas

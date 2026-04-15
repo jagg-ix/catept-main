@@ -1,3 +1,7 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ChristoffelSymbols
+
 /-!
 # Gravitas.RiemannTensor
 
@@ -14,10 +18,6 @@ Storage convention (matching WL `(False, True, True, True)` default):
 All 16 index combinations are available via `reindex`.
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ChristoffelSymbols
-
 namespace Gravitas
 
 -- ---------------------------------------------------------------------------
@@ -28,7 +28,10 @@ structure RiemannTensor where
   metric     : MetricTensor
   /-- Flattened n⁴ array; index order: (ρ, σ, μ, ν). -/
   components : Array Expr
-  idx1 idx2 idx3 idx4 : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
+  idx3 : IndexKind
+  idx4 : IndexKind
   deriving Repr
 
 namespace RiemannTensor
@@ -36,7 +39,7 @@ namespace RiemannTensor
 private def size4 (n : Nat) := n * n * n * n
 
 def getComp (n : Nat) (comps : Array Expr) (i j k l : Nat) : Expr :=
-  comps.get? (i*n*n*n + j*n*n + k*n + l) |>.getD (.lit 0)
+  comps[i*n*n*n + j*n*n + k*n + l]? |>.getD (.lit 0)
 
 private def setComp (n : Nat) (comps : Array Expr) (i j k l : Nat) (e : Expr)
     : Array Expr :=
@@ -52,21 +55,21 @@ def computeMixed (gCov gInv : Mat) (coords : Array String) : Array Expr :=
   let n := gCov.size
   -- Step 1: Christoffel symbols Γ^λ_{μν}
   let Γ := ChristoffelSymbols.computeMixed gCov gInv coords
-  let getΓ := fun λ_ μ ν => ChristoffelSymbols.getComp n Γ λ_ μ ν
+  let getΓ := fun lam_ μ ν => ChristoffelSymbols.getComp n Γ lam_ μ ν
   -- Step 2: R^ρ_{σμν}
-  let comps := Array.mkArray (size4 n) (.lit 0)
+  let comps := List.replicate (size4 n) (.lit 0) |>.toArray
   (List.range n).foldl (fun comps ρ =>
     (List.range n).foldl (fun comps σ =>
       (List.range n).foldl (fun comps μ =>
         (List.range n).foldl (fun comps ν =>
           -- R^ρ_{σμν} = ∂_μ Γ^ρ_{νσ} - ∂_ν Γ^ρ_{μσ}
           --           + Σ_λ (Γ^ρ_{μλ} Γ^λ_{νσ} - Γ^ρ_{νλ} Γ^λ_{μσ})
-          let t1 := symDiff (getΓ ρ ν σ) (coords.get! μ)
-          let t2 := symDiff (getΓ ρ μ σ) (coords.get! ν)
-          let t3 := sumN n (fun λ_ =>
-            simplify (.mul (getΓ ρ μ λ_) (getΓ λ_ ν σ)))
-          let t4 := sumN n (fun λ_ =>
-            simplify (.mul (getΓ ρ ν λ_) (getΓ λ_ μ σ)))
+          let t1 := symDiff (getΓ ρ ν σ) (coords[μ]!)
+          let t2 := symDiff (getΓ ρ μ σ) (coords[ν]!)
+          let t3 := sumN n (fun lam_ =>
+            simplify (.mul (getΓ ρ μ lam_) (getΓ lam_ ν σ)))
+          let t4 := sumN n (fun lam_ =>
+            simplify (.mul (getΓ ρ ν lam_) (getΓ lam_ μ σ)))
           let val := simplify (.sub (.add (.sub t1 t2) t3) t4)
           setComp n comps ρ σ μ ν val
         ) comps
@@ -85,7 +88,7 @@ def computeMixed (gCov gInv : Mat) (coords : Array String) : Array Expr :=
 def convertIndices (n : Nat) (gCov gInv : Mat) (mixed : Array Expr)
     (i1 i2 i3 i4 : IndexKind) : Array Expr :=
   let get := fun ρ σ μ ν => getComp n mixed ρ σ μ ν
-  let base := Array.mkArray (size4 n) (.lit 0)
+  let base := List.replicate (size4 n) (.lit 0) |>.toArray
   (List.range n).foldl (fun comps i =>
     (List.range n).foldl (fun comps j =>
       (List.range n).foldl (fun comps k =>
@@ -106,8 +109,8 @@ def convertIndices (n : Nat) (gCov gInv : Mat) (mixed : Array Expr)
             -- (con, con, con, con) = R^{ρσμν} = g^{σα}g^{μβ}g^{νγ} R^ρ_{αβγ}
             | false, false, false, false =>
                 sumN n (fun α => sumN n (fun β => sumN n (fun γ =>
-                  simplify (.mul (.mul (.mul (matGet gInv j α) (matGet gInv k β))
-                                      (.mul (matGet gInv l γ) (get i α β γ))))))
+                  simplify (.mul (.mul (matGet gInv j α) (matGet gInv k β))
+                                 (.mul (matGet gInv l γ) (get i α β γ))))))
             -- (co, con, con, con)
             | true,  false, false, false =>
                 sumN n (fun ρ => sumN n (fun α => sumN n (fun β => sumN n (fun γ =>

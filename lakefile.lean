@@ -20,10 +20,29 @@ require cslib from git
   "file:///Users/macbookpro/lab/tau/tau-information-dynamics/cslib-inspect" @ "0d37cc7fcc98"
 
 require pphi2 from git
-  "file:///Users/macbookpro/lab/tau/tau-information-dynamics/pphi2" @ "1211294"
+  "file:///Users/macbookpro/lab/tau/tau-information-dynamics/pphi2" @ "b0cbac4"
+
+-- pphi2N: O(N) linear sigma model, large-N mass gap via Hubbard-Stratonovich.
+-- Requires pphi2 (above) + MarkovSemigroups (transitive via pphi2).
+require pphi2N from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/pphi2N"
+
+-- LGT: 2D Yang-Mills mass gap via discrete differential geometry + Doeblin mixing.
+-- Requires GaussianField + MarkovSemigroups (both transitive via pphi2/pphi2N).
+-- GaugeFixing.lean has 2 localized sorries (Faddeev-Popov); bridge staged for Ph2.
+require LGT from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/lgt"
 
 require DimensionalAnalysis from
   "/Users/macbookpro/lab/tau/tau-information-dynamics/LeanDimensionalAnalysis"
+
+-- lean-inf: Levi-Civita numbers, SafeFloat, Array utilities (updated to v4.29.0).
+require «lean-inf» from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/lean-inf"
+
+-- VML: Formal verification of the Vlasov-Maxwell-Landau steady-state theorem.
+require aristotle from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem"
 
 -- Keep mathlib last so its transitive versions win during resolution.
 require mathlib from git

@@ -1,3 +1,6 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+
 /-!
 # Gravitas.StressEnergyTensor
 
@@ -12,9 +15,6 @@ Stress-energy tensor T_{μν} for various matter models:
 - Massive scalar field: T_{μν} = ∇_μ φ ∇_ν φ - (1/2) g_{μν}[(∇φ)² + m²φ²]
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-
 namespace Gravitas
 
 -- ---------------------------------------------------------------------------
@@ -24,7 +24,8 @@ namespace Gravitas
 structure StressEnergyTensor where
   metric     : MetricTensor
   components : Mat
-  idx1 idx2  : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace StressEnergyTensor
@@ -95,7 +96,7 @@ def perfectFluid (g : MetricTensor) (ρ P : Expr) (u : Array Expr)
   let gInv := g.inverseMatrix
   -- T^{μν} = (ρ+P) u^μ u^ν + P g^{μν}
   let tCon := matBuild n (fun μ ν =>
-    simplify (.add (.mul (.add ρ P) (.mul (u.get! μ) (u.get! ν)))
+    simplify (.add (.mul (.add ρ P) (.mul (u[μ]!) (u[ν]!)))
                    (.mul P (matGet gInv μ ν))))
   let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
@@ -106,7 +107,7 @@ def perfectFluidSymbolic (g : MetricTensor)
   let n := g.dim
   let ρ := .var "ρ"
   let P := .var "P"
-  let u := Array.ofFn (fun i => .var s!"u{i.val}")
+  let u := Array.ofFn (n := n) (fun i : Fin n => .var s!"u{i.val}")
   perfectFluid g ρ P u idx1 idx2
 
 -- ---------------------------------------------------------------------------
@@ -119,13 +120,13 @@ def dust (g : MetricTensor) (ρ : Expr) (u : Array Expr)
   let gCov := g.covariantMatrix
   let gInv := g.inverseMatrix
   let tCon := matBuild n (fun μ ν =>
-    simplify (.mul ρ (.mul (u.get! μ) (u.get! ν))))
+    simplify (.mul ρ (.mul (u[μ]!) (u[ν]!))))
   let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
 
 def dustSymbolic (g : MetricTensor) (idx1 idx2 : IndexKind := co) : StressEnergyTensor :=
   let n := g.dim
-  dust g (.var "ρ") (Array.ofFn (fun i => .var s!"u{i.val}")) idx1 idx2
+  dust g (.var "ρ") (Array.ofFn (n := n) (fun i : Fin n => .var s!"u{i.val}")) idx1 idx2
 
 -- ---------------------------------------------------------------------------
 -- Radiation:  T^{μν} = (ρ/3)(4 u^μ u^ν + g^{μν})
@@ -138,14 +139,14 @@ def radiation (g : MetricTensor) (ρ : Expr) (u : Array Expr)
   let gInv := g.inverseMatrix
   let tCon := matBuild n (fun μ ν =>
     simplify (.mul (.div ρ (.lit 3))
-                   (.add (.mul (.lit 4) (.mul (u.get! μ) (u.get! ν)))
+                   (.add (.mul (.lit 4) (.mul (u[μ]!) (u[ν]!)))
                          (matGet gInv μ ν))))
   let comps := toIndexed gCov gInv (lowerBoth gCov tCon) idx1 idx2
   { metric := g, components := comps, idx1, idx2 }
 
 def radiationSymbolic (g : MetricTensor) (idx1 idx2 : IndexKind := co) : StressEnergyTensor :=
   let n := g.dim
-  radiation g (.var "ρ") (Array.ofFn (fun i => .var s!"u{i.val}")) idx1 idx2
+  radiation g (.var "ρ") (Array.ofFn (n := n) (fun i : Fin n => .var s!"u{i.val}")) idx1 idx2
 
 -- ---------------------------------------------------------------------------
 -- Electromagnetic field:
@@ -189,13 +190,13 @@ def massiveScalarField (g : MetricTensor) (φ m : Expr)
   let gInv   := g.inverseMatrix
   let coords := g.coords
   -- ∂_μ φ
-  let dφ := Array.ofFn (fun μ => symDiff φ (coords.get! μ.val))
+  let dφ := Array.ofFn (n := n) (fun μ : Fin n => symDiff φ (coords[μ.val]!))
   -- (∂φ)² = g^{μν} ∂_μ φ ∂_ν φ
   let gradSq := sumN n (fun μ => sumN n (fun ν =>
-    simplify (.mul (.mul (matGet gInv μ ν) (dφ.get! μ)) (dφ.get! ν))))
+    simplify (.mul (.mul (matGet gInv μ ν) (dφ[μ]!)) (dφ[ν]!))))
   let kinTerm := simplify (.add gradSq (.mul (.mul m m) (.mul φ φ)))
   let tcov := matBuild n (fun μ ν =>
-    simplify (.sub (.mul (dφ.get! μ) (dφ.get! ν))
+    simplify (.sub (.mul (dφ[μ]!) (dφ[ν]!))
                    (.mul (.mul (.lit (1/2)) (matGet gCov μ ν)) kinTerm)))
   let comps := toIndexed gCov gInv tcov idx1 idx2
   { metric := g, components := comps, idx1, idx2 }

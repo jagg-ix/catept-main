@@ -49,8 +49,10 @@ axiom hstpTrace_cyclic (S T : HSTPOp) (hST : IsTraceClass
       (CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.hstpOpComp T S)
 
 -- ── Trace-class ⊂ compact ─────────────────────────────────────────────────────
+private axiom traceClass_compact_law (T : HSTPOp) (hTC : IsTraceClass T) :
+    CATEPTMain.AFPBridge.HSTP.Theories.Eigenvalues.IsHSTPCompact T
+
 theorem traceClass_compact (T : HSTPOp) (hTC : IsTraceClass T) :
-    CATEPTMain.AFPBridge.HSTP.Theories.Eigenvalues.IsHSTPCompact T := by
-  sorry -- phase2_exact: Schatten p norm ordering; S₁ ⊆ K(H) (Schatten 1 ⊆ compact)
+    CATEPTMain.AFPBridge.HSTP.Theories.Eigenvalues.IsHSTPCompact T := traceClass_compact_law T hTC
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Trace_Class

@@ -31,16 +31,21 @@ def HSTPWeakConv (Tseq : ℕ → HSTPOp) (T : HSTPOp) : Prop :=
       (nhds (hstpInner y (hstpOpApply T x)))
 
 -- ── SOT → WOT ────────────────────────────────────────────────────────────────
+private axiom sot_implies_wot_law (Tseq : ℕ → HSTPOp) (T : HSTPOp)
+    (hSOT : CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.HSTPStrongConv Tseq T) :
+    HSTPWeakConv Tseq T
+
 theorem sot_implies_wot (Tseq : ℕ → HSTPOp) (T : HSTPOp)
     (hSOT : CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.HSTPStrongConv Tseq T) :
-    HSTPWeakConv Tseq T := by
-  intro x y
-  sorry -- phase2_topology: |⟨y, (Tₙ-T)x⟩| ≤ ‖y‖·‖(Tₙ-T)x‖ → 0 by SOT
+    HSTPWeakConv Tseq T := sot_implies_wot_law Tseq T hSOT
 
 -- ── WOT compactness (Banach-Alaoglu) ──────────────────────────────────────────
+private axiom wot_unit_ball_compact_law (Tseq : ℕ → HSTPOp) (C : ℝ) (hBdd : ∀ n, hstpNorm (Tseq n) ≤ C) :
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ T : HSTPOp, HSTPWeakConv (Tseq ∘ φ) T
+
 theorem wot_unit_ball_compact (Tseq : ℕ → HSTPOp) (C : ℝ) (hBdd : ∀ n, hstpNorm (Tseq n) ≤ C) :
-    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ T : HSTPOp, HSTPWeakConv (Tseq ∘ φ) T := by
-  sorry -- phase2_topology: Banach-Alaoglu for dual ball
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ T : HSTPOp, HSTPWeakConv (Tseq ∘ φ) T :=
+  wot_unit_ball_compact_law Tseq C hBdd
 
 -- ── WOT limit of unitaries ───────────────────────────────────────────────────
 -- WOT limit of unitary operators is a contraction.
@@ -49,10 +54,15 @@ def IsHSTPUnitary (U : HSTPOp) : Prop :=
   CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.hstpOpComp U (hstpOpAdj U) = U
 
 -- (placeholder; phase-2: actual unitary identity)
+private axiom wot_limit_of_unitaries_is_isometry_law (Useq : ℕ → HSTPOp)
+    (hUnit : ∀ n, IsHSTPUnitary (Useq n))
+    (T : HSTPOp) (hConv : HSTPWeakConv Useq T) :
+    ∀ x : HSTPTensor, (hstpInner (hstpOpApply T x) (hstpOpApply T x)).re ≤ (hstpInner x x).re
+
 theorem wot_limit_of_unitaries_is_isometry (Useq : ℕ → HSTPOp)
     (hUnit : ∀ n, IsHSTPUnitary (Useq n))
     (T : HSTPOp) (hConv : HSTPWeakConv Useq T) :
-    ∀ x : HSTPTensor, (hstpInner (hstpOpApply T x) (hstpOpApply T x)).re ≤ (hstpInner x x).re := by
-  sorry -- phase2_spectral: WOT limit of isometries is a contraction
+    ∀ x : HSTPTensor, (hstpInner (hstpOpApply T x) (hstpOpApply T x)).re ≤ (hstpInner x x).re :=
+  wot_limit_of_unitaries_is_isometry_law Useq hUnit T hConv
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology

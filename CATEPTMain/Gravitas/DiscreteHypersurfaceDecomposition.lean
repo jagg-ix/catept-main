@@ -1,3 +1,6 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+
 /-!
 # Gravitas.DiscreteHypersurfaceDecomposition
 
@@ -17,17 +20,18 @@ the algebraic structure (the data returned by the WL computations):
 - `adjacencyList` : list of (vertex, neighbours) pairs
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-
 namespace Gravitas
+
+/-- Integer floor square root: largest k with k*k ≤ n. -/
+private def natSqrt (n : Nat) : Nat :=
+  ((List.range (n + 1)).reverse.find? (fun k => k * k ≤ n)).getD 0
 
 -- ---------------------------------------------------------------------------
 -- Coordinate range
 -- ---------------------------------------------------------------------------
 
 structure CoordRange where
-  variable   : String
+  coord      : String
   initial    : Rat
   final      : Rat
   deriving Repr
@@ -56,13 +60,13 @@ namespace DiscreteHypersurface
 /-- Sample `n` equally-spaced rational values in [a, b]. -/
 private def linspace (a b : Rat) (n : Nat) : Array Rat :=
   if n ≤ 1 then #[a]
-  else Array.ofFn (fun i =>
+  else Array.ofFn (n := n) (fun i : Fin n =>
     a + (b - a) * (i.val : Rat) / ((n - 1 : Nat) : Rat))
 
 /-- Substitute rational values into a metric matrix component. -/
 private def evalAt (e : Expr) (coords : Array String) (vals : Array Rat) : Expr :=
-  coords.zipWith vals (·, ·) |>.toList.foldl (fun e (x, v) =>
-    exprSubstExpr e x (.lit v)) e
+  (List.range (min coords.size vals.size)).foldl (fun e i =>
+    exprSubstExpr e coords[i]! (.lit vals[i]!)) e
 
 /-- Compute the induced 3-metric at a spatial slice t = t0. -/
 private def inducedMetricAt (g : MetricTensor) (tIdx : Nat) (t0 : Rat)
@@ -71,16 +75,16 @@ private def inducedMetricAt (g : MetricTensor) (tIdx : Nat) (t0 : Rat)
   let n3 := g.dim - 1
   matBuild n3 (fun i j =>
     evalAt (matGet g.covariantMatrix (i+1) (j+1)) g.coords
-      (g.coords.mapIdx (fun k _ => if k.val == tIdx then t0 else 0)))
+      (g.coords.mapIdx (fun k _ => if k == tIdx then t0 else 0)))
 
 /-- Build a discrete approximation of the hypersurface. -/
 def ofMetric (g : MetricTensor)
-    (timeRange : CoordRange := { variable := "t", initial := 0, final := 1 })
-    (spatialRange1 : CoordRange := { variable := "x1", initial := -2, final := 2 })
-    (spatialRange2 : CoordRange := { variable := "x2", initial := -2, final := 2 })
+    (timeRange : CoordRange := { coord := "t", initial := 0, final := 1 })
+    (spatialRange1 : CoordRange := { coord := "x1", initial := -2, final := 2 })
+    (spatialRange2 : CoordRange := { coord := "x2", initial := -2, final := 2 })
     (vertexCount : Nat := 100)
     (discretizationScale : Rat := 1) : DiscreteHypersurface :=
-  let n   := Nat.sqrt vertexCount  -- grid points per dimension (approx)
+  let n   := natSqrt vertexCount  -- grid points per dimension (approx)
   let ts  := linspace timeRange.initial timeRange.final n
   let x1s := linspace spatialRange1.initial spatialRange1.final n
   let x2s := linspace spatialRange2.initial spatialRange2.final n
@@ -90,11 +94,11 @@ def ofMetric (g : MetricTensor)
       x1s.toList.flatMap (fun x1 =>
         x2s.toList.map (fun x2 => (t, x1, x2))))).toArray.take vertexCount
   -- Induced metrics at each vertex
-  let tIdx := g.coords.findIdx? (· == timeRange.variable) |>.getD 0
+  let tIdx := g.coords.findIdx? (· == timeRange.coord) |>.getD 0
   let n3   := g.dim - 1
   let inducedMetrics := vertices.map (fun (t0, x1, x2) =>
     -- Substitute values into the spatial block
-    let subs := [(timeRange.variable, t0), (spatialRange1.variable, x1), (spatialRange2.variable, x2)]
+    let subs := [(timeRange.coord, t0), (spatialRange1.coord, x1), (spatialRange2.coord, x2)]
     let gCov := g.covariantMatrix
     matBuild n3 (fun i j =>
       let e := matGet gCov (i+1) (j+1)
@@ -108,13 +112,13 @@ def ofMetric (g : MetricTensor)
     if n ≤ 1 then 1
     else (spatialRange1.final - spatialRange1.initial) / ((n - 1 : Nat) : Rat)
   let threshold : Rat := gridSpacing * (3 / 2)  -- 1.5 × grid step
-  let adjacencyList := Array.ofFn (fun i =>
+  let adjacencyList := Array.ofFn (n := nv) (fun i : Fin nv =>
     -- Find all j ≠ i whose vertex is within threshold distance
-    let (ti, xi, yi) := vertices.get! i.val
-    (Array.ofFn (fun j => j.val)).filter (fun j =>
+    let (ti, xi, yi) := vertices[i.val]!
+    (Array.ofFn (n := nv) (fun j : Fin nv => j.val)).filter (fun j =>
       if j == i.val then false
       else
-        let (tj, xj, yj) := vertices.get! j
+        let (tj, xj, yj) := vertices[j]!
         let dt := ti - tj; let dx := xi - xj; let dy := yi - yj
         -- Rational Euclidean distance squared ≤ threshold²
         dt*dt + dx*dx + dy*dy ≤ threshold * threshold))

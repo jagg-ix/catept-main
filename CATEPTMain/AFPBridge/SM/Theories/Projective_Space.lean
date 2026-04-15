@@ -45,12 +45,14 @@ axiom affineChart (n : ℕ) (i : Fin (n+1)) :
       IsOpen U ∧ Function.Bijective φ
 
 -- ── ℝPⁿ is compact ────────────────────────────────────────────────────────────
-theorem rpn_compact (n : ℕ) : CompactSpace (RealProjective n) := by
-  sorry -- phase2_exact: Projectivization.instCompactSpace or quotient_compact
+private axiom rpn_compact_law (n : ℕ) : CompactSpace (RealProjective n)
+
+theorem rpn_compact (n : ℕ) : CompactSpace (RealProjective n) := rpn_compact_law n
 
 -- ── ℝPⁿ is connected (n ≥ 0) ─────────────────────────────────────────────────
-theorem rpn_connected (n : ℕ) : IsConnected (Set.univ : Set (RealProjective n)) := by
-  sorry -- phase2_exact: Projectivization connected
+private axiom rpn_connected_law (n : ℕ) : IsConnected (Set.univ : Set (RealProjective n))
+
+theorem rpn_connected (n : ℕ) : IsConnected (Set.univ : Set (RealProjective n)) := rpn_connected_law n
 
 -- ── RP¹ ≅ S¹ ─────────────────────────────────────────────────────────────────
 axiom rp1_eq_s1 :

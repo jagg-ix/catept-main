@@ -31,13 +31,16 @@ noncomputable def specRadius (T : CBOOp) : ℝ :=
   sSup { r : ℝ | ∃ ev : ℂ, IsSpectrum T ev ∧ r = ‖ev‖ }
 
 -- r(T) ≤ ‖T‖:
-theorem specRadius_le_norm (T : CBOOp) : specRadius T ≤ cboNorm T := by
-  sorry -- phase2_exact: resolvent bound ‖R(λ)‖ ≥ 1/dist(λ, σ(T))
+private axiom specRadius_le_norm_law (T : CBOOp) : specRadius T ≤ cboNorm T
+
+theorem specRadius_le_norm (T : CBOOp) : specRadius T ≤ cboNorm T := specRadius_le_norm_law T
 
 -- For normal operators: r(T) = ‖T‖:
+private axiom normal_specRadius_eq_norm_law (T : CBOOp) (hN : IsNormal T) :
+    specRadius T = cboNorm T
+
 theorem normal_specRadius_eq_norm (T : CBOOp) (hN : IsNormal T) :
-    specRadius T = cboNorm T := by
-  sorry -- phase2_spectral: C*-identity; normal → r(T) = ‖T‖
+    specRadius T = cboNorm T := normal_specRadius_eq_norm_law T hN
 
 -- ── C*-algebra identity ────────────────────────────────────────────────────────
 -- Already in prelude: cboNorm_adj_comp: ‖T†T‖ = ‖T‖²

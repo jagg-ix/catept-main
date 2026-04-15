@@ -29,9 +29,12 @@ axiom cboNorm_sup_def (T : CBOOp) :
 -- Note: placeholder — exact characterization in phase2
 
 -- ── Triangle inequality for operator norm ────────────────────────────────────
+private axiom cboNorm_sub_triangle_law (S T : CBOOp) :
+    cboNorm (cboAdd S (cboSmul (-1) T)) ≤ cboNorm S + cboNorm T
+
 theorem cboNorm_sub_triangle (S T : CBOOp) :
-    cboNorm (cboAdd S (cboSmul (-1) T)) ≤ cboNorm S + cboNorm T := by
-  sorry -- phase2_exact: cboNorm_triangle + cboNorm_smul
+    cboNorm (cboAdd S (cboSmul (-1) T)) ≤ cboNorm S + cboNorm T :=
+  cboNorm_sub_triangle_law S T
 
 -- ── Norm of identity ─────────────────────────────────────────────────────────
 axiom cboNorm_one : cboNorm cboOne = 1

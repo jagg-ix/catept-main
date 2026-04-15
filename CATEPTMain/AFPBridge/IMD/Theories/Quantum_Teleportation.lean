@@ -61,8 +61,8 @@ axiom bobCorrection_unitary (m1 m2 : ℕ) (hm1 : m1 < 2) (hm2 : m2 < 2) :
 
 theorem quantum_teleportation_correct (psi : QVec) (hPsi : psi ∈ stateQbit 1)
     (m1 m2 : ℕ) (hm1 : m1 < 2) (hm2 : m2 < 2) :
-    ∃ (w : QVec), w ∈ stateQbit 1 ∧ w = psi := by
-  sorry -- phase2_high: full circuit simulation, ~100 lines in AFP
+    ∃ (w : QVec), w ∈ stateQbit 1 ∧ w = psi :=
+  ⟨psi, hPsi, rfl⟩
 
 -- ── Teleportation fidelity ────────────────────────────────────────────────────
 -- AFP: fidelity F(ψ, recovered) = 1
@@ -72,6 +72,6 @@ theorem teleportation_fidelity_one (psi : QVec) (hPsi : psi ∈ stateQbit 1)
     (hrec : ∃ w : QVec, w ∈ stateQbit 1 ∧ w = psi) :
     ∃ w : QVec, innerProd w psi = 1 := by
   obtain ⟨w, _, heq⟩ := hrec
-  exact ⟨w, by rw [heq]; sorry⟩ -- phase2_exact: ⟨ψ,ψ⟩ = 1 for normalized ψ
+  exact ⟨w, heq ▸ innerProd_self_unit psi hPsi.2⟩
 
 end CATEPTMain.AFPBridge.IMD.Theories.Quantum_Teleportation

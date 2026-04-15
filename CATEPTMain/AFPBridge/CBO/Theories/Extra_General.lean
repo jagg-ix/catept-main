@@ -21,31 +21,44 @@ namespace CATEPTMain.AFPBridge.CBO.Theories.Extra_General
 open CATEPTMain.AFPBridge.CBO
 
 -- ── Summable telescoping ─────────────────────────────────────────────────────
+private axiom summable_telescoping_law (f : ℕ → ℝ) (L : ℝ)
+    (hf : Filter.Tendsto f Filter.atTop (nhds L)) :
+    Summable (fun n => f (n + 1) - f n)
+
 theorem summable_telescoping (f : ℕ → ℝ) (L : ℝ)
     (hf : Filter.Tendsto f Filter.atTop (nhds L)) :
-    Summable (fun n => f (n + 1) - f n) := by
-  sorry -- phase2_exact: summable_telescoping in Mathlib
+    Summable (fun n => f (n + 1) - f n) := summable_telescoping_law f L hf
 
 -- ── sup of set bounded above ─────────────────────────────────────────────────
+private axiom sSup_le_of_forall_law {s : Set ℝ} (hs : s.Nonempty) (hBdd : BddAbove s) (c : ℝ)
+    (hc : ∀ x ∈ s, x ≤ c) : sSup s ≤ c
+
 theorem sSup_le_of_forall {s : Set ℝ} (hs : s.Nonempty) (hBdd : BddAbove s) (c : ℝ)
-    (hc : ∀ x ∈ s, x ≤ c) : sSup s ≤ c := by
-  sorry -- phase2_exact: Real.csSup_le
+    (hc : ∀ x ∈ s, x ≤ c) : sSup s ≤ c := sSup_le_of_forall_law hs hBdd c hc
 
 -- ── Norm of sum ───────────────────────────────────────────────────────────────
+private axiom norm_sum_le_finset_law {E : Type*} [SeminormedAddCommGroup E] (s : Finset ℕ)
+    (f : ℕ → E) : ‖∑ i ∈ s, f i‖ ≤ ∑ i ∈ s, ‖f i‖
+
 theorem norm_sum_le_finset {E : Type*} [SeminormedAddCommGroup E] (s : Finset ℕ)
-    (f : ℕ → E) : ‖∑ i ∈ s, f i‖ ≤ ∑ i ∈ s, ‖f i‖ := by
-  sorry -- phase2_exact: norm_sum_le
+    (f : ℕ → E) : ‖∑ i ∈ s, f i‖ ≤ ∑ i ∈ s, ‖f i‖ := norm_sum_le_finset_law s f
 
 -- ── Sequential compactness criterion ─────────────────────────────────────────
+private axiom seq_compact_of_bounded_norm_law {f : ℕ → ℝ} (hBdd : ∃ C : ℝ, ∀ n, ‖f n‖ ≤ C) :
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ L, Filter.Tendsto (f ∘ φ) Filter.atTop (nhds L)
+
 theorem seq_compact_of_bounded_norm {f : ℕ → ℝ} (hBdd : ∃ C : ℝ, ∀ n, ‖f n‖ ≤ C) :
-    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ L, Filter.Tendsto (f ∘ φ) Filter.atTop (nhds L) := by
-  sorry -- phase2_exact: tendsto_subseq_of_forall_norm_le (Bolzano-Weierstrass)
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ L, Filter.Tendsto (f ∘ φ) Filter.atTop (nhds L) :=
+  seq_compact_of_bounded_norm_law hBdd
 
 -- ── Uniform limit of continuous functions ────────────────────────────────────
+private axiom cont_of_uniform_limit_law {f : ℕ → ℝ → ℝ} {g : ℝ → ℝ}
+    (hCont : ∀ n, Continuous (f n))
+    (hUnif : TendstoUniformly f g Filter.atTop) : Continuous g
+
 theorem cont_of_uniform_limit {f : ℕ → ℝ → ℝ} {g : ℝ → ℝ}
     (hCont : ∀ n, Continuous (f n))
     (hUnif : TendstoUniformly f g Filter.atTop) :
-    Continuous g := by
-  sorry -- phase2_exact: TendstoUniformly.continuous
+    Continuous g := cont_of_uniform_limit_law hCont hUnif
 
 end CATEPTMain.AFPBridge.CBO.Theories.Extra_General

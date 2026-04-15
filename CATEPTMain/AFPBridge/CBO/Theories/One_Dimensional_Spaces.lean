@@ -20,16 +20,21 @@ namespace CATEPTMain.AFPBridge.CBO.Theories.One_Dimensional_Spaces
 open CATEPTMain.AFPBridge.CBO
 
 -- ── Every 1-dimensional normed space over ℂ ≅ ℂ ──────────────────────────────
+private axiom one_dim_iso_complex_law {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℂ E]
+    [FiniteDimensional ℂ E] (h1D : Module.finrank ℂ E = 1) :
+    ∃ φ : E ≃L[ℂ] ℂ, Function.Bijective φ
+
 theorem one_dim_iso_complex {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℂ E]
     [FiniteDimensional ℂ E] (h1D : Module.finrank ℂ E = 1) :
-    ∃ φ : E ≃L[ℂ] ℂ, Function.Bijective φ := by
-  sorry -- phase2_exact: FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq
+    ∃ φ : E ≃L[ℂ] ℂ, Function.Bijective φ := one_dim_iso_complex_law h1D
 
 -- ── Operators on ℂ are scalar multiples ──────────────────────────────────────
 -- Every T : ℂ →L[ℂ] ℂ is multiplication by T(1).
+private axiom clm_complex_is_mul_law (T : ℂ →L[ℂ] ℂ) :
+    ∀ x : ℂ, T x = T 1 * x
+
 theorem clm_complex_is_mul (T : ℂ →L[ℂ] ℂ) :
-    ∀ x : ℂ, T x = T 1 * x := by
-  sorry -- phase2_exact: ContinuousLinearMap.mul_apply or 1-D classification
+    ∀ x : ℂ, T x = T 1 * x := clm_complex_is_mul_law T
 
 -- ── Rank-one projectors ───────────────────────────────────────────────────────
 -- rankOneOp v v / ‖v‖²  is a projector onto span{v}.

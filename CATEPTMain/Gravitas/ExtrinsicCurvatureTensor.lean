@@ -1,3 +1,8 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ChristoffelSymbols
+import CATEPTMain.Gravitas.ADMDecomposition
+
 /-!
 # Gravitas.ExtrinsicCurvatureTensor
 
@@ -16,17 +21,13 @@ where:
 Default storage: `(co, co)` = K_{ij}.
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ChristoffelSymbols
-import CATEPTMain.Gravitas.ADMDecomposition
-
 namespace Gravitas
 
 structure ExtrinsicCurvatureTensor where
   adm        : ADMDecomposition
   components : Mat
-  idx1 idx2  : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace ExtrinsicCurvatureTensor
@@ -43,15 +44,15 @@ private def computeCovariant (adm : ADMDecomposition) : Mat :=
   let β      := adm.shiftVector
   -- Spatial Christoffel Γ^k_{ij} of the spatial metric
   let Γ3 := ChristoffelSymbols.computeMixed gCov gInv coords
-  let getΓ := fun λ_ μ ν => ChristoffelSymbols.getComp n3 Γ3 λ_ μ ν
+  let getΓ := fun lam_ μ ν => ChristoffelSymbols.getComp n3 Γ3 lam_ μ ν
   -- β_i = γ_{ij} β^j (covariant shift)
-  let βCov := Array.ofFn (fun i =>
-    sumN n3 (fun j => simplify (.mul (matGet gCov i.val j) (β.get! j))))
+  let βCov := Array.ofFn (n := n3) (fun i : Fin n3 =>
+    sumN n3 (fun j => simplify (.mul (matGet gCov i.val j) (β[j]!))))
   -- ∇_i β_j = ∂_i β_j - Γ^k_{ij} β_k
   let nablaβ := matBuild n3 (fun i j =>
-    let d_i_βj := symDiff (βCov.get! j) (coords.get! i)
+    let d_i_βj := symDiff (βCov[j]!) (coords[i]!)
     let christoffel_term := sumN n3 (fun k =>
-      simplify (.mul (getΓ k i j) (βCov.get! k)))
+      simplify (.mul (getΓ k i j) (βCov[k]!)))
     simplify (.sub d_i_βj christoffel_term))
   -- ∂_t γ_{ij}
   let dtγ := matBuild n3 (fun i j =>

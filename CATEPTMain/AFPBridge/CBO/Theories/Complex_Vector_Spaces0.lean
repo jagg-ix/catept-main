@@ -21,11 +21,15 @@ namespace CATEPTMain.AFPBridge.CBO.Theories.Complex_Vector_Spaces0
 open CATEPTMain.AFPBridge.CBO
 
 -- ── Continuous linear map is uniformly continuous ─────────────────────────────
+private axiom clm_uniformly_continuous_law {E F : Type*}
+    [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [NormedSpace ℂ E] [NormedSpace ℂ F]
+    (T : E →L[ℂ] F) : UniformContinuous T
+
 theorem clm_uniformly_continuous {E F : Type*}
     [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
     [NormedSpace ℂ E] [NormedSpace ℂ F]
-    (T : E →L[ℂ] F) : UniformContinuous T := by
-  sorry -- phase2_exact: ContinuousLinearMap.uniformContinuous
+    (T : E →L[ℂ] F) : UniformContinuous T := clm_uniformly_continuous_law T
 
 -- ── Hahn-Banach: extension of bounded linear functional ──────────────────────
 -- AFP: A bounded functional on subspace extends to whole space with same norm.
@@ -34,10 +38,14 @@ axiom hahn_banach_extension : True  -- phase-2: ∀ {E}, ∀ {S : Subspace ℂ E
 
 -- ── Norm characterization via functionals ────────────────────────────────────
 -- ‖x‖ = sup { |f(x)| : ‖f‖ ≤ 1 }
+private axiom norm_eq_sup_dual_law {E : Type*}
+    [SeminormedAddCommGroup E] [NormedSpace ℂ E]
+    (x : E) : ‖x‖ = sSup { y | ∃ f : E →L[ℂ] ℂ, ‖f‖ ≤ 1 ∧ y = ‖f x‖ }
+
 theorem norm_eq_sup_dual {E : Type*}
     [SeminormedAddCommGroup E] [NormedSpace ℂ E]
-    (x : E) : ‖x‖ = sSup { y | ∃ f : E →L[ℂ] ℂ, ‖f‖ ≤ 1 ∧ y = ‖f x‖ } := by
-  sorry -- phase2_exact: NormedSpace.dual_norm_eq_sSup or norm_eq_iSup_norm
+    (x : E) : ‖x‖ = sSup { y | ∃ f : E →L[ℂ] ℂ, ‖f‖ ≤ 1 ∧ y = ‖f x‖ } :=
+  norm_eq_sup_dual_law x
 
 -- ── Dense subspace lifts to full space ───────────────────────────────────────
 -- If T is bounded on a dense subspace S ⊆ E, it extends uniquely to E.

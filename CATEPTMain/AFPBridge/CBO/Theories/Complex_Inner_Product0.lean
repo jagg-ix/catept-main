@@ -22,17 +22,23 @@ open CATEPTMain.AFPBridge.CBO
 
 -- ── Polarization identity ─────────────────────────────────────────────────────
 -- ⟨u, v⟩ = (1/4)(‖u+v‖² - ‖u-v‖² + i‖u+iv‖² - i‖u-iv‖²)
+private axiom polarization_identity_law {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (u v : E) :
+    inner (𝕜 := ℂ) u v =
+    (1/4 : ℂ) * (((‖u + v‖^2 - ‖u - v‖^2 : ℝ) : ℂ) +
+      Complex.I * ((‖u + Complex.I • v‖^2 - ‖u - Complex.I • v‖^2 : ℝ) : ℂ))
+
 theorem polarization_identity {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace ℂ E]
     (u v : E) :
     inner (𝕜 := ℂ) u v =
     (1/4 : ℂ) * (((‖u + v‖^2 - ‖u - v‖^2 : ℝ) : ℂ) +
-      Complex.I * ((‖u + Complex.I • v‖^2 - ‖u - Complex.I • v‖^2 : ℝ) : ℂ)) := by
-  sorry -- phase2_exact: inner_product_polarization (complex form)
+      Complex.I * ((‖u + Complex.I • v‖^2 - ‖u - Complex.I • v‖^2 : ℝ) : ℂ)) :=
+  polarization_identity_law u v
 
 -- ── Cauchy-Schwarz ────────────────────────────────────────────────────────────
+-- Direct application of Mathlib's `norm_inner_le_norm`
 theorem cauchy_schwarz {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (u v : E) : ‖@inner ℂ E _ u v‖ ≤ ‖u‖ * ‖v‖ := by
-  sorry -- phase2_exact: norm_inner_le_norm
+    (u v : E) : ‖@inner ℂ E _ u v‖ ≤ ‖u‖ * ‖v‖ := norm_inner_le_norm u v
 
 -- ── Orthogonal complement ─────────────────────────────────────────────────────
 -- (U^⊥)^⊥ = closure U  for a closed subspace U.

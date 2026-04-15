@@ -1,3 +1,6 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+
 /-!
 # Gravitas.ChristoffelSymbols
 
@@ -16,9 +19,6 @@ The WL source convention:
 All eight index combinations are computed by raising/lowering from the mixed form.
 -/
 
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-
 namespace Gravitas
 
 -- ---------------------------------------------------------------------------
@@ -32,7 +32,9 @@ structure ChristoffelSymbols where
   metric     : MetricTensor
   /-- 3-index components as an n×n×n array (flattened: i*n²+j*n+k). -/
   components : Array Expr          -- size n³
-  idx1 idx2 idx3 : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
+  idx3 : IndexKind
   deriving Repr
 
 namespace ChristoffelSymbols
@@ -43,7 +45,7 @@ namespace ChristoffelSymbols
 
 /-- Get Γ component at (i,j,k) from a flattened n³ array. -/
 def getComp (n : Nat) (comps : Array Expr) (i j k : Nat) : Expr :=
-  comps.get? (i * n * n + j * n + k) |>.getD (.lit 0)
+  comps[i * n * n + j * n + k]? |>.getD (.lit 0)
 
 /-- Set Γ component at (i,j,k) in a flattened n³ array. -/
 private def setComp (n : Nat) (comps : Array Expr) (i j k : Nat) (e : Expr)
@@ -56,17 +58,17 @@ def computeMixed (gCov gInv : Mat) (coords : Array String) : Array Expr :=
   let n := gCov.size
   -- Γ^λ_{μν} = (1/2) Σ_σ gInv^{λσ} (∂_μ g_{σν} + ∂_ν g_{σμ} - ∂_σ g_{μν})
   let size := n * n * n
-  let comps := Array.mkArray size (.lit 0)
-  (List.range n).foldl (fun comps λ_ =>
+  let comps := List.replicate size (.lit 0) |>.toArray
+  (List.range n).foldl (fun comps lam_ =>
     (List.range n).foldl (fun comps μ =>
       (List.range n).foldl (fun comps ν =>
         let val := sumN n (fun σ =>
-          let gInv_lσ := matGet gInv λ_ σ
-          let d_μ_σν  := symDiff (matGet gCov σ ν) (coords.get! μ)
-          let d_ν_σμ  := symDiff (matGet gCov σ μ) (coords.get! ν)
-          let d_σ_μν  := symDiff (matGet gCov μ ν) (coords.get! σ)
+          let gInv_lσ := matGet gInv lam_ σ
+          let d_μ_σν  := symDiff (matGet gCov σ ν) (coords[μ]!)
+          let d_ν_σμ  := symDiff (matGet gCov σ μ) (coords[ν]!)
+          let d_σ_μν  := symDiff (matGet gCov μ ν) (coords[σ]!)
           simplify (.mul (.mul (.lit (1/2)) gInv_lσ) (.sub (.add d_μ_σν d_ν_σμ) d_σ_μν)))
-        setComp n comps λ_ μ ν val
+        setComp n comps lam_ μ ν val
       ) comps
     ) comps
   ) comps
@@ -95,9 +97,9 @@ where
   convertIndices (n : Nat) (gCov gInv : Mat) (mixed : Array Expr)
       (i1 i2 i3 : IndexKind) : Array Expr :=
     -- mixed: getComp n mixed λ μ ν  = Γ^λ_{μν}
-    let get := fun λ_ μ ν => getComp n mixed λ_ μ ν
-    let set := fun comps λ_ μ ν e => setComp n comps λ_ μ ν e
-    let base := Array.mkArray (n*n*n) (.lit 0)
+    let get := fun lam_ μ ν => getComp n mixed lam_ μ ν
+    let set := fun comps lam_ μ ν e => setComp n comps lam_ μ ν e
+    let base := List.replicate (n*n*n) (.lit 0) |>.toArray
     (List.range n).foldl (fun comps i =>
       (List.range n).foldl (fun comps j =>
         (List.range n).foldl (fun comps k =>

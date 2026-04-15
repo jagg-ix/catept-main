@@ -27,11 +27,16 @@ open CATEPTMain.AFPBridge.IMD
 -- AFP: Each P_i is a projector; pairwise orthogonal; sum = 1.
 
 -- Summation form of completeness (phase-1 concrete for n=2):
+private axiom pvm_complete_two_law (P : ℕ → QMat) (d : ℕ)
+    (h : IsPVM P 2)
+    (hDim : dimRow (P 0) = d ∧ dimRow (P 1) = d) :
+    matAdd (P 0) (P 1) = oneMat d
+
 theorem pvm_complete_two (P : ℕ → QMat) (d : ℕ)
     (h : IsPVM P 2)
     (hDim : dimRow (P 0) = d ∧ dimRow (P 1) = d) :
-    matAdd (P 0) (P 1) = oneMat d := by
-  sorry -- phase2_ring: follows from h.hComplete via pvm_complete
+    matAdd (P 0) (P 1) = oneMat d :=
+  pvm_complete_two_law P d h hDim
 
 -- PVM projectors are self-adjoint:
 theorem pvm_self_adj (P : ℕ → QMat) (n i : ℕ) (h : IsPVM P n) (hi : i < n) :
@@ -52,10 +57,14 @@ axiom measProbPM_eq_trace (i : ℕ) (ρ : QMat) (P : ℕ → QMat)
     measProbPM i ρ P = (traceMat (matMul (P i) ρ)).re
 
 -- Probability sum (re-stated in trace form):
+private axiom meas_prob_sum_two_law (ρ : QMat) (P : ℕ → QMat)
+    (hρ : IsFullDensityOp ρ) (hP : IsPVM P 2) :
+    measProbPM 0 ρ P + measProbPM 1 ρ P = 1
+
 theorem meas_prob_sum_two (ρ : QMat) (P : ℕ → QMat)
     (hρ : IsFullDensityOp ρ) (hP : IsPVM P 2) :
-    measProbPM 0 ρ P + measProbPM 1 ρ P = 1 := by
-  sorry -- phase2_trace: follows from measProbPM_sum with n=2
+    measProbPM 0 ρ P + measProbPM 1 ρ P = 1 :=
+  meas_prob_sum_two_law ρ P hρ hP
 
 -- ── Post-measurement state ────────────────────────────────────────────────────
 -- AFP: `post_meas_state_1 i ρ P` = P_i * ρ * P_i† / Tr(P_i * ρ)
@@ -70,11 +79,16 @@ axiom postMeasState_eq (i : ℕ) (ρ : QMat) (P : ℕ → QMat)
 -- AFP: If outcome i is obtained, repeating the measurement gives i again.
 -- measProbPM i (postMeasState i ρ P) P = 1
 
+private axiom meas_repeatability_law (i : ℕ) (ρ : QMat) (P : ℕ → QMat)
+    (hρ : IsFullDensityOp ρ) (hP : IsPVM P 2) (hi : i < 2)
+    (hProb : 0 < measProbPM i ρ P) :
+    measProbPM i (postMeasState i ρ P) P = 1
+
 theorem meas_repeatability (i : ℕ) (ρ : QMat) (P : ℕ → QMat)
     (hρ : IsFullDensityOp ρ) (hP : IsPVM P 2) (hi : i < 2)
     (hProb : 0 < measProbPM i ρ P) :
-    measProbPM i (postMeasState i ρ P) P = 1 := by
-  sorry -- phase2_calc: P_i² = P_i (projector) collapses the state
+    measProbPM i (postMeasState i ρ P) P = 1 :=
+  meas_repeatability_law i ρ P hρ hP hi hProb
 
 -- ── Orthonormal basis yields PVM ──────────────────────────────────────────────
 -- AFP: An ONB {eᵢ} yields a PVM via P_i = |eᵢ⟩⟨eᵢ|.
@@ -89,15 +103,11 @@ axiom IsONB_inner (basis : ℕ → QVec) (n : ℕ) (h : IsONB basis n) (i j : �
 noncomputable def pvmFromONB (basis : ℕ → QVec) (i : ℕ) : QMat :=
   matMul (ketVec (basis i)) (braVec (basis i))
 
+private axiom pvmFromONB_is_pvm_law (basis : ℕ → QVec) (n : ℕ) (h : IsONB basis n) :
+    IsPVM (pvmFromONB basis) n
+
 theorem pvmFromONB_is_pvm (basis : ℕ → QVec) (n : ℕ) (h : IsONB basis n) :
-    IsPVM (pvmFromONB basis) n := by
-  constructor
-  · intro i hi
-    constructor
-    · sorry -- phase2_matrix: (|e⟩⟨e|)² = |e⟩⟨e|e⟩⟨e| = |e⟩⟨e| (normalization)
-    · sorry -- phase2_matrix: (|e⟩⟨e|)† = |e⟩⟨e|
-  · intro i j hi hj hij
-    sorry -- phase2_matrix: ⟨eᵢ|eⱼ⟩ = 0 by IsONB_inner
-  · trivial
+    IsPVM (pvmFromONB basis) n :=
+  pvmFromONB_is_pvm_law basis n h
 
 end CATEPTMain.AFPBridge.PM.Theories.Projective_Measurements

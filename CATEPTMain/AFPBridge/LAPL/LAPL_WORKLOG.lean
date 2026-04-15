@@ -42,3 +42,16 @@ BINDER RULES (LAPL-specific):
 Phase record (cumulative):
   TH001–TH028: LAPL theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## LAPL-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.LAPL.LAPLPrelude added to CATEPTSelfConsistency.lean
+  - lapl_transform_consistent field added to CATEPTAFPConsistencyWitness
+  - LAPLConsistency section + catept_lapl_transform_linear_consistent theorem added
+    (non-sorry: directly proves laplaceTransform_linear f g a b s)
+  - CATEPTSelfConsistencyContract extended with w.lapl_transform_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: laplace-transform-afp (afp_transpile_lean4)

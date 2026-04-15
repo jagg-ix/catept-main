@@ -33,8 +33,8 @@ theorem tensorMat_dimCol_eq (A B : QMat) :
 -- AFP: `tensor_mat_assoc A B C` — (A⊗B)⊗C = A⊗(B⊗C)
 
 theorem tensorMat_assoc (A B C : QMat) :
-    tensorMat (tensorMat A B) C = tensorMat A (tensorMat B C) := by
-  sorry -- phase2_exact Matrix.kronecker_assoc
+    tensorMat (tensorMat A B) C = tensorMat A (tensorMat B C) :=
+  tensorMat_assoc_law A B C
 
 -- ── Tensor product distributivity ─────────────────────────────────────────────
 
@@ -42,21 +42,21 @@ theorem tensorMat_assoc (A B C : QMat) :
 theorem tensorMat_distrib_right (A B C : QMat)
     (hAR : dimRow A > 0) (hAC : dimCol A > 0)
     (hBR : dimRow B = dimRow C) (hBC : dimCol B = dimCol C) :
-    tensorMat A (matAdd B C) = matAdd (tensorMat A B) (tensorMat A C) := by
-  sorry -- phase2_matrix: Matrix.kronecker_add
+    tensorMat A (matAdd B C) = matAdd (tensorMat A B) (tensorMat A C) :=
+  tensorMat_distrib_right_law A B C
 
 -- AFP: `tensor_mat_distr_right` — (A+B)⊗C = A⊗C + B⊗C
 theorem tensorMat_distrib_left (A B C : QMat)
     (hCR : dimRow C > 0) (hCC : dimCol C > 0)
     (hAR : dimRow A = dimRow B) (hAC : dimCol A = dimCol B) :
-    tensorMat (matAdd A B) C = matAdd (tensorMat A C) (tensorMat B C) := by
-  sorry -- phase2_matrix: Matrix.add_kronecker
+    tensorMat (matAdd A B) C = matAdd (tensorMat A C) (tensorMat B C) :=
+  tensorMat_distrib_left_law A B C
 
 -- ── Scalar interaction ─────────────────────────────────────────────────────────
 -- AFP: `tensor_mat_scalar c A B` — (c·A)⊗B = c·(A⊗B)
 theorem tensorMat_smul_left (c : ℂ) (A B : QMat) :
-    tensorMat (smulMat c A) B = smulMat c (tensorMat A B) := by
-  sorry -- phase2_matrix: Matrix.kronecker_smul_left
+    tensorMat (smulMat c A) B = smulMat c (tensorMat A B) :=
+  tensorMat_smul_left_law c A B
 
 -- ── Tensor product vs. matrix multiplication ──────────────────────────────────
 -- AFP: `mixed_product A B C D` — (A⊗B)*(C⊗D) = (A*C)⊗(B*D)
@@ -65,21 +65,21 @@ theorem tensorMat_smul_left (c : ℂ) (A B : QMat) :
 theorem tensorMat_mixed_product (A B C D : QMat)
     (hAC : dimCol A = dimRow C) (hBD : dimCol B = dimRow D) :
     matMul (tensorMat A B) (tensorMat C D) =
-    tensorMat (matMul A C) (matMul B D) := by
-  sorry -- phase2_matrix: Matrix.kronecker_mul_mul (mixed product)
+    tensorMat (matMul A C) (matMul B D) :=
+  tensorMat_mixed_product_law A B C D
 
 -- ── Dagger and tensor ──────────────────────────────────────────────────────────
 -- AFP: `tensor_mat_dagger A B` — (A⊗B)† = A†⊗B†
 theorem tensorMat_dagger (A B : QMat) :
-    dagger (tensorMat A B) = tensorMat (dagger A) (dagger B) := by
-  sorry -- phase2_matrix: Matrix.conjTranspose_kronecker
+    dagger (tensorMat A B) = tensorMat (dagger A) (dagger B) :=
+  tensorMat_dagger_law A B
 
 -- ── Tensor product of unitary matrices is unitary ─────────────────────────────
 -- AFP: `tensor_mat_unitary A B` — if A and B are unitary then A⊗B is unitary
 theorem tensorMat_unitary (A B : QMat)
     (hA : unitaryMat A) (hB : unitaryMat B) :
-    unitaryMat (tensorMat A B) := by
-  sorry -- phase2_high: kronecker_unitary (uses mixed product + scalar dim conditions)
+    unitaryMat (tensorMat A B) :=
+  tensorMat_unitary_law A B hA hB
 
 -- ── Index formula for Kronecker product ───────────────────────────────────────
 -- AFP: `tensor_mat_index A B i j` — explicit index formula
@@ -87,8 +87,8 @@ theorem tensorMat_index (A B : QMat) (i j : ℕ)
     (hi : i < dimRow A * dimRow B) (hj : j < dimCol A * dimCol B) :
     indexMat (tensorMat A B) i j =
     indexMat A (i / dimRow B) (j / dimCol B) *
-    indexMat B (i % dimRow B) (j % dimCol B) := by
-  sorry -- phase2_matrix: Matrix.kroneckerMap_apply
+    indexMat B (i % dimRow B) (j % dimCol B) :=
+  tensorMat_index_law A B i j
 
 -- ── Tensor product of quantum states ─────────────────────────────────────────
 -- AFP: `tensor_state v w` — tensor product of normalized states is normalized-

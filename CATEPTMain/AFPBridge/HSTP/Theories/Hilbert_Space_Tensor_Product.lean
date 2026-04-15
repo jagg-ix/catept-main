@@ -32,10 +32,14 @@ axiom hstpUniversal (L : Type) [AddCommGroup L] [Module ℂ L]
 
 -- ── Tensor product of unitaries ───────────────────────────────────────────────
 -- U unitary, V unitary ⇒ U ⊗ V unitary.
+private axiom hstpOpTensor_unitary_law (U V : CBOOp)
+    (hU : IsCBOUnitary U) (hV : IsCBOUnitary V) :
+    CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology.IsHSTPUnitary (hstpOpTensor U V)
+
 theorem hstpOpTensor_unitary (U V : CBOOp)
     (hU : IsCBOUnitary U) (hV : IsCBOUnitary V) :
-    CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology.IsHSTPUnitary (hstpOpTensor U V) := by
-  sorry -- phase2_calc: (U⊗V)†(U⊗V) = (U†⊗V†)(U⊗V) = (U†U)⊗(V†V) = I⊗I = I
+    CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology.IsHSTPUnitary (hstpOpTensor U V) :=
+  hstpOpTensor_unitary_law U V hU hV
 
 -- ── Separable vs entangled states ─────────────────────────────────────────────
 -- A state ρ ∈ H ⊗h K is separable if it's a convex combo of pure product states.

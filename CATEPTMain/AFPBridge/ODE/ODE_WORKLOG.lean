@@ -52,3 +52,39 @@ BINDER RULES (ODE-specific):
 Phase record (cumulative):
   TH001–TH032: ODE theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## ODE-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.ODE.ODEPrelude added to CATEPTSelfConsistency.lean
+  - ode_flow_consistent field added to CATEPTAFPConsistencyWitness
+  - ODEConsistency section + catept_ode_flow_zero_consistent (non-sorry: odeFlow_zero n f x₀) added
+  - CATEPTSelfConsistencyContract extended with w.ode_flow_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: ordinary-differential-equations-afp (afp_transpile_lean4)
+  Phase-2: odeFlow_semigroup → Galerkin half-step operator + half_holder_from_l2_deriv_bound
+
+────────────────────────────────────────────────────────────────────────────────
+## ODE-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.ODE.ODEPrelude added to CATEPTSelfConsistency.lean
+  - ode_flow_consistent field added to CATEPTAFPConsistencyWitness
+  - ODEConsistency section + catept_ode_flow_zero_consistent (non-sorry: odeFlow_zero n f x₀) added
+  - CATEPTSelfConsistencyContract extended with w.ode_flow_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: ordinary-differential-equations-afp (afp_transpile_lean4)
+  Phase-2: odeFlow_semigroup → Galerkin half-step operator + half_holder_from_l2_deriv_bound
+
+────────────────────────────────────────────────────────────────────────────────
+## ODE-P2-001  Semigroup theorem in CATEPTSelfConsistency (P2)
+Severity: P2 — NS-P1 Galerkin half-step key
+Status: DONE — 2026-04-13
+Record:
+  - catept_ode_flow_semigroup_consistent added to ODEConsistency section
+  - Proves: odeFlow n f (t₁+t₂) x₀ = odeFlow n f t₂ (odeFlow n f t₁ x₀)
+  - Directly applied: odeFlow_semigroup n f t₁ t₂ x₀ (no sorry)
+  - NS-P1 path: operator splitter uses this as the half-step composition law

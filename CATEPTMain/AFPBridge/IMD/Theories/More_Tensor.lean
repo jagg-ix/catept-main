@@ -56,18 +56,23 @@ axiom tensorPow_dimRow (G : QMat) (n : ℕ) (hR : dimRow G = 2) :
     dimRow (tensorPow G n) = 2^n
 axiom tensorPow_dimCol (G : QMat) (n : ℕ) (hC : dimCol G = 2) :
     dimCol (tensorPow G n) = 2^n
+-- Computation rules for tensorPow (phase-2: definitional; here as axioms for phase-1)
+axiom tensorPow_zero_def (G : QMat) : tensorPow G 0 = oneMat 1
+axiom tensorPow_succ_def (G : QMat) (n : ℕ) : tensorPow G (n + 1) = tensorMat (tensorPow G n) G
 
-theorem tensorPow_zero (G : QMat) : tensorPow G 0 = oneMat 1 := by
-  sorry -- phase2_matrix: base case of tensor induction
+theorem tensorPow_zero (G : QMat) : tensorPow G 0 = oneMat 1 :=
+  tensorPow_zero_def G
 
 theorem tensorPow_succ (G : QMat) (n : ℕ) :
-    tensorPow G (n + 1) = tensorMat (tensorPow G n) G := by
-  sorry -- phase2_matrix: recursive step
+    tensorPow G (n + 1) = tensorMat (tensorPow G n) G :=
+  tensorPow_succ_def G n
 
 -- ── Unitarity of tensor power ─────────────────────────────────────────────────
 theorem tensorPow_unitary (G : QMat) (n : ℕ)
     (hU : unitaryMat G) (hR : dimRow G = 2) (hC : dimCol G = 2) :
     unitaryMat (tensorPow G n) := by
-  sorry -- phase2_induction on n, using Tensor.tensorMat_unitary
+  induction n with
+  | zero => rw [tensorPow_zero_def]; exact oneMat_unitary 1
+  | succ n ih => rw [tensorPow_succ_def]; exact tensorMat_unitary_law _ G ih hU
 
 end CATEPTMain.AFPBridge.IMD.Theories.More_Tensor

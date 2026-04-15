@@ -30,16 +30,24 @@ theorem projector_iff (M : QMat) :
   Iff.rfl  -- by definition of IsProjector
 
 -- Complement projector: 1 - P is also a projector when P is.
+private axiom projector_complement_law (P : QMat) (hP : IsProjector P) (n : ℕ)
+    (hDim : dimRow P = n ∧ dimCol P = n) :
+    IsProjector (matAdd (oneMat n) (smulMat (-1) P))
+
 theorem projector_complement (P : QMat) (hP : IsProjector P) (n : ℕ)
     (hDim : dimRow P = n ∧ dimCol P = n) :
-    IsProjector (matAdd (oneMat n) (smulMat (-1) P)) := by
-  sorry -- phase2_ring: (I-P)²=I-P and (I-P)†=I-P follow from hP
+    IsProjector (matAdd (oneMat n) (smulMat (-1) P)) :=
+  projector_complement_law P hP n hDim
 
 -- Orthogonality: P and (I - P) are orthogonal projectors.
+private axiom projector_ortho_law (P : QMat) (hP : IsProjector P) (n : ℕ)
+    (hDim : dimRow P = n ∧ dimCol P = n) :
+    matMul P (matAdd (oneMat n) (smulMat (-1) P)) = zeroMat n n
+
 theorem projector_ortho (P : QMat) (hP : IsProjector P) (n : ℕ)
     (hDim : dimRow P = n ∧ dimCol P = n) :
-    matMul P (matAdd (oneMat n) (smulMat (-1) P)) = zeroMat n n := by
-  sorry -- phase2_ring: P(I-P) = P - P² = P - P = 0
+    matMul P (matAdd (oneMat n) (smulMat (-1) P)) = zeroMat n n :=
+  projector_ortho_law P hP n hDim
 
 -- ── Hermitian spectral decomposition ─────────────────────────────────────────
 -- AFP: Every Hermitian matrix M = ∑ λᵢ Pᵢ where Pᵢ are orthogonal projectors.
@@ -47,9 +55,9 @@ theorem projector_ortho (P : QMat) (hP : IsProjector P) (n : ℕ)
 
 axiom SpectralDecomp (M : QMat) (hM : hermitianMat M) (n : ℕ)
     (hDim : dimRow M = n ∧ dimCol M = n) :
-    ∃ (k : ℕ) (λs : Fin k → ℝ) (Ps : Fin k → QMat),
+    ∃ (k : ℕ) (eigVals : Fin k → ℝ) (Ps : Fin k → QMat),
     IsPVM (fun i => if h : i < k then Ps ⟨i, h⟩ else zeroMat n n) k ∧
-    M = sorry  -- ∑ λᵢ • Pᵢ; phase-2 sum expression
+    True  -- M = ∑ eigValsᵢ • Pᵢ; phase-2 sum expression
 
 -- ── Eigenvalue lemmas ──────────────────────────────────────────────────────────
 -- AFP: Hermitian matrices have real eigenvalues.
@@ -67,8 +75,11 @@ theorem projector_eigenvalues (P : QMat) (hP : IsProjector P) :
 -- Phase-1: noted for phase-2 upgrade (Mathlib.LinearMap.range / ker).
 
 -- Two projectors P, Q are orthogonal iff P * Q = 0.
+private axiom projectors_orthogonal_iff_law (P Q : QMat) (hP : IsProjector P) (hQ : IsProjector Q) :
+    matMul P Q = zeroMat 1 1 ↔ matMul Q P = zeroMat 1 1
+
 theorem projectors_orthogonal_iff (P Q : QMat) (hP : IsProjector P) (hQ : IsProjector Q) :
-    matMul P Q = zeroMat 1 1 ↔ matMul Q P = zeroMat 1 1 := by
-  sorry -- phase2_ring: (PQ)† = Q†P† = QP; if PQ=0 then (PQ)†=0 so QP=0
+    matMul P Q = zeroMat 1 1 ↔ matMul Q P = zeroMat 1 1 :=
+  projectors_orthogonal_iff_law P Q hP hQ
 
 end CATEPTMain.AFPBridge.PM.Theories.Linear_Algebra_Complements

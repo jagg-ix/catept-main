@@ -30,7 +30,8 @@ theorem odeFlow_inv (n : ℕ)
     (f : EuclideanSpace ℝ (Fin n) → EuclideanSpace ℝ (Fin n))
     (t : ℝ) (x₀ : EuclideanSpace ℝ (Fin n)) :
     odeFlow n f (-t) (odeFlow n f t x₀) = x₀ := by
-  sorry -- phase2_analysis: from semigroup and uniqueness: odeFlow(0) = id
+  rw [← odeFlow_semigroup n f t (-t) x₀, show t + -t = (0 : ℝ) by ring]
+  exact odeFlow_zero n f x₀
 
 -- Flow is injective (different initial conditions give distinct trajectories).
 theorem odeFlow_injective (n : ℕ)
@@ -38,7 +39,9 @@ theorem odeFlow_injective (n : ℕ)
   (hLip : True)
     (t : ℝ) :
     Function.Injective (odeFlow n f t) := by
-  sorry -- phase2_analysis: flow(t) is invertible by flow(-t); injectivity follows
+  intro a b hab
+  have h := congr_arg (odeFlow n f (-t)) hab
+  rwa [odeFlow_inv n f t a, odeFlow_inv n f t b] at h
 
 -- ── Invariant sets ────────────────────────────────────────────────────────────
 -- AFP: `invariant S f` = S is flow-invariant for f.

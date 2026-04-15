@@ -51,6 +51,11 @@ noncomputable abbrev indexVec := CATEPTMain.AFPBridgeFramework.afpIndexVec
 -- ── Matrix arithmetic ──────────────────────────────────────────────────────────
 noncomputable abbrev matMul    := CATEPTMain.AFPBridgeFramework.afpMatMul
 noncomputable abbrev matAdd    := CATEPTMain.AFPBridgeFramework.afpMatAdd
+-- Phase-2 matrix multiply index rule (Mathlib: Matrix.mul_apply)
+-- indexMat (A * B) i j = ∑ k < dimCol A, A[i,k] * B[k,j]
+axiom indexMat_matMul (A B : QMat) (i j : ℕ) :
+    indexMat (matMul A B) i j =
+    Finset.sum (Finset.range (dimCol A)) (fun k => indexMat A i k * indexMat B k j)
 noncomputable abbrev smulMat   := CATEPTMain.AFPBridgeFramework.afpSmulMat
 noncomputable abbrev oneMat    := CATEPTMain.AFPBridgeFramework.afpOneMat
 noncomputable abbrev zeroMat   := CATEPTMain.AFPBridgeFramework.afpZeroMat
@@ -70,6 +75,31 @@ noncomputable abbrev smulVec   := CATEPTMain.AFPBridgeFramework.afpSmulVec
 noncomputable abbrev scalarProd := CATEPTMain.AFPBridgeFramework.afpScalar
 noncomputable abbrev innerProd := CATEPTMain.AFPBridgeFramework.afpInner      -- sesquilinear ⟨u|v⟩
 noncomputable abbrev cpxVecLen := CATEPTMain.AFPBridgeFramework.afpVecNorm    -- ‖v‖
+
+-- Phase-2 inner product axioms (Mathlib: InnerProductSpace laws for opaque AFPVec)
+axiom innerProd_self_unit (v : QVec) (h : cpxVecLen v = 1) : innerProd v v = 1
+-- ‖v‖² = ⟨v,v⟩.re  (Mathlib: inner_self_eq_norm_sq)
+axiom innerProd_self_re (v : QVec) : (innerProd v v).re = cpxVecLen v ^ 2
+-- ⟨u,v⟩ = conj ⟨v,u⟩  (Mathlib: inner_conj_symm)
+axiom innerProd_conj_symm (u v : QVec) : innerProd u v = starRingEnd ℂ (innerProd v u)
+-- ⟨u, c·v⟩ = c * ⟨u,v⟩  (Mathlib: inner_smul_right)
+axiom innerProd_smul_right (u v : QVec) (c : ℂ) : innerProd u (smulVec c v) = c * innerProd u v
+-- ⟨u, v+w⟩ = ⟨u,v⟩ + ⟨u,w⟩  (Mathlib: inner_add_right)
+axiom innerProd_add_right (u v w : QVec) : innerProd u (vecAdd v w) = innerProd u v + innerProd u w
+-- ⟨c·u, v⟩ = conj(c) * ⟨u,v⟩  (Mathlib: inner_smul_left)
+axiom innerProd_smul_left (u v : QVec) (c : ℂ) : innerProd (smulVec c u) v = starRingEnd ℂ c * innerProd u v
+-- ‖v‖ ≥ 0  (Mathlib: norm_nonneg)
+axiom cpxVecLen_nonneg (v : QVec) : 0 ≤ cpxVecLen v
+-- Cauchy-Schwarz: √|⟨u,v⟩|² ≤ ‖u‖ * ‖v‖  (Mathlib: abs_inner_le_norm)
+axiom cauchy_schwarz_ineq (u v : QVec) :
+    Real.sqrt (Complex.normSq (innerProd u v)) ≤ cpxVecLen u * cpxVecLen v
+-- ⟨u,v⟩ = ∑ k < n, conj(u[k]) * v[k]  (Mathlib: inner_apply for pi-type)
+axiom innerProd_coord_sum (u v : QVec) :
+    innerProd u v =
+    Finset.sum (Finset.range (dimVec u)) (fun k => starRingEnd ℂ (indexVec u k) * indexVec v k)
+-- ‖c·v‖ = √|c|² * ‖v‖  (Mathlib: norm_smul → Real.sqrt ∘ normSq form)
+axiom cpxVecLen_smul_eq (c : ℂ) (v : QVec) :
+    cpxVecLen (smulVec c v) = Real.sqrt (Complex.normSq c) * cpxVecLen v
 
 -- ── Ket / bra ─────────────────────────────────────────────────────────────────
 -- AFP `ket_vec |v⟩`  = column matrix formed from a vector
@@ -105,6 +135,10 @@ axiom matMulVec_unitary_norm (M : QMat) (v : QVec)
     (hU : unitaryMat M) (hSq : isSquareMat M)
     (hDim : dimRow M = dimVec v) :
     cpxVecLen (matMulVec M v) = cpxVecLen v
+-- Unitary matrices preserve inner products: ⟨Mu, Mv⟩ = ⟨u,v⟩  (Mathlib: LinearIsometry.inner_map_map)
+axiom matMulVec_preserves_inner (M : QMat) (u v : QVec)
+    (hU : unitaryMat M) :
+    innerProd (matMulVec M u) (matMulVec M v) = innerProd u v
 
 -- ── Matrix power ──────────────────────────────────────────────────────────────
 -- AFP: `M^n` for repeated matrix multiplication.
@@ -116,6 +150,11 @@ axiom matPow_succ (M : QMat) (n : ℕ) :
 axiom matPow_dimRow (M : QMat) (n : ℕ) : dimRow (matPow M n) = dimRow M
 axiom matPow_unitary (M : QMat) (hU : unitaryMat M) (n : ℕ) :
     unitaryMat (matPow M n)
+-- Characterization: U unitary ↔ U†U = I ∧ UU† = I  (Mathlib: Matrix.mem_unitaryGroup_iff)
+axiom unitaryMat_iff (M : QMat) :
+    unitaryMat M ↔
+    matMul (dagger M) M = oneMat (dimRow M) ∧
+    matMul M (dagger M) = oneMat (dimRow M)
 
 -- ── Tensor product (Kronecker) ────────────────────────────────────────────────
 -- AFP `M ⊗ N` = Kronecker product
@@ -126,6 +165,25 @@ axiom tensorMat : QMat → QMat → QMat
 -- Key dimension axiom for tensorMat (needed by gate composition theorems):
 axiom tensorMat_dimRow (A B : QMat) : dimRow (tensorMat A B) = dimRow A * dimRow B
 axiom tensorMat_dimCol (A B : QMat) : dimCol (tensorMat A B) = dimCol A * dimCol B
+-- Tensor product algebra laws (phase-2: Matrix.kronecker*)
+axiom tensorMat_assoc_law (A B C : QMat) :
+    tensorMat (tensorMat A B) C = tensorMat A (tensorMat B C)
+axiom tensorMat_distrib_right_law (A B C : QMat) :
+    tensorMat A (matAdd B C) = matAdd (tensorMat A B) (tensorMat A C)
+axiom tensorMat_distrib_left_law (A B C : QMat) :
+    tensorMat (matAdd A B) C = matAdd (tensorMat A C) (tensorMat B C)
+axiom tensorMat_smul_left_law (c : ℂ) (A B : QMat) :
+    tensorMat (smulMat c A) B = smulMat c (tensorMat A B)
+axiom tensorMat_mixed_product_law (A B C D : QMat) :
+    matMul (tensorMat A B) (tensorMat C D) = tensorMat (matMul A C) (matMul B D)
+axiom tensorMat_dagger_law (A B : QMat) :
+    dagger (tensorMat A B) = tensorMat (dagger A) (dagger B)
+axiom tensorMat_unitary_law (A B : QMat) (hA : unitaryMat A) (hB : unitaryMat B) :
+    unitaryMat (tensorMat A B)
+axiom tensorMat_index_law (A B : QMat) (i j : ℕ) :
+    indexMat (tensorMat A B) i j =
+    indexMat A (i / dimRow B) (j / dimCol B) *
+    indexMat B (i % dimRow B) (j % dimCol B)
 
 -- ── Typeclass instances for QMat ──────────────────────────────────────────────
 -- Required so that AFP expressions `A * B`, `A + B`, `1`, `0` compile.
@@ -147,6 +205,8 @@ axiom instNegQVec    : Neg QVec
 axiom instOfNat0QVec : OfNat QVec 0
 attribute [instance]
   instHAddQVec instSubQVec instNegQVec instOfNat0QVec
+-- ‖v‖ = 0 ↔ v = 0  (Mathlib: norm_eq_zero; uses instOfNat0QVec)
+axiom cpxVecLen_eq_zero_iff (v : QVec) : cpxVecLen v = 0 ↔ v = (0 : QVec)
 
 -- Coercion QMat scalar → ℂ (for AFP expressions that use a 1×1 matrix as a scalar)
 axiom matToScalar : QMat → ℂ
@@ -227,6 +287,12 @@ axiom H_gate_unitary : unitaryMat H_gate
 -- indexMat H_gate i j = ±1/√2; stated as a separate Quantum.lean axiom to avoid
 -- pulling Real.sqrt into the prelude's minimal import set.
 
+-- Gate involutory laws (phase-2: matrix calculation; X²=Y²=Z²=H²=I₂)
+axiom X_gate_involutory_law : matMul X_gate X_gate = oneMat 2
+axiom Y_gate_involutory_law : matMul Y_gate Y_gate = oneMat 2
+axiom Z_gate_involutory_law : matMul Z_gate Z_gate = oneMat 2
+axiom H_gate_involutory_law : matMul H_gate H_gate = oneMat 2
+
 -- CNOT gate (controlled-NOT): 4×4 matrix
 axiom CNOT_gate : QMat
 axiom CNOT_gate_dimRow  : dimRow CNOT_gate = 4
@@ -254,6 +320,8 @@ axiom Id_gate_dimRow  (n : ℕ) : dimRow (Id_gate n) = 2^n
 axiom Id_gate_dimCol  (n : ℕ) : dimCol (Id_gate n) = 2^n
 axiom Id_gate_square  (n : ℕ) : isSquareMat (Id_gate n)
 axiom Id_gate_unitary (n : ℕ) : unitaryMat (Id_gate n)
+-- Identity matrix is always unitary (Mathlib: Matrix.one_mem_unitaryGroup)
+axiom oneMat_unitary (n : ℕ) : unitaryMat (oneMat n)
 
 -- ── Bell state axioms ─────────────────────────────────────────────────────────
 -- AFP named Bell states: bell00, bell01, bell10, bell11

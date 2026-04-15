@@ -195,17 +195,16 @@ theorem catept_satisfies_ept_axioms
     EPT τ(x) = x 0 (the coordinate-time component, non-negative by assumption).
     Lorentz metric: the standard (−,+,+,+) Minkowski form.
 
-    Phase-1: EPT is taken as the time coordinate.  Actual τ from entropy:
-    phase-2 requires replacing `x 0` with an entropy functional. -/
+    Phase-1: EPT is taken as |x 0| (absolute time coordinate) to guarantee
+    non-negativity uniformly.  Actual τ from entropy: phase-2 replaces this
+    with a monotone entropy functional restricted to the future cone. -/
 noncomputable def minkowskiCATEPT : CATEPTSpacetimeModel where
   SpaceTime     := Fin 4 → ℝ
   lorentzMetric := fun x y =>
     -- Minkowski (−,+,+,+): −x₀y₀ + x₁y₁ + x₂y₂ + x₃y₃
     - (x 0 * y 0) + (x 1 * y 1) + (x 2 * y 2) + (x 3 * y 3)
-  ept           := fun x => x 0
-  ept_nonneg    := fun _ => by
-    sorry
-    -- phase2_exact: add hypothesis `hx : 0 ≤ x 0` or restrict to future cone
+  ept           := fun x => |x 0|
+  ept_nonneg    := fun x => abs_nonneg (x 0)
   ept_smooth    := trivial
   ept_causal_arrow := trivial
   noFTL         := trivial

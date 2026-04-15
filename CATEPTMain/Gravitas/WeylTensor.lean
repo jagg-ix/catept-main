@@ -1,3 +1,8 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RiemannTensor
+import CATEPTMain.Gravitas.RicciTensor
+
 /-!
 # Gravitas.WeylTensor
 
@@ -11,11 +16,6 @@ Weyl (conformal curvature) tensor:
 
 Default storage: all covariant `(co,co,co,co)`.
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RiemannTensor
-import CATEPTMain.Gravitas.RicciTensor
 
 namespace Gravitas
 

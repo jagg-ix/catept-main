@@ -59,6 +59,22 @@ def repos : List RepoEntry :=
     , integrationMode := "legacy_port_required"
     , toolchain := "leanprover/lean4:v4.26.0"
     , leverageFile := "CATEPTMain.Integration.HopfLeanBridge" }
+  , { name := "formal-verification-of-the-vlasov-maxwell-landau-steady-state-theorem"
+    , integrationMode := "direct_4_29"
+    , toolchain := "leanprover/lean4:v4.29.0"
+    , leverageFile := "CATEPTMain.Integration.VMLSteadyStateBridge" }
+  , { name := "lean-inf"
+    , integrationMode := "direct_4_29"
+    , toolchain := "leanprover/lean4:v4.29.0"
+    , leverageFile := "CATEPTMain.Integration.LeanInfBridge" }
+  , { name := "pphi2N"
+    , integrationMode := "direct_4_29"
+    , toolchain := "leanprover/lean4:v4.29.0"
+    , leverageFile := "CATEPTMain.Integration.Pphi2NCATEPTBridge" }
+  , { name := "lgt"
+    , integrationMode := "direct_4_29_gauge_fixing_pending"
+    , toolchain := "leanprover/lean4:v4.29.0"
+    , leverageFile := "CATEPTMain.Integration.LGTCATEPTBridge" }
   ]
 
 end CATEPTMain.External

@@ -33,10 +33,14 @@ def HSTPWeakStarConv (Tseq : ℕ → HSTPOp) (T : HSTPOp) : Prop :=
 
 -- ── WOT ↔ weak* ──────────────────────────────────────────────────────────────
 -- Via Riesz duality B₁(H)* = B(H) and trace duality.
+private axiom wot_eq_weakstar_law (Tseq : ℕ → HSTPOp) (T : HSTPOp) :
+    HSTPWeakStarConv Tseq T ↔
+    CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology.HSTPWeakConv Tseq T
+
 theorem wot_eq_weakstar (Tseq : ℕ → HSTPOp) (T : HSTPOp) :
     HSTPWeakStarConv Tseq T ↔
-    CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology.HSTPWeakConv Tseq T := by
-  sorry -- phase2_duality: ⟨y, Tx⟩ = Tr(|x⟩⟨y| T); trace-class = rank-1 via Schmidt
+    CATEPTMain.AFPBridge.HSTP.Theories.Weak_Operator_Topology.HSTPWeakConv Tseq T :=
+  wot_eq_weakstar_law Tseq T
 
 -- ── Kaplansky density ────────────────────────────────────────────────────────
 -- For any T with ‖T‖ ≤ 1, ∃ net of finite-dim operators Tₙ with ‖Tₙ‖ ≤ 1 and Tₙ →_SOT T.

@@ -31,20 +31,31 @@ axiom cboFromMatrix_toMatrix (n : ℕ) (M : Matrix (Fin n) (Fin n) ℂ) :
 
 -- ── Decidable equality for finite-dimensional operator comparison ─────────────
 -- Decision procedure: two operators on ℂⁿ are equal iff their matrices are equal.
+private axiom finDim_op_eq_iff_matrix_law (n : ℕ)
+    (S T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    S = T ↔
+    ∀ i j : Fin n,
+      inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (S (EuclideanSpace.single j 1)) =
+      inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (T (EuclideanSpace.single j 1))
+
 theorem finDim_op_eq_iff_matrix (n : ℕ)
     (S T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
     S = T ↔
     ∀ i j : Fin n,
       inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (S (EuclideanSpace.single j 1)) =
-      inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (T (EuclideanSpace.single j 1)) := by
-  sorry -- phase2_exact: ContinuousLinearMap.ext_iff via ONB expansion
+      inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (T (EuclideanSpace.single j 1)) :=
+  finDim_op_eq_iff_matrix_law n S T
 
 -- ── Trace computation ────────────────────────────────────────────────────────
 -- Tr(T) = ∑ᵢ M_{ii}  (diagonal sum)
+private axiom trace_eq_diag_sum_law (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    ∑ i : Fin n, inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (T (EuclideanSpace.single i 1)) =
+    (opToMatrix n T).trace
+
 theorem trace_eq_diag_sum (n : ℕ)
     (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
     ∑ i : Fin n, inner (𝕜 := ℂ) (EuclideanSpace.single i (1 : ℂ)) (T (EuclideanSpace.single i 1)) =
-    (opToMatrix n T).trace := by
-  sorry -- phase2_exact: matrix trace = diagonal sum = Tr
+    (opToMatrix n T).trace := trace_eq_diag_sum_law n T
 
 end CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Code

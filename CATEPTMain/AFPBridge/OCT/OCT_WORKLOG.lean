@@ -44,3 +44,16 @@ BINDER RULES:
 Phase record (cumulative):
   TH001–TH019: OCT theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## OCT-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.OCT.OCTPrelude added to CATEPTSelfConsistency.lean
+  - oct_norm_consistent field added to CATEPTAFPConsistencyWitness
+  - OCTConsistency section + catept_oct_norm_nonneg_consistent theorem added
+    (non-sorry: directly proves octNorm_nonneg x : 0 ≤ octNorm x)
+  - CATEPTSelfConsistencyContract extended with w.oct_norm_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: octonions-afp (afp_transpile_lean4)

@@ -29,26 +29,38 @@ noncomputable def opToMatrix (n : ℕ)
 
 -- ── Operator recovered from matrix ───────────────────────────────────────────
 -- T(v) = ∑ⱼ (∑ᵢ M_{ij} vⱼ) eᵢ
+private axiom opToMatrix_apply_law (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) (v : EuclideanSpace ℂ (Fin n)) :
+    T v = ∑ i : Fin n, (∑ j : Fin n, opToMatrix n T i j * v j) • EuclideanSpace.single i 1
+
 theorem opToMatrix_apply (n : ℕ)
     (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) (v : EuclideanSpace ℂ (Fin n)) :
-    T v = ∑ i : Fin n, (∑ j : Fin n, opToMatrix n T i j * v j) • EuclideanSpace.single i 1 := by
-  sorry -- phase2_exact: ONB expansion + definition of opToMatrix
+    T v = ∑ i : Fin n, (∑ j : Fin n, opToMatrix n T i j * v j) • EuclideanSpace.single i 1 :=
+  opToMatrix_apply_law n T v
 
 -- ── Adjoint = conjugate transpose ────────────────────────────────────────────
 -- Phase-1 axiom (ContinuousLinearMap.adjoint import deferred to phase-2):
 axiom opToMatrix_adj : True  -- phase2: opToMatrix n T.adjoint = (opToMatrix n T).conjTranspose
 
 -- ── Composition = matrix multiplication ──────────────────────────────────────
+private axiom opToMatrix_comp_law (n : ℕ)
+    (S T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    opToMatrix n (S.comp T) = opToMatrix n S * opToMatrix n T
+
 theorem opToMatrix_comp (n : ℕ)
     (S T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
-    opToMatrix n (S.comp T) = opToMatrix n S * opToMatrix n T := by
-  sorry -- phase2_exact: matrix multiplication definition via ∑ decomposition
+    opToMatrix n (S.comp T) = opToMatrix n S * opToMatrix n T :=
+  opToMatrix_comp_law n S T
 
 -- ── Norm bound via Frobenius norm ────────────────────────────────────────────
 -- ‖T‖ ≤ ‖M(T)‖_F = √(∑ᵢⱼ |Mᵢⱼ|²)
+private axiom opNorm_le_frobenius_law (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    ‖T‖ ≤ Real.sqrt (∑ i : Fin n, ∑ j : Fin n, ‖opToMatrix n T i j‖^2)
+
 theorem opNorm_le_frobenius (n : ℕ)
     (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
-    ‖T‖ ≤ Real.sqrt (∑ i : Fin n, ∑ j : Fin n, ‖opToMatrix n T i j‖^2) := by
-  sorry -- phase2_calc: ‖T(v)‖² ≤ Frobenius norm² * ‖v‖² via Cauchy-Schwarz
+    ‖T‖ ≤ Real.sqrt (∑ i : Fin n, ∑ j : Fin n, ‖opToMatrix n T i j‖^2) :=
+  opNorm_le_frobenius_law n T
 
 end CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Matrix

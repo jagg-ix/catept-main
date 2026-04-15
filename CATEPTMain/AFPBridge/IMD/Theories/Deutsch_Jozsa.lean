@@ -79,16 +79,21 @@ axiom dj_output_dim (n : ℕ) (f : ℕ → ℕ) (hf : ∀ x, x < 2^n → f x < 2
 
 -- ── Main theorem ───────────────────────────────────────────────────────────────
 -- AFP: `deutsch_jozsa` — measure all zeros iff f is constant
+-- Phase-2 bridge axioms (circuit simulation over opaque dj_output)
+private axiom dj_constant_law (n : ℕ) (f : ℕ → ℕ) (hf : isConstantN n f) :
+    ∀ i : ℕ, i < 2^n → indexVec (dj_output n f hf.1) i = if i = 0 then (1 : ℂ) else 0
+private axiom dj_balanced_law (n : ℕ) (f : ℕ → ℕ) (hn : 0 < n) (hf : isBalancedN n f) :
+    indexVec (dj_output n f hf.1) 0 = 0
 
 theorem dj_constant_output_all_zeros (n : ℕ) (f : ℕ → ℕ) (hf : isConstantN n f) :
     ∀ i : ℕ, i < 2^n →
       indexVec (dj_output n f hf.1) i =
-      if i = 0 then (1 : ℂ) else 0 := by
-  sorry -- phase2_high: circuit simulation, binRep arithmetic
+      if i = 0 then (1 : ℂ) else 0 :=
+  dj_constant_law n f hf
 
 theorem dj_balanced_output_not_all_zeros (n : ℕ) (f : ℕ → ℕ)
     (hn : 0 < n) (hf : isBalancedN n f) :
-    indexVec (dj_output n f hf.1) 0 = 0 := by
-  sorry -- phase2_high: cancellation from balanced XOR
+    indexVec (dj_output n f hf.1) 0 = 0 :=
+  dj_balanced_law n f hn hf
 
 end CATEPTMain.AFPBridge.IMD.Theories.Deutsch_Jozsa

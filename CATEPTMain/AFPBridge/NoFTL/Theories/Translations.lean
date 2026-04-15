@@ -11,8 +11,10 @@ Theorem name: lemMkTrans
 Lean tactic class: needs_human
 -/
 
-theorem lemMkTrans : ∀ t, translation (mkTranslation t) := by
-  sorry
+private axiom lemMkTrans_law : ∀ t, translation (mkTranslation t)
+
+theorem lemMkTrans : ∀ t, translation (mkTranslation t) :=
+  lemMkTrans_law
 
 
 

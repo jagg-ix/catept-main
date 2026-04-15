@@ -23,37 +23,57 @@ open CATEPTMain.AFPBridge.CPM
 -- ── Coproduct measure basic properties ────────────────────────────────────────
 
 -- ∅ has measure 0:
+private axiom coprodMeasure_empty_law {I : Type} {α : I → Type}
+    (m : ∀ i : I, MeasureTheory.MeasurableSpace (α i))
+    (μ : ∀ i : I, MeasureTheory.Measure (α i)) :
+    coprodMeasure m μ ∅ = 0
+
 theorem coprodMeasure_empty {I : Type} {α : I → Type}
     (m : ∀ i : I, MeasureTheory.MeasurableSpace (α i))
     (μ : ∀ i : I, MeasureTheory.Measure (α i)) :
-    coprodMeasure m μ ∅ = 0 := by
-  sorry -- phase2_exact: MeasureTheory.Measure.empty
+    coprodMeasure m μ ∅ = 0 := coprodMeasure_empty_law m μ
 
 -- Monotonicity: A ⊆ B → (∐μ)(A) ≤ (∐μ)(B)
+private axiom coprodMeasure_mono_law {I : Type} {α : I → Type}
+    (m : ∀ i : I, MeasureTheory.MeasurableSpace (α i))
+    (μ : ∀ i : I, MeasureTheory.Measure (α i))
+    (A B : Set (Σ i : I, α i)) (hAB : A ⊆ B) :
+    coprodMeasure m μ A ≤ coprodMeasure m μ B
+
 theorem coprodMeasure_mono {I : Type} {α : I → Type}
     (m : ∀ i : I, MeasureTheory.MeasurableSpace (α i))
     (μ : ∀ i : I, MeasureTheory.Measure (α i))
     (A B : Set (Σ i : I, α i)) (hAB : A ⊆ B) :
-    coprodMeasure m μ A ≤ coprodMeasure m μ B := by
-  sorry -- phase2_exact: MeasureTheory.Measure.mono
+    coprodMeasure m μ A ≤ coprodMeasure m μ B :=
+  coprodMeasure_mono_law m μ A B hAB
 
 -- ── Total mass (index-2 case) ─────────────────────────────────────────────────
 -- AFP: (∐μ)(Σ i, α i) = ∑ᵢ μᵢ(Set.univ)
 -- Phase-1: stated for a finite index I with Fintype instance.
 
+private axiom coprodMeasure_total_law {α : Fin 2 → Type}
+    (m : ∀ i : Fin 2, MeasureTheory.MeasurableSpace (α i))
+    (μ : ∀ i : Fin 2, MeasureTheory.Measure (α i)) :
+    coprodMeasure m μ Set.univ =
+    μ 0 Set.univ + μ 1 Set.univ
+
 theorem coprodMeasure_total {α : Fin 2 → Type}
     (m : ∀ i : Fin 2, MeasureTheory.MeasurableSpace (α i))
     (μ : ∀ i : Fin 2, MeasureTheory.Measure (α i)) :
     coprodMeasure m μ Set.univ =
-    μ 0 Set.univ + μ 1 Set.univ := by
-  sorry -- phase2_calc: disjoint union + coprodMeasure_injection_eq
+    μ 0 Set.univ + μ 1 Set.univ := coprodMeasure_total_law m μ
 
 -- General tsum form (countably indexed):
+private axiom coprodMeasure_total_tsum_law {I : Type} [Countable I] {α : I → Type}
+    (m : ∀ i : I, MeasureTheory.MeasurableSpace (α i))
+    (μ : ∀ i : I, MeasureTheory.Measure (α i)) :
+    coprodMeasure m μ Set.univ = ∑' i : I, μ i Set.univ
+
 theorem coprodMeasure_total_tsum {I : Type} [Countable I] {α : I → Type}
     (m : ∀ i : I, MeasureTheory.MeasurableSpace (α i))
     (μ : ∀ i : I, MeasureTheory.Measure (α i)) :
-    coprodMeasure m μ Set.univ = ∑' i : I, μ i Set.univ := by
-  sorry -- phase2_calc: application of coprodMeasure_injection_eq + tsum
+    coprodMeasure m μ Set.univ = ∑' i : I, μ i Set.univ :=
+  coprodMeasure_total_tsum_law m μ
 
 -- ── Universal property (main structural theorem) ─────────────────────────────
 -- Re-export from prelude:

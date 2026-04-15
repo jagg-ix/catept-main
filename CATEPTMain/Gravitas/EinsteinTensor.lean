@@ -1,3 +1,7 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RicciTensor
+
 /-!
 # Gravitas.EinsteinTensor
 
@@ -13,10 +17,6 @@ With cosmological constant:
 
 Default storage: `(true, true)` = G_{μν} (fully covariant).
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RicciTensor
 
 namespace Gravitas
 

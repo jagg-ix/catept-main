@@ -39,3 +39,39 @@ BINDER RULES (MODE-specific):
 Phase record (cumulative):
   TH001–TH024: MODE theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## MODE-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.MODE.MODEPrelude added to CATEPTSelfConsistency.lean
+  - mode_matexp_consistent field added to CATEPTAFPConsistencyWitness
+  - MODEConsistency section + catept_mode_matexp_zero_consistent (non-sorry: matExp_zero n) added
+  - CATEPTSelfConsistencyContract extended with w.mode_matexp_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: matrices-for-odes-afp (afp_transpile_lean4)
+  Phase-2: matExp_add_commute + matExp_deriv → skew-Hermitian one-parameter unitary group
+
+────────────────────────────────────────────────────────────────────────────────
+## MODE-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.MODE.MODEPrelude added to CATEPTSelfConsistency.lean
+  - mode_matexp_consistent field added to CATEPTAFPConsistencyWitness
+  - MODEConsistency section + catept_mode_matexp_zero_consistent (non-sorry: matExp_zero n) added
+  - CATEPTSelfConsistencyContract extended with w.mode_matexp_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: matrices-for-odes-afp (afp_transpile_lean4)
+  Phase-2: matExp_add_commute + matExp_deriv → skew-Hermitian one-parameter unitary group
+
+────────────────────────────────────────────────────────────────────────────────
+## MODE-P2-001  matExp semigroup theorem in CATEPTSelfConsistency (P2)
+Severity: P2 — NS-P1 linear evolution semigroup key
+Status: DONE — 2026-04-13
+Record:
+  - catept_mode_matexp_semigroup_consistent added to MODEConsistency section
+  - Proves: matExp (A+B) = matExp A * matExp B when A*B = B*A
+  - Directly applied: matExp_add_commute A B hComm (no sorry)
+  - NS-P1 path: skew-Hermitian one-parameter unitary group identity

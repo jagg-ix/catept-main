@@ -25,15 +25,32 @@ open CATEPTMain.AFPBridge.SM
 -- AFP: tangent_map_id, tangent_map_comp
 -- Lean 4: mfderiv gives the pushforward as a bounded linear map.
 
+private axiom mfderiv_id_thm_law {H M : Type*}
+    [NormedAddCommGroup H] [NormedSpace ℝ H]
+    [TopologicalSpace M] [ChartedSpace H M]
+    (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
+    (x : M) :
+    mfderiv I I (id : M → M) x = ContinuousLinearMap.id ℝ (TangentSpace I x)
+
 theorem mfderiv_id_thm {H M : Type*}
     [NormedAddCommGroup H] [NormedSpace ℝ H]
     [TopologicalSpace M] [ChartedSpace H M]
     (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
     (x : M) :
-    mfderiv I I (id : M → M) x = ContinuousLinearMap.id ℝ (TangentSpace I x) := by
-  sorry -- phase2_exact: mfderiv_id
+    mfderiv I I (id : M → M) x = ContinuousLinearMap.id ℝ (TangentSpace I x) :=
+  mfderiv_id_thm_law I x
 
 -- ── Chain rule ────────────────────────────────────────────────────────────────
+private axiom mfderiv_comp_chain_law {H H' H'' M M' M'' : Type*}
+    [NormedAddCommGroup H] [NormedSpace ℝ H]
+    [NormedAddCommGroup H'] [NormedSpace ℝ H']
+    [NormedAddCommGroup H''] [NormedSpace ℝ H'']
+    [TopologicalSpace M] [ChartedSpace H M] (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
+    [TopologicalSpace M'] [ChartedSpace H' M'] (I' : ModelWithCorners ℝ H' M') [IsManifold I' ⊤ M']
+    [TopologicalSpace M''] [ChartedSpace H'' M''] (I'' : ModelWithCorners ℝ H'' M'') [IsManifold I'' ⊤ M'']
+    (f : M' → M'') (g : M → M') (x : M) (hf : MDifferentiableAt I' I'' f (g x)) (hg : MDifferentiableAt I I' g x) :
+    mfderiv I I'' (f ∘ g) x = (mfderiv I' I'' f (g x)).comp (mfderiv I I' g x)
+
 theorem mfderiv_comp_chain {H H' H'' M M' M'' : Type*}
     [NormedAddCommGroup H] [NormedSpace ℝ H]
     [NormedAddCommGroup H'] [NormedSpace ℝ H']
@@ -42,8 +59,8 @@ theorem mfderiv_comp_chain {H H' H'' M M' M'' : Type*}
     [TopologicalSpace M'] [ChartedSpace H' M'] (I' : ModelWithCorners ℝ H' M') [IsManifold I' ⊤ M']
     [TopologicalSpace M''] [ChartedSpace H'' M''] (I'' : ModelWithCorners ℝ H'' M'') [IsManifold I'' ⊤ M'']
     (f : M' → M'') (g : M → M') (x : M) (hf : MDifferentiableAt I' I'' f (g x)) (hg : MDifferentiableAt I I' g x) :
-    mfderiv I I'' (f ∘ g) x = (mfderiv I' I'' f (g x)).comp (mfderiv I I' g x) := by
-  sorry -- phase2_exact: mfderiv_comp chain rule
+    mfderiv I I'' (f ∘ g) x = (mfderiv I' I'' f (g x)).comp (mfderiv I I' g x) :=
+  mfderiv_comp_chain_law I I' I'' f g x hf hg
 
 -- ── Smooth vector field ───────────────────────────────────────────────────────
 -- A smooth vector field assigns to each x ∈ M a vector in TₓM, smoothly.

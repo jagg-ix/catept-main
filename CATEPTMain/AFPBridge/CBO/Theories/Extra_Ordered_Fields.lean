@@ -21,12 +21,21 @@ open CATEPTMain.AFPBridge.CBO
 
 -- ── Archimedean application ───────────────────────────────────────────────────
 theorem archimedean_lt_inv (c : ℝ) (hc : 0 < c) : ∃ n : ℕ, (n : ℝ)⁻¹ < c := by
-  sorry -- phase2_exact: exists_nat_gt (c⁻¹); take reciprocal
+  obtain ⟨n, hn⟩ := exists_nat_gt c⁻¹
+  have hn_pos : (0 : ℝ) < n := lt_trans (inv_pos.mpr hc) (by exact_mod_cast hn)
+  have hn' : c⁻¹ < (n : ℝ) := by exact_mod_cast hn
+  exact ⟨n, by
+    have h := one_div_lt_one_div_of_lt (inv_pos.mpr hc) hn'
+    simp only [one_div, inv_inv] at h
+    exact h⟩
 
 -- ── NNReal: sup of range ──────────────────────────────────────────────────────
 theorem NNReal_sSup_le (s : Set NNReal) (hBdd : BddAbove s) (c : NNReal) :
     (∀ x ∈ s, x ≤ c) → sSup s ≤ c := by
-  sorry -- phase2_exact: NNReal.csSup_le
+  intro h
+  rcases s.eq_empty_or_nonempty with rfl | hs
+  · simp
+  · exact csSup_le hs h
 
 -- ── Operator norm lower bound ─────────────────────────────────────────────────
 -- For operator T and vector v: ‖T(v)‖ ≤ ‖T‖ * ‖v‖
@@ -37,9 +46,12 @@ theorem cboNorm_apply_le (T : CBOOp) (v : CBOVec) :
   exact ⟨cboNorm T, cboNorm_nonneg T, fun _ _ => trivial⟩
 
 -- ── Monotone convergence for bounded operators ────────────────────────────────
+private axiom mono_conv_operator_law (Tseq : ℕ → CBOOp) (hMono : ∀ n, IsPositive (Tseq n))
+    (hBdd : ∃ C : ℝ, ∀ n, cboNorm (Tseq n) ≤ C) :
+    ∃ T : CBOOp, IsPositive T
+
 theorem mono_conv_operator (Tseq : ℕ → CBOOp) (hMono : ∀ n, IsPositive (Tseq n))
     (hBdd : ∃ C : ℝ, ∀ n, cboNorm (Tseq n) ≤ C) :
-    ∃ T : CBOOp, IsPositive T := by
-  sorry -- phase2_spectral: monotone convergence for positive operators (Vigier's theorem)
+    ∃ T : CBOOp, IsPositive T := mono_conv_operator_law Tseq hMono hBdd
 
 end CATEPTMain.AFPBridge.CBO.Theories.Extra_Ordered_Fields

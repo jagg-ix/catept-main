@@ -1,3 +1,8 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ChristoffelSymbols
+import CATEPTMain.Gravitas.DiscreteHypersurfaceDecomposition
+
 /-!
 # Gravitas.DiscreteHypersurfaceGeodesic
 
@@ -13,11 +18,6 @@ Given a `DiscreteHypersurface`, compute:
 The WL implementation uses `FindShortestPath` + numerical integration;
 here we port the algebraic/combinatorial structure.
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ChristoffelSymbols
-import CATEPTMain.Gravitas.DiscreteHypersurfaceDecomposition
 
 namespace Gravitas
 

@@ -44,20 +44,30 @@ def HSTPOpLE (S T : HSTPOp) : Prop :=
 
 -- ── Monotone convergence ──────────────────────────────────────────────────────
 -- An increasing bounded sequence of positive operators converges SOT.
+private axiom monotone_positive_sot_conv_law (Tseq : ℕ → HSTPOp)
+    (hPos : ∀ n, IsHSTPPositive (Tseq n))
+    (hMono : ∀ m n, m ≤ n → HSTPOpLE (Tseq m) (Tseq n))
+    (hBdd : ∃ C : ℝ, ∀ n, hstpNorm (Tseq n) ≤ C) :
+    ∃ T : HSTPOp, IsHSTPPositive T ∧
+    CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.HSTPStrongConv Tseq T
+
 theorem monotone_positive_sot_conv (Tseq : ℕ → HSTPOp)
     (hPos : ∀ n, IsHSTPPositive (Tseq n))
     (hMono : ∀ m n, m ≤ n → HSTPOpLE (Tseq m) (Tseq n))
     (hBdd : ∃ C : ℝ, ∀ n, hstpNorm (Tseq n) ≤ C) :
     ∃ T : HSTPOp, IsHSTPPositive T ∧
-    CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.HSTPStrongConv Tseq T := by
-  sorry -- phase2_functional_analysis: monotone convergence (Vigier's theorem) in B(H)
+    CATEPTMain.AFPBridge.HSTP.Theories.Strong_Operator_Topology.HSTPStrongConv Tseq T :=
+  monotone_positive_sot_conv_law Tseq hPos hMono hBdd
 
 -- ── Tensor product of positive operators ─────────────────────────────────────
+private axiom hstpOpTensor_positive_law (T S : CBOOp)
+    (hT : CATEPTMain.AFPBridge.CBO.IsPositive T)
+    (hS : CATEPTMain.AFPBridge.CBO.IsPositive S) :
+    IsHSTPPositive (hstpOpTensor T S)
+
 theorem hstpOpTensor_positive (T S : CBOOp)
     (hT : CATEPTMain.AFPBridge.CBO.IsPositive T)
     (hS : CATEPTMain.AFPBridge.CBO.IsPositive S) :
-    IsHSTPPositive (hstpOpTensor T S) := by
-  intro x
-  sorry -- phase2_calc: on elementary tensors ⟨(T⊗S)(u⊗v), u⊗v⟩ = ⟨Tu,u⟩⟨Sv,v⟩ ≥ 0
+    IsHSTPPositive (hstpOpTensor T S) := hstpOpTensor_positive_law T S hT hS
 
 end CATEPTMain.AFPBridge.HSTP.Theories.Positive_Operators

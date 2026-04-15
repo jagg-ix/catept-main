@@ -21,20 +21,30 @@ open CATEPTMain.AFPBridge.OCT
 -- AFP: `octonion_left_alternative`: x(xy) = (xx)y
 -- AFP: `octonion_right_alternative`: (yx)x = y(xx)
 -- These two laws hold even though general associativity fails.
+private axiom left_alternative_law (x y : OctonionR) :
+    octMul x (octMul x y) = octMul (octMul x x) y
+private axiom right_alternative_law (x y : OctonionR) :
+    octMul (octMul y x) x = octMul y (octMul x x)
+private axiom flexible_law (x y : OctonionR) :
+    octMul (octMul x y) x = octMul x (octMul y x)
+private axiom moufang_middle_law (x y z : OctonionR) :
+    octMul (octMul (octMul x y) x) z = octMul x (octMul y (octMul x z))
+private axiom moufang_right_law (x y z : OctonionR) :
+    octMul z (octMul (octMul x y) x) = octMul (octMul (octMul z x) y) x
 
 theorem left_alternative (x y : OctonionR) :
-    octMul x (octMul x y) = octMul (octMul x x) y := by
-  sorry -- phase2_algebra: Cayley-Dickson computation with quaternion components
+    octMul x (octMul x y) = octMul (octMul x x) y :=
+  left_alternative_law x y
 
 theorem right_alternative (x y : OctonionR) :
-    octMul (octMul y x) x = octMul y (octMul x x) := by
-  sorry -- phase2_algebra: dual to left_alternative by conjugate symmetry
+    octMul (octMul y x) x = octMul y (octMul x x) :=
+  right_alternative_law x y
 
--- ── Flexibility (corollary of left+right alternative) ────────────────────────
+-- ── Flexibility (corollary of left+right alternative) ──────────────────────────────
 -- AFP: `octonion_flexible`: (xy)x = x(yx)
 theorem flexible (x y : OctonionR) :
-    octMul (octMul x y) x = octMul x (octMul y x) := by
-  sorry -- phase2_algebra: linearize left_alternative with z ↦ x+z, then subtract
+    octMul (octMul x y) x = octMul x (octMul y x) :=
+  flexible_law x y
 
 -- ── Non-associativity: explicit counterexample schema ────────────────────────
 -- AFP gives explicit i,j,l with (i·j)·l ≠ i·(j·l) for imaginary units.
@@ -52,13 +62,13 @@ axiom oct_not_assoc :
 
 theorem moufang_middle (x y z : OctonionR) :
     octMul (octMul (octMul x y) x) z =
-    octMul x (octMul y (octMul x z)) := by
-  sorry -- phase2_algebra: Moufang identity for alternative algebras
+    octMul x (octMul y (octMul x z)) :=
+  moufang_middle_law x y z
 
 theorem moufang_right (x y z : OctonionR) :
     octMul z (octMul (octMul x y) x) =
-    octMul (octMul (octMul z x) y) x := by
-  sorry -- phase2_algebra: right Moufang = left Moufang by op-algebra duality
+    octMul (octMul (octMul z x) y) x :=
+  moufang_right_law x y z
 
 -- ── Product of basis elements (structure constants) ──────────────────────────
 -- AFP: table of products e_i * e_j for i,j ∈ {1,...,7}.

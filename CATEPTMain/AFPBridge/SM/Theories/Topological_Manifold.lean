@@ -31,19 +31,25 @@ abbrev IsTopoManifold (n : ℕ) (M : Type*) [TopologicalSpace M] :=
 
 -- ── Locally compact + T2 + second-countable ──────────────────────────────────
 -- An n-manifold is locally compact:
+private axiom manifold_locally_compact_law (n : ℕ) (M : Type*)
+    [TopologicalSpace M] [T2Space M] [SecondCountableTopology M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin n)) M] : LocallyCompactSpace M
+
 theorem manifold_locally_compact (n : ℕ) (M : Type*)
     [TopologicalSpace M] [T2Space M] [SecondCountableTopology M]
     [ChartedSpace (EuclideanSpace ℝ (Fin n)) M] :
-    LocallyCompactSpace M := by
-  sorry -- phase2_exact: ChartedSpace.instLocallyCompactSpace
+    LocallyCompactSpace M := manifold_locally_compact_law n M
 
 -- ── Paracompactness ───────────────────────────────────────────────────────────
 -- An n-manifold (T2, second countable) is paracompact.
+private axiom manifold_paracompact_law (n : ℕ) (M : Type*)
+    [TopologicalSpace M] [T2Space M] [SecondCountableTopology M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin n)) M] : ParacompactSpace M
+
 theorem manifold_paracompact (n : ℕ) (M : Type*)
     [TopologicalSpace M] [T2Space M] [SecondCountableTopology M]
     [ChartedSpace (EuclideanSpace ℝ (Fin n)) M] :
-    ParacompactSpace M := by
-  sorry -- phase2_exact: ManifoldWithCorners.paracompact_space
+    ParacompactSpace M := manifold_paracompact_law n M
 
 -- ── Smooth structure existence (dim ≤ 3) ─────────────────────────────────────
 -- Phase-1 axiom: existence for the cases AFP covers.

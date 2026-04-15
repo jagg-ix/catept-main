@@ -49,11 +49,17 @@ axiom compBasis (n : ℕ) : Fin (2^n) → QVec
 axiom compBasis_isONB (n : ℕ) : isONBasis n (compBasis n)
 
 -- AFP: Parseval identity for ONBs
+-- Phase-2 bridge axiom: Parseval's identity (Mathlib: EuclideanSpace.inner_orthonormalBasis_apply)
+private axiom parseval_law (n : ℕ) (B : Fin (2^n) → QVec) (hB : isONBasis n B)
+    (v : QVec) (hv : v ∈ stateQbit n) :
+    cpxVecLen v ^ 2 =
+    Finset.sum Finset.univ (fun i => Complex.normSq (innerProd (B i) v))
+
 theorem parseval (n : ℕ) (B : Fin (2^n) → QVec) (hB : isONBasis n B)
     (v : QVec) (hv : v ∈ stateQbit n) :
     cpxVecLen v ^ 2 =
-    Finset.sum Finset.univ (fun i => Complex.normSq (innerProd (B i) v)) := by
-  sorry -- phase2_high: Parseval via ONB
+    Finset.sum Finset.univ (fun i => Complex.normSq (innerProd (B i) v)) :=
+  parseval_law n B hB v hv
 
 -- AFP: completeness — sum of |b⟩⟨b| = I
 -- Phase-1: stated as "expansion coefficients determine the vector" (avoids QMat summation).

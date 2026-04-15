@@ -162,3 +162,29 @@ Required checks:
   4. `Real.atanh` in scope.
 Fix status: See build output.
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## PDC-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.PDC.PDCPrelude added to CATEPTSelfConsistency.lean
+  - pdc_hyperbolic_consistent field added to CATEPTAFPConsistencyWitness
+  - PDCConsistency section + catept_pdc_dist_nonneg_consistent (non-sorry: pdcDist_nonneg a b) added
+  - CATEPTSelfConsistencyContract extended with w.pdc_hyperbolic_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: poincare-disc-afp (afp_transpile_lean4)
+  Phase-2: PDC-INT-001: pdcDist_triangle + pdcMobius_isometry → EPT hyperboloid slice
+
+────────────────────────────────────────────────────────────────────────────────
+## PDC-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.PDC.PDCPrelude added to CATEPTSelfConsistency.lean
+  - pdc_hyperbolic_consistent field added to CATEPTAFPConsistencyWitness
+  - PDCConsistency section + catept_pdc_dist_nonneg_consistent (non-sorry: pdcDist_nonneg a b) added
+  - CATEPTSelfConsistencyContract extended with w.pdc_hyperbolic_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: poincare-disc-afp (afp_transpile_lean4)
+  Phase-2: PDC-INT-001: pdcDist_triangle + pdcMobius_isometry → EPT hyperboloid slice

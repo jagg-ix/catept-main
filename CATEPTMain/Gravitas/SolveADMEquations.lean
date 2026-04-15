@@ -1,3 +1,11 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RicciTensor
+import CATEPTMain.Gravitas.ChristoffelSymbols
+import CATEPTMain.Gravitas.ExtrinsicCurvatureTensor
+import CATEPTMain.Gravitas.ADMDecomposition
+import CATEPTMain.Gravitas.ADMStressEnergyDecomposition
+
 /-!
 # Gravitas.SolveADMEquations
 
@@ -17,14 +25,6 @@ Evolution equations (lapse/shift gauge + extrinsic curvature):
               + β^k ∂_k K_{ij} + K_{ik} ∂_j β^k + K_{jk} ∂_i β^k
               - 8πG α (S_{ij} - (1/2) γ_{ij} (S - ρ_ADM))
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RicciTensor
-import CATEPTMain.Gravitas.ChristoffelSymbols
-import CATEPTMain.Gravitas.ExtrinsicCurvatureTensor
-import CATEPTMain.Gravitas.ADMDecomposition
-import CATEPTMain.Gravitas.ADMStressEnergyDecomposition
 
 namespace Gravitas
 

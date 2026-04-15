@@ -1,3 +1,9 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.ADMDecomposition
+import CATEPTMain.Gravitas.ADMStressEnergyDecomposition
+import CATEPTMain.Gravitas.SolveADMEquations
+
 /-!
 # Gravitas.SolveVacuumADMEquations
 
@@ -13,12 +19,6 @@ Momentum constraint (vacuum):
 
 Evolution equations are the same as in the matter case with ρ = 0, j_i = 0.
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.ADMDecomposition
-import CATEPTMain.Gravitas.ADMStressEnergyDecomposition
-import CATEPTMain.Gravitas.SolveADMEquations
 
 namespace Gravitas
 

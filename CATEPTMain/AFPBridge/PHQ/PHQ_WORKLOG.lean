@@ -171,3 +171,40 @@ Required checks:
   4. All SI constants defined and type-check.
 Fix status: See current build.
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## PHQ-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.PHQ.PHQPrelude added to CATEPTSelfConsistency.lean
+  - phq_dimension_consistent field added to CATEPTAFPConsistencyWitness
+  - PHQConsistency section + catept_phq_dimless_consistent (trivial stub) added
+  - CATEPTSelfConsistencyContract extended with w.phq_dimension_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: physical-quantities-afp (afp_transpile_lean4)
+  Phase-2: PHQ-INT-001: constSpeedOfLight → CATEPTSpacetimeModel.noFTL
+
+────────────────────────────────────────────────────────────────────────────────
+## PHQ-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.PHQ.PHQPrelude added to CATEPTSelfConsistency.lean
+  - phq_dimension_consistent field added to CATEPTAFPConsistencyWitness
+  - PHQConsistency section + catept_phq_dimless_consistent (trivial stub) added
+  - CATEPTSelfConsistencyContract extended with w.phq_dimension_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: physical-quantities-afp (afp_transpile_lean4)
+  Phase-2: PHQ-INT-001: constSpeedOfLight → CATEPTSpacetimeModel.noFTL
+
+────────────────────────────────────────────────────────────────────────────────
+## PHQ-P2-001  Speed-of-light positivity in CATEPTSelfConsistency (P2)
+Severity: P2 — PHQ-INT-001 dimensional certificate partial closure
+Status: DONE — 2026-04-13
+Record:
+  - catept_phq_speed_positive_consistent added to PHQConsistency section
+  - Proves: physVal constSpeedOfLight > 0 (i.e., c = 299792458 > 0)
+  - Proof: unfold constSpeedOfLight; rw [physMk_val]; norm_num (no sorry)
+  - PHQ-INT-001 partial: positivity certificate done; noFTL binding remains
+  - Next: relate constSpeedOfLight to CATEPTSpacetimeModel.noFTL

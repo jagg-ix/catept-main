@@ -1,3 +1,9 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RicciTensor
+import CATEPTMain.Gravitas.EinsteinTensor
+import CATEPTMain.Gravitas.StressEnergyTensor
+
 /-!
 # Gravitas.SolveEinsteinEquations
 
@@ -12,12 +18,6 @@ and related data.  Since Lean 4 is not a CAS, we represent the equations
 symbolically as matrices of `Expr` residuals rather than "solving" them;
 the structure mirrors what the WL implementation stores for display.
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RicciTensor
-import CATEPTMain.Gravitas.EinsteinTensor
-import CATEPTMain.Gravitas.StressEnergyTensor
 
 namespace Gravitas
 

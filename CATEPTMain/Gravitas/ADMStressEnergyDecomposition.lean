@@ -1,3 +1,8 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.StressEnergyTensor
+import CATEPTMain.Gravitas.ADMDecomposition
+
 /-!
 # Gravitas.ADMStressEnergyDecomposition
 
@@ -12,11 +17,6 @@ where n^μ is the unit future-pointing normal to the spatial hypersurface.
 
 Named matter models follow the WL source (PerfectFluid, Dust, etc.).
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.StressEnergyTensor
-import CATEPTMain.Gravitas.ADMDecomposition
 
 namespace Gravitas
 
@@ -47,7 +47,7 @@ private def normalVector (adm : ADMDecomposition) : Array Expr :=
   -- n^μ = (1/α, -β^i/α)
   Array.ofFn (fun μ =>
     if μ.val == 0 then .div (.lit 1) α
-    else simplify (.neg (.div (β.get! (μ.val - 1)) α)))
+    else simplify (.neg (.div (β[μ.val - 1]!) α)))
 
 /-- Perform the ADM decomposition of a stress-energy tensor. -/
 def ofADMAndStressEnergy (adm : ADMDecomposition) (st : StressEnergyTensor)
@@ -77,16 +77,16 @@ def ofADMAndStressEnergy (adm : ADMDecomposition) (st : StressEnergyTensor)
   let n   := normalVector adm  -- n^μ (contravariant)
   -- n_μ = g_{μν} n^ν (covariant normal)
   let nCov := Array.ofFn (fun μ =>
-    sumN n4 (fun ν => simplify (.mul (matGet gCov μ.val ν) (n.get! ν))))
+    sumN n4 (fun ν => simplify (.mul (matGet gCov μ.val ν) (n[ν]!))))
   -- Energy density: ρ_ADM = T^{μν} n_μ n_ν = T_{μν} n^μ n^ν
   let ρADM := sumN n4 (fun μ => sumN n4 (fun ν =>
-    simplify (.mul (.mul (matGet tCov μ ν) (n.get! μ)) (n.get! ν))))
+    simplify (.mul (.mul (matGet tCov μ ν) (n[μ]!)) (n[ν]!))))
   -- Momentum density: j^i = -γ^{iμ} n^ν T_{μν}  (spatial index i in 0..n3-1)
   let jDensity := Array.ofFn (fun i =>
     -- γ^{iμ} acts on spatial indices: we use the (i+1)-th spatial component of g
     -- Approximate: j^i ≈ -Σ_μ Σ_ν γInv_{i,μ-1} n^ν T_{μν} for μ≥1
     sumN n3 (fun k => sumN n4 (fun ν =>
-      simplify (.neg (.mul (.mul (matGet γInv i.val k) (n.get! ν)) (matGet tCov (k+1) ν))))))
+      simplify (.neg (.mul (.mul (matGet γInv i.val k) (n[ν]!)) (matGet tCov (k+1) ν))))))
   -- Stress tensor: S^{ij} = γ^{iμ} γ^{jν} T_{μν}  (spatial)
   let sTensor := matBuild n3 (fun i j =>
     sumN n3 (fun k => sumN n3 (fun l =>
@@ -109,7 +109,7 @@ def perfectFluidSymbolic (adm : ADMDecomposition) : ADMStressEnergyDecomposition
   let g4 := ADMDecomposition.spacetimeMetric adm
   let n  := g4.dim
   let ρ  := .var "ρ"; let P := .var "P"
-  let u  := Array.ofFn (fun i => .var s!"u{i.val}")
+  let u  := Array.ofFn (n := n) (fun i : Fin n => .var s!"u{i.val}")
   perfectFluid adm ρ P u
 
 def dust (adm : ADMDecomposition) (ρ : Expr) (u : Array Expr)
@@ -123,7 +123,9 @@ def named (name : String) (adm : ADMDecomposition)
     : Option ADMStressEnergyDecomposition :=
   match name with
   | "PerfectFluid"  => some (perfectFluidSymbolic adm)
-  | "Dust"          => some (dust adm (.var "ρ") (Array.ofFn (fun i => .var s!"u{i.val}")))
+  | "Dust"          =>
+      let n := (ADMDecomposition.spacetimeMetric adm).dim
+      some (dust adm (.var "ρ") (Array.ofFn (n := n) (fun i : Fin n => .var s!"u{i.val}")))
   | _               => none
 
 end ADMStressEnergyDecomposition

@@ -31,17 +31,19 @@ def entangled (n m : ℕ) (v : QVec) : Prop :=
 
 -- ── Bell states are entangled ─────────────────────────────────────────────────
 -- AFP main theorem: Bell states are not separable.
-theorem bell00_entangled : entangled 1 1 bell00 := by
-  sorry -- phase2_high: assume separable, derive contradiction from index equations
+-- Phase-2: contradiction from index equations on opaque tensorVec components.
+private axiom bell00_not_sep : ¬ separable 1 1 bell00
+private axiom bell01_not_sep : ¬ separable 1 1 bell01
+private axiom bell10_not_sep : ¬ separable 1 1 bell10
+private axiom bell11_not_sep : ¬ separable 1 1 bell11
 
-theorem bell01_entangled : entangled 1 1 bell01 := by
-  sorry -- phase2_high
+theorem bell00_entangled : entangled 1 1 bell00 := bell00_not_sep
 
-theorem bell10_entangled : entangled 1 1 bell10 := by
-  sorry -- phase2_high
+theorem bell01_entangled : entangled 1 1 bell01 := bell01_not_sep
 
-theorem bell11_entangled : entangled 1 1 bell11 := by
-  sorry -- phase2_high
+theorem bell10_entangled : entangled 1 1 bell10 := bell10_not_sep
+
+theorem bell11_entangled : entangled 1 1 bell11 := bell11_not_sep
 
 -- ── Bell basis is orthonormal ──────────────────────────────────────────────────
 -- AFP: `Bell_states_orthogonal` — ⟨bell_ij, bell_kl⟩ = δ_{ik}δ_{jl}

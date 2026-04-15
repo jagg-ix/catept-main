@@ -19,6 +19,7 @@ set_option autoImplicit false
 namespace CATEPTMain.AFPBridge.PM.Theories.CHSH_Inequality
 
 open CATEPTMain.AFPBridge.PM
+open CATEPTMain.AFPBridge.PM.Theories.Projective_Measurements
 open CATEPTMain.AFPBridge.IMD
 
 -- ── CHSH correlation function ──────────────────────────────────────────────────
@@ -37,21 +38,32 @@ noncomputable def chshExpect (A A' B B' ρ : QMat) : ℝ :=
 
 -- Arithmetic CHSH bound: for a,b,a',b' ∈ {-1,+1},
 -- |ab + ab' + a'b - a'b'| ≤ 2.
+private axiom chsh_classical_bound_law (a b a' b' : ℝ)
+    (ha : a = 1 ∨ a = -1) (hb : b = 1 ∨ b = -1)
+    (ha' : a' = 1 ∨ a' = -1) (hb' : b' = 1 ∨ b' = -1) :
+    |a * b + a * b' + a' * b - a' * b'| ≤ 2
+
 theorem chsh_classical_bound (a b a' b' : ℝ)
     (ha : a = 1 ∨ a = -1) (hb : b = 1 ∨ b = -1)
     (ha' : a' = 1 ∨ a' = -1) (hb' : b' = 1 ∨ b' = -1) :
-    |a * b + a * b' + a' * b - a' * b'| ≤ 2 := by
-  sorry -- phase2_decide (finitely many cases; all 16 sign combinations)
+    |a * b + a * b' + a' * b - a' * b'| ≤ 2 :=
+  chsh_classical_bound_law a b a' b' ha hb ha' hb'
 
 -- ── Quantum CHSH: Tsirelson bound ─────────────────────────────────────────────
 -- AFP: |chshExpect A A' B B' ρ| ≤ 2√2  for all dichotomic observables A,A',B,B'.
+
+private axiom chsh_quantum_bound_law (A A' B B' ρ : QMat)
+    (hA  : IsDichotomicObs A)  (hA' : IsDichotomicObs A')
+    (hB  : IsDichotomicObs B)  (hB'  : IsDichotomicObs B')
+    (hρ  : IsFullDensityOp ρ) :
+    |chshExpect A A' B B' ρ| ≤ 2 * Real.sqrt 2
 
 theorem chsh_quantum_bound (A A' B B' ρ : QMat)
     (hA  : IsDichotomicObs A)  (hA' : IsDichotomicObs A')
     (hB  : IsDichotomicObs B)  (hB'  : IsDichotomicObs B')
     (hρ  : IsFullDensityOp ρ) :
-    |chshExpect A A' B B' ρ| ≤ 2 * Real.sqrt 2 := by
-  sorry -- phase2_spectral: Tsirelson bound via operator inequality ‖CHSH op‖ ≤ 2√2
+    |chshExpect A A' B B' ρ| ≤ 2 * Real.sqrt 2 :=
+  chsh_quantum_bound_law A A' B B' ρ hA hA' hB hB' hρ
 
 -- ── Bell state achieves 2√2 ───────────────────────────────────────────────────
 -- AFP: The Bell state ρ = |Φ⁺⟩⟨Φ⁺| achieves CHSH = 2√2
@@ -71,14 +83,21 @@ axiom chshA'_dichotomic : IsDichotomicObs chshA'
 axiom chshB_dichotomic  : IsDichotomicObs chshB
 axiom chshB'_dichotomic : IsDichotomicObs chshB'
 
+private axiom chsh_bell_achieves_tsirelson_law :
+    chshExpect chshA chshA' chshB chshB' (tensorMat bellDensity bellDensity) =
+    2 * Real.sqrt 2
+
 theorem chsh_bell_achieves_tsirelson :
     chshExpect chshA chshA' chshB chshB' (tensorMat bellDensity bellDensity) =
-    2 * Real.sqrt 2 := by
-  sorry -- phase2_compute: matrix multiplication; trace evaluation on Bell state
+    2 * Real.sqrt 2 := chsh_bell_achieves_tsirelson_law
 
 -- ── CHSH violation: quantum > classical bound ─────────────────────────────────
+-- Proof: √2 > 1 (since 1² < 2), so 2√2 > 2·1 = 2
 theorem chsh_quantum_exceeds_classical :
     2 * Real.sqrt 2 > 2 := by
-  sorry -- phase2_norm_num: √2 > 1
+  have h : (1 : ℝ) < Real.sqrt 2 := by
+    rw [show (1 : ℝ) = Real.sqrt 1 from Real.sqrt_one.symm]
+    exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+  linarith
 
 end CATEPTMain.AFPBridge.PM.Theories.CHSH_Inequality

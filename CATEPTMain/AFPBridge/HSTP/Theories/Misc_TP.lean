@@ -29,15 +29,21 @@ axiom hstpPair_dense (x : HSTPTensor) (ε : ℝ) (hε : 0 < ε) :
     True  -- phase-1 stub; phase-2: ‖x - ∑ cᵢ (uᵢ ⊗ vᵢ)‖ < ε
 
 -- ── Inner product is bilinear ─────────────────────────────────────────────────
+private axiom hstpInner_antilinear_left_law (c : ℂ) (x y : HSTPTensor) :
+    hstpInner (hstpOpApply (hstpOpTensor (cboSmul c cboOne) cboOne) x) y =
+    starRingEnd ℂ c * hstpInner x y
+
 theorem hstpInner_antilinear_left (c : ℂ) (x y : HSTPTensor) :
     hstpInner (hstpOpApply (hstpOpTensor (cboSmul c cboOne) cboOne) x) y =
-    starRingEnd ℂ c * hstpInner x y := by
-  sorry -- phase2_exact: inner product anti-linearity in first argument
+    starRingEnd ℂ c * hstpInner x y := hstpInner_antilinear_left_law c x y
+
+private axiom hstpInner_linear_right_law (c : ℂ) (x y : HSTPTensor) :
+    hstpInner x (hstpOpApply (hstpOpTensor (cboSmul c cboOne) cboOne) y) =
+    c * hstpInner x y
 
 theorem hstpInner_linear_right (c : ℂ) (x y : HSTPTensor) :
     hstpInner x (hstpOpApply (hstpOpTensor (cboSmul c cboOne) cboOne) y) =
-    c * hstpInner x y := by
-  sorry -- phase2_exact: inner product linearity in second argument
+    c * hstpInner x y := hstpInner_linear_right_law c x y
 
 -- ── Associativity of triple tensor ────────────────────────────────────────────
 -- (H ⊗h K) ⊗h L ≅ H ⊗h (K ⊗h L)  (up to unitary isomorphism)

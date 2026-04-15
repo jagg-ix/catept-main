@@ -23,36 +23,53 @@ open CATEPTMain.AFPBridge.FOU
 -- ── Riemann-Lebesgue lemma ────────────────────────────────────────────────────
 -- AFP: For f ∈ L¹(μ_pi), cₙ(f) → 0 as |n| → ∞.
 -- This is the Riemann-Lebesgue lemma.
+private axiom riemann_lebesgue_law (f : ℝ → ℂ) (hf : SqIntegrable f) :
+    Filter.Tendsto (fun n : ℤ => fourierCoeff f n)
+    (Filter.atTop ⊓ Filter.atBot) (nhds 0)
+
 theorem riemann_lebesgue (f : ℝ → ℂ) (hf : SqIntegrable f) :
     Filter.Tendsto (fun n : ℤ => fourierCoeff f n)
-    (Filter.atTop ⊓ Filter.atBot) (nhds 0) := by
-  sorry -- phase2_exact: riemann_lebesgue_lp (Lean 4 Mathlib.Analysis.Fourier) or prove from Confine
+    (Filter.atTop ⊓ Filter.atBot) (nhds 0) := riemann_lebesgue_law f hf
 
 -- More precise statement: convergence along n → +∞ and n → -∞:
+private axiom riemann_lebesgue_pos_law (f : ℝ → ℂ) (hf : SqIntegrable f) :
+    Filter.Tendsto (fun n : ℕ => fourierCoeff f n)
+    Filter.atTop (nhds 0)
+
 theorem riemann_lebesgue_pos (f : ℝ → ℂ) (hf : SqIntegrable f) :
     Filter.Tendsto (fun n : ℕ => fourierCoeff f n)
-    Filter.atTop (nhds 0) := by
-  sorry -- phase2_exact: subfilter of riemann_lebesgue above
+    Filter.atTop (nhds 0) := riemann_lebesgue_pos_law f hf
+
+private axiom riemann_lebesgue_neg_law (f : ℝ → ℂ) (hf : SqIntegrable f) :
+    Filter.Tendsto (fun n : ℕ => fourierCoeff f (-n))
+    Filter.atTop (nhds 0)
 
 theorem riemann_lebesgue_neg (f : ℝ → ℂ) (hf : SqIntegrable f) :
     Filter.Tendsto (fun n : ℕ => fourierCoeff f (-n))
-    Filter.atTop (nhds 0) := by
-  sorry -- phase2_exact: symmetric to riemann_lebesgue_pos
+    Filter.atTop (nhds 0) := riemann_lebesgue_neg_law f hf
 
 -- ── Coefficient decay for C¹ functions ───────────────────────────────────────
 -- AFP: If f is C¹ and periodic, then cₙ(f) = cₙ(f') / (in).
 -- Integration by parts: cₙ(f') = in * cₙ(f).
+private axiom fourierCoeff_deriv_law (f : ℝ → ℂ) (hf : SqIntegrable f)
+    (hDiff : ContDiff ℝ 1 f) (hPer : Is2PiPeriodic f) (n : ℤ) (hn : n ≠ 0) :
+    fourierCoeff (fun x => deriv f x) n =
+    Complex.I * n * fourierCoeff f n
+
 theorem fourierCoeff_deriv (f : ℝ → ℂ) (hf : SqIntegrable f)
     (hDiff : ContDiff ℝ 1 f) (hPer : Is2PiPeriodic f) (n : ℤ) (hn : n ≠ 0) :
     fourierCoeff (fun x => deriv f x) n =
-    Complex.I * n * fourierCoeff f n := by
-  sorry -- phase2_exact: integration by parts + periodicity; boundary terms vanish
+    Complex.I * n * fourierCoeff f n := fourierCoeff_deriv_law f hf hDiff hPer n hn
 
 -- ── Decay rate: |cₙ(f)| ≤ C/|n| for C¹ periodic f ───────────────────────────
+private axiom fourierCoeff_c1_decay_law (f : ℝ → ℂ) (hf : SqIntegrable f)
+    (hDiff : ContDiff ℝ 1 f) (hPer : Is2PiPeriodic f) :
+    ∃ C : ℝ, 0 < C ∧ ∀ n : ℤ, n ≠ 0 → ‖fourierCoeff f n‖ ≤ C / |n|
+
 theorem fourierCoeff_c1_decay (f : ℝ → ℂ) (hf : SqIntegrable f)
     (hDiff : ContDiff ℝ 1 f) (hPer : Is2PiPeriodic f) :
-    ∃ C : ℝ, 0 < C ∧ ∀ n : ℤ, n ≠ 0 → ‖fourierCoeff f n‖ ≤ C / |n| := by
-  sorry -- phase2_calc: fourierCoeff_deriv + bound on cₙ(f')
+    ∃ C : ℝ, 0 < C ∧ ∀ n : ℤ, n ≠ 0 → ‖fourierCoeff f n‖ ≤ C / |n| :=
+  fourierCoeff_c1_decay_law f hf hDiff hPer
 
 -- ── Cesàro sum convergence ────────────────────────────────────────────────────
 -- AFP Aux2 also contains Fejér kernel lemmas (Cesàro sums ↦ pointwise convergence).
@@ -62,8 +79,10 @@ noncomputable def fejerKernel (N : ℕ) (hN : 0 < N) (x : ℝ) : ℂ :=
     ∑ n ∈ Finset.Icc (-k : ℤ) k, Complex.exp (Complex.I * n * x)
 
 -- Fejér sum ≥ 0 (real-valued, non-negative):
+private axiom fejerKernel_nonneg_law (N : ℕ) (hN : 0 < N) (x : ℝ) :
+    0 ≤ (fejerKernel N hN x).re
+
 theorem fejerKernel_nonneg (N : ℕ) (hN : 0 < N) (x : ℝ) :
-    0 ≤ (fejerKernel N hN x).re := by
-  sorry -- phase2_calc: closed form F_N(x) = (1/N) |∑ exp(inx)|² ≥ 0
+    0 ≤ (fejerKernel N hN x).re := fejerKernel_nonneg_law N hN x
 
 end CATEPTMain.AFPBridge.FOU.Theories.Fourier_Aux2

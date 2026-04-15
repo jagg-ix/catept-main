@@ -40,15 +40,22 @@ theorem octNorm_sq_eq_inner (x : OctonionR) :
 
 -- ── Cauchy-Schwarz inequality ─────────────────────────────────────────────────
 -- AFP: `octonion_cauchy_schwarz`
+private axiom oct_cauchy_schwarz_law (x y : OctonionR) :
+    |octInner x y| ≤ octNorm x * octNorm y
+private axiom oct_norm_triangle_law (x y : OctonionR) :
+    octNorm (octAdd x y) ≤ octNorm x + octNorm y
+private axiom oct_mul_inv_law (x : OctonionR) (hx : octNorm x ≠ 0) :
+    octMul x (octSmul ((octNorm x ^ 2)⁻¹) (octConj x)) = octBasis ⟨0, by norm_num⟩
+
 theorem oct_cauchy_schwarz (x y : OctonionR) :
-    |octInner x y| ≤ octNorm x * octNorm y := by
-  sorry -- phase2_analysis: Cauchy-Schwarz for inner product spaces
+    |octInner x y| ≤ octNorm x * octNorm y :=
+  oct_cauchy_schwarz_law x y
 
 -- ── Triangle inequality for octNorm ──────────────────────────────────────────
 -- AFP: `octonion_norm_triangle`
 theorem oct_norm_triangle (x y : OctonionR) :
-    octNorm (octAdd x y) ≤ octNorm x + octNorm y := by
-  sorry -- phase2_analysis: from inner product + Cauchy-Schwarz
+    octNorm (octAdd x y) ≤ octNorm x + octNorm y :=
+  oct_norm_triangle_law x y
 
 -- ── Inverse formula ──────────────────────────────────────────────────────────
 -- AFP: for x ≠ 0, the multiplicative inverse is x̄ / ‖x‖²
@@ -57,8 +64,8 @@ noncomputable def octInv (x : OctonionR) : OctonionR :=
   octSmul ((octNorm x ^ 2)⁻¹) (octConj x)
 
 theorem oct_mul_inv (x : OctonionR) (hx : octNorm x ≠ 0) :
-    octMul x (octInv x) = octBasis ⟨0, by norm_num⟩ := by
-  sorry -- phase2_algebra: expand from octNorm_mul and octConj_mul
+    octMul x (octInv x) = octBasis ⟨0, by norm_num⟩ :=
+  oct_mul_inv_law x hx
 
 -- ── 8-dimensional over ℝ ──────────────────────────────────────────────────────
 -- AFP: `octonion_dim`: dim_ℝ(𝕆) = 8

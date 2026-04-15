@@ -20,6 +20,26 @@ repositories:
     integration_mode: direct_4_29
     package: cslib
 
+  - name: formal-verification-of-the-vlasov-maxwell-landau-steady-state-theorem
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.24.0
+    integration_mode: legacy_port_required
+    package: VMLSteadyState
+    repo_url: https://github.com/allofphysicsgraph/Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem.git
+    target_module_root: CATEPTMain.Integration.VMLSteadyStateBridge
+    worklog: CATEPTMain/Integration/VMLSteadyState_WORKLOG.lean
+    plan_mode: bridge_contract_first_then_native_port
+    phase1_scope:
+      - define_bridge_contract
+      - wire_registry_entry
+      - consume_contract_integration_side
+      - add_governance_checks
+    phase2_scope:
+      - port_to_lean_4_29
+      - replay_core_theorem_chain
+      - enable_optional_native_dependency
+      - promote_to_direct_4_29
+
   - name: isabelle-marries-dirac-afp
     path: (pending-clone)
     toolchain: leanprover/lean4:v4.29.0
@@ -283,6 +303,252 @@ repositories:
     toolchain: leanprover/lean4:v4.28.0
     integration_mode: bridge_upgrade_required
     package: quantumInfo
+
+  - name: laplace-transform-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: LAPL
+    afp_entry: Laplace_Transform
+    afp_url: https://www.isa-afp.org/entries/Laplace_Transform.html
+    target_module_root: CATEPTMain.AFPBridge.LAPL
+    worklog: CATEPTMain/AFPBridge/LAPL/LAPL_WORKLOG.lean
+    theories:
+      - Laplace_Transform
+      - Laplace_Shift
+      - Laplace_Diff
+      - Convolution_Theorem
+      - Inversion
+    afp_deps:
+      - HOL-Analysis
+      - HOL-Complex-Analysis
+    afp_used_by: []
+    pre_generation_gates:
+      - LAPL-PRE-001  # HOL-Analysis bridge
+      - LAPL-PRE-002  # Prelude-first (LAPLPrelude.lean)
+      - LAPL-PRE-003  # Type map (laplace ↔ MeasureTheory.integral)
+
+  - name: quaternions-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: QUAT
+    afp_entry: Quaternions
+    afp_url: https://www.isa-afp.org/entries/Quaternions.html
+    target_module_root: CATEPTMain.AFPBridge.QUAT
+    worklog: CATEPTMain/AFPBridge/QUAT/QUAT_WORKLOG.lean
+    theories:
+      - Quaternions
+      - Unit_Quaternions
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by: []
+    pre_generation_gates:
+      - QUAT-PRE-001  # Mathlib Quaternion bridge
+      - QUAT-PRE-002  # Prelude-first (QUATPrelude.lean)
+      - QUAT-PRE-003  # Type map (AFP quat ↔ Mathlib Quaternion ℝ)
+
+  - name: octonions-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: OCT
+    afp_entry: Octonions
+    afp_url: https://www.isa-afp.org/entries/Octonions.html
+    target_module_root: CATEPTMain.AFPBridge.OCT
+    worklog: CATEPTMain/AFPBridge/OCT/OCT_WORKLOG.lean
+    theories:
+      - Octonions
+      - Norm_Octonions
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by: []
+    pre_generation_gates:
+      - OCT-PRE-001  # Cayley-Dickson bridge
+      - OCT-PRE-002  # Prelude-first (OCTPrelude.lean)
+      - OCT-PRE-003  # Type map (AFP oct ↔ Lean OctonionR)
+
+  - name: minkowskis-theorem-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: MINK
+    afp_entry: Minkowskis_Theorem
+    afp_url: https://www.isa-afp.org/entries/Minkowskis_Theorem.html
+    target_module_root: CATEPTMain.AFPBridge.MINK
+    worklog: CATEPTMain/AFPBridge/MINK/MINK_WORKLOG.lean
+    theories:
+      - Minkowski_Misc
+      - Minkowski_Main
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by: []
+    pre_generation_gates:
+      - MINK-PRE-001  # MeasureTheory volume bridge
+      - MINK-PRE-002  # Prelude-first (MINKPrelude.lean)
+      - MINK-PRE-003  # Type map (AFP lattice ↔ Fin n → ℤ)
+
+  - name: matrix-tensor-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: MTN
+    afp_entry: Matrix_Tensor
+    afp_url: https://www.isa-afp.org/entries/Matrix_Tensor.html
+    target_module_root: CATEPTMain.AFPBridge.MTN
+    worklog: CATEPTMain/AFPBridge/MTN/MTN_WORKLOG.lean
+    theories:
+      - Kronecker_Product
+      - Eigenvalues_Kron
+    afp_deps:
+      - Jordan_Normal_Form
+    afp_used_by:
+      - Isabelle_Marries_Dirac
+    pre_generation_gates:
+      - MTN-PRE-001  # Jordan_Normal_Form bridge
+      - MTN-PRE-002  # Prelude-first (MTNPrelude.lean)
+      - MTN-PRE-003  # Type map (AFP ⊗ ↔ Mathlib Matrix.kronecker)
+
+  - name: ordinary-differential-equations-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: ODE
+    afp_entry: Ordinary_Differential_Equations
+    afp_url: https://www.isa-afp.org/entries/Ordinary_Differential_Equations.html
+    target_module_root: CATEPTMain.AFPBridge.ODE
+    worklog: CATEPTMain/AFPBridge/ODE/ODE_WORKLOG.lean
+    theories:
+      - Picard_Lindeloef_Qualitative
+      - ODE_Auxiliarities
+      - Flow
+      - Euler_Method
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by:
+      - Hilbert_Space_Tensor_Product
+    pre_generation_gates:
+      - ODE-PRE-001  # HOL-Analysis flow bridge
+      - ODE-PRE-002  # Prelude-first (ODEPrelude.lean)
+      - ODE-PRE-003  # Type map (AFP flow ↔ odeFlow)
+
+  - name: matrices-for-odes-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: MODE
+    afp_entry: Matrices_for_ODEs
+    afp_url: https://www.isa-afp.org/entries/Matrices_for_ODEs.html
+    target_module_root: CATEPTMain.AFPBridge.MODE
+    worklog: CATEPTMain/AFPBridge/MODE/MODE_WORKLOG.lean
+    theories:
+      - Matrix_Exp
+      - Linear_ODE
+      - Affine_ODE
+      - Lyapunov
+    afp_deps:
+      - Ordinary_Differential_Equations
+    afp_used_by: []
+    pre_generation_gates:
+      - MODE-PRE-001  # ODE bridge
+      - MODE-PRE-002  # Prelude-first (MODEPrelude.lean)
+      - MODE-PRE-003  # Type map (AFP matExp ↔ Matrix.exp)
+
+  - name: gyrovector-spaces-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: GYR
+    afp_entry: GyrovectorSpaces
+    afp_url: https://www.isa-afp.org/entries/GyrovectorSpaces.html
+    target_module_root: CATEPTMain.AFPBridge.GYR
+    worklog: CATEPTMain/AFPBridge/GYR/GYR_WORKLOG.lean
+    theories:
+      - GyroGroup
+      - GyroVector
+      - Einstein_Gyrovector
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by: []
+    catept_integration:
+      - GYR-INT-001  # Einstein model → NoFTL velocity bound (P2)
+    pre_generation_gates:
+      - GYR-PRE-001  # HOL-Analysis bridge
+      - GYR-PRE-002  # Prelude-first (GYRPrelude.lean)
+      - GYR-PRE-003  # Type map (AFP gyroAdd ↔ relativistic velocity add)
+
+  - name: schutz-spacetime-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: SCHTZ
+    afp_entry: Schutz_Spacetime
+    afp_url: https://www.isa-afp.org/entries/Schutz_Spacetime.html
+    target_module_root: CATEPTMain.AFPBridge.SCHTZ
+    worklog: CATEPTMain/AFPBridge/SCHTZ/SCHTZ_WORKLOG.lean
+    theories:
+      - Minkowski
+      - Order_Derivation
+      - Betweenness_Axioms
+      - Signal
+      - Schutz
+    afp_deps:
+      - HOL-Order_Theory
+    afp_used_by: []
+    catept_integration:
+      - SCHTZ-INT-001  # SchutzEvent → CATEPTSpacetimeModel.SpaceTime (P2)
+    pre_generation_gates:
+      - SCHTZ-PRE-001  # Order_Theory bridge
+      - SCHTZ-PRE-002  # Prelude-first (SCHTZPrelude.lean)
+      - SCHTZ-PRE-003  # Type map (AFP path/event ↔ Lean SchutzPath/SchutzEvent)
+
+  - name: poincare-disc-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: PDC
+    afp_entry: Poincare_Disc
+    afp_url: https://www.isa-afp.org/entries/Poincare_Disc.html
+    target_module_root: CATEPTMain.AFPBridge.PDC
+    worklog: CATEPTMain/AFPBridge/PDC/PDC_WORKLOG.lean
+    theories:
+      - Poincare_Disc
+      - Complex_Geometry
+      - Hyperbolic_Geometry
+    afp_deps:
+      - HOL-Complex-Analysis
+    afp_used_by: []
+    catept_integration:
+      - PDC-INT-001  # PDC → SCHTZ via hyperbolic geometry (P3)
+    pre_generation_gates:
+      - PDC-PRE-001  # HOL-Complex-Analysis bridge
+      - PDC-PRE-002  # Prelude-first (PDCPrelude.lean)
+      - PDC-PRE-003  # Type map (AFP disc ↔ PDCPoint = {z : ℂ // ‖z‖ < 1})
+
+  - name: physical-quantities-afp
+    path: (pending-clone)
+    toolchain: leanprover/lean4:v4.29.0
+    integration_mode: afp_transpile_lean4
+    package: PHQ
+    afp_entry: Physical_Quantities
+    afp_url: https://www.isa-afp.org/entries/Physical_Quantities.html
+    target_module_root: CATEPTMain.AFPBridge.PHQ
+    worklog: CATEPTMain/AFPBridge/PHQ/PHQ_WORKLOG.lean
+    theories:
+      - Dimensions
+      - Units
+      - SI_Units
+      - Derived_Quantities
+      - Physical_Quantities
+    afp_deps:
+      - HOL-Analysis
+    afp_used_by: []
+    catept_integration:
+      - PHQ-INT-001  # constSpeedOfLight → CATEPTSpacetimeModel.noFTL (P2)
+    pre_generation_gates:
+      - PHQ-PRE-001  # HOL-Analysis bridge
+      - PHQ-PRE-002  # Prelude-first (PHQPrelude.lean)
+      - PHQ-PRE-003  # Type map (AFP ISQ dimensions ↔ PhysDim = Fin 7 → ℤ)
   - name: brownian-motion-inspect
     path: /Users/macbookpro/lab/tau/tau-information-dynamics/brownian-motion-inspect
     toolchain: leanprover/lean4:v4.28.0-rc1

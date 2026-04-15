@@ -38,7 +38,13 @@ noncomputable def omegaN (n : ℕ) : ℂ :=
 
 -- Key property: (ω_n)^n = 1
 theorem omegaN_pow (n : ℕ) (hn : n ≠ 0) : omegaN n ^ n = 1 := by
-  sorry -- phase2_exact: Complex.exp_nat_mul + mul_div_cancel₀
+  simp only [omegaN]
+  have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hn
+  rw [← Complex.exp_nat_mul]
+  have h : (↑n : ℂ) * (2 * ↑Real.pi * Complex.I / ↑n) = 2 * ↑Real.pi * Complex.I := by
+    field_simp
+  rw [h]
+  exact Complex.exp_two_pi_mul_I
 
 -- ── Phase gate R_k ─────────────────────────────────────────────────────────────
 -- AFP: `R_k k` = 2×2 diagonal gate with entries (1, exp(2πi/2^k))

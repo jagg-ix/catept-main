@@ -43,3 +43,16 @@ BINDER RULES:
 Phase record (cumulative):
   TH001–TH024: MINK theorems translated
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## MINK-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.MINK.MINKPrelude added to CATEPTSelfConsistency.lean
+  - mink_lattice_consistent field added to CATEPTAFPConsistencyWitness
+  - MINKConsistency section + catept_mink_lattice_consistent theorem added (trivial stub)
+  - CATEPTSelfConsistencyContract extended with w.mink_lattice_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: minkowskis-theorem-afp (afp_transpile_lean4)
+  Phase-2: instantiate minkowski_theorem with EPT spectral ball to close NS-P2.

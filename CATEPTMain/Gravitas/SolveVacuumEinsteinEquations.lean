@@ -1,3 +1,10 @@
+import CATEPTMain.Gravitas.Basic
+import CATEPTMain.Gravitas.MetricTensor
+import CATEPTMain.Gravitas.RicciTensor
+import CATEPTMain.Gravitas.EinsteinTensor
+import CATEPTMain.Gravitas.StressEnergyTensor
+import CATEPTMain.Gravitas.SolveEinsteinEquations
+
 /-!
 # Gravitas.SolveVacuumEinsteinEquations
 
@@ -13,13 +20,6 @@ With cosmological constant Λ:
 
   G_{μν} + Λ g_{μν} = 0  ⟺  R_{μν} = Λ g_{μν}
 -/
-
-import CATEPTMain.Gravitas.Basic
-import CATEPTMain.Gravitas.MetricTensor
-import CATEPTMain.Gravitas.RicciTensor
-import CATEPTMain.Gravitas.EinsteinTensor
-import CATEPTMain.Gravitas.StressEnergyTensor
-import CATEPTMain.Gravitas.SolveEinsteinEquations
 
 namespace Gravitas
 

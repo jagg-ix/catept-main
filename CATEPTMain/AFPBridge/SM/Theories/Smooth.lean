@@ -59,6 +59,10 @@ theorem smooth_iff_smooth_on_open_cover {H H' M M' : Type*}
     IsSmooth I I' f ↔ ∀ x : M, ∃ U : Set M, IsOpen U ∧ x ∈ U ∧ ContMDiffOn I I' ⊤ f U := by
   constructor
   · intro h x; exact ⟨Set.univ, isOpen_univ, Set.mem_univ x, h.contMDiffOn⟩
-  · intro _; sorry -- phase2_exact: smooth_iff_contMDiffAt
+  · intro h
+    -- IsSmooth = ContMDiff = ∀ x, ContMDiffAt (by definition)
+    intro x
+    obtain ⟨U, hU, hxU, hfU⟩ := h x
+    exact hfU.contMDiffAt (hU.mem_nhds hxU)
 
 end CATEPTMain.AFPBridge.SM.Theories.Smooth

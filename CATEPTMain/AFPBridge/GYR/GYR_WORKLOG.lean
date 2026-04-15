@@ -179,3 +179,55 @@ Required checks:
   4. GG1–GG5 all present and type-checked.
 Fix status: See current build.
 -/
+
+────────────────────────────────────────────────────────────────────────────────
+## GYR-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.GYR.GYRPrelude added to CATEPTSelfConsistency.lean
+  - gyr_gyro_consistent field added to CATEPTAFPConsistencyWitness
+  - GYRConsistency section + catept_gyr_left_id_consistent (non-sorry: gyroAdd_left_id a) added
+  - CATEPTSelfConsistencyContract extended with w.gyr_gyro_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: gyrovector-spaces-afp (afp_transpile_lean4)
+  Phase-2: GYR-INT-001: gyroAdd_left_assoc + gyroAut_homo → NoFTL velocity bound
+
+────────────────────────────────────────────────────────────────────────────────
+## GYR-INT-001  Downstream wiring in CATEPTSelfConsistency (P1)
+Severity: P2 — consistency contract completeness
+Status: DONE — 2026-04-13
+Record:
+  - import CATEPTMain.AFPBridge.GYR.GYRPrelude added to CATEPTSelfConsistency.lean
+  - gyr_gyro_consistent field added to CATEPTAFPConsistencyWitness
+  - GYRConsistency section + catept_gyr_left_id_consistent (non-sorry: gyroAdd_left_id a) added
+  - CATEPTSelfConsistencyContract extended with w.gyr_gyro_consistent conjunct
+  - Master catept_self_consistent witness and refine tuple updated
+  - repos.yaml entry added: gyrovector-spaces-afp (afp_transpile_lean4)
+  Phase-2: GYR-INT-001: gyroAdd_left_assoc + gyroAut_homo → NoFTL velocity bound
+
+────────────────────────────────────────────────────────────────────────────────
+## GYR-P2-001  Einstein NoFTL bound theorem in CATEPTSelfConsistency (P2)
+Severity: P2 — INT-001 GYR ↔ EPT NoFTL connection
+Status: DONE — 2026-04-13
+Record:
+  - catept_gyr_einstein_noftl_consistent added to GYRConsistency section
+  - Proves: Einstein velocity addition closed on {v | ∑ v_i² < 1} (c=1 units)
+  - Directly applied: einsteinAdd_norm_lt_one u v hu hv (no sorry)
+  - INT-001 connection: GYR speed closure ↔ EPT NoFTL axiom package
+
+────────────────────────────────────────────────────────────────────────────────
+## GYR-P2-002  Abstract gyroassociativity bridge GG3+GG4 (P2)
+Severity: P2 — GYR-INT-001 abstract completion
+Status: DONE — 2026-04-14
+Record:
+  - catept_gyr_gyroassoc_homo_noftl_bridge added to GYRConsistency section
+  - Proves conjunction (no sorry):
+      (1) GG3: gyroAdd a (gyroAdd b (gyroAdd x y)) =
+               gyroAdd (gyroAdd a b) (gyroAut a b (gyroAdd x y))
+      (2) GG4: gyroAut a b (gyroAdd x y) =
+               gyroAdd (gyroAut a b x) (gyroAut a b y)
+  - Uses gyroAdd_left_assoc + gyroAut_homo directly.
+  - Abstract analogue of catept_gyr_einstein_noftl_consistent.
+  - gyroNorm_gyroAut closes the norm-invariance leg.
+  - GYR-INT-001 Phase-2 deferred item fully discharged.
