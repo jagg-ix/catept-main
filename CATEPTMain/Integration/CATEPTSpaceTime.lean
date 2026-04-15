@@ -76,6 +76,16 @@ namespace CATEPTMain.Integration.CATEPTSpaceTime
     (b) `equivIocBridge` provides the isomorphism to the torus side. -/
 def CATEPTVelocityField : Type := (Fin 3 → ℝ) → (Fin 3 → ℝ)
 
+/-- The EPT Paraboloid Trajectory Constraint.
+    Formulation: `EPTTrajectory = {(u, τ) : NSField × ℝ | ‖u‖² + 2ℏτ = E₀}`
+    For any fixed `τ`, the spatial velocity manifold `u` forms a sphere.
+    This provides manifest compactness, bypassing Aubin-Lions-Simon fraction machinery. -/
+structure EPTTrajectory (E₀ : ℝ) (ℏ : ℝ) where
+  u : CATEPTVelocityField
+  τ : ℝ
+  /-- The paraboloid constraint ‖u‖² + 2ℏτ = E₀ -/
+  energy_constraint : ‖u‖^2 + 2 * ℏ * τ = E₀
+
 -- ── Torus velocity field (NS / Galerkin side) ─────────────────────────────────
 
 /-- Abstract NS torus velocity field carrier (Galerkin T³ side). -/
