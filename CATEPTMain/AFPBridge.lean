@@ -1,4 +1,4 @@
-/-!
+/-
 # AFPBridge — Root aggregator for all AFP ↔ Lean 4 bridge subsystems
 
 Imports every AFP bridge subsystem that has been ported to Lean 4.29 in this
@@ -27,6 +27,10 @@ repo.  Subsystem layout:
 | QUAT  | Quaternions                           | Phase 1  |
 | SCHTZ | Schroder_Bernstein_Cantor             | Phase 1 (Prelude only) |
 | SM    | Smooth_Manifolds                      | Phase 1  |
+| FEYNCALC    | FeynCalc (Wolfram Mathematica → Lean 4)      | Phase 1 (Prelude + DiracAlgebra + DiracTrace + LorentzAlgebra) |
+| ELECTROWEAK | ElectroweakInteraction_HiggsMechanism (Mathematica) | Phase 1 (EWPrelude + HiggsMechanism; EW-1..EW-5 proved) |
+| QUANTUM     | lean4-quantum lift + QFI-Toolbox scaffold    | Phase 1 (QuantumPrelude + QuantumGates + DensityMatrix + QFIScaffold + JordanWigner + QFIToolbox + PhysicsHamiltonians + QFIMeasurements) |
+| FBD         | FermionBosonDuality_QFT (Mathematica)        | Phase 1 (FBDPrelude + OmegaMatrices + QEDProcesses + WeakProcesses) |
 
 See `CATEPTMain/AFPBridge/*/WORKLOG.lean` for per-subsystem status and
 `CATEPTMain/Integration/CATEPTSelfConsistency.lean` for cross-subsystem
@@ -186,6 +190,24 @@ import CATEPTMain.AFPBridge.QUAT.Theories.Unit_Quaternions
 
 -- ── SCHTZ: Schröder–Bernstein–Cantor (Prelude only) ──────────────────────────
 import CATEPTMain.AFPBridge.SCHTZ.SCHTZPrelude
+
+-- ── FEYNCALC: FeynCalc Dirac/Lorentz algebra port (Wolfram Mathematica → Lean 4) ──
+import CATEPTMain.AFPBridge.FEYNCALC.FeynCalcPort
+
+-- ── ELECTROWEAK: Higgs mechanism, W/Z mass theorems (Mathematica → Lean 4) ───
+import CATEPTMain.AFPBridge.ELECTROWEAK.ElectroweakPort
+
+-- ── QUANTUM: Density matrices, QFI, Cramér-Rao (lean4-quantum lift) ───────────
+import CATEPTMain.AFPBridge.QUANTUM.QuantumPort
+
+-- ── FBD: Fermion-Boson Duality, omega matrices, QED processes (Mathematica) ──
+import CATEPTMain.AFPBridge.FBD.FBDPort
+
+-- ── LDO: LatticeDiracOperators.jl (lattice QCD fermion operators) ────────────
+import CATEPTMain.AFPBridge.LDO.LDOPort
+
+-- ── QCD: Quantum Chromodynamics — SU(3) gauge theory (Phase 1) ───────────────
+import CATEPTMain.AFPBridge.QCD.QCDPort
 
 -- ── SM: Smooth Manifolds ──────────────────────────────────────────────────────
 import CATEPTMain.AFPBridge.SM.Theories.Analysis_More
