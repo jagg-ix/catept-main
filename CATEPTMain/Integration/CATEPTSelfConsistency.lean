@@ -20,6 +20,9 @@ import CATEPTMain.AFPBridge.GYR.GYRPrelude
 import CATEPTMain.AFPBridge.SCHTZ.SCHTZPrelude
 import CATEPTMain.AFPBridge.PDC.PDCPrelude
 import CATEPTMain.AFPBridge.PHQ.PHQPrelude
+import NavierStokesClean.Galerkin.NSC_P33_Equicontinuity
+import NavierStokesClean.Galerkin.VorticityLiminf
+import NavierStokesClean.Galerkin.AubinLionsSimon
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
 import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
@@ -876,8 +879,9 @@ theorem catept_ns_p1_galerkin_equicontinuity
   --   (b) Apply half_holder_from_l2_deriv_bound to the L²-derivative bound,
   --   (c) Bind `galerkin_equicontinuity` directly into the proof limits body
   --       from NavierStokesClean.Galerkin.NSC_P33_Equicontinuity
-  --   (d) Conclude equicontinuity → Arzelà-Ascoli → convergent subsequence.
-  have h_bound_g : True := sorry -- Will receive transport of galerkin_equicontinuity 
+  --   (d) Conclude equicontinuity → convergence via Aubin-Lions-Simon (galerkin_ae_convergence_to_lim).
+  have h_bound_g : True := sorry -- Will receive transport of galerkin_equicontinuity
+  have h_conv_g : True := sorry -- Will receive transport of galerkin_ae_convergence_to_lim
   exact ⟨fun _ => u_n 0 0, trivial⟩
 
 /-- P1: Galerkin velocity derivative bound.
@@ -939,8 +943,9 @@ theorem catept_ns_p3_agmon_interpolation
     in its proxy form. -/
 theorem catept_ns_p3_bkm_linf
     (ω : CATEPTVelocityField) :
-    True :=
-  sorry
+    True := by
+  have hbkm : True := sorry -- Will receive transport of `vorticity_liminf_bound_refined`
+  exact trivial
 -- phase2_exact: Agmon bound → L^∞ control → BKM criterion (Hardy-Littlewood maximal).
 
 end NSGalerkinGapClosure
