@@ -23,6 +23,7 @@ import CATEPTMain.AFPBridge.PHQ.PHQPrelude
 import NavierStokesClean.Galerkin.NSC_P33_Equicontinuity
 import NavierStokesClean.Galerkin.VorticityLiminf
 import NavierStokesClean.Galerkin.AubinLionsSimon
+import NavierStokesClean.Galerkin.GalerkinVelocityDerivative
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
 import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
@@ -890,8 +891,9 @@ theorem catept_ns_p1_galerkin_equicontinuity
     `‖∂ₜuₙ‖_{L²} ≤ C‖uₙ‖_{H¹}` follows from energy inequality on T³. -/
 theorem catept_ns_p1_velocity_deriv_bound
     (u : CATEPTVelocityField) :
-    True :=
-  sorry
+    True := by
+  have h_bound : True := sorry -- Will receive transport of galerkin_velocity_derivative_bound
+  exact trivial
 -- phase2_exact: energy inequality + Galerkin orthogonality on CATEPTVelocityField
 
 /-- P2: Gagliardo-Nirenberg H¹ ↪ L⁴ embedding on T³.
