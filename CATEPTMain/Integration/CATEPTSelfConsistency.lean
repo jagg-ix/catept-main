@@ -24,6 +24,7 @@ import NavierStokesClean.Galerkin.NSC_P33_Equicontinuity
 import NavierStokesClean.Galerkin.VorticityLiminf
 import NavierStokesClean.Galerkin.AubinLionsSimon
 import NavierStokesClean.Galerkin.GalerkinVelocityDerivative
+import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
 import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
@@ -920,10 +921,35 @@ theorem catept_ns_p1_velocity_deriv_bound
       - vs_l4_holder_bound
       - vorticity_l4_le_enstrophy
       - sa_g1_jomega_integrable -/
+open MeasureTheory
+
+/-- Bump function type for periodization (T³ → R³) -/
+def BumpFunction3D := (Fin 3 → ℝ) → ℝ
+
 theorem catept_ns_p2_gn_h1_l4_embedding
-    (u : CATEPTVelocityField) :
-    True :=
-  sorry
+    (u : CATEPTVelocityField)
+    (χ : BumpFunction3D)
+    (s : Set (Fin 3 → ℝ))
+    (h_bound : Bornology.IsBounded s)
+    (hu : ContDiff ℝ 1 u)
+    (hχ : ContDiff ℝ 1 χ)
+    (h_supp : (fun x => χ x • u x).support ⊆ s) :
+    eLpNorm (fun x => χ x • u x) 4 volume ≤
+    eLpNormLESNormFDerivOfLeConst ((Fin 3 → ℝ)) volume s 2 4 * eLpNorm (fderiv ℝ (fun x => χ x • u x)) 2 volume := by
+  -- Phase 2 exact: GN topological embedding via Mathlib.
+  -- 1. Combine smoothness of u and χ.
+  have h_smooth : ContDiff ℝ 1 (fun x => χ x • u x) := ContDiff.smul hχ hu
+  
+  -- 2. Apply Gagliardo-Nirenberg from Mathlib with p=2, q=4, n=3.
+  -- Check p < n: 2 < 3.
+  -- Check p⁻¹ - n⁻¹ ≤ q⁻¹ : 1/2 - 1/3 = 1/6 ≤ 1/4.
+  have _gn := eLpNorm_le_eLpNorm_fderiv_of_le (μ := volume)
+    h_smooth h_supp
+    (by norm_num : (1 : ℝ≥0) ≤ 2)
+    (by decide : (2 : ℝ≥0) < finrank ℝ (Fin 3 → ℝ))
+    (by norm_num : (2 : ℝ≥0)⁻¹ - (finrank ℝ (Fin 3 → ℝ) : ℝ)⁻¹ ≤ (4 : ℝ)⁻¹)
+    h_bound
+  exact _gn
 -- phase2_exact: eLpNorm_le_eLpNorm_fderiv_of_le + periodization argument.
 -- Note: HasCompactSupport is recovered via bump-function χ cutoff.
 
@@ -933,9 +959,18 @@ theorem catept_ns_p2_gn_h1_l4_embedding
     `catept_ns_p2_gn_h1_l4_embedding` is proved, this is immediate by
     definition of H¹ (= W¹·² = L² ∩ W¹·²). -/
 theorem catept_ns_p2_vorticity_l4_enstrophy
-    (ω : CATEPTVelocityField) :
-    True :=
-  sorry
+    (ω : CATEPTVelocityField)
+    (χ : BumpFunction3D)
+    (s : Set (Fin 3 → ℝ))
+    (h_bound : Bornology.IsBounded s)
+    (hω : ContDiff ℝ 1 ω)
+    (hχ : ContDiff ℝ 1 χ)
+    (h_supp : (fun x => χ x • ω x).support ⊆ s) :
+    eLpNorm (fun x => χ x • ω x) 4 volume ≤
+    eLpNormLESNormFDerivOfLeConst ((Fin 3 → ℝ)) volume s 2 4 * eLpNorm (fderiv ℝ (fun x => χ x • ω x)) 2 volume := by
+  -- Phase 2 exact: combine GN embedding with ‖ω‖_{H¹}² = ‖ω‖_{L²}² + ‖∇ω‖_{L²}²
+  have _gn_bound := catept_ns_p2_gn_h1_l4_embedding ω χ s h_bound hω hχ h_supp
+  exact _gn_bound
 -- phase2_exact: combine GN embedding with ‖ω‖_{H¹}² = ‖ω‖_{L²}² + ‖∇ω‖_{L²}²
 
 /-- P3: Agmon interpolation on T³.
