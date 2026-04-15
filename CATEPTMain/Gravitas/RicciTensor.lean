@@ -28,7 +28,8 @@ structure RicciTensor where
   metric     : MetricTensor
   /-- n×n matrix of Ricci components in whatever index position is stored. -/
   components : Mat
-  idx1 idx2  : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace RicciTensor
@@ -41,9 +42,9 @@ namespace RicciTensor
     from the mixed Riemann tensor array. -/
 def computeCovariant (n : Nat) (riemannMixed : Array Expr) : Mat :=
   -- R_{μν} = Σ_λ R^λ_{μλν}
-  let getR := fun λ_ μ ν => RiemannTensor.getComp n riemannMixed λ_ μ λ_ ν
+  let getR := fun lam μ ν => RiemannTensor.getComp n riemannMixed lam μ lam ν
   matBuild n (fun μ ν =>
-    sumN n (fun λ_ => simplify (getR λ_ μ ν)))
+    sumN n (fun lam => simplify (getR lam μ ν)))
 
 -- ---------------------------------------------------------------------------
 -- Raise/lower from covariant R_{μν}

@@ -22,7 +22,10 @@ namespace Gravitas
 structure WeylTensor where
   metric     : MetricTensor
   components : Array Expr   -- n⁴, all-covariant by default
-  idx1 idx2 idx3 idx4 : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
+  idx3 : IndexKind
+  idx4 : IndexKind
   deriving Repr
 
 namespace WeylTensor
@@ -30,7 +33,7 @@ namespace WeylTensor
 private def size4 (n : Nat) := n * n * n * n
 
 def getComp (n : Nat) (comps : Array Expr) (i j k l : Nat) : Expr :=
-  comps.get? (i*n*n*n + j*n*n + k*n + l) |>.getD (.lit 0)
+  (comps[i*n*n*n + j*n*n + k*n + l]?).getD (.lit 0)
 
 private def setComp (n : Nat) (comps : Array Expr) (i j k l : Nat) (e : Expr)
     : Array Expr :=
@@ -50,7 +53,7 @@ def computeCovariant (g : MetricTensor) : Array Expr :=
   let R := RicciTensor.ricciScalar g
   -- n as Expr for arithmetic
   let nE : Expr := .lit (n : Rat)
-  let comps := Array.mkArray (size4 n) (.lit 0)
+  let comps := Array.replicate (size4 n) (.lit 0)
   (List.range n).foldl (fun comps ρ =>
     (List.range n).foldl (fun comps σ =>
       (List.range n).foldl (fun comps μ =>
@@ -85,7 +88,7 @@ def computeCovariant (g : MetricTensor) : Array Expr :=
 def convertIndices (n : Nat) (gCov gInv : Mat) (cov : Array Expr)
     (i1 i2 i3 i4 : IndexKind) : Array Expr :=
   let get := fun i j k l => getComp n cov i j k l
-  let base := Array.mkArray (size4 n) (.lit 0)
+  let base := Array.replicate (size4 n) (.lit 0)
   (List.range n).foldl (fun comps i =>
     (List.range n).foldl (fun comps j =>
       (List.range n).foldl (fun comps k =>
@@ -133,24 +136,24 @@ def convertIndices (n : Nat) (gCov gInv : Mat) (cov : Array Expr)
             | false, false, false, true  =>
                 sumN n (fun α => sumN n (fun β => sumN n (fun γ =>
                   simplify (.mul (.mul (.mul (matGet gInv i α) (matGet gInv j β))
-                                      (.mul (matGet gInv k γ) (get α β γ l))))))
+                                      (matGet gInv k γ)) (get α β γ l)))))
             | false, false, true,  false =>
                 sumN n (fun α => sumN n (fun β => sumN n (fun δ =>
                   simplify (.mul (.mul (.mul (matGet gInv i α) (matGet gInv j β))
-                                      (.mul (matGet gInv l δ) (get α β k δ))))))
+                                      (matGet gInv l δ)) (get α β k δ)))))
             | false, true,  false, false =>
                 sumN n (fun α => sumN n (fun γ => sumN n (fun δ =>
                   simplify (.mul (.mul (.mul (matGet gInv i α) (matGet gInv k γ))
-                                      (.mul (matGet gInv l δ) (get α j γ δ))))))
+                                      (matGet gInv l δ)) (get α j γ δ)))))
             | true,  false, false, false =>
                 sumN n (fun β => sumN n (fun γ => sumN n (fun δ =>
                   simplify (.mul (.mul (.mul (matGet gInv j β) (matGet gInv k γ))
-                                      (.mul (matGet gInv l δ) (get i β γ δ))))))
+                                      (matGet gInv l δ)) (get i β γ δ)))))
             -- 4 indices raised
             | false, false, false, false =>
                 sumN n (fun a => sumN n (fun b => sumN n (fun c => sumN n (fun d =>
                   simplify (.mul (.mul (.mul (.mul (matGet gInv i a) (matGet gInv j b))
-                                            (.mul (matGet gInv k c) (matGet gInv l d)))
+                                            (matGet gInv k c)) (matGet gInv l d))
                                       (get a b c d))))))
           setComp n comps i j k l val
         ) comps

@@ -28,12 +28,12 @@ namespace Gravitas
 /-- Compute the discrete geodesic length of the edge (i, j) using the
     induced metric at vertex i (midpoint approximation). -/
 def edgeLength (surf : DiscreteHypersurface) (i j : Nat) : Expr :=
-  match surf.vertices.get? i, surf.vertices.get? j, surf.inducedMetrics.get? i with
+  match surf.vertices[i]?, surf.vertices[j]?, surf.inducedMetrics[i]? with
   | some (t1, x1, y1), some (t2, x2, y2), some γ =>
       let dx : Array Rat := #[t2 - t1, x2 - x1, y2 - y1]
       -- ds² = γ_{ab} dx^a dx^b  (rational arithmetic, result is Expr)
       let ds2 := sumN 3 (fun a => sumN 3 (fun b =>
-        simplify (.mul (.mul (matGet γ a b) (.lit (dx.get! a))) (.lit (dx.get! b)))))
+        simplify (.mul (.mul (matGet γ a b) (.lit (dx[a]!))) (.lit (dx[b]!)))))
       simplify (.sqrt ds2)
   | _, _, _ => .lit 0
 
@@ -50,8 +50,8 @@ def shortestPath (surf : DiscreteHypersurface) (src dst : Nat) : Array Nat :=
   if src >= nv || dst >= nv then #[]
   else
     -- BFS
-    let visited := Array.mkArray nv false
-    let prev    := Array.mkArray nv nv  -- nv = "no predecessor"
+    let visited := Array.replicate nv false
+    let prev    := Array.replicate nv nv  -- nv = "no predecessor"
     let queue   := #[src]
     let visited := visited.set! src true
     let (_, _, prev) := Id.run do
@@ -60,29 +60,30 @@ def shortestPath (surf : DiscreteHypersurface) (src dst : Nat) : Array Nat :=
       let mut prev    := prev
       let mut found   := false
       while !q.isEmpty && !found do
-        let v := q.get! 0
+        let v := q[0]!
         q := q.extract 1 q.size
         if v == dst then
           found := true
         else
-          for w in surf.adjacencyList.get! v do
-            if !visited.get! w then
+          for w in surf.adjacencyList[v]! do
+            if !visited[w]! then
               visited := visited.set! w true
               prev    := prev.set! w v
               q := q.push w
       pure (q, visited, prev)
     -- Reconstruct path
-    let mut path := #[dst]
-    let mut cur  := dst
-    let mut ok   := true
-    while ok && cur != src do
-      let p := prev.get! cur
-      if p == nv then
-        ok := false  -- no path
-      else
-        path := #[p] ++ path
-        cur  := p
-    if ok then path else #[]
+    Id.run do
+      let mut path := #[dst]
+      let mut cur  := dst
+      let mut ok   := true
+      while ok && cur != src do
+        let p := prev[cur]!
+        if p == nv then
+          ok := false  -- no path
+        else
+          path := #[p] ++ path
+          cur  := p
+      return if ok then path else #[]
 
 -- ---------------------------------------------------------------------------
 -- Geodesic path length (sum of edge lengths along the path)
@@ -93,7 +94,7 @@ def pathLength (surf : DiscreteHypersurface) (path : Array Nat) : Expr :=
   if path.size < 2 then .lit 0
   else
     (List.range (path.size - 1)).foldl (fun acc k =>
-      simplify (.add acc (edgeLength surf (path.get! k) (path.get! (k+1))))) (.lit 0)
+      simplify (.add acc (edgeLength surf (path[k]!) (path[k+1]!)))) (.lit 0)
 
 -- ---------------------------------------------------------------------------
 -- Discrete parallel transport
@@ -105,7 +106,7 @@ def pathLength (surf : DiscreteHypersurface) (path : Array Nat) : Expr :=
     where Δx^c = x^c_j - x^c_i is the coordinate displacement. -/
 private def edgeTransport (surf : DiscreteHypersurface) (i j : Nat) : Mat :=
   let n3 := 3
-  match surf.vertices.get? i, surf.vertices.get? j, surf.inducedMetrics.get? i with
+  match surf.vertices[i]?, surf.vertices[j]?, surf.inducedMetrics[i]? with
   | some (t1, x1, y1), some (t2, x2, y2), some γ =>
       let dx : Array Expr := #[.lit (t2-t1), .lit (x2-x1), .lit (y2-y1)]
       -- Build a dummy MetricTensor from the induced metric (no coords needed for Γ)
@@ -117,7 +118,7 @@ private def edgeTransport (surf : DiscreteHypersurface) (i j : Nat) : Mat :=
       -- T^a_b = δ^a_b - Σ_c Γ^a_{bc} Δx^c
       matBuild n3 (fun a b =>
         let correction := sumN n3 (fun c =>
-          simplify (.mul (getΓ a b c) (dx.get! c)))
+          simplify (.mul (getΓ a b c) (dx[c]!)))
         let delta : Expr := if a == b then .lit 1 else .lit 0
         simplify (.sub delta correction))
   | _, _, _ => matId n3
@@ -131,8 +132,8 @@ def parallelTransport (surf : DiscreteHypersurface) (path : Array Nat) : Mat :=
   if path.size < 2 then matId n3
   else
     (List.range (path.size - 1)).foldl (fun acc k =>
-      let vi := path.get! k
-      let vj := path.get! (k+1)
+      let vi := path[k]!
+      let vj := path[k+1]!
       matMul acc (edgeTransport surf vi vj)
     ) (matId n3)
 

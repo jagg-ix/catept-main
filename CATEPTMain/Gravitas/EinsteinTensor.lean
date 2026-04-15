@@ -27,7 +27,8 @@ namespace Gravitas
 structure EinsteinTensor where
   metric     : MetricTensor
   components : Mat
-  idx1 idx2  : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace EinsteinTensor

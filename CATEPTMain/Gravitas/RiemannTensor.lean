@@ -114,9 +114,9 @@ def convertIndices (n : Nat) (gCov gInv : Mat) (mixed : Array Expr)
             -- (co, con, con, con)
             | true,  false, false, false =>
                 sumN n (fun ρ => sumN n (fun α => sumN n (fun β => sumN n (fun γ =>
-                  simplify (.mul (.mul (.mul (.mul (matGet gCov i ρ) (matGet gInv j α))
-                                          (.mul (matGet gInv k β) (matGet gInv l γ)))
-                                      (get ρ α β γ))))))
+                  simplify (.mul (.mul (.mul (matGet gCov i ρ) (matGet gInv j α))
+                                     (.mul (matGet gInv k β) (matGet gInv l γ)))
+                                 (get ρ α β γ))))))
             -- (con, co, con, con)
             | false, true,  false, false =>
                 sumN n (fun α => sumN n (fun β =>
@@ -155,6 +155,14 @@ def convertIndices (n : Nat) (gCov gInv : Mat) (mixed : Array Expr)
             | true,  false, false, true  =>
                 sumN n (fun α => sumN n (fun β =>
                   simplify (.mul (.mul (matGet gInv j α) (matGet gInv k β)) (covariant_ρ i α β l))))
+            -- (con, con, con, co) = R^{ρσμ}_ν = g^{σα}g^{μβ} R^ρ_{αβν}
+            | false, false, false, true  =>
+                sumN n (fun α => sumN n (fun β =>
+                  simplify (.mul (.mul (matGet gInv j α) (matGet gInv k β)) (get i α β l))))
+            -- (con, con, co, con) = R^{ρσ}_μ^ν = g^{σα}g^{νγ} R^ρ_{αμγ}
+            | false, false, true,  false =>
+                sumN n (fun α => sumN n (fun γ =>
+                  simplify (.mul (.mul (matGet gInv j α) (matGet gInv l γ)) (get i α k γ))))
           setComp n comps i j k l val
         ) comps
       ) comps

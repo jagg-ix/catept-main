@@ -35,7 +35,8 @@ namespace Gravitas
 structure BachTensor where
   metric     : MetricTensor
   components : Mat
-  idx1 idx2  : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace BachTensor
@@ -46,7 +47,7 @@ private def mixedWeyl (g : MetricTensor) (covWeyl : Array Expr) : Array Expr :=
   let n    := g.dim
   let gInv := g.inverseMatrix
   let getW := fun a b c d => WeylTensor.getComp n covWeyl a b c d
-  let base := Array.mkArray (n*n*n*n) (.lit 0)
+  let base := Array.replicate (n*n*n*n) (.lit 0)
   -- W^ρ_{μ}^{σ}_{ν} = g^{ρα} g^{σβ} W_{αμβν}
   (List.range n).foldl (fun comps ρ =>
     (List.range n).foldl (fun comps μ =>
@@ -70,14 +71,14 @@ private def covDerivSchouten (n : Nat) (scov : Mat) (gCov gInv : Mat)
   (List.range n).foldl (fun comps k =>
     (List.range n).foldl (fun comps i =>
       (List.range n).foldl (fun comps j =>
-        let partial := symDiff (matGet scov i j) (coords.get! k)
+        let partialDeriv := symDiff (matGet scov i j) (coords[k]!)
         let conn1 := sumN n (fun l => simplify (.mul (getΓ l k i) (matGet scov l j)))
         let conn2 := sumN n (fun l => simplify (.mul (getΓ l k j) (matGet scov i l)))
-        let val := simplify (.sub (.sub partial conn1) conn2)
+        let val := simplify (.sub (.sub partialDeriv conn1) conn2)
         comps.set! (k*n*n + i*n + j) val
       ) comps
     ) comps
-  ) (Array.mkArray (n*n*n) (.lit 0))
+  ) (Array.replicate (n*n*n) (.lit 0))
 
 /-- Compute Bach tensor B_{μν} using the WL-faithful formula:
       B_{μν} = Σ_{ρσ} S_{ρσ} W^ρ_μ^σ_ν
@@ -99,31 +100,31 @@ private def computeCovariant (g : MetricTensor) : Mat :=
   let getΓ := fun l k m => ChristoffelSymbols.getComp n Γ3 l k m
   -- First covariant derivative: nablaS[k,i,j] = ∇_k S_{ij}
   let nablaSArr := covDerivSchouten n scov gCov gInv coords
-  let nablaS := fun k i j => nablaSArr.get? (k*n*n + i*n + j) |>.getD (.lit 0)
+  let nablaS := fun k i j => (nablaSArr[k*n*n + i*n + j]?).getD (.lit 0)
   -- Mixed Weyl W^ρ_μ^σ_ν
   let covW  := WeylTensor.computeCovariant g
   let mixWArr := mixedWeyl g covW
-  let getMW := fun ρ μ σ ν => mixWArr.get? (ρ*n*n*n + μ*n*n + σ*n + ν) |>.getD (.lit 0)
+  let getMW := fun ρ μ σ ν => (mixWArr[ρ*n*n*n + μ*n*n + σ*n + ν]?).getD (.lit 0)
   -- Second covariant derivative: g^{αβ}(∇_β ∇_α S_{ij})
   -- ∇_β(∇_α S_{ij}) = ∂_β(∇_α S_{ij}) - Γ^γ_{βα} ∇_γ S_{ij}
   --                  - Γ^γ_{βi} ∇_α S_{γj} - Γ^γ_{βj} ∇_α S_{iγ}
   let nabla2S := fun μ ν =>
     sumN n (fun α => sumN n (fun β =>
-      let partial := symDiff (nablaS α μ ν) (coords.get! β)
+      let partialDeriv := symDiff (nablaS α μ ν) (coords[β]!)
       let c1 := sumN n (fun γ => simplify (.mul (getΓ γ β α) (nablaS γ μ ν)))
       let c2 := sumN n (fun γ => simplify (.mul (getΓ γ β μ) (nablaS α γ ν)))
       let c3 := sumN n (fun γ => simplify (.mul (getΓ γ β ν) (nablaS α μ γ)))
       simplify (.mul (matGet gInv α β)
-                     (.sub (.sub (.sub partial c1) c2) c3))))
+                     (.sub (.sub (.sub partialDeriv c1) c2) c3))))
   -- Cross term: g^{αβ} ∇_μ ∇_α S_{νβ}
   let crossTerm := fun μ ν =>
     sumN n (fun α => sumN n (fun β =>
-      let partial := symDiff (nablaS α ν β) (coords.get! μ)
+      let partialDeriv := symDiff (nablaS α ν β) (coords[μ]!)
       let c1 := sumN n (fun γ => simplify (.mul (getΓ γ μ α) (nablaS γ ν β)))
       let c2 := sumN n (fun γ => simplify (.mul (getΓ γ μ ν) (nablaS α γ β)))
       let c3 := sumN n (fun γ => simplify (.mul (getΓ γ μ β) (nablaS α ν γ)))
       simplify (.mul (matGet gInv α β)
-                     (.sub (.sub (.sub partial c1) c2) c3))))
+                     (.sub (.sub (.sub partialDeriv c1) c2) c3))))
   matBuild n (fun μ ν =>
     -- Term 1: Σ_{ρσ} S^{ρσ} W^ρ_μ^σ_ν   (Schouten × mixed Weyl, WL: schoutenTensor * mixedWeylTensor)
     let schoutenWeylTerm :=

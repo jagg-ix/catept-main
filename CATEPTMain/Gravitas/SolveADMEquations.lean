@@ -53,7 +53,7 @@ private def spatialRicciScalar (adm : ADMDecomposition) : Expr :=
 
 /-- Hamiltonian constraint:
     H = ³R + K² - K_{ij} K^{ij} - 16πG ρ_ADM -/
-private def hamiltonianConstraint
+private def computeHamiltonianConstraint
     (adm : ADMDecomposition) (decomp : ADMStressEnergyDecomposition)
     (G_N : Expr) : Expr :=
   let kt   := ExtrinsicCurvatureTensor.ofADM adm
@@ -75,7 +75,7 @@ private def hamiltonianConstraint
     Uses the Christoffel-corrected covariant divergence (AFP semantic-mapping technique):
       ∇^j K_{ij} = γ^{jk} ∂_k K_{ij} - γ^{jk} Γ^l_{ki} K_{lj} - γ^{jk} Γ^l_{kj} K_{il}
     which replaces the previous partial-derivative approximation. -/
-private def momentumConstraints
+private def computeMomentumConstraints
     (adm : ADMDecomposition) (decomp : ADMStressEnergyDecomposition)
     (G_N : Expr) : Array Expr :=
   let kt     := ExtrinsicCurvatureTensor.ofADM adm
@@ -89,11 +89,11 @@ private def momentumConstraints
   let π      := .var "π"
   -- Spatial Christoffel Γ^l_{km} for the covariant divergence correction
   let Γ3 := ChristoffelSymbols.computeMixed γCov γInv coords
-  let getΓ := fun λ_ μ ν => ChristoffelSymbols.getComp n3 Γ3 λ_ μ ν
-  Array.ofFn (fun i =>
+  let getΓ := fun lam μ ν => ChristoffelSymbols.getComp n3 Γ3 lam μ ν
+  Array.ofFn (n := n3) (fun i : Fin n3 =>
     -- ∇^j K_{ij} = γ^{jk}(∂_k K_{ij} - Γ^l_{ki} K_{lj} - Γ^l_{kj} K_{il})
     let divK := sumN n3 (fun j_ => sumN n3 (fun k =>
-      let partialTerm := symDiff (matGet kt.components i j_) (coords.get! k)
+      let partialTerm := symDiff (matGet kt.components i j_) (coords[k]!)
       let conn1 := sumN n3 (fun l_ =>
         simplify (.mul (getΓ l_ k i.val) (matGet kt.components l_ j_)))
       let conn2 := sumN n3 (fun l_ =>
@@ -101,12 +101,12 @@ private def momentumConstraints
       simplify (.mul (matGet γInv j_ k)
                      (.sub (.sub partialTerm conn1) conn2))))
     -- ∇_i K = ∂_i K  (K is a scalar, covariant gradient = partial gradient)
-    let gradK := symDiff K (coords.get! i.val)
+    let gradK := symDiff K (coords[i.val]!)
     simplify (.sub (.sub divK gradK)
-                   (.mul (.mul (.mul (.lit 8) π) G_N) (j.get! i.val))))
+                   (.mul (.mul (.mul (.lit 8) π) G_N) (j[i.val]!))))
 
 /-- ∂_t γ_{ij} = -2α K_{ij} + ∇_i β_j + ∇_j β_i -/
-private def metricEvolution (adm : ADMDecomposition) : Mat :=
+private def computeMetricEvolution (adm : ADMDecomposition) : Mat :=
   let γ      := adm.spatialMetric
   let gCov   := γ.covariantMatrix
   let gInv   := γ.inverseMatrix
@@ -116,15 +116,15 @@ private def metricEvolution (adm : ADMDecomposition) : Mat :=
   let β      := adm.shiftVector
   let kt     := ExtrinsicCurvatureTensor.ofADM adm
   -- β_i = γ_{ij} β^j
-  let βCov := Array.ofFn (fun i =>
-    sumN n3 (fun j => simplify (.mul (matGet gCov i.val j) (β.get! j))))
+  let βCov := Array.ofFn (n := n3) (fun i : Fin n3 =>
+    sumN n3 (fun j => simplify (.mul (matGet gCov i.val j) (β[j]!))))
   -- Spatial Christoffel symbols
   let Γ3 := ChristoffelSymbols.computeMixed gCov gInv coords
-  let getΓ := fun λ_ μ ν => ChristoffelSymbols.getComp n3 Γ3 λ_ μ ν
+  let getΓ := fun lam μ ν => ChristoffelSymbols.getComp n3 Γ3 lam μ ν
   -- ∇_i β_j = ∂_i β_j - Γ^k_{ij} β_k
   let nablaβ := matBuild n3 (fun i j =>
-    simplify (.sub (symDiff (βCov.get! j) (coords.get! i))
-                   (sumN n3 (fun k => simplify (.mul (getΓ k i j) (βCov.get! k))))))
+    simplify (.sub (symDiff (βCov[j]!) (coords[i]!))
+                   (sumN n3 (fun k => simplify (.mul (getΓ k i j) (βCov[k]!))))))
   -- ∂_t γ_{ij} - (-2α K_{ij} + ∇_i β_j + ∇_j β_i) = 0
   matBuild n3 (fun i j =>
     simplify (.sub (symDiff (matGet gCov i j) adm.timeCoordinate)
@@ -152,7 +152,7 @@ def ofADM (adm : ADMDecomposition) (decomp : ADMStressEnergyDecomposition)
   let β  := adm.shiftVector
   -- Spatial Christoffel symbols for ∇_i∇_j α and Lie derivative terms
   let Γ3   := ChristoffelSymbols.computeMixed gCov gInv coords
-  let getΓ := fun λ_ μ ν => ChristoffelSymbols.getComp n3 Γ3 λ_ μ ν
+  let getΓ := fun lam μ ν => ChristoffelSymbols.getComp n3 Γ3 lam μ ν
   let extrinEvo := matBuild n3 (fun i j =>
     -- α R_{ij} + α K K_{ij} - 2α K_{ik}K^k_j
     -- - ∇_i∇_j α  (Christoffel-corrected lapse Hessian)
@@ -166,18 +166,18 @@ def ofADM (adm : ADMDecomposition) (decomp : ADMStressEnergyDecomposition)
                            (sumN n3 (fun l => simplify (.mul (matGet gInv k l) (matGet kt.components l j)))))))
     -- ∇_i∇_j α = ∂_i∂_j α - Γ^k_{ij} ∂_k α
     let lapseHess :=
-      let hess := symDiff (symDiff α (coords.get! i)) (coords.get! j)
+      let hess := symDiff (symDiff α (coords[i]!)) (coords[j]!)
       let conn := sumN n3 (fun k =>
-        simplify (.mul (getΓ k i j) (symDiff α (coords.get! k))))
+        simplify (.mul (getΓ k i j) (symDiff α (coords[k]!))))
       simplify (.sub hess conn)
     -- Lie derivative: β^k ∂_k K_{ij} + K_{ik} ∂_j β^k + K_{jk} ∂_i β^k
     let lieShift :=
       let advect := sumN n3 (fun k =>
-        simplify (.mul (β.get! k) (symDiff (matGet kt.components i j) (coords.get! k))))
+        simplify (.mul (β[k]!) (symDiff (matGet kt.components i j) (coords[k]!))))
       let shear1 := sumN n3 (fun k =>
-        simplify (.mul (matGet kt.components i k) (symDiff (β.get! k) (coords.get! j))))
+        simplify (.mul (matGet kt.components i k) (symDiff (β[k]!) (coords[j]!))))
       let shear2 := sumN n3 (fun k =>
-        simplify (.mul (matGet kt.components j k) (symDiff (β.get! k) (coords.get! i))))
+        simplify (.mul (matGet kt.components j k) (symDiff (β[k]!) (coords[i]!))))
       simplify (.add (.add advect shear1) shear2)
     let matterTerm := simplify
       (.mul (.mul (.mul (.lit 8) π) (.mul G_N α))
@@ -186,9 +186,9 @@ def ofADM (adm : ADMDecomposition) (decomp : ADMStressEnergyDecomposition)
     simplify (.sub (symDiff (matGet kt.components i j) adm.timeCoordinate)
                    (.sub (.add (.add (.sub rTerm k2Term) kTerm) lieShift)
                          (.add lapseHess matterTerm))))
-  let H  := hamiltonianConstraint adm decomp G_N
-  let Mi := momentumConstraints adm decomp G_N
-  let γEvo := metricEvolution adm
+  let H  := computeHamiltonianConstraint adm decomp G_N
+  let Mi := computeMomentumConstraints adm decomp G_N
+  let γEvo := computeMetricEvolution adm
   { adm := adm, admDecomp := decomp,
     hamiltonianConstraint := H, momentumConstraints := Mi,
     metricEvolution := γEvo, extrinEvolution := extrinEvo }

@@ -24,7 +24,8 @@ structure ElectrograviticTensor where
   metric            : MetricTensor
   timelikeCongruence : Array Expr  -- 4-velocity u^μ (contravariant components)
   components        : Mat
-  idx1 idx2         : IndexKind
+  idx1 : IndexKind
+  idx2 : IndexKind
   deriving Repr
 
 namespace ElectrograviticTensor
@@ -40,7 +41,7 @@ private def computeCovariant (g : MetricTensor) (u : Array Expr) : Mat :=
   let getR := fun a b c d => RiemannTensor.getComp n covR a b c d
   matBuild n (fun μ ν =>
     sumN n (fun ρ => sumN n (fun σ =>
-      simplify (.mul (.mul (getR μ ρ ν σ) (u.get! ρ)) (u.get! σ)))))
+      simplify (.mul (.mul (getR μ ρ ν σ) (u[ρ]!)) (u[σ]!)))))
 
 private def toIndexed (gCov gInv ecov : Mat) (idx1 idx2 : IndexKind) : Mat :=
   let n := gCov.size
@@ -64,7 +65,7 @@ def ofMetric (g : MetricTensor) (u : Array Expr := #[])
     (idx1 : IndexKind := co) (idx2 : IndexKind := co) : ElectrograviticTensor :=
   let n := g.dim
   let u' := if u.isEmpty then
-    Array.ofFn (fun i => .var s!"X{i.val}")
+    Array.ofFn (n := n) (fun i : Fin n => .var s!"X{i.val}")
   else u
   let gCov  := g.covariantMatrix
   let gInv  := g.inverseMatrix

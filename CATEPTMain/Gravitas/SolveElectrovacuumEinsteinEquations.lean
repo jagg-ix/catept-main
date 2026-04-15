@@ -52,9 +52,9 @@ private def maxwellResiduals (g : MetricTensor) (F : ElectromagneticTensor) : Ar
     sumN n (fun k => sumN n (fun l =>
       simplify (.mul (.mul (matGet gInv i k) (matGet gInv j l)) (matGet F.components k l)))))
   let sqrtDetG : Expr := .var "√|g|"
-  Array.ofFn (fun ν =>
+  Array.ofFn (n := n) (fun ν : Fin n =>
     let divergence := sumN n (fun μ =>
-      simplify (symDiff (.mul sqrtDetG (matGet fCon μ ν.val)) (g.coords.get! μ)))
+      simplify (symDiff (.mul sqrtDetG (matGet fCon μ ν.val)) (g.coords[μ]!)))
     simplify (.mul (.div (.lit 1) sqrtDetG) divergence))
 
 /-- Build the electrovacuum solution. -/
@@ -66,7 +66,7 @@ def ofMetric (g : MetricTensor) (A : Array Expr := #[]) (μ₀ : Expr := .var "�
   let sol := EinsteinSolution.ofStressEnergy st Λ
   let maxwell := maxwellResiduals g F
   -- Bianchi: ∂_{[μ} F_{νρ]} = 0  — trivial from F = dA, store as zeros
-  let bianchi := Array.mkArray g.dim (.lit 0)
+  let bianchi := Array.replicate g.dim (.lit 0)
   { metric := g, faradayTensor := F, cosmologicalConst := Λ,
     einsteinEquations := sol.fieldEquations,
     maxwellEquations := maxwell,

@@ -51,7 +51,7 @@ def ofADM (adm : ADMDecomposition) : VacuumADMSolution :=
   let zeroDecomp : ADMStressEnergyDecomposition :=
     { adm := adm, stressEnergy := zeroT,
       energyDensity := .lit 0,
-      momentumDensity := Array.mkArray adm.spatialMetric.dim (.lit 0),
+      momentumDensity := Array.replicate adm.spatialMetric.dim (.lit 0),
       stressTensor := matBuild adm.spatialMetric.dim (fun _ _ => .lit 0) }
   let sol := ADMSolution.ofADM adm zeroDecomp (.lit 0)
   { adm := adm,

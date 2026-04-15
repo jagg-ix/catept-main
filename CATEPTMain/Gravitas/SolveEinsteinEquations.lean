@@ -51,10 +51,10 @@ private def bianchiResidual (g : MetricTensor) (Gcov : Mat) : Array Expr :=
   let gInv   := g.inverseMatrix
   let coords := g.coords
   -- ∇^μ G_{μν} ≈ g^{μλ} ∂_λ G_{μν} (partial derivative approximation)
-  Array.ofFn (fun ν =>
-    sumN n (fun μ => sumN n (fun λ_ =>
-      simplify (.mul (matGet gInv μ λ_)
-                     (symDiff (matGet Gcov μ ν.val) (coords.get! λ_))))))
+  Array.ofFn (n := n) (fun ν : Fin n =>
+    sumN n (fun μ => sumN n (fun lam =>
+      simplify (.mul (matGet gInv μ lam)
+                     (symDiff (matGet Gcov μ ν.val) (coords[lam]!))))))
 
 -- ---------------------------------------------------------------------------
 -- Constructor
@@ -70,12 +70,12 @@ def ofStressEnergy (st : StressEnergyTensor) (Λ : Expr := .lit 0)
   let R    := RicciTensor.ricciScalar g
   let gCov := g.covariantMatrix
   let n    := g.dim
-  let π    := .var "π"
+  let π    : Expr := .var "π"
   -- 8πG T_{μν}
   let tCov : Mat :=
     match st.idx1, st.idx2 with
     | true, true => st.components
-    | _ =>
+    | _, _ =>
         let gC := gCov; let gI := g.inverseMatrix
         matBuild n (fun i j =>
           sumN n (fun k => sumN n (fun l =>

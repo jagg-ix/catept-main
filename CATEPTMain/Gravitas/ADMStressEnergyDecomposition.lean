@@ -43,9 +43,9 @@ namespace ADMStressEnergyDecomposition
 private def normalVector (adm : ADMDecomposition) : Array Expr :=
   let α  := adm.lapseFunction
   let β  := adm.shiftVector
-  let n3 := adm.spatialMetric.dim
+  let n4 := adm.spatialMetric.dim + 1
   -- n^μ = (1/α, -β^i/α)
-  Array.ofFn (fun μ =>
+  Array.ofFn (n := n4) (fun μ : Fin n4 =>
     if μ.val == 0 then .div (.lit 1) α
     else simplify (.neg (.div (β[μ.val - 1]!) α)))
 
@@ -76,13 +76,13 @@ def ofADMAndStressEnergy (adm : ADMDecomposition) (st : StressEnergyTensor)
           sumN n4 (fun k => simplify (.mul (matGet gCov i k) (matGet tc k j))))
   let n   := normalVector adm  -- n^μ (contravariant)
   -- n_μ = g_{μν} n^ν (covariant normal)
-  let nCov := Array.ofFn (fun μ =>
+  let nCov := Array.ofFn (n := n4) (fun μ : Fin n4 =>
     sumN n4 (fun ν => simplify (.mul (matGet gCov μ.val ν) (n[ν]!))))
   -- Energy density: ρ_ADM = T^{μν} n_μ n_ν = T_{μν} n^μ n^ν
   let ρADM := sumN n4 (fun μ => sumN n4 (fun ν =>
     simplify (.mul (.mul (matGet tCov μ ν) (n[μ]!)) (n[ν]!))))
   -- Momentum density: j^i = -γ^{iμ} n^ν T_{μν}  (spatial index i in 0..n3-1)
-  let jDensity := Array.ofFn (fun i =>
+  let jDensity := Array.ofFn (n := n3) (fun i : Fin n3 =>
     -- γ^{iμ} acts on spatial indices: we use the (i+1)-th spatial component of g
     -- Approximate: j^i ≈ -Σ_μ Σ_ν γInv_{i,μ-1} n^ν T_{μν} for μ≥1
     sumN n3 (fun k => sumN n4 (fun ν =>
