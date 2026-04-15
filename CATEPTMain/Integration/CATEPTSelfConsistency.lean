@@ -77,15 +77,26 @@ Phase-2 will replace each sorry with a Mathlib-backed derivation.
 ```
 ns_periodic_smooth_solution_exists
 │
-├─ P0: torus mean-zero vorticity ← HasFDerivAt.comp_hasDerivAt (close now)
+├── P0: torusMeanZero_vorticity
+│   └── HasFDerivAt.comp_hasDerivAt ✓ (Mathlib:383) → CLOSE NOW
 │
-├─ P1: Galerkin cluster (4 sorrys)
-│     KEY: CATEPTVelocityField carrier + half_holder_from_l2_deriv_bound
+├── P1: Galerkin cluster [4 sorrys]
+│   ├── galerkin_velocity_derivative_bound_from_abstract
+│   ├── galerkin_velocity_derivative_bound
+│   ├── galerkin_ept_equicontinuity
+│   └── galerkin_limit_identification
+│   └── KEY: half_holder_from_l2_deriv_bound PROVED ✓
+│         → unblocked by CATEPTVelocityField carrier migration
 │
-├─ P2: Gagliardo-Nirenberg H¹ ↪ L⁴ on T³   ← hardest
-│     periodization: restrict [0,1]³, bump χ → apply Mathlib GN → χ→1
+├── P2: GN cluster [3 sorrys]  ← hardest gap
+│   ├── vs_l4_holder_bound
+│   ├── vorticity_l4_le_enstrophy
+│   └── sa_g1_jomega_integrable
+│   └── KEY: Mathlib GN + periodization argument
 │
-└─ P3: Agmon + BKM (2 sorrys) ← follows from P2
+└── P3: Agmon + BKM [2 sorrys]
+    ├── agmon_t3_interpolation → follows from P2
+    └── bkm_linf_proxy_gap → follows from P3
 ```
 
 ## Phase-1 scope
@@ -905,7 +916,10 @@ theorem catept_ns_p1_velocity_deriv_bound
           (n=3, p=4 ≤ n·p/(n−p) with p=2)
       (d) take limit χ → 1 using dominated convergence
 
-    Net: 10 → 7 sorrys by closing the three GN-cluster sorrys. -/
+    Net: 10 → 7 sorrys by closing the three GN-cluster sorrys:
+      - vs_l4_holder_bound
+      - vorticity_l4_le_enstrophy
+      - sa_g1_jomega_integrable -/
 theorem catept_ns_p2_gn_h1_l4_embedding
     (u : CATEPTVelocityField) :
     True :=
@@ -973,7 +987,7 @@ end NSGalerkinGapClosure
       P1 (4 sorrys)   → Galerkin + CATEPTVelocityField carrier
       P2 (3 sorrys)   → GN H¹ ↪ L⁴ periodization
       P3 (2 sorrys)   → Agmon + BKM from P2
-      P4 (deferred)   → CATEPT/QFT off-path sorrys (not on NS critical path) -/
+      P4 (deferred)   → CATEPT/QFT off-path sorrys (`cateptst_no_ftl_diffusion_gap`, `massless_KL_weyl_correspondence`) -/
 theorem catept_self_consistent
     (st : CATEPTSpacetimeModel) :
     CATEPTSelfConsistencyContract st {
