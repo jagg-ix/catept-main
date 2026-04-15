@@ -939,7 +939,7 @@ theorem catept_ns_p2_gn_h1_l4_embedding
   -- Phase 2 exact: GN topological embedding via Mathlib.
   -- 1. Combine smoothness of u and χ.
   have h_smooth : ContDiff ℝ 1 (fun x => χ x • u x) := ContDiff.smul hχ hu
-  
+
   -- 2. Apply Gagliardo-Nirenberg from Mathlib with p=2, q=4, n=3.
   -- Check p < n: 2 < 3.
   -- Check p⁻¹ - n⁻¹ ≤ q⁻¹ : 1/2 - 1/3 = 1/6 ≤ 1/4.
