@@ -70,8 +70,7 @@ def ofStressEnergy (st : StressEnergyTensor) (Λ : Expr := .lit 0)
   let R    := RicciTensor.ricciScalar g
   let gCov := g.covariantMatrix
   let n    := g.dim
-  let π    : Expr := .var "π"
-  -- 8πG T_{μν}
+  -- 8πG T_{μν} (π handled inside EinsteinTensor.fieldEquations)
   let tCov : Mat :=
     match st.idx1, st.idx2 with
     | true, true => st.components

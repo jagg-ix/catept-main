@@ -5,6 +5,8 @@ WL source: `/Users/macbookpro/lab/tau/Gravitas/Gravitas/Kernel/`
 Lean4 root: `CATEPTMain/Gravitas/`
 Branch: `private/catept-afp-leverage-20260413`
 Phase 1 committed: `957674189` (2026-04-14)
+Phase 2 committed: `2a56782a6` (2026-04-14) — fidelity inspection, 4 bugs fixed
+Phase 3 committed: `0dad194c7` (2026-04-14) — Lean 4.29.0 compat, build gate lifted
 
 ---
 
@@ -12,7 +14,63 @@ Phase 1 committed: `957674189` (2026-04-14)
 
 All 24 files written and committed. No `sorry` entries. Symbolic ops
 via `partial` functions (`simplify`, `symDiff`, `exprSubst`). 20 named
-metrics. Build gate not yet lifted (do not `lake build` until confirmed).
+metrics.
+
+---
+
+## Phase 2 — Fidelity inspection (complete)
+
+All 24 modules inspected side-by-side against WL source. 4 bugs fixed:
+
+| File | Bug | Fix |
+|------|-----|-----|
+| `Basic.lean` | `q` helper coercion: `Rat` constructor wasn't lifted to `Expr.lit` | `.div (.lit num) (.lit den)` |
+| `MetricTensor.lean` | Gödel metric `ex` exponent was `2*sqrt2` not `sqrt2` | corrected to `sqrt2`; dead `factor` binding removed |
+| `StressEnergyTensor.lean` | `lowerBoth` not applied to perfectFluid/dust/radiation/EM field | `lowerBoth` wired in |
+| `SolveADMEquations.lean` | Hamiltonian constraint sign: `R3 - K² + kSq` (wrong) | `R3 + K² - kSq` |
+
+All 20 other files verified clean.
+
+---
+
+## Phase 3 — Lean 4.29.0 compat + build gate (complete)
+
+Build gate lifted: `lake build CATEPTMain.Gravitas` → **26/26 ✔, 0 errors**.
+
+Compat fixes applied across 14 files:
+
+| Pattern | Files affected |
+|---------|---------------|
+| `Array.get!`/`get?` → `arr[i]!`/`arr[i]?` | 7 |
+| `Array.mkArray` → `Array.replicate` | 4 |
+| `Array.ofFn` missing `(n :=)` annotation | 3 |
+| `let mut`/`while` outside `do` → `Id.run do` | 1 (DiscreteHypersurfaceGeodesic) |
+| Combined struct fields `idx1 idx2 : T` → split | 5 (Ricci/Einstein/Electrogravitic/Schouten/Bach/Weyl) |
+| `λ_` variable name → `lam` (λ is Lean keyword) | 3 (RicciTensor, SolveADMEquations ×2) |
+| `partial` variable name → `partialDeriv` | 1 (BachTensor) |
+| Private def names colliding with struct fields | 1 (SolveADMEquations: 3 helpers → `compute*`) |
+| `| _ =>` on `Bool×Bool` match → `| _, _ =>` | 1 (SolveEinsteinEquations) |
+| Missing type annotation for `.var`/`.lit` | 1 (SolveEinsteinEquations: `π : Expr`) |
+| 3/4-index Weyl raise: malformed `.mul` nesting | 1 (WeylTensor: all 5 raise cases) |
+
+---
+
+## Phase 4 — Post-build fidelity fixes (2026-04-14)
+
+### BrillLindquist fidelity rewrite
+
+WL source (`ADMDecomposition.wl`) uses:
+- Spherical coordinates (r, θ, φ), not Cartesian
+- Single mass M with separation z₀ (black holes at ±z₀ on the z-axis)
+- ψ = 1 + (M/2)(1/r₁ + 1/r₂), r₁ = √(r²sin²θ + (r·cosθ−z₀)²)
+- Spatial metric ψ⁴ diag(1, r², r²sin²θ) — spherical conformal flat
+- Lapse: symbolic α function (not 1/ψ)
+
+Prior Lean port had: Cartesian coords, two separate masses M1/M2, only M1/(2r1), ψ⁴·δ flat metric, 1/ψ lapse. Rewritten to match WL exactly.
+
+### Dead code removal
+
+`SolveEinsteinEquations.lean`: removed unused `let π := .var "π"` — the 8πG coefficient is constructed inside `EinsteinTensor.fieldEquations`, not here.
 
 ---
 
@@ -120,5 +178,18 @@ For each file, the inspector should:
   Dense numeric inversion deferred to later phase.
 
 - **No Mathlib `Matrix` wrapping (yet)**: `Mat` is `Array (Array Expr)`, not
-  `Matrix n n Expr`. Bridging to `Mathlib.Matrix` is a Phase 2 stretch goal.
+  `Matrix n n Expr`. Bridging to `Mathlib.Matrix` is a future stretch goal.
+
+---
+
+## Stretch goals (future phases)
+
+| Goal | Notes |
+|------|-------|
+| Bridge `Mat` → `Mathlib.Matrix n n Expr` | Enables Mathlib linear-algebra theorems (det, trace, eigenvalues) |
+| `matInv` → `Mathlib.Matrix.inv` | Current: symbolic Gauss-Jordan; Mathlib has `nonsing_inv` |
+| Metric positivity axiom | `MetricTensor` has no `isNonDegenerate : Bool`; adding it enables downstream topology |
+| BrillLindquist: lapse from conformal factor | Current lapse is symbolic α; WL also symbolic — optionally use `ψ⁻¹` for maximal slicing |
+| Numerical evaluation mode | `Expr.eval : HashMap String Float → Float` for concrete metric computations |
+| Formal proof of Bianchi identity | `∇^μ G_{μν} = 0` provable from the symbolic `symDiff` algebra via `sorry`-free lemma |
 -/

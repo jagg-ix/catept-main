@@ -184,23 +184,39 @@ def kerrNewman (mass : String := "M") (charge : String := "Q") (angMom : String 
   { spatialMetric := γ, timeCoordinate := timeCoord,
     lapseFunction := α, shiftVector := #[.lit 0, .lit 0, βφ] }
 
-/-- Brill-Lindquist (two-black-hole) data in ADM form. -/
-def brillLindquist (mass1 : String := "M1") (mass2 : String := "M2")
+/-- Brill-Lindquist (two-black-hole) initial data in ADM form.
+    Matches WL `ADMDecomposition["BrillLindquist"]` exactly:
+    - Single mass M, two black holes at ±z₀ on the z-axis (spherical coords)
+    - ψ = 1 + (M/2)(1/r₁ + 1/r₂), where r₁ = √(r²sin²θ + (r·cosθ−z₀)²),
+                                          r₂ = √(r²sin²θ + (r·cosθ+z₀)²)
+    - Spatial metric: γ_{ij} = ψ⁴ diag(1, r², r²sin²θ) -/
+def brillLindquist (mass : String := "M") (sep : String := "z₀")
     (timeCoord : String := "t")
-    (spatialCoords : Array String := #["x","y","z"]) : ADMDecomposition :=
-  let M1 : Expr := .var mass1; let M2 : Expr := .var mass2
-  let x  := .var spatialCoords[0]!
-  let y  := .var spatialCoords[1]!
-  let z  := .var spatialCoords[2]!
-  -- r_i = |x - x_i|, simplified as r for the conformal factor
-  let r1 := .sqrt (.add (.add (.pow x (.lit 2)) (.pow y (.lit 2))) (.pow z (.lit 2)))
-  -- Conformal factor ψ = 1 + M1/(2r1) + M2/(2r2) (single black hole approx)
-  let ψ := .add (.lit 1) (.div M1 (.mul (.lit 2) r1))
+    (spatialCoords : Array String := #["r","θ","φ"]) : ADMDecomposition :=
+  let r  := spatialCoords[0]!; let θ := spatialCoords[1]!
+  let M  : Expr := .var mass
+  let z0 : Expr := .var sep
+  let r_ := .var r; let sinθ := .sin (.var θ); let cosθ := .cos (.var θ)
+  let r2sin2 := .mul (.pow r_ (.lit 2)) (.pow sinθ (.lit 2))
+  let rcosθ  := .mul r_ cosθ
+  let r1 := .sqrt (.add r2sin2 (.pow (.sub rcosθ z0) (.lit 2)))
+  let r2 := .sqrt (.add r2sin2 (.pow (.add rcosθ z0) (.lit 2)))
+  -- ψ = 1 + (M/2)(1/r₁ + 1/r₂)
+  let ψ := .add (.lit 1) (.mul (.div M (.lit 2)) (.add (.div (.lit 1) r1) (.div (.lit 1) r2)))
   let ψ4 := .pow ψ (.lit 4)
-  let γCov := matBuild 3 (fun i j => if i == j then ψ4 else .lit 0)
+  -- γ = ψ⁴ diag(1, r², r²sin²θ)  (spherical conformal flat)
+  let γCov := matBuild 3 (fun i j =>
+    if i != j then .lit 0
+    else match i with
+    | 0 => ψ4
+    | 1 => .mul (.pow r_ (.lit 2)) ψ4
+    | 2 => .mul (.mul (.pow r_ (.lit 2)) (.pow sinθ (.lit 2))) ψ4
+    | _ => .lit 0)
   let γ := MetricTensor.fromCovariant γCov spatialCoords co co
+  -- Lapse: symbolic α (WL default), zero shift
+  let α : Expr := .var s!"α({timeCoord},{r},{θ},{spatialCoords[2]!})"
   { spatialMetric := γ, timeCoordinate := timeCoord,
-    lapseFunction := .div (.lit 1) ψ, shiftVector := List.replicate 3 (.lit 0 : Expr) |>.toArray }
+    lapseFunction := α, shiftVector := List.replicate 3 (.lit 0 : Expr) |>.toArray }
 
 /-- FLRW cosmology in ADM form. -/
 def flrw (scaleParam : String := "a") (curvParam : String := "k")
