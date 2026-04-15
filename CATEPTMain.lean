@@ -8,12 +8,17 @@ import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.Pphi2CATEPTEPTBridge
 import CATEPTMain.Integration.ComplexDimensionalModularBridge
 import CATEPTMain.Integration.AlphaDivergencePathIntegralBridge
+import CATEPTMain.Integration.AlphaPathIntegralIntegration
+import CATEPTMain.Integration.ComplexEinsteinPathIntegralBridge
 import CATEPTMain.Integration.YoshidaFreeFisherBridge
 import CATEPTMain.Integration.QuantumFisherBridge
 import CATEPTMain.Integration.InformationDimensionalFrameworkBridge
 import CATEPTMain.Integration.Pphi2NCATEPTBridge
 import CATEPTMain.Integration.LGTCATEPTBridge
 import CATEPTMain.Integration.TheoryPluginArchitecture
+import CATEPTMain.Integration.TheoryPluginAdapterSupport
+import CATEPTMain.Integration.TheoryPluginAdapter
+import CATEPTMain.Integration.TheoryPluginStressTests
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 

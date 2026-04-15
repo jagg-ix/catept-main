@@ -1,7 +1,9 @@
-{"version": "1.1.0",
+{
+ "version": "1.1.0",
  "packagesDir": ".lake/packages",
- "packages":
- [{"url": "https://github.com/leanprover-community/mathlib4.git",
+ "packages": [
+  {
+   "url": "https://github.com/leanprover-community/mathlib4.git",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -10,16 +12,19 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "v4.29.0",
    "inherited": false,
-   "configFile": "lakefile.lean"},
-  {"type": "path",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "type": "path",
    "scope": "",
    "name": "DimensionalAnalysis",
    "manifestFile": "lake-manifest.json",
    "inherited": false,
-   "dir":
-   "/Users/macbookpro/lab/tau/tau-information-dynamics/LeanDimensionalAnalysis",
-   "configFile": "lakefile.toml"},
-  {"url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/pphi2",
+   "dir": "/Users/macbookpro/lab/tau/tau-information-dynamics/LeanDimensionalAnalysis",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/pphi2",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -28,9 +33,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "1211294",
    "inherited": false,
-   "configFile": "lakefile.toml"},
-  {"url":
-   "file:///Users/macbookpro/lab/tau/tau-information-dynamics/cslib-inspect",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/cslib-inspect",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -39,9 +45,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "0d37cc7fcc98",
    "inherited": false,
-   "configFile": "lakefile.toml"},
-  {"url":
-   "file:///Users/macbookpro/lab/tau/tau-information-dynamics/hille-yosida",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/hille-yosida",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -50,8 +57,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "7731442e5b01",
    "inherited": false,
-   "configFile": "lakefile.toml"},
-  {"url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/bochner",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/bochner",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -60,8 +69,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "1b56973aff9b",
    "inherited": false,
-   "configFile": "lakefile.lean"},
-  {"url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/physlib",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "file:///Users/macbookpro/lab/tau/tau-information-dynamics/physlib",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -70,8 +81,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "9ca1ee1d0cac",
    "inherited": false,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/leanprover-community/plausible",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/leanprover-community/plausible",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -80,8 +93,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover-community/LeanSearchClient",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover-community/LeanSearchClient",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -90,8 +105,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover-community/import-graph",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover-community/import-graph",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -100,8 +117,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover-community/ProofWidgets4",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover-community/ProofWidgets4",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -110,8 +129,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "v0.0.95",
    "inherited": true,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/leanprover-community/aesop",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/leanprover-community/aesop",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -120,8 +141,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "master",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover-community/quote4",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover-community/quote4",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -130,8 +153,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "master",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover-community/batteries",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover-community/batteries",
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -140,8 +165,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover/lean4-cli",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover/lean4-cli",
    "type": "git",
    "subDir": null,
    "scope": "leanprover",
@@ -150,8 +177,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "v4.29.0",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/mrdouglasny/bochner.git",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/mrdouglasny/bochner.git",
    "type": "git",
    "subDir": null,
    "scope": "mrdouglasny",
@@ -160,8 +189,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/mrdouglasny/gaussian-field.git",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/mrdouglasny/gaussian-field.git",
    "type": "git",
    "subDir": null,
    "scope": "mrdouglasny",
@@ -170,8 +201,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "74a9599",
    "inherited": true,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/remydegenne/kolmogorov_extension4.git",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/remydegenne/kolmogorov_extension4.git",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -180,18 +213,22 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": null,
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover/doc-gen4",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover/doc-gen4",
    "type": "git",
    "subDir": null,
    "scope": "",
    "rev": "aa4c3e4e14f5b31495b7c7238762ecceddd9f52c",
-   "name": "«doc-gen4»",
+   "name": "\u00abdoc-gen4\u00bb",
    "manifestFile": "lake-manifest.json",
    "inputRev": "v4.29.0",
    "inherited": true,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/kim-em/leansqlite",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/kim-em/leansqlite",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -200,8 +237,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "suppress-reducibility-warning",
    "inherited": true,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/fgdorais/lean4-unicode-basic",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/fgdorais/lean4-unicode-basic",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -210,8 +249,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.lean"},
-  {"url": "https://github.com/dupuisf/BibtexQuery",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "url": "https://github.com/dupuisf/BibtexQuery",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -220,8 +261,10 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "nightly-testing",
    "inherited": true,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/acmepjz/md4lean",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/acmepjz/md4lean",
    "type": "git",
    "subDir": null,
    "scope": "",
@@ -230,6 +273,54 @@
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
    "inherited": true,
-   "configFile": "lakefile.lean"}],
+   "configFile": "lakefile.lean"
+  },
+  {
+   "type": "path",
+   "scope": "",
+   "name": "\u00ablean-inf\u00bb",
+   "manifestFile": "lake-manifest.json",
+   "inherited": false,
+   "dir": "/Users/macbookpro/lab/tau/tau-information-dynamics/lean-inf",
+   "configFile": "lakefile.lean"
+  },
+  {
+   "type": "path",
+   "scope": "",
+   "name": "aristotle",
+   "manifestFile": "lake-manifest.json",
+   "inherited": false,
+   "dir": "/Users/macbookpro/lab/tau/tau-information-dynamics/Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "type": "path",
+   "scope": "",
+   "name": "LGT",
+   "manifestFile": "lake-manifest.json",
+   "inherited": false,
+   "dir": "/Users/macbookpro/lab/tau/tau-information-dynamics/lgt",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "type": "path",
+   "scope": "",
+   "name": "pphi2N",
+   "manifestFile": "lake-manifest.json",
+   "inherited": false,
+   "dir": "/Users/macbookpro/lab/tau/tau-information-dynamics/pphi2N",
+   "configFile": "lakefile.toml"
+  },
+  {
+   "type": "path",
+   "scope": "",
+   "name": "MarkovSemigroups",
+   "manifestFile": "lake-manifest.json",
+   "inherited": true,
+   "dir": "/tmp/MarkovSemigroups",
+   "configFile": "lakefile.toml"
+  }
+ ],
  "name": "CATEPTMain",
- "lakeDir": ".lake"}
+ "lakeDir": ".lake"
+}
