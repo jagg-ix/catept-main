@@ -31,6 +31,8 @@ repo.  Subsystem layout:
 | ELECTROWEAK | ElectroweakInteraction_HiggsMechanism (Mathematica) | Phase 1 (EWPrelude + HiggsMechanism; EW-1..EW-5 proved) |
 | QUANTUM     | lean4-quantum lift + QFI-Toolbox scaffold    | Phase 1 (QuantumPrelude + QuantumGates + DensityMatrix + QFIScaffold + JordanWigner + QFIToolbox + PhysicsHamiltonians + QFIMeasurements) |
 | FBD         | FermionBosonDuality_QFT (Mathematica)        | Phase 1 (FBDPrelude + OmegaMatrices + QEDProcesses + WeakProcesses) |
+| CATEPT      | Complex Action / Entropic Time framework     | Phase 1 (CATEPTPrelude + FeynmanKacBridge + ModularFlowBridge)       |
+| EPT         | Entropic Proper Time — NS/BKM bounds         | Phase 1 (EPTPrelude: decay rate, CI, τ_bound, BKM axioms)            |
 
 See `CATEPTMain/AFPBridge/*/WORKLOG.lean` for per-subsystem status and
 `CATEPTMain/Integration/CATEPTSelfConsistency.lean` for cross-subsystem
@@ -208,6 +210,12 @@ import CATEPTMain.AFPBridge.LDO.LDOPort
 
 -- ── QCD: Quantum Chromodynamics — SU(3) gauge theory (Phase 1) ───────────────
 import CATEPTMain.AFPBridge.QCD.QCDPort
+
+-- ── CATEPT: Complex Action / Entropic Time framework (Phase 1) ───────────────
+import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
+
+-- ── EPT: Entropic Proper Time — NS BKM bounds (Phase 1) ──────────────────────
+import CATEPTMain.AFPBridge.EPT.EPTPort
 
 -- ── SM: Smooth Manifolds ──────────────────────────────────────────────────────
 import CATEPTMain.AFPBridge.SM.Theories.Analysis_More
