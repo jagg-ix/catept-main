@@ -18,6 +18,7 @@ import CATEPTMain.Integration.LGTCATEPTBridge
 import CATEPTMain.Integration.LatticeQCDWilsonBridge
 import CATEPTMain.Integration.NSCATEPTCoreBridge
 import CATEPTMain.Integration.NSCATEPTExtendedBridge
+import CATEPTMain.Integration.AdSCFTBridge
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.UnifiedTheorySpine
 import CATEPTMain.Integration.QuantumCATEPTBridge
