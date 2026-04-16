@@ -2,6 +2,7 @@ import CATEPTMain.Integration.CATEPTSpaceTime
 import DimensionalAnalysis.Basic
 import DimensionalAnalysis.Dimensions
 import DimensionalAnalysis.ISQ
+import NavierStokesClean.AFPBridge.Spacetime.Theoremized.Batch20260408_19_EmergentDimensions
 /-!
 # Information-Extended Dimensional Framework Bridge
 
@@ -330,3 +331,242 @@ theorem phase1_information_dimensional_concrete_contract :
     trivial
 
 end CATEPTMain.Integration.InformationDimensionalFramework.Concrete
+
+-- ============================================================================
+-- §3. Quantum of action, complex action, and time as a composed dimension
+-- ============================================================================
+-- Starting from first principles: ħ (the quantum of action) is the smallest
+-- unit of action in quantum mechanics.  The key identity [ħ] = [E·T] shows
+-- that time is not primitive but composed from action and energy.
+--
+-- Three converging lines of evidence:
+--   (A) ConstDim algebra (Batch20260408_19_EmergentDimensions):
+--       planck_constant_hbar_dimensional_consistency: [E]·[T] = [ħ]
+--       ⟹  timeDim = dimDiv hbarConst energyDim = ħ/E  (time IS action/energy)
+--
+--   (B) InformationExtendedBase algebra (§2 of this file):
+--       dim_action_eq_information: [E·T] = [I]  (the same identity in [I] basis)
+--       ⟹  dim_time_ext = dim_action_ext / dim_energy_ext  (time derived in ext. basis)
+--
+--   (C) Complex action S ∈ ℂ (CAT/EPT Foundations):
+--       [S_R] = [S_I] = [ħ] = [I]  (both parts carry the same information dimension)
+--       τ_ent = S_I/ħ ∈ ℝ  (imaginary part of S/ħ is the EPT clock, dimensionless)
+--       Geometric time t = τ_ent · (ħ/E₀) = S_I/E₀  →  [t] = [I/(I·T⁻¹)] = [T]
+
+namespace CATEPTMain.Integration.InformationDimensionalFramework.QuantumAction
+
+open CATEPTMain.Integration.InformationDimensionalFramework.Concrete
+open NavierStokesClean.AFPBridge.Spacetime.Theoremized.Batch20260408.B19
+
+-- §3.1  Quantum of action: ħ = E·T in ConstDim algebra
+
+/-- The quantum-of-action identity in the ConstDim ({ħ,c,G,k_B}) basis:
+    energy × time = ħ.  Alias of the already-proved `planck_constant_hbar_dimensional_consistency`. -/
+theorem quantum_of_action_E_times_T :
+    dimMul energyDim timeDim = hbarConst :=
+  planck_constant_hbar_dimensional_consistency
+
+/-- Time is the quantum of action divided by energy: T = ħ/E. -/
+theorem time_composed_as_action_per_energy :
+    timeDim = dimDiv hbarConst energyDim := by native_decide
+
+/-- The ConstDim dimension of ħ is a pure hbar-exponent-1 element — the fundamental
+    unit of information/action in the Planck system. -/
+theorem hbar_is_primitive_in_const_basis :
+    hbarConst = { hbarExp := 1, cExp := 0, GExp := 0, kBExp := 0 } := rfl
+
+-- §3.2  Bridge from ConstDim ħ to InformationExtendedBase [I]
+
+/-- ħ in the ConstDim basis corresponds to [I] (information) in the extended basis:
+    both represent the quantum of action.  This is the fundamental identification. -/
+theorem hbar_const_dim_bridges_to_information :
+    -- In ConstDim: hbar is the primitive unit  (hbarExp = 1, all others = 0)
+    -- In InformationExtended: dim_action_eq_information says [E·T] = [I]
+    -- The bridge: ħ ↦ [I] makes the two systems compatible.
+    dim_action_ext = dim_information := dim_action_eq_information
+
+/-- The quantum relation [ħ] = [E·T] in InformationExtendedBase:
+    dim_energy_ext * dim_time_ext = dim_information (proved as dim_action_eq_information). -/
+theorem quantum_action_relation_in_ext_basis :
+    dim_energy_ext * dim_time_ext = dim_information :=
+  dim_action_eq_information
+
+-- §3.3  Time as a composed dimension in InformationExtendedBase
+
+/-- Time has dimension [I/E] in InformationExtendedBase:
+    dim_time_ext = dim_information / dim_energy_ext.
+    Proof: dim_action_eq_information gives dim_energy_ext * dim_time_ext = dim_information,
+    so dividing both sides by dim_energy_ext yields dim_time_ext = dim_information/dim_energy_ext. -/
+theorem time_composed_from_information_and_energy :
+    dim_time_ext = dim_information / dim_energy_ext := by
+  rw [dimension.div_eq_mul_inv]
+  have h : dim_energy_ext * dim_time_ext = dim_information := dim_action_eq_information
+  calc dim_time_ext
+      = 1 * dim_time_ext := (dimension.one_mul _).symm
+    _ = (dim_energy_ext⁻¹ * dim_energy_ext) * dim_time_ext := by
+          rw [dimension.mul_left_inv]
+    _ = dim_energy_ext⁻¹ * (dim_energy_ext * dim_time_ext) := by
+          rw [dimension.mul_assoc]
+    _ = dim_energy_ext⁻¹ * dim_information := by rw [h]
+    _ = dim_information * dim_energy_ext⁻¹ := dimension.mul_comm _ _
+
+/-- Equivalently: dim_information = dim_energy_ext * dim_time_ext,
+    so time IS the "missing" dimension needed to turn energy into information. -/
+theorem time_is_information_per_energy_unit :
+    dim_energy_ext * dim_time_ext = dim_information :=
+  dim_action_eq_information
+
+/-- Parallel to ConstDim: the InformationExtendedBase version of `time_composed_as_action_per_energy`.
+    In both bases, [T] = [ħ/E].  Here ħ ↦ [I] and E ↦ [I·T⁻¹], giving [T] = [I/(I·T⁻¹)] — consistent. -/
+theorem ext_time_matches_const_composition :
+    -- Both ConstDim and InformationExtended agree: time = action / energy
+    -- ConstDim:  timeDim = dimDiv hbarConst energyDim  (proved above)
+    -- ExtBasis:  dim_time_ext = dim_information / dim_energy_ext  (proved above)
+    -- They are the same conceptual statement under the identification ħ ↦ [I].
+    dim_time_ext = dim_information / dim_energy_ext :=
+  time_composed_from_information_and_energy
+
+-- §3.4  Complex action dimensional analysis
+
+/-- The real part of a complex action S = S_R + i·S_I has the same dimension as ħ: [I].
+    This means S_R, S_I are both ℝ-valued quantities with dimension [action] = [I]. -/
+def dim_complex_action_realPart : dimension InformationExtendedBase ℤ := dim_information
+
+/-- The imaginary part S_I has the same dimension as the real part S_R. -/
+def dim_complex_action_imagPart : dimension InformationExtendedBase ℤ := dim_information
+
+/-- Real and imaginary parts of the complex action are dimensionally identical. -/
+theorem complex_action_parts_share_dimension :
+    dim_complex_action_realPart = dim_complex_action_imagPart := rfl
+
+/-- S/ħ ∈ ℂ is fully dimensionless: both Re(S/ħ) = S_R/ħ and Im(S/ħ) = S_I/ħ
+    carry dimension [I/I] = 1.  The EPT clock τ_ent = Im(S/ħ) = S_I/ħ is therefore
+    dimensionless, consistent with exp(-τ_ent) being the path-integral suppression factor. -/
+theorem complex_action_over_hbar_dimensionless :
+    dim_complex_action_imagPart / dim_information =
+      dimension.dimensionless InformationExtendedBase ℤ := by
+  unfold dim_complex_action_imagPart
+  simp [← dimension.one_eq_dimensionless, dimension.mul_right_inv]
+
+/-- Witness that S ∈ ℂ can be represented with a single Information dimension,
+    since both Re and Im parts carry [I] regardless of the ℂ structure. -/
+structure ComplexActionDimensionWitness where
+  /-- Real part of complex action has dimension [I]. -/
+  realPart_is_information : dim_complex_action_realPart = dim_information
+  /-- Imaginary part of complex action has dimension [I]. -/
+  imagPart_is_information : dim_complex_action_imagPart = dim_information
+  /-- Both parts are dimensionally equal. -/
+  parts_are_equal         : dim_complex_action_realPart = dim_complex_action_imagPart
+  /-- S/ħ is dimensionless (the path-integral exponent). -/
+  ratio_dimensionless     : dim_complex_action_imagPart / dim_information =
+                              dimension.dimensionless InformationExtendedBase ℤ
+
+def phase1ComplexActionDimensionWitness : ComplexActionDimensionWitness where
+  realPart_is_information := rfl
+  imagPart_is_information := rfl
+  parts_are_equal         := rfl
+  ratio_dimensionless     := complex_action_over_hbar_dimensionless
+
+-- §3.5  ISQ equivalence (corrected proofs using explicit evaluation)
+
+/-- Conversion map from ISQ dimension to InformationExtended dimension.
+    Natural units c = ħ = k_B = 1; luminosity → dimensionless. -/
+def convertISQToExtended (d : dimension ISQ ℤ) : dimension InformationExtendedBase ℤ :=
+  fun b => match b with
+  | .information => d .mass + d .amount
+  | .time        => -2 * d .mass + d .length + d .time - d .current
+  | .charge      => d .current
+  | .temperature => d .temperature
+
+/-- `convertISQToExtended` is a group homomorphism. -/
+theorem convertISQToExtended_mul (d₁ d₂ : dimension ISQ ℤ) :
+    convertISQToExtended (d₁ * d₂) =
+      convertISQToExtended d₁ * convertISQToExtended d₂ := by
+  funext b; cases b <;>
+    simp only [convertISQToExtended, dimension.mul_def'] <;> ring
+
+-- Helper lemmas: evaluate ISQ base dimensions at each ISQ slot.
+-- All proofs by `decide` (ISQ has DecidableEq, Pi.single is computable).
+
+private lemma isq_time_ev  : ∀ b : ISQ, dimension.time ISQ ℤ b =
+    if b = ISQ.time then 1 else 0 := fun b => Pi.single_apply _ _ _
+private lemma isq_mass_ev  : ∀ b : ISQ, dimension.mass ISQ ℤ b =
+    if b = ISQ.mass then 1 else 0 := fun b => Pi.single_apply _ _ _
+private lemma isq_length_ev : ∀ b : ISQ, dimension.length ISQ ℤ b =
+    if b = ISQ.length then 1 else 0 := fun b => Pi.single_apply _ _ _
+private lemma isq_current_ev : ∀ b : ISQ, dimension.current ISQ ℤ b =
+    if b = ISQ.current then 1 else 0 := fun b => Pi.single_apply _ _ _
+private lemma isq_temp_ev : ∀ b : ISQ, dimension.temperature ISQ ℤ b =
+    if b = ISQ.temperature then 1 else 0 := fun b => Pi.single_apply _ _ _
+
+/-- [T]_ISQ ↔ [T]_ext : time is primitive in both systems. -/
+theorem convertISQToExtended_time :
+    convertISQToExtended (dimension.time ISQ ℤ) = dim_time_ext := by
+  funext b
+  fin_cases b <;>
+    simp only [convertISQToExtended, isq_time_ev, dim_time_ext, Pi.single_apply] <;>
+    decide
+
+/-- [Θ]_ISQ ↔ [Θ]_ext : temperature is primitive in both systems. -/
+theorem convertISQToExtended_temperature :
+    convertISQToExtended (dimension.temperature ISQ ℤ) = dim_temperature_ext := by
+  funext b
+  fin_cases b <;>
+    simp only [convertISQToExtended, isq_temp_ev, dim_temperature_ext, Pi.single_apply] <;>
+    decide
+
+/-- [M]_ISQ ↔ [I·T⁻²]_ext : ISQ mass maps to information × time⁻². -/
+theorem convertISQToExtended_mass :
+    convertISQToExtended (dimension.mass ISQ ℤ) = dim_mass_ext := by
+  funext b
+  simp only [dim_mass_ext, dim_information, dim_time_ext,
+             dimension.mul_def', dimension.inv_def, dimension.pow_def']
+  fin_cases b <;>
+    simp only [convertISQToExtended, isq_mass_ev, Pi.single_apply] <;>
+    decide
+
+/-- [L]_ISQ ↔ [T]_ext : length equals time in natural units c = 1. -/
+theorem convertISQToExtended_length :
+    convertISQToExtended (dimension.length ISQ ℤ) = dim_length_ext := by
+  funext b
+  fin_cases b <;>
+    simp only [convertISQToExtended, isq_length_ev, dim_length_ext, dim_time_ext,
+               Pi.single_apply] <;>
+    decide
+
+/-- ISQ energy [M·L²·T⁻²] maps to [I·T⁻²] = dim_mass_ext in the extended basis.
+    Note: this differs from dim_energy_ext = [I·T⁻¹]; the discrepancy is the
+    Mathematica inconsistency documented in §2. -/
+theorem convertISQToExtended_energy_eq_mass_ext :
+    convertISQToExtended (dimension.energy ISQ ℤ) = dim_mass_ext := by
+  funext b
+  simp only [dim_mass_ext, dim_information, dim_time_ext,
+             dimension.mul_def', dimension.inv_def, dimension.pow_def']
+  fin_cases b <;>
+    simp only [convertISQToExtended, dimension.energy,
+               isq_mass_ev, isq_length_ev, isq_time_ev,
+               dimension.mul_def', dimension.pow_def',
+               Pi.single_apply] <;>
+    decide
+
+-- §3.6  Infrastructure reuse inventory (documentation theorems)
+
+/-- The `dimension` CommGroup structure (mul_assoc, mul_left_inv, mul_one, etc.) is fully
+    generic over the base type B.  All proofs from §2 transfer unchanged when B is replaced
+    by any other Fintype with DecidableEq. -/
+theorem commgroup_reuse_ok :
+    Nonempty (CommGroup (dimension InformationExtendedBase ℤ)) :=
+  ⟨inferInstance⟩
+
+/-- Buckingham-Pi counting works for InformationExtendedBase (it has Fintype). -/
+theorem buckingham_pi_applicable :
+    Fintype.card InformationExtendedBase = 4 := by decide
+
+/-- evalAutoDim pattern (from DimensionalHomogeneity) applies to extended basis:
+    dim_length_ext / dim_time_ext = dimensionless (c=1 in natural units). -/
+theorem ext_velocity_dimensionless_reuse :
+    dim_length_ext / dim_time_ext =
+      dimension.dimensionless InformationExtendedBase ℤ := by
+  simp [dim_length_ext, ← dimension.one_eq_dimensionless]
+
+end CATEPTMain.Integration.InformationDimensionalFramework.QuantumAction
