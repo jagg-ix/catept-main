@@ -1,5 +1,6 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
+import CATEPTMain.Integration.TheoryPluginDimSlot
 import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
 import CATEPTMain.Integration.ComplexFunctionalsBridge
 import CATEPTMain.Gravitas.Basic
@@ -115,7 +116,7 @@ theorem adapterCATEPTSlot_consistent :
 -- ── Concrete plugin instance ──────────────────────────────────────────────────
 
 /-- Concrete plugin instance wiring the abstract slots to Gravitas-level types. -/
-def gravitasPphi2AdapterPlugin : TheoryPlugin :=
+noncomputable def gravitasPphi2AdapterPlugin : TheoryPlugin :=
   { name := "gravitas-pphi2-adapter"
     ModelSpaceTy := EuclideanSpace ℝ (Fin 4)
     SpacetimePointTy := EuclideanSpace ℝ (Fin 4)
@@ -192,14 +193,15 @@ theorem adapterQuantizedParticle_hasReconstruction :
 /-- The reconstruction-backed quantized particle is the unique adapter particle seed. -/
 theorem adapterQuantizedParticle_mem_particles :
     adapterQuantizedParticle ∈ gravitasPphi2AdapterPlugin.particles := by
-  simp [gravitasPphi2AdapterPlugin, adapterQuantizedParticle]
+  show adapterQuantizedParticle ∈ [adapterQuantizedParticle]
+  simp
 
 /-- WP03 core slot lemma: gauge-geometry slot for the concrete adapter plugin. -/
 theorem gravitasPphi2AdapterPlugin_gaugeGeometrySlot :
     gaugeGeometryPluginConstraint gravitasPphi2AdapterPlugin := by
   constructor
   · intro G
-    trivial
+    exact fun x => rfl
   · intro phi
     exact adapterMaxwellCurveSpacePphi2Contract
 
@@ -208,11 +210,11 @@ theorem gravitasPphi2AdapterPlugin_localGlobalSlot :
     localGlobalPluginConstraint gravitasPphi2AdapterPlugin := by
   constructor
   · intro p
-    decide
+    rfl
   constructor
   · rfl
-  · use 0
-    refine ⟨rfl, NavierStokes.FourierModel.enstrophyF_nonneg 0⟩
+  · exact ⟨{ N := 0, freq := Fin.elim0, amp := Fin.elim0 },
+           rfl, NavierStokes.FourierModel.enstrophyF_nonneg _⟩
 
 /-- WP03 core slot lemma: classical-quantum slot for the concrete adapter plugin. -/
 theorem gravitasPphi2AdapterPlugin_classicalQuantumSlot :
@@ -306,7 +308,7 @@ theorem gravitasPphi2AdapterPlugin_diag_quantize
 /-- Post-tranche diagnostic: diffeomorphism-facing bridge contract is available. -/
 theorem gravitasPphi2AdapterPlugin_diag_diffeoBridgeContract :
     CatEptPphi2IntegrationContract adapterMaxwellCurveSpaceModel adapterPphi2Witness :=
-  (gravitasPphi2AdapterPlugin_diag_gaugeGeometrySlot.2 Unit.unit)
+  gravitasPphi2AdapterPlugin_diag_gaugeGeometrySlot.2 ""
 
 /-- WP09 diagnostic: EM slot can be projected from unified validation. -/
 theorem gravitasPphi2AdapterPlugin_diag_emSlot :
@@ -326,7 +328,9 @@ theorem gravitasPphi2AdapterPlugin_diag_quantumSlot :
 /-- Post-tranche diagnostic: the adapter exposes a Quantum Fisher contract. -/
 theorem gravitasPphi2AdapterPlugin_diag_quantumFisherContract :
     QuantumFisher.QuantumFisherIntegrationContract adapterQuantumFisherWitness :=
-  (gravitasPphi2AdapterPlugin_diag_quantumSlot _ (by simp)).2
+  (gravitasPphi2AdapterPlugin_diag_quantumSlot
+      (Gravitas.Expr.var "Qop")
+      (by show Gravitas.Expr.var "Qop" ∈ [Gravitas.Expr.var "Qop"]; simp)).2
 
 /-- Post-tranche diagnostic: low-energy scalar is sourced from the Yoshida bridge. -/
 theorem adapterLowEnergyScalar_eq :
@@ -358,7 +362,9 @@ theorem gravitasPphi2AdapterPlugin_diag_entropicProperTimeContract :
 /-- Post-tranche diagnostic: the coupling slot carries the Maxwell-curve-space contract. -/
 theorem gravitasPphi2AdapterPlugin_diag_couplingBridgeContract :
     CatEptPphi2IntegrationContract adapterMaxwellCurveSpaceModel adapterPphi2Witness :=
-  (gravitasPphi2AdapterPlugin_diag_couplingSlot _ (by simp)).2
+  (gravitasPphi2AdapterPlugin_diag_couplingSlot
+      adapterQuantizedParticle
+      (by show adapterQuantizedParticle ∈ [adapterQuantizedParticle]; simp)).2
 
 /-- Mapping sanity: adapter solver artifacts are available from mapped payloads. -/
 theorem adapter_payload_mapping_sanity :
@@ -373,5 +379,23 @@ theorem adapter_payload_mapping_sanity :
   constructor
   · rfl
   · rfl
+
+-- ── Dimensional analysis slot (TheoryPluginDimSlot) ──────────────────────────
+
+/-- Dimensional certificate for the adapter plugin.
+    Uses `canonicalDimReport` plus the trivial Unit CATEPT slot consistency. -/
+def gravitasPphi2AdapterPlugin_dimCertificate :
+    PluginDimCertificate gravitasPphi2AdapterPlugin :=
+  { dimReport := canonicalDimReport
+    cateptOk  := adapterCATEPTSlot_consistent }
+
+theorem gravitasPphi2AdapterPlugin_dimConstraint :
+    dimConsistencyConstraint gravitasPphi2AdapterPlugin :=
+  ⟨gravitasPphi2AdapterPlugin_dimCertificate⟩
+
+/-- **End-to-end full validation** (13 slots: 12 standard + dimensional homogeneity). -/
+theorem gravitasPphi2AdapterPlugin_fullValid :
+    validatePluginFull gravitasPphi2AdapterPlugin :=
+  ⟨gravitasPphi2AdapterPlugin_valid, gravitasPphi2AdapterPlugin_dimConstraint⟩
 
 end CATEPTMain.Integration
