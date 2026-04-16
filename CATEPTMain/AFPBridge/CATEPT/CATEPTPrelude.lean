@@ -181,6 +181,14 @@ theorem measurable_weight : Measurable m.weight := by
   · exact (Complex.measurable_ofReal.comp
       (m.measurable_actionRe.div_const m.hbar)).mul_const Complex.I
 
+/-- The scaled imaginary action is measurable. -/
+theorem measurable_actionImScaled : Measurable m.actionImScaled :=
+  m.measurable_actionIm.div_const m.hbar
+
+/-- The damping factor is measurable. -/
+theorem measurable_damping : Measurable m.damping :=
+  Real.measurable_exp.comp m.measurable_actionImScaled.neg
+
 end  -- noncomputable section
 
 end MeasurePathIntegralModel

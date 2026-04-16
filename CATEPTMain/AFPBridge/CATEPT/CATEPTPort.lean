@@ -1,6 +1,7 @@
 import CATEPTMain.AFPBridge.CATEPT.CATEPTPrelude
 import CATEPTMain.AFPBridge.CATEPT.FeynmanKacBridge
 import CATEPTMain.AFPBridge.CATEPT.ModularFlowBridge
+import CATEPTMain.AFPBridge.CATEPT.ComplexMeasureBridge
 /-!
 # CATEPT Port — Root Module
 
@@ -10,13 +11,15 @@ This barrel file aggregates all CATEPT submodules in dependency order.
 
 ## Module map
 
-  CATEPTPrelude       — core structures: ComplexAction, MeasurePathIntegralModel,
-                        weight factorization, Cameron condition, Bochner bounds,
-                        ComplexSchrodingerFunctional
-  FeynmanKacBridge    — FK ↔ CAT/EPT bridge: τ_ent ↔ ∫V ds, Euclidean correspondence,
-                        decay ODE, complex FK bridge (axiom)
-  ModularFlowBridge   — Tomita-Takesaki: τ_ent = accumulated modular flow,
-                        Page-Wootters = Connes-Rovelli, Hyers-Ulam stability
+  CATEPTPrelude         — core structures: ComplexAction, MeasurePathIntegralModel,
+                          weight factorization, Cameron condition, Bochner bounds,
+                          ComplexSchrodingerFunctional
+  FeynmanKacBridge      — FK ↔ CAT/EPT bridge: τ_ent ↔ ∫V ds, Euclidean correspondence,
+                          decay ODE, complex FK bridge (axiom)
+  ModularFlowBridge     — Tomita-Takesaki: τ_ent = accumulated modular flow,
+                          Page-Wootters = Connes-Rovelli, Hyers-Ulam stability
+  ComplexMeasureBridge  — measure existence via L¹-density: ν(A)=∫_A w dγ is a
+                          finite countably additive complex measure (VectorMeasure α ℂ)
 
 ## Theorems proved (Phase 1)
 
@@ -45,6 +48,18 @@ This barrel file aggregates all CATEPT submodules in dependency order.
     • `connes_rovelli_time_eq_accumulated_modular_flow` — CR time = ∫ λ dτ
     • `relational_time_eq_thermal_time`  — PW clock = CR clock
 
+  ComplexMeasureBridge:
+    • `weight_integrable_of_damping_integrable` — damping ∈ L¹ → w ∈ L¹
+    • `integral_weight_hasSum`           — HasSum / countable additivity via DCT
+    • `integral_weight_iUnion`           — tsum = ∫_{⋃ sₙ} w dγ
+    • `setIntegral_weight_norm_le_damping` — ‖∫_A w‖ ≤ ∫_A damping (total variation)
+    • `catept_complex_measure`           — VectorMeasure α ℂ construction
+    • `catept_complex_measure_apply`     — ν(A) = ∫_A w dγ for measurable A
+    • `catept_complex_measure_norm_le`   — ‖ν(A)‖ ≤ Z₀ = ∫ damping dγ
+    • `catept_fk_decomposition`          — ν(A) = ∫_A phase·damping dγ
+    • `catept_measure_exists_from_finite_reference` — finite γ → L¹ automatic
+    • `cameron_condition_gives_pointwise_bound` — pointwise bound clarification
+
 ## Axiom surface (pending Phase 2)
 
   FeynmanKacBridge:
@@ -53,7 +68,10 @@ This barrel file aggregates all CATEPT submodules in dependency order.
   ModularFlowBridge:
     • `kms_condition`         — KMS from modular flow theory (Type III₁)
     • `cameron_martin_girsanov` — absolute continuity w.r.t. Wiener measure
-    • `hyers_ulam_weight_stability` — 2 sorry stubs (need S_I ≥ 0 + MVT)
+    • `hyers_ulam_weight_stability` — 1 sorry stub (needs MVT on exp(-·/ħ))
+
+  ComplexMeasureBridge:
+    • `cameron_martin_quasi_invariance` — d(T_h)*ν/dν Radon-Nikodym (Phase 2)
 
 ## Phase-2 roadmap
 
