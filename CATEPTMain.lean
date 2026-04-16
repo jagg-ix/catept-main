@@ -38,6 +38,7 @@ import CATEPTMain.Integration.TheoryPluginDimFundamental
 import CATEPTMain.Integration.TheoryPluginQTMBridge
 import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
 import CATEPTMain.Integration.TheoryPluginOriginBridge
+import CATEPTMain.Integration.TheoryPluginThermodynamicsOfChoiceBridge
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 
