@@ -15,6 +15,7 @@ import CATEPTMain.Integration.QuantumFisherBridge
 import CATEPTMain.Integration.InformationDimensionalFrameworkBridge
 import CATEPTMain.Integration.Pphi2NCATEPTBridge
 import CATEPTMain.Integration.LGTCATEPTBridge
+import CATEPTMain.Integration.LatticeQCDWilsonBridge
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.UnifiedTheorySpine
 import CATEPTMain.Integration.QuantumCATEPTBridge

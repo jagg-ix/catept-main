@@ -82,58 +82,55 @@ theorem adapterMaxwellCurveSpacePphi2Contract :
     adapterMaxwellCurveSpaceModel
     adapterPphi2Witness
     ?hCurve ?hMaxwell ?hCoupling ?hOS0 ?hOS1 ?hOS2 ?hOS3 ?hOS4 ?hRec
-  · intro x
-    norm_num
-  · intro a
-    norm_num
-  · intro x a
-    norm_num
-  · trivial
-  · trivial
-  · trivial
-  · trivial
-  · trivial
+  · intro x; simp [adapterMaxwellCurveSpaceModel]
+  · intro a; simp [adapterMaxwellCurveSpaceModel]
+  · intro x a; simp [adapterMaxwellCurveSpaceModel]
+  · exact fun z => rfl
+  · exact fun f => rfl
+  · exact fun x => rfl
+  · exact ⟨0, le_refl 0⟩
+  · exact fun x y => Classical.em (x = y)
   · trivial
 
 /-- Local Quantum Fisher bridge theorem instance exported into the adapter layer. -/
 theorem adapterQuantumFisherContract :
-    QuantumFisher.QuantumFisherIntegrationContract adapterQuantumFisherWitness := by
-  exact QuantumFisher.quantumFisher_integration_contract
+    QuantumFisher.QuantumFisherIntegrationContract adapterQuantumFisherWitness :=
+  QuantumFisher.quantumFisher_integration_contract
     adapterQuantumFisherWitness
-    ⟨0, rfl⟩
-    ⟨0, rfl⟩
-    (by norm_num)
-    (by norm_num)
-    (by norm_num)
-    (by norm_num)
-    (by norm_num)
+    ⟨0, rfl⟩        -- densityFamily_defined : ∃ x : ℝ, x = x
+    ⟨0, rfl⟩        -- sld_exists : ∃ x : ℝ, x = x
+    (le_refl 0)      -- qfi_nonneg : (0 : ℝ) ≤ 0
+    (le_refl 1)      -- cramerRao_bound : (1 : ℝ) ≤ 1
+    (zero_div 4)     -- sImag_generator_identity : (0 : ℝ) / 4 = 0
+    (mul_zero 4)     -- bures_relation : (4 : ℝ) * 0 = 0
+    (le_refl 0)      -- wigner_yanase_bound : (0 : ℝ) ≤ 0
     trivial
 
 /-- Local Yoshida bridge theorem instance exported into the adapter layer. -/
 theorem adapterYoshidaContract :
-    YoshidaFreeFisher.YoshidaFreeFisherIntegrationContract adapterYoshidaWitness := by
-  exact YoshidaFreeFisher.yoshidaFreeFisher_integration_contract
+    YoshidaFreeFisher.YoshidaFreeFisherIntegrationContract adapterYoshidaWitness :=
+  YoshidaFreeFisher.yoshidaFreeFisher_integration_contract
     adapterYoshidaWitness
-    ⟨0, rfl⟩
-    ⟨0, rfl⟩
-    (by norm_num)
-    ⟨0, rfl⟩
-    (by norm_num)
-    (by norm_num)
+    ⟨0, rfl⟩    -- semicircularNoise_defined : ∃ σ : ℝ, σ = σ
+    ⟨0, rfl⟩    -- freeConvolution_defined : ∃ x : ℝ, x = x
+    (le_refl 0) -- freeMSE_nonneg : (0 : ℝ) ≤ 0
+    ⟨0, rfl⟩    -- freeFisherDist_defined : ∃ d : ℝ, d = d
+    rfl         -- sImag_generator_identity : (0 : ℝ) = 0
+    (le_refl 0) -- voiculescuFisherInfo_largeN : (0 : ℝ) ≤ 0
     trivial
 
 /-- Local alpha-divergence bridge theorem instance exported into the adapter layer. -/
 theorem adapterAlphaDivergenceContract :
     AlphaDivergencePathIntegral.AlphaDivergencePathIntegralIntegrationContract
-      adapterAlphaDivergenceWitness := by
-  exact AlphaDivergencePathIntegral.alphaDivergencePathIntegral_integration_contract
+      adapterAlphaDivergenceWitness :=
+  AlphaDivergencePathIntegral.alphaDivergencePathIntegral_integration_contract
     adapterAlphaDivergenceWitness
-    trivial
-    trivial
-    trivial
-    trivial
-    trivial
-    trivial
+    (fun α h => ⟨by linarith [h.1], by linarith [h.2]⟩) -- banachExponents_wellDefined
+    ⟨0, le_refl 0⟩                                       -- relativeModular_positiveSelfAdjoint
+    (fun α _ => ⟨4 / (1 - α ^ 2), rfl⟩)                 -- alphaDivergence_defined
+    (fun r => rfl)                                        -- araki_limit
+    (fun τ_ent => ⟨Real.exp (-τ_ent), rfl⟩)             -- pathIntegral_damping_match
+    Real.exp_zero                                         -- feynman_recovery
     trivial
 
 /-- Local entropic proper-time bridge theorem instance exported into the adapter layer. -/
