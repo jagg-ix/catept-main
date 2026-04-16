@@ -36,6 +36,7 @@ import CATEPTMain.Integration.TheoryPluginDimCore
 import CATEPTMain.Integration.TheoryPluginDimCategory
 import CATEPTMain.Integration.TheoryPluginDimFundamental
 import CATEPTMain.Integration.TheoryPluginQTMBridge
+import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 
