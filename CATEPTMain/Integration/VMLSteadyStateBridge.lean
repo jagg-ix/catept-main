@@ -2,6 +2,8 @@ import Aristotle.Landau.main.Theorem42
 
 set_option autoImplicit false
 
+open MeasureTheory VML
+
 /-!
 # VML Steady-State Integration Bridge
 

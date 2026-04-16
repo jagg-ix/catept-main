@@ -19,6 +19,7 @@ import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.UnifiedTheorySpine
 import CATEPTMain.Integration.QuantumCATEPTBridge
 import CATEPTMain.Integration.ElectroweakCATEPTBridge
+import CATEPTMain.Integration.VMLCATEPTBridge
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
 import CATEPTMain.Integration.TheoryPluginAdapter
 import CATEPTMain.Integration.TheoryPluginStressTests
