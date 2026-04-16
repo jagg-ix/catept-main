@@ -32,6 +32,7 @@ import CATEPTMain.Integration.TheoryPluginAdapterSupport
 import CATEPTMain.Integration.TheoryPluginAdapter
 import CATEPTMain.Integration.TheoryPluginStressTests
 import CATEPTMain.Integration.TheoryPluginDimSlot
+import CATEPTMain.Integration.TheoryPluginDimCore
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 

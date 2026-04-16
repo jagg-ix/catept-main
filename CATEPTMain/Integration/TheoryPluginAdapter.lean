@@ -1,6 +1,6 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
-import CATEPTMain.Integration.TheoryPluginDimSlot
+import CATEPTMain.Integration.TheoryPluginDimCore
 import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
 import CATEPTMain.Integration.ComplexFunctionalsBridge
 import CATEPTMain.Gravitas.Basic
@@ -397,5 +397,34 @@ theorem gravitasPphi2AdapterPlugin_dimConstraint :
 theorem gravitasPphi2AdapterPlugin_fullValid :
     validatePluginFull gravitasPphi2AdapterPlugin :=
   ⟨gravitasPphi2AdapterPlugin_valid, gravitasPphi2AdapterPlugin_dimConstraint⟩
+
+-- ── Dimensional core and profile (TheoryPluginDimCore) ───────────────────────
+
+/-- Canonical dim profile for the adapter plugin (empty extension). -/
+noncomputable def gravitasPphi2AdapterPlugin_dimProfile :
+    PluginDimProfile gravitasPphi2AdapterPlugin :=
+  canonicalDimProfile gravitasPphi2AdapterPlugin
+
+/-- The adapter plugin satisfies the full extended validator with dim profile. -/
+theorem gravitasPphi2AdapterPlugin_withDimProfile :
+    validatePluginWithDimProfile gravitasPphi2AdapterPlugin :=
+  validatePluginWithDimProfile_intro gravitasPphi2AdapterPlugin
+    gravitasPphi2AdapterPlugin_fullValid
+    gravitasPphi2AdapterPlugin_dimProfile
+
+/-- Derived fact: clock is dimensionless for the adapter's canonical core. -/
+theorem gravitasPphi2Adapter_clock_dimensionless :
+    (canonicalPluginDimCore gravitasPphi2AdapterPlugin).actionDim /
+    (canonicalPluginDimCore gravitasPphi2AdapterPlugin).hbarDim =
+      dimension.dimensionless
+        InformationDimensionalFramework.Concrete.InformationExtendedBase ℤ :=
+  (canonicalDerivedFacts gravitasPphi2AdapterPlugin).clock_dimensionless
+
+/-- Derived fact: time is composed for the adapter's canonical core. -/
+theorem gravitasPphi2Adapter_time_composed :
+    (canonicalPluginDimCore gravitasPphi2AdapterPlugin).timeDim =
+    (canonicalPluginDimCore gravitasPphi2AdapterPlugin).actionDim /
+    (canonicalPluginDimCore gravitasPphi2AdapterPlugin).energyDim :=
+  (canonicalDerivedFacts gravitasPphi2AdapterPlugin).time_composed
 
 end CATEPTMain.Integration
