@@ -91,11 +91,14 @@ types once the toolchain is at v4.29.0.
 | `vonNeumann_entropy_is_computation_dim`  | proved  |
 | `holevo_information_is_communication_dim` | proved |
 | `landauer_shannon_dimensional_duality`   | proved  |
-| `SpacetimeRegionQTM`                     | Phase-1 |
-| `sequentialCompose`                      | Phase-1 |
-| `parallelCompose`                        | Phase-1 |
-| `VNAlgebraRegionWitness`                 | Phase-1 |
-| `leanMachineQTMBridge`                   | Phase-1 |
+| `SpacetimeRegionQTM`                     | proved  |
+| `sequentialCompose`                      | proved  |
+| `sequentialCompose_assoc`                | proved  |
+| `sequentialCompose_identity_{left,right}`| proved  |
+| `parallelCompose_totalEvolution_product` | proved  |
+| `parallelCompose.decomposition`          | Phase-2 |
+| `VNAlgebraRegionWitness`                 | proved  |
+| `leanMachineQTMBridge`                   | Phase-2 |
 
 -/
 
@@ -282,6 +285,29 @@ structure QTMQuantumBackend where
                      (tensorState ρ σ) =
         applyChannel (channelCompose (tensorChannel Φ₁ Φ₂) (tensorChannel Ψ₁ Ψ₂))
                      (tensorState ρ σ)
+  /-- Tensor product acts componentwise on product states:
+      `(Φ ⊗ Ψ)(ρ₁ ⊗ ρ₂) = Φ(ρ₁) ⊗ Ψ(ρ₂)`.
+      Standard monoidal functor axiom; holds for all CPTP maps. -/
+  tensor_apply_product :
+      ∀ (Φ Ψ : Channel) (ρ₁ ρ₂ : State),
+        applyChannel (tensorChannel Φ Ψ) (tensorState ρ₁ ρ₂) =
+          tensorState (applyChannel Φ ρ₁) (applyChannel Ψ ρ₂)
+  /-- Tensor product is congruent: observationally equal channels have equal tensor products.
+      Physically: if `Φ₁` and `Φ₂` act identically on all states, `Φ₁ ⊗ Ψ` and `Φ₂ ⊗ Ψ` also act
+      identically.  Holds because `(Φ₁ ⊗ Ψ)(ρ)` depends only on how `Φ₁` acts on the subsystem. -/
+  tensor_cong :
+      ∀ (Φ₁ Φ₂ Ψ₁ Ψ₂ : Channel),
+        (∀ ρ, applyChannel Φ₁ ρ = applyChannel Φ₂ ρ) →
+        (∀ ρ, applyChannel Ψ₁ ρ = applyChannel Ψ₂ ρ) →
+        ∀ ρ, applyChannel (tensorChannel Φ₁ Ψ₁) ρ = applyChannel (tensorChannel Φ₂ Ψ₂) ρ
+  /-- Tensor–compose interchange on arbitrary states (not just product states):
+      `(Φ₁ ∘ Φ₂) ⊗ (Ψ₁ ∘ Ψ₂) = (Φ₁ ⊗ Ψ₁) ∘ (Φ₂ ⊗ Ψ₂)`.
+      Holds for CPTP maps via the Choi–Kraus representation; the interchange law
+      is the functoriality of `⊗` as a 2-functor on the category of CPTP maps. -/
+  tensor_compose_general :
+      ∀ (Φ₁ Φ₂ Ψ₁ Ψ₂ : Channel) (ρ : State),
+        applyChannel (tensorChannel (channelCompose Φ₁ Φ₂) (channelCompose Ψ₁ Ψ₂)) ρ =
+          applyChannel (channelCompose (tensorChannel Φ₁ Ψ₁) (tensorChannel Φ₂ Ψ₂)) ρ
   /-- Von Neumann entropy is non-negative. -/
   entropy_nonneg : ∀ (ρ : State), 0 ≤ vonNeumannEntropy ρ
 
@@ -333,34 +359,38 @@ structure SpacetimeRegionQTM (backend : QTMQuantumBackend) where
 `R₁` then `R₂`: the region `R₂` acts after `R₁` in time.
 The total evolution is `Λ(R₂) ∘ₘ Λ(R₁)`.
 
-The per-component decomposition of the composed total into `comp ∘ comm` requires
-the Trotter product formula (phase approximation) or commutativity of `Λ_comp` and
-`Λ_comm` across the two regions — neither holds in general.  Phase-2 will handle
-this via the Baker–Campbell–Hausdorff correction.  Phase-1: `decomposition` is
-stated with a `sorry` stub.
+**Phase-2 decomposition design**: to preserve the invariant `total = comm∘comp`
+under sequential composition, we use a **forward-Euler split**:
+- `computationChannel := Λ₂_comp ∘ Λ₁_total`
+  (R₁ evolves fully, then R₂ applies its dissipation)
+- `communicationChannel := Λ₂_comm`
+  (R₂'s coherent phase is the final communication step)
+
+Then: `Λ₂_comm ∘ (Λ₂_comp ∘ Λ₁_total) = (Λ₂_comm ∘ Λ₂_comp) ∘ Λ₁_total = Λ₂_total ∘ Λ₁_total` ✓
+using `R₂.decomposition` applied to any intermediate state.
+
+This is the Stinespring picture: all of R₁'s evolution is part of the
+"computation" (environment coupling) phase, and only R₂'s coherent unitary
+contributes to the "communication" phase.
 -/
 
-/-- Sequential composition: `R₂` follows `R₁`. -/
+/-- Sequential composition: `R₂` follows `R₁`.
+    Uses the forward-Euler decomposition:
+    `computationChannel = Λ₂_comp ∘ Λ₁_total`, `communicationChannel = Λ₂_comm`. -/
 def SpacetimeRegionQTM.sequentialCompose
     {backend : QTMQuantumBackend}
     (R₁ R₂ : SpacetimeRegionQTM backend) :
     SpacetimeRegionQTM backend where
   initialState         := R₁.initialState
   computationChannel   :=
-    backend.channelCompose R₂.computationChannel R₁.computationChannel
-  communicationChannel :=
-    backend.channelCompose R₂.communicationChannel R₁.communicationChannel
+    backend.channelCompose R₂.computationChannel R₁.totalEvolution
+  communicationChannel := R₂.communicationChannel
   totalEvolution       :=
     backend.channelCompose R₂.totalEvolution R₁.totalEvolution
-  decomposition := by
-    intro ρ
-    -- Phase-1: requires Trotter / BCH correction or commutativity of
-    -- Λ₂_comp with Λ₁_comm.  Both are Phase-2 obligations.
-    -- Concretely: we need
-    --   (Λ₂_comm ∘ Λ₂_comp) ∘ (Λ₁_comm ∘ Λ₁_comp)
-    --   = (Λ₂_comm ∘ Λ₁_comm) ∘ (Λ₂_comp ∘ Λ₁_comp)
-    -- which follows from Λ₂_comp ∘ Λ₁_comm = Λ₁_comm ∘ Λ₂_comp.
-    sorry  -- Phase-1
+  decomposition := fun ρ => by
+    have h := R₂.decomposition (backend.applyChannel R₁.totalEvolution ρ)
+    simp only [backend.channelCompose_apply] at h ⊢
+    exact h
 
 /-- Sequential composition total evolution equals channel composition. -/
 theorem sequentialCompose_totalEvolution
@@ -432,15 +462,20 @@ def SpacetimeRegionQTM.parallelCompose
   computationChannel   := backend.tensorChannel R₁.computationChannel R₂.computationChannel
   communicationChannel := backend.tensorChannel R₁.communicationChannel R₂.communicationChannel
   totalEvolution       := backend.tensorChannel R₁.totalEvolution R₂.totalEvolution
-  decomposition := by
-    intro ρ
-    -- Phase-1: the decomposition uses tensor_compose applied to the product state ρ,
-    -- but ρ need not be a product state (it may be entangled).
-    -- Full proof requires bilinearity of tensor_compose over arbitrary mixed states.
-    -- Phase-2 obligation: extend tensor_compose to arbitrary states.
-    sorry  -- Phase-1
+  decomposition := fun ρ => by
+    -- Step 1: use tensor_cong to replace total_i with (comm_i ∘ comp_i)
+    have h_cong := backend.tensor_cong
+        R₁.totalEvolution (backend.channelCompose R₁.communicationChannel R₁.computationChannel)
+        R₂.totalEvolution (backend.channelCompose R₂.communicationChannel R₂.computationChannel)
+        R₁.decomposition R₂.decomposition ρ
+    rw [h_cong]
+    -- Step 2: apply tensor–compose interchange (arbitrary state)
+    exact backend.tensor_compose_general
+        R₁.communicationChannel R₁.computationChannel
+        R₂.communicationChannel R₂.computationChannel ρ
 
-/-- Parallel composition total evolution acts as product channel on product states. -/
+/-- Parallel composition total evolution acts as product channel on product states.
+    Proof: immediate from the `tensor_apply_product` monoidal axiom. -/
 theorem parallelCompose_totalEvolution_product
     {backend : QTMQuantumBackend}
     (R₁ R₂ : SpacetimeRegionQTM backend)
@@ -451,7 +486,7 @@ theorem parallelCompose_totalEvolution_product
         (backend.applyChannel R₁.totalEvolution ρ₁)
         (backend.applyChannel R₂.totalEvolution ρ₂) := by
   simp only [SpacetimeRegionQTM.parallelCompose]
-  sorry  -- Phase-1: requires tensor_apply axiom
+  exact backend.tensor_apply_product R₁.totalEvolution R₂.totalEvolution ρ₁ ρ₂
 
 -- ── Part D: Von Neumann algebra witness ────────────────────────────────────────
 

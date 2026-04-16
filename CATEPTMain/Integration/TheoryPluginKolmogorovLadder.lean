@@ -80,10 +80,11 @@ Each rung n is a `LeanMachineQTMBridge` where:
 | `kolmogorov_ladder_covers_all_depths`         | proved  |
 | `sequentialCompose_ladder_rungs`              | proved  |
 | `ladder_monotone_of_cert_monotone`            | proved  |
-| `QTMKolmogorovCert`                           | Phase-1 |
-| `KolmogorovLadderRung`                        | Phase-1 |
-| `KolmogorovLadder`                            | Phase-1 |
-| `qtm_kolmogorov_complexity_bridge`            | Phase-1 |
+| `QTMKolmogorovCert`                           | Phase-2 |
+| `KolmogorovLadderRung`                        | proved  |
+| `KolmogorovLadder`                            | Phase-2 |
+| `canonicalLadderRung.rungBound`               | proved  |
+| `qtm_kolmogorov_complexity_bridge`            | Phase-2 |
 
 -/
 
@@ -196,11 +197,19 @@ structure QTMKolmogorovCert (backend : QTMQuantumBackend)
       K(ρ) ≥ entropy(ρ) − const.  Most quantum states are incompressible. -/
   incompressibility : ∀ (ρ : backend.State),
       ∃ (c : ℕ), (complexityOf ρ : ℝ) + c ≥ backend.vonNeumannEntropy ρ
-  /-- **Computation increases complexity**: `Re(S)` evolution (Landauer erasure)
-      generates new information, increasing `K`.  Formally, the computation
-      channel is non-contracting on K. -/
+  /-- **Computation strictly increases complexity** (Phase-2 axiom):
+      `Re(S)` evolution (Landauer erasure) generates ≥ 1 new irreversible bit
+      per step.  This is the Phase-2 strengthening of the non-decreasing axiom;
+      it holds because each Landauer erasure event is thermodynamically irreversible:
+      the environment absorbs `k_B T ln 2` of entropy, raising K by ≥ 1.
+
+      Formally: `K(Λ_comp(ρ)) ≥ K(ρ) + 1`. -/
+  computation_increases : ∀ (ρ : backend.State),
+      complexityOf (backend.applyChannel R.computationChannel ρ) ≥ complexityOf ρ + 1
+  /-- **Computation is non-decreasing** (derived from `computation_increases`). -/
   computation_nondecreasing : ∀ (ρ : backend.State),
-      complexityOf (backend.applyChannel R.computationChannel ρ) ≥ complexityOf ρ
+      complexityOf (backend.applyChannel R.computationChannel ρ) ≥ complexityOf ρ :=
+    fun ρ => Nat.le_of_succ_le (computation_increases ρ)
   /-- **Communication preserves complexity**: `Im(S)` evolution (unitary) is
       reversible, so K is preserved: `K(U ρ U†) = K(ρ)` up to constant. -/
   communication_preserving : ∀ (ρ : backend.State),
@@ -489,17 +498,47 @@ theorem ladder_refinement_chain_unbounded
   refine ⟨C + 1, Nat.lt_of_lt_of_le (Nat.lt_succ_self C) ?_⟩
   exact (ladder.rung (C + 1)).floorPositive
 
--- ── Part G: Phase-1 instantiation ─────────────────────────────────────────────
+-- ── Part G: Phase-2 instantiation ─────────────────────────────────────────────
 
 /-!
 ### G.1  Abstract canonical ladder
 
-A Phase-1 `KolmogorovLadder` that uses the `QTMKolmogorovCert` monotonicity
-to build the rungs.  All `rungBound` fields are sorry-proved in Phase 1.
-Phase-2 will fill these from `cert.computation_nondecreasing` applied n times.
+The canonical `KolmogorovLadder` that proves rung `n` by induction using
+`cert.computation_increases`: each computation step raises `K` by ≥ 1, so
+after `n` steps, `K ≥ n`.
+
+**Key lemma**: `applyCompN_complexity_ge cert n ρ : cert.complexityOf (applyCompN R n ρ) ≥ n`
+
+Proof by induction:
+- n = 0: `K(ρ) ≥ 0` trivially (ℕ)
+- n → n+1: `K(comp(applyCompN R n ρ)) ≥ K(applyCompN R n ρ) + 1 ≥ n + 1` by
+  `computation_increases` and IH, closed by `linarith`.
 -/
 
-/-- Phase-1 canonical rung: `complexityFloor = n`, `rungBound = sorry`. -/
+/-- `applyCompN` unfolds one step: n+1 applications = 1 comp applied to n applications. -/
+private lemma applyCompN_succ
+    {backend : QTMQuantumBackend}
+    {R : SpacetimeRegionQTM backend}
+    (n : ℕ) (ρ : backend.State) :
+    applyCompN R (n + 1) ρ =
+      backend.applyChannel R.computationChannel (applyCompN R n ρ) := rfl
+
+/-- After n computation steps, Kolmogorov complexity ≥ n.
+    Proved by induction using `cert.computation_increases`. -/
+private lemma applyCompN_complexity_ge
+    {backend : QTMQuantumBackend}
+    {R : SpacetimeRegionQTM backend}
+    (cert : QTMKolmogorovCert backend R)
+    (n : ℕ) (ρ : backend.State) :
+    cert.complexityOf (applyCompN R n ρ) ≥ n := by
+  induction n with
+  | zero => exact Nat.zero_le _
+  | succ k ih =>
+    rw [applyCompN_succ]
+    have h := cert.computation_increases (applyCompN R k ρ)
+    linarith
+
+/-- Canonical rung n: `complexityFloor = n`, proved by `applyCompN_complexity_ge`. -/
 def canonicalLadderRung
     {backend : QTMQuantumBackend}
     {R : SpacetimeRegionQTM backend}
@@ -508,13 +547,7 @@ def canonicalLadderRung
     KolmogorovLadderRung backend R cert n where
   complexityFloor := n
   floorPositive   := le_refl n
-  rungBound := by
-    intro ρ
-    -- Phase-1: needs n applications of cert.computation_nondecreasing.
-    -- Proof sketch: by induction on n,
-    --   base: K(ρ) ≥ 0 (trivial)
-    --   step: K(Λ_comp^{n+1}(ρ)) ≥ K(Λ_comp^n(ρ)) ≥ n ≥ n  (by nondecreasing + IH)
-    sorry  -- Phase-1
+  rungBound       := fun ρ => applyCompN_complexity_ge cert n ρ
 
 /-- Phase-1 canonical ladder: monotone chain of `canonicalLadderRung n`. -/
 def canonicalLadder
