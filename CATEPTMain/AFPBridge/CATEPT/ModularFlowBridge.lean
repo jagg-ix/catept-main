@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.CATEPT.CATEPTPrelude
+import CATEPTMain.AFPBridge.CATEPT.ComplexMeasureBridge
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 /-!
 # CATEPT Port — Modular Flow / Tomita-Takesaki Bridge
@@ -38,6 +39,10 @@ At equilibrium: λ = 0 ↔ τ_ent = 0 ↔ H_I = 0.
 | `relational_time_eq_thermal_time`           | proved   | PW clock = CR clock           |
 | `entropic_time_eq_accumulated_modular_flow` | proved   | by definition of structure    |
 | `kms_condition`                             | axiom    | phase2: KMS from FK bridge    |
+| `modularFlowToPathIntegral`                 | defined  | clock + phase → MPIM          |
+| `modularFlow_actionImScaled_eq_rate`        | proved   | S_I/ħ = modularRate           |
+| `modular_flow_complex_measure_exists`       | proved   | finite μ → ∃ VectorMeasure ℂ |
+| `connes_rovelli_determines_complex_measure` | proved   | CR clock → ν construction     |
 -/
 
 set_option autoImplicit false
@@ -143,5 +148,107 @@ axiom kms_condition : True
     Source: StochasticWeberBridge.lean, RemainingObligationsBridge.lean. -/
 axiom cameron_martin_girsanov : True
   -- phase2: absolute continuity, Radon-Nikodym derivative = exp(-τ_ent)
+
+-- ── ComplexMeasureBridge: modular flow → complex measure ─────────────────────
+
+noncomputable section
+
+/-- Construct a `MeasurePathIntegralModel` from an entropic modular flow clock
+    and a real phase function φ.
+
+    Identification: the modular rate λ(x) IS the scaled imaginary action S_I(x)/ħ
+    (with ħ = 1), so the FK damping is exp(−λ(x)).
+
+    This is the canonical bridge from Tomita-Takesaki modular theory to the
+    CAT/EPT path integral measure. -/
+def modularFlowToPathIntegral
+    {α : Type*} [MeasurableSpace α]
+    (clk : EntropicModularFlowClock α)
+    (φ : α → ℝ) (hφ : Measurable φ)
+    (hnn : ∀ x, 0 ≤ clk.modularRate x) :
+    MeasurePathIntegralModel α where
+  μ                   := clk.μ
+  hbar                := 1
+  hbar_pos            := one_pos
+  actionRe            := φ
+  actionIm            := clk.modularRate
+  measurable_actionRe := hφ
+  measurable_actionIm := clk.measurable_rate
+  actionIm_nonneg     := hnn
+
+/-- The scaled imaginary action of the modular flow model equals the modular rate:
+    S_I(x)/ħ = λ(x)  (with ħ = 1). -/
+theorem modularFlow_actionImScaled_eq_rate
+    {α : Type*} [MeasurableSpace α]
+    (clk : EntropicModularFlowClock α)
+    (φ : α → ℝ) (hφ : Measurable φ)
+    (hnn : ∀ x, 0 ≤ clk.modularRate x) :
+    (modularFlowToPathIntegral clk φ hφ hnn).actionImScaled = clk.modularRate := by
+  ext x
+  show clk.modularRate x / 1 = clk.modularRate x
+  ring
+
+/-- The FK damping of the modular flow model is exp(−λ(x)). -/
+theorem modularFlow_damping_eq_exp_neg_rate
+    {α : Type*} [MeasurableSpace α]
+    (clk : EntropicModularFlowClock α)
+    (φ : α → ℝ) (hφ : Measurable φ)
+    (hnn : ∀ x, 0 ≤ clk.modularRate x)
+    (x : α) :
+    (modularFlowToPathIntegral clk φ hφ hnn).damping x =
+    Real.exp (-(clk.modularRate x)) := by
+  show Real.exp (-(clk.modularRate x / 1)) = Real.exp (-(clk.modularRate x))
+  congr 1; ring
+
+/-- **Measure existence from modular clock** (main structural theorem):
+    On a finite reference measure, an entropic modular flow clock and phase φ
+    determine a CAT/EPT complex measure
+      ν(A) = ∫_A exp(iφ(x)) · exp(−λ(x)) dμ(x)
+    where λ(x) = modularRate(x) is the pointwise entropy production.
+
+    The L¹ hypothesis is automatic from finiteness and exp(−λ) ≤ 1. -/
+theorem modular_flow_complex_measure_exists
+    {α : Type*} [MeasurableSpace α]
+    (clk : EntropicModularFlowClock α)
+    (φ : α → ℝ) (hφ : Measurable φ)
+    (hnn : ∀ x, 0 ≤ clk.modularRate x)
+    [IsFiniteMeasure clk.μ] :
+    ∃ ν : VectorMeasure α ℂ,
+      ∀ s : Set α, MeasurableSet s →
+        ν s = ∫ x in s,
+          Complex.exp ((φ x : ℂ) * Complex.I) *
+          (Real.exp (-(clk.modularRate x)) : ℂ) ∂clk.μ := by
+  let m := modularFlowToPathIntegral clk φ hφ hnn
+  have hL1 : Integrable (fun x => m.damping x) m.μ := by
+    haveI : IsFiniteMeasure m.μ := ‹IsFiniteMeasure clk.μ›
+    exact catept_measure_exists_from_finite_reference m
+  refine ⟨catept_complex_measure m hL1, fun s hs => ?_⟩
+  rw [catept_complex_measure_apply m hL1 s hs]
+  congr 1; ext x
+  rw [m.weight_factorizes x]
+  have hRe : m.actionReScaled x = φ x :=
+    show φ x / 1 = φ x by ring
+  have hIm : m.actionImScaled x = clk.modularRate x :=
+    show clk.modularRate x / 1 = clk.modularRate x by ring
+  rw [hRe, hIm]
+
+/-- The Connes-Rovelli thermal time clock determines the complex measure ν.
+    The CR clock's modular rate λ(x) is the pointwise entropy density; the
+    accumulated τ_ent = ∫ λ dμ appears as the normalization log Z₀ ≥ −τ_ent. -/
+theorem connes_rovelli_determines_complex_measure
+    {α : Type*} [MeasurableSpace α]
+    (cr : ConnesRovelliBridgeData α)
+    (φ : α → ℝ) (hφ : Measurable φ)
+    (hnn : ∀ x, 0 ≤ cr.modularRate x)
+    [IsFiniteMeasure cr.μ] :
+    ∃ ν : VectorMeasure α ℂ,
+      ∀ s : Set α, MeasurableSet s →
+        ν s = ∫ x in s,
+          Complex.exp ((φ x : ℂ) * Complex.I) *
+          (Real.exp (-(cr.modularRate x)) : ℂ) ∂cr.μ :=
+  modular_flow_complex_measure_exists
+    cr.toEntropicModularFlowClock φ hφ hnn
+
+end  -- noncomputable section
 
 end CATEPTMain.AFPBridge.CATEPT
