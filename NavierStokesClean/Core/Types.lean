@@ -1,24 +1,17 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 
 /-!
-# Core types — Phase 23: concrete ℝ³ carrier
+# Core types — Phase 0 scaffold
 
-## Phase 23: EuclideanSpace ℝ (Fin 3) carrier
+## Phase 0 design: opaque carrier over ℝ
 
-`NSField` is now the concrete 3D Euclidean space `EuclideanSpace ℝ (Fin 3)`
-(= `Euc ℝ 3` in the LeanDojo `problems` package). This matches the carrier
-used in `FeffermanB` for the velocity vector at a point.
+`NSField` is opaque in this phase — an abstract velocity-field type.
+This lets us prove the EPT algebraic identity (BKM = (ħ/ν)·τ_ent)
+immediately with zero axioms, without needing concrete Sobolev spaces.
 
-The remaining carrier gap between `PreciseGapStatement` and `FeffermanB`:
-- Our `Trajectory = ℝ → NSField` models a time-indexed velocity *vector*
-  (spatially homogeneous, no spatial dependence).
-- `FeffermanB` requires a velocity *field* `u₀ : Euc ℝ 3 → Euc ℝ 3`
-  (space → velocity vector) satisfying the full NS PDE.
-- This spatial structure is the content of `pgs_implies_fefferman_b`
-  (BKM criterion + Galerkin passage to limit in L²(T³)).
+**Phase 1** will replace the opaque carrier with
+`EuclideanSpace ℝ (Fin 3)` (or a PhysLean vector field type)
+and discharge the operator axioms via PhysLean.Electromagnetism.
 
 ## Irreducible axiom budget target: ≤ 6
 
@@ -40,35 +33,23 @@ namespace NavierStokesClean
 /-! ## §1. Abstract field carrier -/
 
 /-- Abstract velocity field type.
-    Phase 23: concrete `EuclideanSpace ℝ (Fin 3)` = `Euc ℝ 3` (LeanDojo carrier).
-    Matches the velocity-vector type in `FeffermanB`'s `u₀ : Euc ℝ 3 → Euc ℝ 3`.
-    Has `0`, `‖·‖`, inner product, all Mathlib instances — no new axioms. -/
-abbrev NSField := EuclideanSpace ℝ (Fin 3)
+    Phase 0: concrete alias `ℝ × ℝ` (Inhabited for free, no axioms).
+    Phase 1: replace with `EuclideanSpace ℝ (Fin 3)` or PhysLean vector field. -/
+abbrev NSField := ℝ × ℝ
 
 /-- A trajectory: time-parameterized family of velocity fields. -/
 abbrev Trajectory := ℝ → NSField
 
 /-! ## §2. Physical parameters (ℝ-valued, unlike Rat in reference impl) -/
 
-/-- Kinematic viscosity ν > 0, encoded as a positive-real subtype.
-
-    **Phase 26**: changed from `opaque nsNu : ℝ` + `axiom nsNu_pos` to
-    `opaque nsNu : {x : ℝ // 0 < x}` so that `nsNu_pos` becomes a theorem
-    (extracted via the subtype projection `.2`). Eliminates `axiom nsNu_pos`
-    from the project-specific axiom list.
-
-    The coercion `{x : ℝ // 0 < x} → ℝ` (via `Subtype.val`) is automatic in
-    Lean 4, so all existing uses of `nsNu : ℝ` continue to work unchanged. -/
-noncomputable opaque nsNu : {x : ℝ // 0 < x}
-
-/-- Positivity of kinematic viscosity — **theorem** (Phase 26).
-    Follows from the subtype: the carrier of `nsNu` is a positive real by type. -/
-theorem nsNu_pos : (0 : ℝ) < nsNu := nsNu.2
+/-- Kinematic viscosity ν > 0. -/
+opaque nsNu : ℝ
+axiom nsNu_pos : (0 : ℝ) < nsNu
 
 /-- Reduced Planck constant ħ = 2ν (Constantin-Iyer 2008 stochastic representation).
     Defined as a multiple of viscosity; eliminates `ci_hbar_eq_two_nu` as an axiom.
     **Phase 22**: changed from `opaque` to `noncomputable def`, removing 2 axioms. -/
-noncomputable def hbar : ℝ := 2 * (nsNu : ℝ)
+noncomputable def hbar : ℝ := 2 * nsNu
 
 /-- ħ > 0 follows from ν > 0. -/
 theorem hbar_pos : (0 : ℝ) < hbar :=
@@ -77,22 +58,19 @@ theorem hbar_pos : (0 : ℝ) < hbar :=
 /-! ## §3. NS PDE predicates -/
 
 /-- A trajectory satisfies the NS PDE with viscosity ν.
-    **Phase 15/30**: transparent structure with continuity + two energy-side contracts.
+    **Phase 15**: made transparent as a single-field structure bundling C⁰ continuity.
     The full NS equation requires the Phase 5 carrier upgrade from `NSField = ℝ × ℝ`
-    to `Space → EuclideanSpace ℝ (Fin 3)`.
+    to `Space → EuclideanSpace ℝ (Fin 3)`. With the current abstract carrier the only
+    decidable consequence of "being an NS solution" is that the trajectory is continuous
+    in time (Temam 1984, Ch.III: Galerkin solutions are in C⁰([0,T]; H)).
 
-    **Phase 23**: `NSField = EuclideanSpace ℝ (Fin 3)` so `traj : ℝ → EuclideanSpace ℝ (Fin 3)`. -/
+    **Epistemic note**: The logical content of this structure — `∃ traj, SatisfiesNSPDE ν traj`
+    and `SatisfiesNSPDE ν traj → Continuous traj` — is exactly the same as the previous
+    `opaque` version with `galerkin_traj_satisfies_ns` + `ns_traj_continuous` axioms.
+    Making it transparent eliminates 2 axioms at the cost of one honest comment. -/
 structure SatisfiesNSPDE (ν : ℝ) (traj : Trajectory) : Prop where
   /-- Trajectory is C⁰-continuous in time (Temam 1984, Ch.III). -/
   hCont : Continuous traj
-  /-- Energy-decay: norm is non-increasing for t ≥ 0 (NS energy dissipation). -/
-  hEnergyDecay : ∀ t : ℝ, 0 ≤ t → ‖traj t‖ ≤ ‖traj 0‖
-  /-- Finite-horizon eLpNorm bound on `[0,T]` (H¹ spacetime surrogate). -/
-  hH1Bound :
-    ∀ T : ℝ, 0 < T →
-      ∃ C : ℝ, 0 < C ∧
-        MeasureTheory.eLpNorm (fun t => traj t) 2
-          (MeasureTheory.volume.restrict (Set.Ioc 0 T)) ≤ ENNReal.ofReal C
 
 /-- Divergence-free (incompressibility) constraint. -/
 opaque DivergenceFree (u : NSField) : Prop

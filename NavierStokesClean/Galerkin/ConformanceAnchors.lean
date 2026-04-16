@@ -81,15 +81,14 @@ theorem ns_galerkin_vorticity_liminf_bound :
       0 < T → 0 < M →
       (∀ N, SatisfiesNSPDE nsNu (traj_seq N)) →
       SatisfiesNSPDE nsNu traj_lim →
-      ∀ (C₀ : ℝ), 0 < C₀ → (∀ N, ‖traj_seq N 0‖ ≤ C₀) →
       (∀ N, bkmVorticityIntegral (traj_seq N) T ≤ M) →
       ∃ liminf_bound : ℝ,
         0 < liminf_bound ∧
         liminf_bound ≤ M ∧
         bkmVorticityIntegral traj_lim T ≤ liminf_bound :=
-  fun traj_seq traj_lim T M hT hM hConv hLim C₀ hC₀ hInit hBKMN =>
+  fun traj_seq traj_lim T M hT hM hConv hLim hBKMN =>
     ⟨M, hM, le_refl M,
-     vorticity_liminf_bound_from_L2 traj_seq traj_lim T M hT hM hConv hLim C₀ hC₀ hInit hBKMN⟩
+     vorticity_liminf_bound_from_L2 traj_seq traj_lim T M hT hM hConv hLim hBKMN⟩
 
 /-! ## Anchor 4: Fatou's lemma for BKM integral -/
 
@@ -118,11 +117,10 @@ theorem galerkin_bkm_limit_bounded
     (hT : 0 < T) (hM : 0 < M)
     (hConv : ∀ N, SatisfiesNSPDE nsNu (traj_seq N))
     (hLim  : SatisfiesNSPDE nsNu traj_lim)
-    (C₀ : ℝ) (hC₀ : 0 < C₀) (hInit : ∀ N, ‖traj_seq N 0‖ ≤ C₀)
     (hBKMN : ∀ N, bkmVorticityIntegral (traj_seq N) T ≤ M) :
     bkmVorticityIntegral traj_lim T ≤ M :=
   let ⟨lb, _, hle, hbkm⟩ :=
-    ns_galerkin_vorticity_liminf_bound traj_seq traj_lim T M hT hM hConv hLim C₀ hC₀ hInit hBKMN
+    ns_galerkin_vorticity_liminf_bound traj_seq traj_lim T M hT hM hConv hLim hBKMN
   fatou_bkm_from_vorticity_liminf traj_lim T M lb hT hM hLim hle hbkm
 
 end NavierStokesClean.Galerkin

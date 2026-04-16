@@ -1,4 +1,4 @@
-import Physlib.SpaceAndTime.Space.Derivatives.Curl
+import PhysLean.SpaceAndTime.Space.Derivatives.Curl
 import NavierStokesClean.Core.Types
 
 /-!
