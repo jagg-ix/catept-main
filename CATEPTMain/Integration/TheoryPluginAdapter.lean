@@ -1,5 +1,6 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
+import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
 import CATEPTMain.Integration.ComplexFunctionalsBridge
 import CATEPTMain.Gravitas.Basic
 import CATEPTMain.Gravitas.MetricTensor
@@ -90,6 +91,29 @@ def adapterEinsteinSolution : Gravitas.EinsteinSolution :=
     adapterStressEnergy
     (Gravitas.Expr.lit 0)
 
+-- ── Trivial CATEPT slot (phase-1 placeholder for the adapter plugin) ─────────
+
+/-- A trivial CATEPT slot on the Unit configuration space.
+    This is the phase-1 placeholder; phase-2 will replace it with the
+    Gravitas/AdapterField configuration space and real Yang-Mills action. -/
+def adapterCATEPTSlot : CATEPTPluginSlot where
+  ConfigSpaceTy   := Unit
+  actionRe        := fun _ => 0
+  actionIm        := fun _ => 0
+  actionIm_nonneg := fun _ => le_refl 0
+  hbar            := 1
+  hbar_pos        := one_pos
+  eptClock        := fun _ => 0
+  eptClock_nonneg := fun _ => le_refl 0
+
+/-- The trivial CATEPT slot is consistent: actionIm/hbar = eptClock (both 0). -/
+theorem adapterCATEPTSlot_consistent :
+    cateptConsistencyConstraint adapterCATEPTSlot := by
+  intro x
+  simp [adapterCATEPTSlot, cateptConsistencyConstraint]
+
+-- ── Concrete plugin instance ──────────────────────────────────────────────────
+
 /-- Concrete plugin instance wiring the abstract slots to Gravitas-level types. -/
 def gravitasPphi2AdapterPlugin : TheoryPlugin :=
   { name := "gravitas-pphi2-adapter"
@@ -148,7 +172,10 @@ def gravitasPphi2AdapterPlugin : TheoryPlugin :=
     metric := adapterMetric
     curvature := adapterCurvature
     stressEnergy := adapterStressEnergy
-    emField := adapterEMField }
+    emField := adapterEMField
+    manifoldWitness := True.intro  -- phase-2: IsManifold 𝓘(ℝ, EuclideanSpace ℝ (Fin 4)) ⊤ _
+    -- CATEPT spine: trivial unit slot (phase-2: wire Gravitas config space)
+    catept := adapterCATEPTSlot }
 
 /-- Baseline wave-particle slot witness for the concrete adapter plugin. -/
 theorem gravitasPphi2AdapterPlugin_waveSlot :
@@ -237,6 +264,11 @@ theorem gravitasPphi2AdapterPlugin_quantumCorrespondenceSlot :
   · rfl
   · exact adapterQuantumFisherContract
 
+/-- CATEPT spine slot for the adapter plugin (trivial unit placeholder). -/
+theorem gravitasPphi2AdapterPlugin_cateptSpineSlot :
+    cateptSpineConstraint gravitasPphi2AdapterPlugin :=
+  adapterCATEPTSlot_consistent
+
 /-- End-to-end baseline validator proof for the concrete scaffold plugin. -/
 theorem gravitasPphi2AdapterPlugin_valid :
     validatePlugin gravitasPphi2AdapterPlugin := by
@@ -253,6 +285,7 @@ theorem gravitasPphi2AdapterPlugin_valid :
     gravitasPphi2AdapterPlugin_symmetrySlot
     gravitasPphi2AdapterPlugin_couplingSlot
     gravitasPphi2AdapterPlugin_quantumCorrespondenceSlot
+    gravitasPphi2AdapterPlugin_cateptSpineSlot
 
 /-- WP09 diagnostic: wave slot can be projected from unified validation. -/
 theorem gravitasPphi2AdapterPlugin_diag_waveSlot :

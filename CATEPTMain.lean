@@ -16,6 +16,7 @@ import CATEPTMain.Integration.InformationDimensionalFrameworkBridge
 import CATEPTMain.Integration.Pphi2NCATEPTBridge
 import CATEPTMain.Integration.LGTCATEPTBridge
 import CATEPTMain.Integration.TheoryPluginArchitecture
+import CATEPTMain.Integration.UnifiedTheorySpine
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
 import CATEPTMain.Integration.TheoryPluginAdapter
 import CATEPTMain.Integration.TheoryPluginStressTests
