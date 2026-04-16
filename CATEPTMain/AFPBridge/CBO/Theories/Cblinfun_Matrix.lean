@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.CBO.Theories.Extra_Jordan_Normal_Form
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 /-!
 # Cblinfun_Matrix — AFP Complex_Bounded_Operators → Lean 4 (Phase 1)
 
@@ -20,6 +21,13 @@ namespace CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Matrix
 
 open CATEPTMain.AFPBridge.CBO
 
+-- ── Downstream rank-one projector bridge ─────────────────────────────────────
+theorem rankOne_unit_projector_bridge
+    (v : CBOVec)
+    (hUnit : CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.cboVecNorm v = 1) :
+    IsCBOProjector (CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.rankOneOp v v) :=
+  CATEPTMain.AFPBridge.CBO.Theories.Extra_Jordan_Normal_Form.rankOne_unit_projector_bridge v hUnit
+
 -- ── Matrix of an operator ─────────────────────────────────────────────────────
 -- Given ONB {e_j}, the matrix of T is M_{ij} = ⟨eᵢ, T(eⱼ)⟩.
 noncomputable def opToMatrix (n : ℕ)
@@ -39,8 +47,15 @@ theorem opToMatrix_apply (n : ℕ)
   opToMatrix_apply_law n T v
 
 -- ── Adjoint = conjugate transpose ────────────────────────────────────────────
--- Phase-1 axiom (ContinuousLinearMap.adjoint import deferred to phase-2):
-axiom opToMatrix_adj : True  -- phase2: opToMatrix n T.adjoint = (opToMatrix n T).conjTranspose
+-- Phase-1 bridge theorem (proof deferred to phase-2):
+private axiom opToMatrix_adj_law (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    opToMatrix n (ContinuousLinearMap.adjoint T) = (opToMatrix n T).conjTranspose
+
+theorem opToMatrix_adj (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    opToMatrix n (ContinuousLinearMap.adjoint T) = (opToMatrix n T).conjTranspose :=
+  opToMatrix_adj_law n T
 
 -- ── Composition = matrix multiplication ──────────────────────────────────────
 private axiom opToMatrix_comp_law (n : ℕ)

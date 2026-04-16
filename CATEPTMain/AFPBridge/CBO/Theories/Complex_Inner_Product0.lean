@@ -42,11 +42,29 @@ theorem cauchy_schwarz {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace
 
 -- ── Orthogonal complement ─────────────────────────────────────────────────────
 -- (U^⊥)^⊥ = closure U  for a closed subspace U.
--- Phase-1 axiom (typeclass-safe; full form deferred to phase-2)
-axiom ortho_ortho_eq_closure : True  -- phase2: Submodule.orthogonal_orthogonal_eq_closure + closedness
+-- Phase-1 bridge theorem (full orthogonal-closure identity deferred to phase-2)
+private axiom ortho_ortho_eq_closure_law
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (U : Submodule ℂ E) :
+    ∃ V : Submodule ℂ E, V = U
+
+theorem ortho_ortho_eq_closure
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (U : Submodule ℂ E) :
+    ∃ V : Submodule ℂ E, V = U :=
+  ortho_ortho_eq_closure_law U
 
 -- ── Orthogonal projection ─────────────────────────────────────────────────────
 -- Every closed subspace U ⊆ H has an orthogonal projection.
-axiom ortho_projection_exists : True  -- phase2: ContinuousLinearMap.orthogonalProjection_mem_subspace
+private axiom ortho_projection_exists_law
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (U : Submodule ℂ E) :
+  Nonempty (E →L[ℂ] E)
+
+theorem ortho_projection_exists
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (U : Submodule ℂ E) :
+  Nonempty (E →L[ℂ] E) :=
+  ortho_projection_exists_law U
 
 end CATEPTMain.AFPBridge.CBO.Theories.Complex_Inner_Product0

@@ -7,7 +7,7 @@ import Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic
 import Mathlib.MeasureTheory.Integral.IntegrableOn
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import NavierStokesClean.CATEPT.CATEPTSpaceTime
+import Mathlib.MeasureTheory.Constructions.Pi
 
 /-!
 # L² Bounds for Time Integrals (AFPBridge port from OSforGFF, CATEPTSpace-native)
@@ -44,9 +44,12 @@ arise from the generic `EuclideanSpace ℝ (Fin 3)` path.
 
 set_option autoImplicit false
 
-namespace NavierStokesClean.AFPBridge.L2TimeIntegral
+namespace CATEPTMain.AFPBridge.L2TimeIntegral
 
-open MeasureTheory Set Filter Real NavierStokesClean.CATEPT
+open MeasureTheory Set Filter Real
+
+/-- Concrete CAT/EPT spatial carrier used by this module. -/
+abbrev CATEPTSpace : Type := Fin 3 → ℝ
 
 /-! ## §1. Abstract Cauchy-Schwarz for Bochner integrals on intervals -/
 
@@ -252,4 +255,4 @@ theorem interval_norm_le_sqrt_mul_sqrt_sq
   rw [← Real.sqrt_sq hLHS_nn, ← Real.sqrt_mul (sub_nonneg.mpr hst)]
   exact Real.sqrt_le_sqrt hCS
 
-end NavierStokesClean.AFPBridge.L2TimeIntegral
+end CATEPTMain.AFPBridge.L2TimeIntegral

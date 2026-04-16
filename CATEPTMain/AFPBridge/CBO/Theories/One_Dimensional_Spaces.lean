@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.CBO.Theories.Complex_Inner_Product
+import CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples
 /-!
 # One_Dimensional_Spaces — AFP Complex_Bounded_Operators → Lean 4 (Phase 1)
 
@@ -18,6 +19,7 @@ set_option autoImplicit false
 namespace CATEPTMain.AFPBridge.CBO.Theories.One_Dimensional_Spaces
 
 open CATEPTMain.AFPBridge.CBO
+open CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples
 
 -- ── Every 1-dimensional normed space over ℂ ≅ ℂ ──────────────────────────────
 private axiom one_dim_iso_complex_law {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℂ E]
@@ -38,7 +40,8 @@ theorem clm_complex_is_mul (T : ℂ →L[ℂ] ℂ) :
 
 -- ── Rank-one projectors ───────────────────────────────────────────────────────
 -- rankOneOp v v / ‖v‖²  is a projector onto span{v}.
--- Phase-1 axiom (rankOneOp and cboVecNorm defined in Extra_Pretty_Code_Examples):
-axiom rankOne_norm_projector : True  -- phase2: IsCBOProjector (|v⟩⟨v| / ‖v‖²)
+theorem rankOne_norm_projector (v : CBOVec) (hUnit : cboVecNorm v = 1) :
+        IsCBOProjector (rankOneOp v v) :=
+    rankOneOp_projector v hUnit
 
 end CATEPTMain.AFPBridge.CBO.Theories.One_Dimensional_Spaces

@@ -272,4 +272,29 @@ Metrics:
 Phase-2 targets: faithful_proof ≥ 0.6 (most reduce directly to MeasureTheory.Measure.sum)
 -/
 
+/-!
+────────────────────────────────────────────────────────────────────────────────
+## CPM-FIX-20260415-A  Vacuous-content tracking for Coproduct_Measure_Additional (P1)
+Target file:
+  - CATEPTMain/AFPBridge/CPM/Theories/Coproduct_Measure_Additional.lean
+Current compile-preserving shim:
+  - `coprodMeasure_lintegral : True`
+  - `coprodMeasure_integral_formula : True`
+  - `coprodMeasure_pushforward : True`
+  - `coprodMeasure_prod_distrib : True`
+  - `coprodMeasure_prob_total : True`
+Fix intent:
+  - Keep this file build-stable while replacing vacuous theorem statements with typed measure
+    equalities in AFP order (lintegral, integral, pushforward, prod distribution, probability mass).
+Phase-2 adjustments:
+  1. Restore typed measurable-space binders using root names (`MeasurableSpace`, `Measurable`).
+  2. Reintroduce `coprodMeasure m μ` signatures with explicit `μ` argument threading.
+  3. Prove lintegral formula from `MeasureTheory.Measure.sum` + sigma-domain decomposition.
+  4. Prove integral formula via integrable decomposition (`lintegral` + `toReal` pipeline).
+  5. Add finite-index probability corollary (`Fintype I`) as a theorem, not placeholder `True`.
+Validation target:
+  - `lake build CATEPTMain.AFPBridge.CPM.Theories.Coproduct_Measure_Additional` EXIT:0
+  - zero theorem statements of shape `: True` in this file.
+-/
+
 -- This file is a worklog / issue tracker. No runnable Lean 4 code is defined here.

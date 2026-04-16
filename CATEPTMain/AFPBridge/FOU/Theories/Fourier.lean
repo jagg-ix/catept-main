@@ -72,13 +72,15 @@ theorem fourier_unique (f : ℝ → ℂ) (hf : SqIntegrable f)
 theorem fourier_series_representation (f : ℝ → ℂ) (hf : SqIntegrable f) :
     ∀ ε : ℝ, 0 < ε → ∃ N₀ : ℕ, ∀ N : ℕ, N ≥ N₀ →
     L2norm (fun x => f x - fourierPartialSum f N x) < ε := by
-  intro ε hε
-  have := fourier_L2_convergence f hf
-  rw [Metric.tendsto_atTop] at this
-  obtain ⟨N₀, hN₀⟩ := this ε hε
-  exact ⟨N₀, fun N hN => by
-    have := hN₀ N hN
-    simp [Real.dist_eq] at this
-    linarith [abs_nonneg (L2norm (fun x => f x - fourierPartialSum f N x))]⟩
+        intro ε hε
+        have hconv := fourier_L2_convergence f hf
+        rw [Metric.tendsto_atTop] at hconv
+        obtain ⟨N₀, hN₀⟩ := hconv ε hε
+        refine ⟨N₀, ?_⟩
+        intro N hN
+        have hdist := hN₀ N hN
+        have habs : |L2norm (fun x => f x - fourierPartialSum f N x)| < ε := by
+            simpa [Real.dist_eq] using hdist
+        exact lt_of_le_of_lt (le_abs_self (L2norm (fun x => f x - fourierPartialSum f N x))) habs
 
 end CATEPTMain.AFPBridge.FOU.Theories.Fourier

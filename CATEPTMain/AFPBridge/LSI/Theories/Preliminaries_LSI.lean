@@ -63,11 +63,11 @@ theorem lsiMeasure_sigma_finite (F : ℝ → ℝ) (hF : Monotone F) :
 
 private axiom absCont_iff_density_law (ν μ : MeasureTheory.Measure ℝ)
     [MeasureTheory.SigmaFinite μ] [MeasureTheory.SigmaFinite ν] :
-    LSIAbsCont ν μ ↔ ∃ f : ℝ → ℝ≥0∞, ν = μ.withDensity f
+    LSIAbsCont ν μ ↔ ∃ f : ℝ → ENNReal, ν = μ.withDensity f
 
 theorem absCont_iff_density (ν μ : MeasureTheory.Measure ℝ)
     [MeasureTheory.SigmaFinite μ] [MeasureTheory.SigmaFinite ν] :
-    LSIAbsCont ν μ ↔ ∃ f : ℝ → ℝ≥0∞, ν = μ.withDensity f :=
+    LSIAbsCont ν μ ↔ ∃ f : ℝ → ENNReal, ν = μ.withDensity f :=
   absCont_iff_density_law ν μ
 
 -- ── Dominated convergence application ─────────────────────────────────────────

@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.CBO.Theories.One_Dimensional_Spaces
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 /-!
 # Complex_Euclidean_Space0 — AFP Complex_Bounded_Operators → Lean 4 (Phase 1)
 
@@ -57,7 +58,21 @@ noncomputable def hsInner (n : ℕ)
   ∑ j : Fin n, inner (𝕜 := ℂ) (S (stdBasis n j)) (T (stdBasis n j))
 
 -- HS inner product = Tr(S†T):
--- Phase-1 axiom (ContinuousLinearMap.adjoint import deferred to phase-2):
-axiom hsInner_eq_trace_adj : True  -- phase2: hsInner n S T = traceViaONB n (S.adjoint.comp T)
+-- Phase-1 bridge theorem (proof deferred to phase-2):
+private axiom hsInner_eq_trace_adj_law (n : ℕ)
+    (S T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    hsInner n S T = traceViaONB n ((ContinuousLinearMap.adjoint S).comp T)
+
+theorem hsInner_eq_trace_adj (n : ℕ)
+    (S T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    hsInner n S T = traceViaONB n ((ContinuousLinearMap.adjoint S).comp T) :=
+  hsInner_eq_trace_adj_law n S T
+
+  -- ── Rank-one projector bridge from one-dimensional theory ─────────────────────
+  theorem rankOne_unit_projector_bridge
+      (v : CBOVec)
+      (hUnit : CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.cboVecNorm v = 1) :
+      IsCBOProjector (CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.rankOneOp v v) :=
+    CATEPTMain.AFPBridge.CBO.Theories.One_Dimensional_Spaces.rankOne_norm_projector v hUnit
 
 end CATEPTMain.AFPBridge.CBO.Theories.Complex_Euclidean_Space0

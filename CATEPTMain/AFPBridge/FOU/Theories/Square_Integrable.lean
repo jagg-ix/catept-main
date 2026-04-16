@@ -19,6 +19,7 @@ set_option autoImplicit false
 namespace CATEPTMain.AFPBridge.FOU.Theories.Square_Integrable
 
 open CATEPTMain.AFPBridge.FOU
+open CATEPTMain.AFPBridge.FOU.Theories.Lspace
 
 -- ── Closure properties ────────────────────────────────────────────────────────
 

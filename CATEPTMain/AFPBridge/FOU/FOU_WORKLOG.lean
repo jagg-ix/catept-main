@@ -300,4 +300,46 @@ Metrics:
 Phase-2 targets: faithful_proof ≥ 0.5 (Riemann-Lebesgue and Parseval via Mathlib)
 -/
 
+/-!
+────────────────────────────────────────────────────────────────────────────────
+## FOU-FIX-20260415-A  Vacuous-content tracking for Fourier_Aux2 (P2)
+Target file:
+  - CATEPTMain/AFPBridge/FOU/Theories/Fourier_Aux2.lean
+Current stabilization:
+  - File compiles after explicit calculus imports (`ContDiff`, `deriv`) were added.
+  - Proof bodies remain phase-1 placeholders/sorries for auxiliary lemmas.
+Fix intent:
+  - Preserve parser/import correctness while converting Aux2 lemmas from placeholder form
+    to Mathlib-backed statements used downstream by `Fourier.lean`.
+Phase-2 adjustments:
+  1. Replace `riemann_lebesgue_*_law` axioms with Mathlib `fourier_tendsto_zero` bridges.
+  2. Replace C1 decay axiom with derivative-based coefficient decay theorem over periodic domain.
+  3. Tighten Fejer-kernel nonnegativity using explicit kernel identity and positivity proofs.
+Validation target:
+  - `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier_Aux2` EXIT:0 with reduced sorry count.
+-/
+
+/-!
+────────────────────────────────────────────────────────────────────────────────
+## FOU-FIX-20260415-B  Vacuous-content tracking for Fourier main theorem (P1)
+Target file:
+  - CATEPTMain/AFPBridge/FOU/Theories/Fourier.lean
+Current stabilization:
+  - `fourier_series_representation` currently uses placeholder proof (`sorry`) to avoid a
+    brittle `linarith` step in the epsilon extraction path.
+Progress (2026-04-15):
+  - Placeholder removed. `fourier_series_representation` now has a concrete epsilon-N proof
+    using `Metric.tendsto_atTop` and `le_abs_self` (no theorem-body `sorry` remaining).
+  - Build validated: `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier` EXIT:0.
+Fix intent:
+  - Recover typed epsilon-N proof from `Filter.Tendsto` without relying on fragile arithmetic
+    automation assumptions.
+Phase-2 adjustments:
+  1. Rework `Metric.tendsto_atTop` extraction into a reusable lemma for `L2norm` convergence.
+  2. Replace the final inequality closure with direct order rewriting on `dist` and nonnegativity.
+  3. Keep theorem statement unchanged so integration bridges continue to depend on the same API.
+Validation target:
+  - `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier` EXIT:0 with theorem proved (no `sorry`).
+-/
+
 -- This file is a worklog / issue tracker. No runnable Lean 4 code is defined here.

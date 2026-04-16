@@ -234,17 +234,17 @@ theorem minkowski_satisfies_ept_axioms :
 
     Proof priority order (from the request):
       P0  — torus mean-zero vorticity:         HasFDerivAt.comp_hasDerivAt
-      P1  — Galerkin cluster (4 sorrys):       half_holder_from_l2_deriv_bound
+      P1  — Galerkin cluster (4 sorrys):       ept_paraboloid_compactness
       P2  — Gagliardo-Nirenberg H¹ ↪ L⁴ (3):  Mathlib GN + periodization
       P3  — Agmon + BKM (2 sorrys):            follows from P2
       P4  — CATEPT / QFT off-path (2 sorrys):  deferred, not on NS critical path -/
 structure NSGalerkinGapRecord where
   /-- P0: Torus mean-zero vorticity. -/
   p0_vorticity_mean_zero    : Prop
-  /-- P1: Galerkin equicontinuity (requires CATEPTVelocityField carrier). -/
-  p1_galerkin_equicontinuity : Prop
-  /-- P1: Galerkin velocity derivative bound. -/
-  p1_velocity_deriv_bound    : Prop
+  /-- P1: EPT Paraboloid sequential compactness. -/
+  p1_ept_paraboloid_compactness : Prop
+  /-- P1: Stage B Integrability closure. -/
+  p1_ept_stage_b_integrability : Prop
   /-- P1: Galerkin limit identification. -/
   p1_galerkin_limit          : Prop
   /-- P2: vs_l4_holder_bound (Gagliardo-Nirenberg L⁴ estimate). -/

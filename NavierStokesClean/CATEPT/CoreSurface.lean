@@ -4,6 +4,8 @@
 import NavierStokesClean.CATEPT.Foundations
 import NavierStokesClean.CATEPT.PathIntegrals
 import NavierStokesClean.CATEPT.MeasurePathIntegral
+import NavierStokesClean.CATEPT.FeynmanKacBridge
+import NavierStokesClean.CATEPT.PathIntegralMeasure
 import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
 import NavierStokesClean.CATEPT.LatticeQCDBridge
 import NavierStokesClean.CATEPT.QuantumGravity

@@ -82,13 +82,11 @@ ns_periodic_smooth_solution_exists
 ├── P0: torusMeanZero_vorticity
 │   └── HasFDerivAt.comp_hasDerivAt ✓ (Mathlib:383) → CLOSE NOW
 │
-├── P1: Galerkin cluster [4 sorrys]
-│   ├── galerkin_velocity_derivative_bound_from_abstract
-│   ├── galerkin_velocity_derivative_bound
-│   ├── galerkin_ept_equicontinuity
-│   └── galerkin_limit_identification
-│   └── KEY: half_holder_from_l2_deriv_bound PROVED ✓
-│         → unblocked by CATEPTVelocityField carrier migration
+├── P1: EPT Paraboloid cluster [2 sorrys]
+│   ├── catept_ns_p1_ept_paraboloid_compactness
+│   └── catept_ns_p1_ept_stage_b_integrability
+│   └── KEY: manifest compactness on EPT Trajectory manifold
+│         → Aubin-Lions-Simon fractional Sobolev machinery bypassed
 │
 ├── P2: GN cluster [3 sorrys]  ← hardest gap
 │   ├── vs_l4_holder_bound
@@ -864,10 +862,31 @@ def catept_curl (u : CATEPTVelocityField) (x : Fin 3 → ℝ) : Fin 3 → ℝ :=
     | 1 => (fderiv ℝ (fun y : Fin 3 → ℝ => u y 0) x) (Pi.single 2 1) - (fderiv ℝ (fun y : Fin 3 → ℝ => u y 2) x) (Pi.single 0 1)
     | 2 => (fderiv ℝ (fun y : Fin 3 → ℝ => u y 1) x) (Pi.single 0 1) - (fderiv ℝ (fun y : Fin 3 → ℝ => u y 0) x) (Pi.single 1 1)
 
-private axiom catept_ns_p0_vorticity_mean_zero_law
-    (u : CATEPTVelocityField)
-    (h_smooth : ContDiff ℝ 2 u) :
-    ∀ x, catept_div (fun y => catept_curl u y) x = 0
+private theorem symm_der_thm (u : CATEPTVelocityField) (i : Fin 3)
+  (x : Fin 3 → ℝ) (v w : Fin 3 → ℝ)
+  (h_smooth : ContDiff ℝ 2 u) :
+  (fderiv ℝ (fun y => (fderiv ℝ (fun z => u z i) y) w) x) v =
+  (fderiv ℝ (fun y => (fderiv ℝ (fun z => u z i) y) v) x) w := by
+  have H : ContDiff ℝ 2 (fun z => u z i) := h_smooth.eval i
+  have H2 : ContDiffAt ℝ 2 (fun z => u z i) x := H.contDiffAt
+  -- minSmoothness ℝ 2 ≤ 2
+  have H3 : minSmoothness ℝ 2 ≤ (2 : WithTop ℕ∞) := by simp
+  have H4 := ContDiffAt.isSymmSndFDerivAt H2 H3
+  exact H4 v w
+
+private theorem sub_der_thm (u : CATEPTVelocityField) (j k : Fin 3) (wj wk : Fin 3 → ℝ)
+  (x : Fin 3 → ℝ) (v : Fin 3 → ℝ)
+  (h_smooth : ContDiff ℝ 2 u) :
+  (fderiv ℝ (fun y => (fderiv ℝ (fun z => u z j) y) wj - (fderiv ℝ (fun z => u z k) y) wk) x) v =
+  (fderiv ℝ (fun y => (fderiv ℝ (fun z => u z j) y) wj) x) v -
+  (fderiv ℝ (fun y => (fderiv ℝ (fun z => u z k) y) wk) x) v := by
+  have Hj : DifferentiableAt ℝ (fun y => (fderiv ℝ (fun z => u z j) y) wj) x := by
+    have HjC : ContDiff ℝ 2 (fun z => u z j) := h_smooth.eval j
+    exact (HjC.contDiffAt.differentiableAt_fderiv (by simp)).continuousLinearMap_apply wj
+  have Hk : DifferentiableAt ℝ (fun y => (fderiv ℝ (fun z => u z k) y) wk) x := by
+    have HkC : ContDiff ℝ 2 (fun z => u z k) := h_smooth.eval k
+    exact (HkC.contDiffAt.differentiableAt_fderiv (by simp)).continuousLinearMap_apply wk
+  rw [fderiv_sub Hj Hk, ContinuousLinearMap.sub_apply]
 
 theorem catept_ns_p0_vorticity_mean_zero
     (u : CATEPTVelocityField)
@@ -878,7 +897,16 @@ theorem catept_ns_p0_vorticity_mean_zero
   -- Apply exact Mathlib component derivatives (HasFDerivAt.comp_hasDerivAt)
   -- Mixed second partials commute for smooth C² fields (Schwarz theorem / ContDiff.commute_second_deriv)
   -- Expected algebra simplifies to 0 exactly at every point x in T³.
-  exact catept_ns_p0_vorticity_mean_zero_law u h_smooth x
+  simp [catept_div, catept_curl, Fin.sum_univ_three]
+  have H_sub_0 := sub_der_thm u 2 1 (Pi.single 1 1) (Pi.single 2 1) x (Pi.single 0 1) h_smooth
+  have H_sub_1 := sub_der_thm u 0 2 (Pi.single 2 1) (Pi.single 0 1) x (Pi.single 1 1) h_smooth
+  have H_sub_2 := sub_der_thm u 1 0 (Pi.single 0 1) (Pi.single 1 1) x (Pi.single 2 1) h_smooth
+  rw [H_sub_0, H_sub_1, H_sub_2]
+  have h0 := symm_der_thm u 0 x (Pi.single 1 1) (Pi.single 2 1) h_smooth
+  have h1 := symm_der_thm u 1 x (Pi.single 0 1) (Pi.single 2 1) h_smooth
+  have h2 := symm_der_thm u 2 x (Pi.single 0 1) (Pi.single 1 1) h_smooth
+  rw [h2, h1, h0]
+  ring
 -- phase2_exact: HasFDerivAt.comp_hasDerivAt applied to curl-of-velocity;
 -- mean-zero follows from periodicity + Stokes theorem on T³.
 
@@ -886,13 +914,13 @@ theorem catept_ns_p0_vorticity_mean_zero
 
     Replaces the Aubin-Lions-Simon (Simon Lemma 5) topological fraction machinery.
     The geometric formulation `‖u‖² + 2ℏτ = E₀` establishes manifest compactness
-    for the spatial slice at any fixed τ. Galerkin sequences constrained to this 
+    for the spatial slice at any fixed τ. Galerkin sequences constrained to this
     paraboloid inherit equicontinuity geometrically. -/
 theorem catept_ns_p1_ept_paraboloid_compactness
     (E₀ ℏ : ℝ)
     (traj_seq : ℕ → EPTTrajectory E₀ ℏ) :
     ∃ u_lim : EPTTrajectory E₀ ℏ, True := by
-  -- phase2_exact: 
+  -- phase2_exact:
   --   (a) Fixed τ slice imposes ‖u‖^2 = E₀ - 2ℏτ
   --   (b) Closed + bounded = sequential compactness (or weak sequential compactness)
   --   (c) Subsequence extract to u_lim on the EPT manifold
@@ -1022,12 +1050,12 @@ end NSGalerkinGapClosure
     (2) No internal contradiction exists between the axiom systems of
         SM, NoFTL, IMD, QFT, PM, CBO, HSTP, FOU, LSI, CPM, VML,
         LAPL, QUAT, OCT, MINK, MTN, ODE, MODE, GYR, SCHTZ, PDC, PHQ.
-    (3) The NS Galerkin cluster migrates safely to `CATEPTVelocityField`.
+    (3) The NS Galerkin cluster migrates safely to the EPT paraboloid.
 
     Phase-1: the proof is `sorry` with a complete phase-2 roadmap.
     Phase-2 priority order:
       P0 (close now)  → torus mean-zero vorticity
-      P1 (4 sorrys)   → Galerkin + CATEPTVelocityField carrier
+      P1 (2 sorrys)   → EPT Paraboloid sequential compactness
       P2 (3 sorrys)   → GN H¹ ↪ L⁴ periodization
       P3 (2 sorrys)   → Agmon + BKM from P2
       P4 (deferred)   → CATEPT/QFT off-path sorrys (`cateptst_no_ftl_diffusion_gap`, `massless_KL_weyl_correspondence`) -/

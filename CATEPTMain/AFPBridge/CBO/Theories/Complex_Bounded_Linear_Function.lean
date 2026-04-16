@@ -42,6 +42,13 @@ private axiom normal_specRadius_eq_norm_law (T : CBOOp) (hN : IsNormal T) :
 theorem normal_specRadius_eq_norm (T : CBOOp) (hN : IsNormal T) :
     specRadius T = cboNorm T := normal_specRadius_eq_norm_law T hN
 
+-- ── Downstream rank-one projector bridge ─────────────────────────────────────
+theorem rankOne_unit_projector_bridge
+    (v : CBOVec)
+    (hUnit : CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.cboVecNorm v = 1) :
+    IsCBOProjector (CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.rankOneOp v v) :=
+  CATEPTMain.AFPBridge.CBO.Theories.Complex_Bounded_Linear_Function0.rankOne_unit_projector_bridge v hUnit
+
 -- ── C*-algebra identity ────────────────────────────────────────────────────────
 -- Already in prelude: cboNorm_adj_comp: ‖T†T‖ = ‖T‖²
 

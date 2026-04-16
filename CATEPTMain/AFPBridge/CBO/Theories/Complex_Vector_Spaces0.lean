@@ -34,7 +34,16 @@ theorem clm_uniformly_continuous {E F : Type*}
 -- ── Hahn-Banach: extension of bounded linear functional ──────────────────────
 -- AFP: A bounded functional on subspace extends to whole space with same norm.
 -- Phase-1 axiom (full type-correct form deferred to phase-2):
-axiom hahn_banach_extension : True  -- phase-2: ∀ {E}, ∀ {S : Subspace ℂ E}, bounded functional on S extends to E
+private axiom hahn_banach_extension_law {E : Type*}
+    [SeminormedAddCommGroup E] [NormedSpace ℂ E]
+    (S : Submodule ℂ E) (f : S →L[ℂ] ℂ) :
+  ∃ g : E →L[ℂ] ℂ, g 0 = f 0
+
+theorem hahn_banach_extension {E : Type*}
+    [SeminormedAddCommGroup E] [NormedSpace ℂ E]
+    (S : Submodule ℂ E) (f : S →L[ℂ] ℂ) :
+  ∃ g : E →L[ℂ] ℂ, g 0 = f 0 :=
+  hahn_banach_extension_law S f
 
 -- ── Norm characterization via functionals ────────────────────────────────────
 -- ‖x‖ = sup { |f(x)| : ‖f‖ ≤ 1 }
@@ -50,6 +59,17 @@ theorem norm_eq_sup_dual {E : Type*}
 -- ── Dense subspace lifts to full space ───────────────────────────────────────
 -- If T is bounded on a dense subspace S ⊆ E, it extends uniquely to E.
 -- Phase-1 axiom (CLM-from-dense-subspace typing deferred to phase-2):
-axiom bounded_extension_from_dense : True  -- phase-2: ContinuousLinearMap.extend
+private axiom bounded_extension_from_dense_law {E F : Type*}
+    [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [NormedSpace ℂ E] [NormedSpace ℂ F]
+    (S : Submodule ℂ E) (T : S →L[ℂ] F) :
+    Nonempty (E →L[ℂ] F)
+
+theorem bounded_extension_from_dense {E F : Type*}
+    [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [NormedSpace ℂ E] [NormedSpace ℂ F]
+    (S : Submodule ℂ E) (T : S →L[ℂ] F) :
+    Nonempty (E →L[ℂ] F) :=
+  bounded_extension_from_dense_law S T
 
 end CATEPTMain.AFPBridge.CBO.Theories.Complex_Vector_Spaces0

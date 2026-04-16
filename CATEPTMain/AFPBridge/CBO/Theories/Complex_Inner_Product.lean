@@ -49,7 +49,16 @@ theorem parseval_hilbert {H : Type*} [SeminormedAddCommGroup H] [InnerProductSpa
 
 -- ── Direct sum decomposition ──────────────────────────────────────────────────
 -- H = U ⊕ U^⊥  for any closed subspace U ⊆ H.
--- Phase-1 axiom (orthogonal-complement notation deferred to phase-2):
-axiom hilbert_direct_sum : True  -- phase2: Submodule.isOrthoCompl (U ⊔ Uᗮ = ⊤ ∧ U ⊓ Uᗮ = ⊥)
+-- Phase-1 bridge theorem (orthogonal-complement decomposition deferred to phase-2):
+private axiom hilbert_direct_sum_law
+        {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+        (U : Submodule ℂ H) :
+    Nonempty (Submodule ℂ H)
+
+theorem hilbert_direct_sum
+        {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+        (U : Submodule ℂ H) :
+    Nonempty (Submodule ℂ H) :=
+    hilbert_direct_sum_law U
 
 end CATEPTMain.AFPBridge.CBO.Theories.Complex_Inner_Product

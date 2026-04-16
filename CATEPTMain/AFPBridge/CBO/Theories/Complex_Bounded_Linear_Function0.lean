@@ -41,6 +41,13 @@ private axiom unitary_normal_law (U : CBOOp) (hU : IsCBOUnitary U) : IsNormal U
 theorem unitary_normal (U : CBOOp) (hU : IsCBOUnitary U) : IsNormal U :=
   unitary_normal_law U hU
 
+-- ── Downstream rank-one projector bridge ─────────────────────────────────────
+theorem rankOne_unit_projector_bridge
+    (v : CBOVec)
+    (hUnit : CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.cboVecNorm v = 1) :
+    IsCBOProjector (CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.rankOneOp v v) :=
+  CATEPTMain.AFPBridge.CBO.Theories.Complex_Euclidean_Space0.rankOne_unit_projector_bridge v hUnit
+
 -- ── Hermitian operators have real spectrum ────────────────────────────────────
 -- Phase-1 axiom placeholder (spectral theorem proven in later file).
 axiom hermitian_eigenvalue_real (T : CBOOp) (h : IsHermitian T)

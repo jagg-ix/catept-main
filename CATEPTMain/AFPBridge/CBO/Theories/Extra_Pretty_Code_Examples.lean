@@ -42,10 +42,27 @@ axiom rankOneOp_norm (v w : CBOVec) :
 
 -- ── Example: projection onto span of v ───────────────────────────────────────
 -- For unit vector v: P_v = |v⟩⟨v| is a projector.
--- phase2_note: idempotency cboComp P P = P requires cboComp_apply + cboExt + cboSmulOne_apply
--- axioms not yet in CBOPrelude; admitted as a private axiom pending that infrastructure.
-private axiom rankOneOp_idempotent (v : CBOVec) (h : cboVecNorm v = 1) :
-    cboComp (rankOneOp v v) (rankOneOp v v) = rankOneOp v v
+-- phase2_note: make the idempotency step explicit through reusable rank-one laws.
+axiom rankOneOp_comp (u v x y : CBOVec) :
+    cboComp (rankOneOp u v) (rankOneOp x y) =
+      cboSmul (cboInner v x) (rankOneOp u y)
+
+axiom cboInner_self_of_unit (v : CBOVec) (h : cboVecNorm v = 1) :
+    cboInner v v = (1 : ℂ)
+
+axiom cboSmul_one_op (T : CBOOp) :
+    cboSmul (1 : ℂ) T = T
+
+theorem rankOneOp_idempotent (v : CBOVec) (h : cboVecNorm v = 1) :
+    cboComp (rankOneOp v v) (rankOneOp v v) = rankOneOp v v := by
+  calc
+    cboComp (rankOneOp v v) (rankOneOp v v)
+        = cboSmul (cboInner v v) (rankOneOp v v) := by
+            simpa using rankOneOp_comp v v v v
+    _ = cboSmul (1 : ℂ) (rankOneOp v v) := by
+          rw [cboInner_self_of_unit v h]
+    _ = rankOneOp v v := by
+          simpa using cboSmul_one_op (rankOneOp v v)
 
 theorem rankOneOp_projector (v : CBOVec) (hUnit : cboVecNorm v = 1) :
     IsCBOProjector (rankOneOp v v) := by

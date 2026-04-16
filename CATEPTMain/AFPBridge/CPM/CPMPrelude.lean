@@ -1,6 +1,7 @@
 import CATEPTMain.AFPBridge.Framework.AFPBridgeFramework
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 /-!
 # CPM Prelude — Coproduct_Measure (AFP) → Lean 4
 

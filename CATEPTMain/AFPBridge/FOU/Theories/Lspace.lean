@@ -38,7 +38,7 @@ theorem L1_le_L2 (f : ℝ → ℂ) (hf : SqIntegrable f) :
 
 -- ── Lp norm definition ────────────────────────────────────────────────────────
 -- Re-export: L²-norm as ENNReal.toReal of Lp norm.
-noncomputable def eLpNorm (f : ℝ → ℂ) (p : ℝ≥0∞) : ℝ :=
+noncomputable def eLpNorm (f : ℝ → ℂ) (p : ENNReal) : ℝ :=
   (MeasureTheory.eLpNorm f p μ_pi).toReal
 
 -- ── Continuous functions dense in L² ─────────────────────────────────────────

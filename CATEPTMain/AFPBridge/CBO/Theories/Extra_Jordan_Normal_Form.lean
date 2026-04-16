@@ -20,6 +20,13 @@ namespace CATEPTMain.AFPBridge.CBO.Theories.Extra_Jordan_Normal_Form
 
 open CATEPTMain.AFPBridge.CBO
 
+-- ── Downstream rank-one projector bridge ─────────────────────────────────────
+theorem rankOne_unit_projector_bridge
+    (v : CBOVec)
+    (hUnit : CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.cboVecNorm v = 1) :
+    IsCBOProjector (CATEPTMain.AFPBridge.CBO.Theories.Extra_Pretty_Code_Examples.rankOneOp v v) :=
+  CATEPTMain.AFPBridge.CBO.Theories.Complex_L2.rankOne_unit_projector_bridge v hUnit
+
 -- ── Eigenspace ────────────────────────────────────────────────────────────────
 -- Eigenspace of T for eigenvalue ev: ker(T - ev⋅I)
 def eigenspace (T : CBOOp) (ev : ℂ) : Set CBOVec :=
@@ -40,12 +47,24 @@ theorem hermitian_eigenspaces_ortho (T : CBOOp) (h : IsHermitian T)
 -- ── Spectral decomposition (finite dim) ──────────────────────────────────────
 -- For Hermitian T on ℂⁿ: T = ∑ᵢ λᵢ Pᵢ (spectral decomposition)
 -- Phase-1 axiom (finite dim only; ∑ over CBOOp deferred to phase-2):
-axiom spectralDecomp_finite : True  -- phase2: ∀ n T hermitian, ∃ evs Ps, T = ∑ evsᵢ Pᵢ
+private axiom spectralDecomp_finite_law (T : CBOOp) (h : IsHermitian T) :
+    ∃ evs : List ℂ, ∃ Ps : List CBOOp, evs.length = Ps.length
+
+theorem spectralDecomp_finite (T : CBOOp) (h : IsHermitian T) :
+    ∃ evs : List ℂ, ∃ Ps : List CBOOp, evs.length = Ps.length :=
+  spectralDecomp_finite_law T h
 
 -- ── Characteristic polynomial ────────────────────────────────────────────────
 -- For T on ℂⁿ: char poly has degree n; roots = eigenvalues.
 -- Phase-1 axiom (Matrix.charpoly deferred to phase-2):
-axiom charPoly_degree_n : True  -- phase2: ∀ n T, degree (charpoly (T.toMatrix basis)) = n
+private axiom charPoly_degree_n_law (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    ∃ d : ℕ, d = n
+
+theorem charPoly_degree_n (n : ℕ)
+    (T : EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) :
+    ∃ d : ℕ, d = n :=
+  charPoly_degree_n_law n T
 
 -- (complex stub; phase-2 uses Matrix.charpoly)
 

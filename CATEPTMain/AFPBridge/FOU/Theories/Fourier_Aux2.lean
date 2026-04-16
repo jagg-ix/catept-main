@@ -1,4 +1,6 @@
 import CATEPTMain.AFPBridge.FOU.Theories.Confine
+import Mathlib.Analysis.Calculus.ContDiff.Basic
+import Mathlib.Analysis.Calculus.Deriv.Basic
 /-!
 # Fourier_Aux2 — AFP Fourier → Lean 4 (Phase 1)
 

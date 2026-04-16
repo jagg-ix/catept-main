@@ -38,6 +38,11 @@ import NavierStokesClean.Audit.AxiomAudit
 -- Phase 7: CAT/EPT verification (Complex Action / Entropic Time framework)
 import NavierStokesClean.CATEPT.Foundations
 import NavierStokesClean.CATEPT.PathIntegrals
+import NavierStokesClean.CATEPT.MeasurePathIntegral
+import NavierStokesClean.CATEPT.FeynmanKacBridge
+import NavierStokesClean.CATEPT.PathIntegralMeasure
+import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
+import NavierStokesClean.CATEPT.LatticeQCDBridge
 import NavierStokesClean.CATEPT.QuantumGravity
 import NavierStokesClean.CATEPT.QFTGRClosures
 import NavierStokesClean.CATEPT.DSLVerification

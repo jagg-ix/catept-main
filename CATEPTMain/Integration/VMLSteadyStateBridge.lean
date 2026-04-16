@@ -1,3 +1,5 @@
+import Aristotle.Landau.main.Theorem42
+
 set_option autoImplicit false
 
 /-!
@@ -13,8 +15,6 @@ into CATEPT in two phases:
 This file intentionally avoids direct imports from the external repository so
 it remains build-stable while the external code is still on Lean 4.24.
 -/
-
-import Aristotle.Landau.main.Theorem42
 
 namespace CATEPTMain.Integration.VMLSteadyState
 
