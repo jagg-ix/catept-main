@@ -5,6 +5,8 @@ import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Tactic
 /-!
 # Spinor Propagator — Dirac Propagator as FCEnd, CATEPT Weight Bridge
@@ -171,12 +173,44 @@ theorem euclideanDiracCurvedModel_damping_eq (m hbar : ℝ) (hh : 0 < hbar)
   congr 1
   field_simp
 
-/-- The Euclidean Dirac damping is integrable on ℝ⁴ (Gaussian integral). -/
+/-- The Euclidean Dirac damping is integrable on ℝ⁴ (Gaussian integral).
+    Proof: rewrite as exp(-m²) · ∏_μ exp(-(k_μ)²), then use
+    `Integrable.fintype_prod` from MeasureTheory.Integral.Pi and
+    `integrable_exp_neg_mul_sq` for each 1D Gaussian factor. -/
 theorem euclideanDiracDamping_integrable (m hbar : ℝ) (hh : 0 < hbar) :
     MeasureTheory.Integrable
       (fun k => (euclideanDiracCurvedModel m hbar hh).toMeasurePathIntegralModel.damping k)
       (euclideanDiracCurvedModel m hbar hh).geom.volumeMeasure := by
-  sorry -- phase2_medium: Gaussian integral on ℝ⁴
+  -- Step 1: rewrite volumeMeasure to Measure.pi (product Lebesgue on ℝ⁴)
+  have hmeas : (euclideanDiracCurvedModel m hbar hh).geom.volumeMeasure =
+      MeasureTheory.Measure.pi (fun (_ : FCIdx) => MeasureTheory.volume) := by
+    rw [euclideanDiracCurvedModel_measure_eq_lebesgue]
+    simp only [euclideanDiracCurvedModel, euclideanFlatGeom]
+  rw [hmeas]
+  -- Step 2: rewrite damping explicitly as exp(-euclideanDenominator k m)
+  simp_rw [euclideanDiracCurvedModel_damping_eq]
+  -- Step 3: unfold euclideanDenominator to Σ_μ (k μ)² + m²
+  simp_rw [euclideanDenominator]
+  -- Step 4: factor as exp(-m²) · Π_μ exp(-(k μ)²)
+  have factored : ∀ k : FCIdx → ℝ,
+      Real.exp (-(((∑ μ : FCIdx, k μ ^ 2) + m ^ 2))) =
+      Real.exp (-m ^ 2) * ∏ μ : FCIdx, Real.exp (-(k μ) ^ 2) := by
+    intro k
+    rw [show -(((∑ μ : FCIdx, k μ ^ 2) + m ^ 2)) =
+        (-m ^ 2) + (-(∑ μ : FCIdx, k μ ^ 2)) by linarith,
+      ← Finset.sum_neg_distrib (f := fun μ => k μ ^ 2),
+      Real.exp_add, ← Real.exp_sum]
+  simp_rw [factored]
+  -- Step 5: each 1D factor exp(-(k μ)²) is integrable
+  have h1 : MeasureTheory.Integrable (fun x : ℝ => Real.exp (-x ^ 2)) MeasureTheory.volume := by
+    have := integrable_exp_neg_mul_sq (b := 1) (by norm_num : (0:ℝ) < 1)
+    simpa [neg_mul, one_mul] using this
+  -- Step 6: const factor × product of 1D Gaussians; provide f explicitly
+  have hprod : MeasureTheory.Integrable
+      (fun (x : FCIdx → ℝ) => ∏ μ : FCIdx, Real.exp (-x μ ^ 2))
+      (MeasureTheory.Measure.pi fun (_ : FCIdx) => MeasureTheory.volume) :=
+    MeasureTheory.Integrable.fintype_prod (fun _ => h1)
+  exact hprod.const_mul _
 
 -- ── Schwinger parametrization ─────────────────────────────────────────────────
 
