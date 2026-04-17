@@ -330,23 +330,178 @@ axiom gamma_contraction_val :
         smulEnd ((eta μ ν : ℂ)) (gamma μ * gamma ν)))
     = smulEnd 4 oneEnd
 
+-- Helper: off-diagonal eta values vanish (used in sandwich proofs).
+private lemma eta_offdiag (α β : FCIdx) (h : α ≠ β) : (eta α β : ℂ) = 0 := by
+  have : eta α β = 0 := by unfold eta; exact if_neg h
+  exact_mod_cast this
+
+-- Helper: η^{αα}² = 1 (Minkowski metric diagonal entries are ±1).
+private lemma eta_sq_one (α : FCIdx) : (eta α α : ℂ) ^ 2 = 1 := by
+  fin_cases α <;> simp only [eta] <;> norm_num
+
+-- Shared diagonal-reduction utility: collapses double sum Σ_{α,β} η^{αβ} f(α,β)
+-- to single sum Σ_α η^{αα} f(α,α) using eta_offdiag.
+private lemma diag_reduce (f : FCIdx → FCIdx → FCEnd) :
+    (Finset.univ (α := FCIdx)).sum (fun α =>
+      (Finset.univ (α := FCIdx)).sum (fun β => smulEnd ((eta α β : ℂ)) (f α β)))
+    = (Finset.univ (α := FCIdx)).sum (fun α => smulEnd ((eta α α : ℂ)) (f α α)) :=
+  Finset.sum_congr rfl fun α _ =>
+    Finset.sum_eq_single α
+      (fun β _ hne => by rw [eta_offdiag α β (Ne.symm hne)]; simp only [smulEnd, zero_smul])
+      (fun h => absurd (Finset.mem_univ α) h)
+
+set_option maxHeartbeats 400000 in
 /-- Sandwiched contraction: `γ^α γ^μ γ_α = -2 γ^μ` (4D, West/FeynCalc convention).
-  FeynCalc: `DiracSimplify[DiracGamma[α] DiracGamma[μ] DiracGamma[α]]` → `-2 DiracGamma[μ]`.
-  Derived from: γ^α γ^μ γ_α = (2g^αμ - γ^μ γ^α)γ_α = 2γ^μ - D γ^μ = (2-D)γ^μ = -2γ^μ for D=4. -/
+  Algebraic proof: α=μ gives (η^{μμ})²·γ^μ = γ^μ; α≠μ gives -(η^{αα})²·γ^μ = -γ^μ;
+  sum = 1 + 3·(-1) = -2.  No matrix computation. -/
 theorem gamma_sandwich_one (μ : FCIdx) :
     (Finset.univ (α := FCIdx)).sum (fun α =>
       (Finset.univ (α := FCIdx)).sum (fun β =>
         smulEnd ((eta α β : ℂ)) (gamma α * gamma μ * gamma β)))
     = smulEnd (-2 : ℂ) (gamma μ) := by
-  sorry  -- phase2_high: use gamma_anticommute + gamma_contraction_val + Finset.sum linearity
+  rw [diag_reduce]
+  -- Each diagonal term evaluates algebraically to ±γ^μ.
+  have each_term : ∀ α : FCIdx,
+      smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma α) =
+      smulEnd (if α = μ then (1 : ℂ) else -1) (gamma μ) := by
+    intro α
+    by_cases h : α = μ
+    · -- α = μ: η^{μμ}·(γ^μ·γ^μ)·γ^μ = η^{μμ}·(η^{μμ}·1)·γ^μ = (η^{μμ})²·γ^μ = γ^μ.
+      rw [if_pos h, h, gamma_sq, smulEnd_mul_left, compEnd_one_left, ← smulEnd_comp, ← sq,
+          eta_sq_one, smulEnd_one_right]
+    · -- α ≠ μ: η^{αμ}=0, so {γ^α,γ^μ}=0, i.e. γ^α·γ^μ = -γ^μ·γ^α.
+      -- Then η^{αα}·γ^α·γ^μ·γ^α = -η^{αα}·γ^μ·(γ^α)²·1 = -(η^{αα})²·γ^μ = -γ^μ.
+      simp only [if_neg h]
+      have hoff : (eta α μ : ℂ) = 0 :=
+        eta_offdiag α μ h
+      have hac := gamma_anticommute α μ
+      rw [hoff, mul_zero] at hac
+      simp only [smulEnd_zero_scalar] at hac
+      -- hac : gamma α * gamma μ + gamma μ * gamma α = zeroEnd = 0
+      have hzero : gamma α * gamma μ + gamma μ * gamma α = 0 := hac
+      have hamu : gamma α * gamma μ = -(gamma μ * gamma α) :=
+        eq_neg_of_add_eq_zero_left hzero
+      rw [hamu, neg_mul, mul_assoc, gamma_sq, smulEnd_mul_right, compEnd_one_right]
+      -- Goal: smulEnd (eta α α : ℂ) (-(smulEnd (eta α α : ℂ) (gamma μ))) = smulEnd (-1 : ℂ) (gamma μ)
+      have hsq := eta_sq_one α
+      simp only [smulEnd, smul_neg, ← mul_smul, ← sq, hsq, one_smul, neg_one_smul]
+  -- Sum the scalar coefficients: (if α=μ then 1 else -1) over all α ∈ Fin 4 = -2.
+  simp_rw [each_term, smulEnd]
+  suffices h : (Finset.univ (α := FCIdx)).sum (fun α => if α = μ then (1 : ℂ) else -1) = -2 by
+    rw [← Finset.sum_smul, h]
+  -- Algebraic: rewrite body via sum_congr, split, then use sum_ite_eq + card.
+  have hsum : (Finset.univ (α := FCIdx)).sum (fun α => if α = μ then (1 : ℂ) else -1) =
+      (Finset.univ (α := FCIdx)).sum (fun α => (if α = μ then (2 : ℂ) else 0) + (-1)) :=
+    Finset.sum_congr rfl (fun α _ => by split_ifs <;> ring)
+  have hsplit : (Finset.univ (α := FCIdx)).sum (fun α => (if α = μ then (2 : ℂ) else 0) + (-1)) =
+      (Finset.univ (α := FCIdx)).sum (fun α => if α = μ then (2 : ℂ) else 0) +
+      (Finset.univ (α := FCIdx)).sum (fun _ : FCIdx => (-1 : ℂ)) := Finset.sum_add_distrib
+  rw [hsum, hsplit]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const,
+             Finset.card_univ, Fintype.card_fin]
+  norm_num
 
+-- Helper: Σ_α η^{αα}·η^{αν}·(γ^α·γ^μ) = γ^ν·γ^μ
+-- Only the α=ν term survives because η is diagonal.
+private lemma sum_eta_gamma (μ ν : FCIdx) :
+    (Finset.univ (α := FCIdx)).sum (fun α =>
+      smulEnd ((eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ))
+    = gamma ν * gamma μ := by
+  rw [Finset.sum_eq_single ν
+        (fun α _ hne => by
+          rw [eta_offdiag α ν hne, mul_zero, smulEnd_zero_scalar]; rfl)
+        (fun h => absurd (Finset.mem_univ ν) h)]
+  rw [← sq, eta_sq_one, smulEnd_one_right]
+
+-- Helper: Σ_α η^{αα}·(γ^α·γ^μ·γ^α) = smulEnd (-2) (γ^μ).
+-- Extracted from gamma_sandwich_one after diagonal reduction.
+private lemma sum_diag_sandwich (μ : FCIdx) :
+    (Finset.univ (α := FCIdx)).sum (fun α =>
+      smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma α))
+    = smulEnd (-2 : ℂ) (gamma μ) := by
+  have h := gamma_sandwich_one μ
+  rwa [diag_reduce] at h
+
+set_option maxHeartbeats 800000 in
 /-- Sandwiched contraction (2 gammas): `γ^α γ^μ γ^ν γ_α = 4 g^μν · 1₄` (4D).
-  FeynCalc: `DiracSimplify[γ^α γ^μ γ^ν γ_α]` → `4 g^{μν}`. -/
+  Algebraic proof using anticommutator split and gamma_sandwich_one.  No matrix comp. -/
 theorem gamma_sandwich_two (μ ν : FCIdx) :
     (Finset.univ (α := FCIdx)).sum (fun α =>
       (Finset.univ (α := FCIdx)).sum (fun β =>
         smulEnd ((eta α β : ℂ)) (gamma α * gamma μ * gamma ν * gamma β)))
     = smulEnd (4 * (eta μ ν : ℂ)) oneEnd := by
-  sorry  -- phase2_high: use gamma_anticommute + gamma_sandwich_one
+  rw [diag_reduce]
+  -- Per-α split: η^{αα}·γ^α·γ^μ·γ^ν·γ^α
+  --   = 2·η^{αα}·η^{αν}·(γ^α·γ^μ) - η^{αα}·(γ^α·γ^μ·γ^α)·γ^ν
+  -- via γ^ν·γ^α = smulEnd(2η^{αν})·1 - γ^α·γ^ν  (from anticommutator).
+  have each_split : ∀ α : FCIdx,
+      smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma ν * gamma α) =
+      smulEnd (2 * (eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ) -
+      smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma α) * gamma ν := by
+    intro α
+    have hac := gamma_anticommute α ν
+    -- γ^ν·γ^α = smulEnd(2·η^{αν})·1 - γ^α·γ^ν
+    have hna : gamma ν * gamma α =
+        smulEnd (2 * (eta α ν : ℂ)) oneEnd - gamma α * gamma ν :=
+      eq_sub_of_add_eq (show gamma ν * gamma α + gamma α * gamma ν =
+          smulEnd (2 * (eta α ν : ℂ)) oneEnd from by rw [add_comm]; exact hac)
+    -- Group and substitute
+    calc smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma ν * gamma α)
+        = smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * (gamma ν * gamma α)) := by
+            rw [mul_assoc (gamma α * gamma μ)]
+      _ = smulEnd ((eta α α : ℂ)) (gamma α * gamma μ *
+              (smulEnd (2 * (eta α ν : ℂ)) oneEnd - gamma α * gamma ν)) := by
+            rw [hna]
+      _ = smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * smulEnd (2 * (eta α ν : ℂ)) oneEnd) -
+          smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * (gamma α * gamma ν)) := by
+            rw [mul_sub]; simp only [smulEnd, smul_sub]
+      _ = smulEnd ((eta α α : ℂ)) (smulEnd (2 * (eta α ν : ℂ)) (gamma α * gamma μ)) -
+          smulEnd ((eta α α : ℂ)) ((gamma α * gamma μ * gamma α) * gamma ν) := by
+            congr 1
+            · rw [smulEnd_mul_right, compEnd_one_right]
+            · rw [← mul_assoc]
+      _ = smulEnd ((eta α α : ℂ) * (2 * (eta α ν : ℂ))) (gamma α * gamma μ) -
+          smulEnd ((eta α α : ℂ)) ((gamma α * gamma μ * gamma α) * gamma ν) := by
+            rw [← smulEnd_comp]
+      _ = smulEnd ((eta α α : ℂ) * (2 * (eta α ν : ℂ))) (gamma α * gamma μ) -
+          smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma α) * gamma ν := by
+            conv_lhs => arg 2; rw [← smulEnd_mul_left]
+      _ = smulEnd (2 * (eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ) -
+          smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma α) * gamma ν := by
+            congr 2; ring
+  -- Aggregate over α using the split.
+  simp_rw [each_split]
+  rw [Finset.sum_sub_distrib]
+  -- First sum: Σ_α smulEnd(2·η^{αα}·η^{αν})(γ^α·γ^μ) = smulEnd 2 (γ^ν·γ^μ).
+  have sum1 : (Finset.univ (α := FCIdx)).sum (fun α =>
+      smulEnd (2 * (eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ)) =
+      smulEnd 2 (gamma ν * gamma μ) := by
+    -- Factor out the scalar 2 without letting smulEnd_comp fire on the inner (eta·eta) product.
+    have key : ∀ α : FCIdx, smulEnd (2 * (eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ) =
+        smulEnd 2 (smulEnd ((eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ)) := fun α => by
+      rw [show 2 * (eta α α : ℂ) * (eta α ν : ℂ) = 2 * ((eta α α : ℂ) * (eta α ν : ℂ)) from by ring]
+      exact smulEnd_comp 2 _ _
+    simp_rw [key]
+    rw [show (Finset.univ (α := FCIdx)).sum (fun α =>
+              smulEnd 2 (smulEnd ((eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ)))
+            = smulEnd 2 ((Finset.univ (α := FCIdx)).sum (fun α =>
+                smulEnd ((eta α α : ℂ) * (eta α ν : ℂ)) (gamma α * gamma μ))) from by
+          simp only [smulEnd, ← Finset.smul_sum]]
+    rw [sum_eta_gamma]
+  -- Second sum: Σ_α smulEnd(η^{αα})(γ^α·γ^μ·γ^α)·γ^ν = smulEnd(-2)(γ^μ)·γ^ν.
+  have sum2 : (Finset.univ (α := FCIdx)).sum (fun α =>
+      smulEnd ((eta α α : ℂ)) (gamma α * gamma μ * gamma α) * gamma ν) =
+      smulEnd (-2 : ℂ) (gamma μ) * gamma ν := by
+    rw [← Finset.sum_mul, sum_diag_sandwich]
+  -- Combine: 2(γ^νγ^μ) - (-2γ^μ)γ^ν = 2γ^νγ^μ + 2γ^μγ^ν = 2·{γ^μ,γ^ν} = 4η^{μν}·1.
+  rw [sum1, sum2, smulEnd_mul_left]
+  -- smulEnd 2 (γ^νγ^μ) - smulEnd(-2)(γ^μγ^ν) = smulEnd 2 (γ^μγ^ν + γ^νγ^μ) = smulEnd(4η^{μν})·1
+  have combo : smulEnd 2 (gamma ν * gamma μ) - smulEnd (-2 : ℂ) (gamma μ * gamma ν) =
+               smulEnd 2 (gamma μ * gamma ν + gamma ν * gamma μ) := by
+    rw [smulEnd_add]
+    simp only [smulEnd]
+    rw [show (-2 : ℂ) = -(2 : ℂ) from by norm_num, neg_smul, sub_neg_eq_add, add_comm]
+  rw [combo, gamma_anticommute, ← smulEnd_comp]
+  congr 1; ring
 
 end CATEPTMain.AFPBridge.FEYNCALC

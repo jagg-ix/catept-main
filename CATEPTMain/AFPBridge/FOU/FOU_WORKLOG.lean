@@ -140,7 +140,7 @@ Translation challenge: LOW
   - Phase-1: `axiom IsPeriodic : (ℝ → ℝ) → ℝ → Prop` (can also use Function.Periodic)
     Bridge: `def IsPeriodic f T := Function.Periodic f T`
 Key theorems: periodic_integral_shift, periodic_translation_invariant
-Validation: `lake build CATEPTMain.AFPBridge.FOU.Theories.Periodic` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.FOU.Periodic` EXIT:0
 -/
 
 /-!
@@ -156,7 +156,7 @@ Translation challenge: MEDIUM
   - Phase-1: `axiom FOUInner : (ℝ → ℝ) → (ℝ → ℝ) → ℝ` with axiom bridge.
   - Phase-2: `def FOUInner f g := ∫ x in (-π, π), f x * g x`
 Key theorems: lspace_is_hilbert (completeness), inner_product_cauchy_schwarz
-Validation: `lake build CATEPTMain.AFPBridge.FOU.Theories.Lspace` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.FOU.Lspace` EXIT:0
 -/
 
 /-!
@@ -172,7 +172,7 @@ Translation challenge: MEDIUM
   - Fejer kernel: `(1/N) ∑ₙ₌₁ᴺ Dₙ` where Dₙ is Dirichlet kernel.
   - Phase-1: axiom `DiriKernel : ℕ → ℝ → ℝ` and `FejerKernel : ℕ → ℝ → ℝ`
 Key theorems: continuous_dense_in_l2, fejer_kernel_nonneg, fejer_kernel_integral
-Validation: `lake build CATEPTMain.AFPBridge.FOU.Theories.Square_Integrable` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.FOU.Square_Integrable` EXIT:0
 -/
 
 /-!
@@ -186,7 +186,7 @@ Content summary:
 Translation challenge: LOW
   Abstract measure-theoretic lemmas. Phase-1: sorry stubs for all.
   Phase-2: reduce to MeasureTheory.Lp approximation lemmas.
-Validation: `lake build CATEPTMain.AFPBridge.FOU.Theories.Confine` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.FOU.Confine` EXIT:0
 -/
 
 /-!
@@ -202,7 +202,7 @@ Translation challenge: MEDIUM
   - Dirichlet integral: `∫₀^∞ sin(x)/x dx = π/2` — known in Mathlib
   - Phase-1: axiom `riemannLebesgue : SqIntegrable f → Tendsto (|fourierCoeff f n|) atTop (nhds 0)`
 Key theorems: riemann_lebesgue, dirichlet_int_eq_pi_2, fourier_coeff_decay
-Validation: `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier_Aux2` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.FOU.Fourier_Aux2` EXIT:0
 -/
 
 /-!
@@ -233,7 +233,7 @@ Phase-2 upgrade path: connect `fourierCoeff` to `Mathlib.Analysis.Fourier.fourie
   and use `MeasureTheory.L2.norm_eq_tsum_inner` for Parseval.
 Validation:
   - `grep "parseval\|fourierL2Conv\|FourierL2Approx" Theories/Fourier.lean` → ≥1 each
-  - `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.FOU.Fourier` EXIT:0
 -/
 
 /-!
@@ -242,7 +242,7 @@ Validation:
 Target file: CATEPTMain/Integration/FOUBridge.lean
 Content plan:
   import CATEPTMain.AFPBridge.FOU.FOUPrelude
-  import CATEPTMain.AFPBridge.FOU.Theories.Fourier
+  import CATEPTMain.AFPBridge.FOU.Fourier
   set_option autoImplicit false
   namespace CATEPTMain.Integration
   /-- Contract: L² functions have convergent Fourier series (Parseval identity). -/
@@ -316,7 +316,7 @@ Phase-2 adjustments:
   2. Replace C1 decay axiom with derivative-based coefficient decay theorem over periodic domain.
   3. Tighten Fejer-kernel nonnegativity using explicit kernel identity and positivity proofs.
 Validation target:
-  - `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier_Aux2` EXIT:0 with reduced sorry count.
+  - `lake build CATEPTMain.AFPBridge.FOU.Fourier_Aux2` EXIT:0 with reduced sorry count.
 -/
 
 /-!
@@ -330,7 +330,7 @@ Current stabilization:
 Progress (2026-04-15):
   - Placeholder removed. `fourier_series_representation` now has a concrete epsilon-N proof
     using `Metric.tendsto_atTop` and `le_abs_self` (no theorem-body `sorry` remaining).
-  - Build validated: `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier` EXIT:0.
+  - Build validated: `lake build CATEPTMain.AFPBridge.FOU.Fourier` EXIT:0.
 Fix intent:
   - Recover typed epsilon-N proof from `Filter.Tendsto` without relying on fragile arithmetic
     automation assumptions.
@@ -339,7 +339,7 @@ Phase-2 adjustments:
   2. Replace the final inequality closure with direct order rewriting on `dist` and nonnegativity.
   3. Keep theorem statement unchanged so integration bridges continue to depend on the same API.
 Validation target:
-  - `lake build CATEPTMain.AFPBridge.FOU.Theories.Fourier` EXIT:0 with theorem proved (no `sorry`).
+  - `lake build CATEPTMain.AFPBridge.FOU.Fourier` EXIT:0 with theorem proved (no `sorry`).
 -/
 
 -- This file is a worklog / issue tracker. No runnable Lean 4 code is defined here.
@@ -354,5 +354,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-FOU is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.FOU.Theories.*`  →  `CATEPTMain.AFPBridge.FOU.*`
+  `CATEPTMain.AFPBridge.FOU.*`  →  `CATEPTMain.AFPBridge.FOU.*`
 -/

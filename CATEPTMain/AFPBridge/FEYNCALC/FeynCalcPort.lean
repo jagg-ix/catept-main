@@ -12,7 +12,8 @@ FeynCalcPort
 ├── FCPrelude          (carrier types, eta, leviCivita, gamma)
 ├── DiracAlgebra       (anti-commutation, γ^5, chiral projectors)
 ├── DiracTrace         (trace formulas TR-0..TR-9)
-└── LorentzAlgebra     (metric contractions, ε-ε identity, p·q)
+├── LorentzAlgebra     (metric contractions, ε-ε identity, p·q)
+└── LeviCivita4D       (4D Levi-Civita wrappers and contractions)
 ```
 
 ## Usage
@@ -42,3 +43,4 @@ import CATEPTMain.AFPBridge.FEYNCALC.FCPrelude
 import CATEPTMain.AFPBridge.FEYNCALC.DiracAlgebra
 import CATEPTMain.AFPBridge.FEYNCALC.DiracTrace
 import CATEPTMain.AFPBridge.FEYNCALC.LorentzAlgebra
+import CATEPTMain.AFPBridge.FEYNCALC.LeviCivita4D

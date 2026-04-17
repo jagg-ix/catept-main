@@ -193,7 +193,7 @@ Translation challenge: MEDIUM-HIGH
     transfer proof boilerplate.
   - Phase-1: sorry-stub all TTS-dependent propositions.
 Batch note: merge both files into Theories/Misc_Tensor_Product.lean
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.Misc_Tensor_Product` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.Misc_Tensor_Product` EXIT:0
 -/
 
 /-!
@@ -213,7 +213,7 @@ Translation challenge: MEDIUM
   - Phase-2: use Filter/Topology instances from Mathlib.Topology
 Batch note: merge three topology files into Theories/Operator_Topologies.lean
 Validation:
-  - `lake build CATEPTMain.AFPBridge.HSTP.Theories.Operator_Topologies` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.HSTP.Operator_Topologies` EXIT:0
 -/
 
 /-!
@@ -231,7 +231,7 @@ Translation challenge: MEDIUM-HIGH
   - Spectral radius: `ρ(A) = sup_n ‖Aⁿ‖^(1/n)` → Mathlib `spectralRadius`.
   - Phase-1: axiom `cblinfunSqrt`, axiom `spectralRadius`.
 Key theorems: pos_op_sqrt_exists, spectral_radius_formula, rayleigh_quotient_bound
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.Positive_Operators` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.Positive_Operators` EXIT:0
 -/
 
 /-!
@@ -245,7 +245,7 @@ Content summary:
 Translation challenge: MEDIUM
   - Phase-1: axiom `HSToEll2 : CBOSpace H H → Ell2 (H × H) → ℂ` (linear functional)
   - Phase-2: Mathlib.Analysis.HilbertSchmidt (if available) or custom construction
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.HS2Ell2` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.HS2Ell2` EXIT:0
 -/
 
 /-!
@@ -275,7 +275,7 @@ Key theorems: compact_op_approx_finite_rank, spectral_theorem_compact_selfadj,
   spectral_decomp_sum_converges
 Validation:
   - `grep "IsCompact\|spectralDecomp\|spectralONB" Theories/Compact_Operators.lean` → ≥1 each
-  - `lake build CATEPTMain.AFPBridge.HSTP.Theories.Compact_Operators` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.HSTP.Compact_Operators` EXIT:0
 -/
 
 /-!
@@ -292,7 +292,7 @@ Translation challenge: HIGH
   - Phase-1: axiom `TraceOp : CBOSpace H H → ℂ` with axiom `TraceOp_converges`.
   - Phase-2: Mathlib nuclear norm (if available) or tsum over ONB.
 Key theorems: trace_class_is_compact, trace_well_defined, trace_adjoint, trace_cycle
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.Trace_Class` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.Trace_Class` EXIT:0
 -/
 
 /-!
@@ -325,7 +325,7 @@ Key theorems: tensor_product_universal, tensor_norm_mul, tensor_flip_isom,
   tensor_associativity, HSTPFlat_finite
 Validation:
   - `grep "HSTPTensorIn\|HSTPOpTensor\|HSTPFlat" Theories/Hilbert_Space_Tensor_Product.lean` → each ≥1
-  - `lake build CATEPTMain.AFPBridge.HSTP.Theories.Hilbert_Space_Tensor_Product` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.HSTP.Hilbert_Space_Tensor_Product` EXIT:0
 -/
 
 /-!
@@ -340,7 +340,7 @@ Content summary:
 Translation challenge: HIGH
   - Phase-1: axiom `partialTrace : CBOSpace (HSTPTensorSpace H₁ H₂) (HSTPTensorSpace H₁ H₂) → CBOSpace H₂ H₂`
   - Connects PM (projective measurements on composite systems) to HSTP.
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.Partial_Trace` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.Partial_Trace` EXIT:0
 -/
 
 /-!
@@ -355,7 +355,7 @@ Content summary:
 Translation challenge: HIGH
   - Phase-1: all as axioms/predicates (IsVonNeumannAlg, Commutant, DoubleCom, IsFactor)
   - Phase-2: formalize from first principles or use Mathlib if VN algebra library exists
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.Von_Neumann_Algebras` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.Von_Neumann_Algebras` EXIT:0
 -/
 
 /-!
@@ -365,7 +365,7 @@ AFP file: Tensor_Product_Code.thy
 Dependency: Hilbert_Space_Tensor_Product, Cblinfun_Matrix
 Content summary: code generation support for tensor product (same as CBO-TH-008 pattern).
 Translation challenge: MINIMAL — same as CBO code modules; emit as stub.
-Validation: `lake build CATEPTMain.AFPBridge.HSTP.Theories.Tensor_Product_Code` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.HSTP.Tensor_Product_Code` EXIT:0
 -/
 
 /-!
@@ -375,7 +375,7 @@ Severity: P2
 Target file: CATEPTMain/Integration/HSTPBridge.lean
 Content plan:
   import CATEPTMain.AFPBridge.HSTP.HSTPPrelude
-  import CATEPTMain.AFPBridge.HSTP.Theories.Hilbert_Space_Tensor_Product
+  import CATEPTMain.AFPBridge.HSTP.Hilbert_Space_Tensor_Product
   import CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Matrix
   import CATEPTMain.AFPBridge.IMD.IMDPrelude
   set_option autoImplicit false
@@ -448,5 +448,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-HSTP is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.HSTP.Theories.*`  →  `CATEPTMain.AFPBridge.HSTP.*`
+  `CATEPTMain.AFPBridge.HSTP.*`  →  `CATEPTMain.AFPBridge.HSTP.*`
 -/

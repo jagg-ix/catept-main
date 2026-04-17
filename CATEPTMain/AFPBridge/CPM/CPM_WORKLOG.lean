@@ -153,7 +153,7 @@ Translation challenge: LOW-MEDIUM
   - Most lemmas are measure-theoretic bookkeeping.
   - Key: `indicator` function measurability → `MeasureTheory.Measurable.indicator`
   - Phase-1: sorry stubs. Phase-2: most reduce to Mathlib sigma-algebra lemmas.
-Validation: `lake build CATEPTMain.AFPBridge.CPM.Theories.Lemmas_Coproduct_Measure` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.CPM.Lemmas_Coproduct_Measure` EXIT:0
 -/
 
 /-!
@@ -186,7 +186,7 @@ Key theorems: coprodMeasure_injection_eq, coprodMeasure_total, coprodMeasure_sfi
   coprodMeasure_measurable_iff
 Validation:
   - `grep "coprodMeasure_injection_eq\|coprodMeasure_sfin" Theories/Coproduct_Measure.lean` → ≥1
-  - `lake build CATEPTMain.AFPBridge.CPM.Theories.Coproduct_Measure` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CPM.Coproduct_Measure` EXIT:0
 -/
 
 /-!
@@ -204,7 +204,7 @@ Translation challenge: MEDIUM
   - Phase-1: axiom `coprodMeasure_integral_eq`.
   - Phase-2: reduce to Mathlib.MeasureTheory.Integral.Lebesgue lintegral_sum.
 Key theorems: coprodMeasure_integral, coprodMeasure_pushforward_inj
-Validation: `lake build CATEPTMain.AFPBridge.CPM.Theories.Coproduct_Measure_Additional` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.CPM.Coproduct_Measure_Additional` EXIT:0
 -/
 
 /-!
@@ -213,7 +213,7 @@ Validation: `lake build CATEPTMain.AFPBridge.CPM.Theories.Coproduct_Measure_Addi
 Target file: CATEPTMain/Integration/CPMBridge.lean
 Content plan:
   import CATEPTMain.AFPBridge.CPM.CPMPrelude
-  import CATEPTMain.AFPBridge.CPM.Theories.Coproduct_Measure
+  import CATEPTMain.AFPBridge.CPM.Coproduct_Measure
   set_option autoImplicit false
   namespace CATEPTMain.Integration
   /-- Contract: coproduct measure correctly sums component measures. -/
@@ -293,7 +293,7 @@ Phase-2 adjustments:
   4. Prove integral formula via integrable decomposition (`lintegral` + `toReal` pipeline).
   5. Add finite-index probability corollary (`Fintype I`) as a theorem, not placeholder `True`.
 Validation target:
-  - `lake build CATEPTMain.AFPBridge.CPM.Theories.Coproduct_Measure_Additional` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CPM.Coproduct_Measure_Additional` EXIT:0
   - zero theorem statements of shape `: True` in this file.
 -/
 
@@ -309,5 +309,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-CPM is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.CPM.Theories.*`  →  `CATEPTMain.AFPBridge.CPM.*`
+  `CATEPTMain.AFPBridge.CPM.*`  →  `CATEPTMain.AFPBridge.CPM.*`
 -/

@@ -68,5 +68,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-OCT is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.OCT.Theories.*`  →  `CATEPTMain.AFPBridge.OCT.*`
+  `CATEPTMain.AFPBridge.OCT.*`  →  `CATEPTMain.AFPBridge.OCT.*`
 -/

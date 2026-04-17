@@ -188,7 +188,7 @@ Translation challenge: LOW-MEDIUM
   Phase-2: proof obligations fill in using simp/norm_num tactics.
 Emit strategy: batch all five into a single Theories/Extra_Aux.lean to reduce file count.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.CBO.Theories.Extra_Aux` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CBO.Extra_Aux` EXIT:0
 -/
 
 /-!
@@ -208,7 +208,7 @@ Translation challenge: MEDIUM
 Key theorems: cinner_sesquilinear, cinner_nonneg, cinner_pos_iff (for norms).
 Batch note: merge 0 and non-0 variants into single Theories/Complex_Vector_Spaces.lean.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.CBO.Theories.Complex_Vector_Spaces` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CBO.Complex_Vector_Spaces` EXIT:0
 -/
 
 /-!
@@ -237,7 +237,7 @@ Translation challenge: HIGH
 Key theorems: cauchy_schwarz, riesz_rep_bounded_functional, ell2_norm_sq,
   is_ortho_set_ORTH (orthonormal sets).
 Validation:
-  - `lake build CATEPTMain.AFPBridge.CBO.Theories.Complex_Inner_Product` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CBO.Complex_Inner_Product` EXIT:0
   - `grep "Ell2\|ell2\|rieszRep" CBOPrelude.lean Theories/Complex_Inner_Product.lean` → ≥1 each
 -/
 
@@ -275,7 +275,7 @@ Key theorems: opNorm_submul, adjoint_compose, adjoint_adjoint,
 Validation:
   - `grep "CBOAdj\|cblinfunAdj" Theories/Complex_Bounded_Linear_Function.lean` → ≥1
   - No `†` notation defined: `grep "notation.*†" Theories/*.lean` → 0
-  - `lake build CATEPTMain.AFPBridge.CBO.Theories.Complex_Bounded_Linear_Function` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CBO.Complex_Bounded_Linear_Function` EXIT:0
 -/
 
 /-!
@@ -290,7 +290,7 @@ Translation challenge: LOW
   - Lean 4 Mathlib: `ComplexHilbert₁.equiv : H ≃ₗᵢ[ℂ] ℂ` for FiniteDimensional rank 1.
   - Phase-1: axiom `IsOneDim : Type → Prop` with `iso_to_C : IsOneDim H → (H ≃ₗᵢ[ℂ] ℂ)`.
   - Phase-2: use `Module.rank_eq_one_iff` and linear isometry.
-Validation: `lake build CATEPTMain.AFPBridge.CBO.Theories.One_Dimensional_Spaces` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.CBO.One_Dimensional_Spaces` EXIT:0
 -/
 
 /-!
@@ -306,7 +306,7 @@ Translation challenge: MEDIUM
   - Phase-1: axiom `L2Space (α : Type) (μ : MeasureTheory.Measure α) : Type`
   - Phase-2: `def L2Space α μ := MeasureTheory.Lp ℂ 2 μ`
 Key theorems: L2_inner_correct, L2_norm_sq_integral
-Validation: `lake build CATEPTMain.AFPBridge.CBO.Theories.Complex_L2` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.CBO.Complex_L2` EXIT:0
 -/
 
 /-!
@@ -328,7 +328,7 @@ Translation challenge: HIGH
 Key theorems: finite_dim_cblinfun_matrix_iso, matrix_of_adj, matrix_of_comp
 Validation:
   - `grep "cblinfunToMatrix\|matrixToCblinfun" Theories/Cblinfun_Matrix.lean` → ≥1 each
-  - `lake build CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Matrix` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.CBO.Cblinfun_Matrix` EXIT:0
 -/
 
 /-!
@@ -344,7 +344,7 @@ Translation challenge: MINIMAL
   Emit as stub modules with a single `-- Code generation not needed in Lean 4` comment
   and a `sorry`-stub for any exported theorem referenced by downstream AFP entries.
 Strategy: emit empty modules with `import CBOPrelude` only.
-Validation: `lake build CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Code` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.CBO.Cblinfun_Code` EXIT:0
 -/
 
 /-!
@@ -354,8 +354,8 @@ Severity: P2
 Target file: CATEPTMain/Integration/CBOBridge.lean
 Content plan:
   import CATEPTMain.AFPBridge.CBO.CBOPrelude
-  import CATEPTMain.AFPBridge.CBO.Theories.Complex_Bounded_Linear_Function
-  import CATEPTMain.AFPBridge.CBO.Theories.Cblinfun_Matrix
+  import CATEPTMain.AFPBridge.CBO.Complex_Bounded_Linear_Function
+  import CATEPTMain.AFPBridge.CBO.Cblinfun_Matrix
   set_option autoImplicit false
   namespace CATEPTMain.Integration
   /-- Contract: finite-dim cblinfun and QMat are isomorphic in the CBO bridge. -/
@@ -429,5 +429,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-CBO is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.CBO.Theories.*`  →  `CATEPTMain.AFPBridge.CBO.*`
+  `CATEPTMain.AFPBridge.CBO.*`  →  `CATEPTMain.AFPBridge.CBO.*`
 -/

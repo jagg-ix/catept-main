@@ -172,7 +172,7 @@ Translation challenge: LOW-MEDIUM
 Key lemmas: rcll_of_mono_right_cont, abs_cont_interval_measure,
   interval_measure_sigma_finite
 Validation:
-  - `lake build CATEPTMain.AFPBridge.LSI.Theories.Preliminaries_LSI` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.LSI.Preliminaries_LSI` EXIT:0
 -/
 
 /-!
@@ -215,7 +215,7 @@ Phase-2 upgrade path:
 Validation:
   - `grep "lsiChangeOfVariables\|lsiIntByParts" Theories/Lebesgue_Stieltjes_Integral.lean` → ≥1 each
   - `grep "lebesgue_stieltjes_integration_by_parts\|integration_by_parts" Theories/Lebesgue_Stieltjes_Integral.lean` → ≥1
-  - `lake build CATEPTMain.AFPBridge.LSI.Theories.Lebesgue_Stieltjes_Integral` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.LSI.Lebesgue_Stieltjes_Integral` EXIT:0
 -/
 
 /-!
@@ -224,7 +224,7 @@ Validation:
 Target file: CATEPTMain/Integration/LSIBridge.lean
 Content plan:
   import CATEPTMain.AFPBridge.LSI.LSIPrelude
-  import CATEPTMain.AFPBridge.LSI.Theories.Lebesgue_Stieltjes_Integral
+  import CATEPTMain.AFPBridge.LSI.Lebesgue_Stieltjes_Integral
   set_option autoImplicit false
   namespace CATEPTMain.Integration
   /-- Contract: Lebesgue-Stieltjes integral reduces to Lebesgue integral for C¹ F. -/
@@ -302,5 +302,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-LSI is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.LSI.Theories.*`  →  `CATEPTMain.AFPBridge.LSI.*`
+  `CATEPTMain.AFPBridge.LSI.*`  →  `CATEPTMain.AFPBridge.LSI.*`
 -/

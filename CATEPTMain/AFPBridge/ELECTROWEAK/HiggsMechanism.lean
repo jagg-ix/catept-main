@@ -25,7 +25,7 @@ Source: ElectroweakInteraction_HiggsMechanism.nb
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs require the real tactics.
 
 namespace CATEPTMain.AFPBridge.ELECTROWEAK
 
@@ -67,7 +67,10 @@ theorem ew_mZ_scaling (gw gb v c : ℝ) (hc : 0 < c) :
 theorem ew_weinberg_mass_relation (gw gb v : ℝ)
     (hgw : 0 < gw) (hgb : 0 < gb) (hv : 0 < v) :
     mW gw v = mZ gw gb v * cosW gw gb := by
-  sorry
+  simp only [mW, mZ, cosW]
+  have hne : Real.sqrt (gw ^ 2 + gb ^ 2) ≠ 0 :=
+    Real.sqrt_ne_zero'.mpr (by positivity)
+  field_simp [hne]
 
 -- ── EW-4: Z is heavier than W (proved) ───────────────────────────────────────
 /-- **Z heavier than W**: mZ > mW for gw, gb > 0.
@@ -76,7 +79,13 @@ theorem ew_weinberg_mass_relation (gw gb v : ℝ)
 theorem ew_mZ_gt_mW (gw gb v : ℝ)
     (hgw : 0 < gw) (hgb : 0 < gb) (hv : 0 < v) :
     mW gw v < mZ gw gb v := by
-  sorry
+  simp only [mW, mZ]
+  have hlt : gw < Real.sqrt (gw ^ 2 + gb ^ 2) :=
+    calc gw = Real.sqrt (gw ^ 2) := (Real.sqrt_sq hgw.le).symm
+      _ < Real.sqrt (gw ^ 2 + gb ^ 2) :=
+          Real.sqrt_lt_sqrt (sq_nonneg _) (by nlinarith [pow_pos hgb 2])
+  nlinarith [mul_pos (show (0:ℝ) < v / 2 by linarith)
+                     (show (0:ℝ) < Real.sqrt (gw ^ 2 + gb ^ 2) - gw by linarith)]
 
 -- ── EW-5: Photon is massless (trivial) ───────────────────────────────────────
 /-- The photon A_μ = sin(θW)W³_μ + cos(θW)B_μ remains massless. -/
@@ -113,7 +122,9 @@ theorem ew_mHiggs_formula (v lambda : ℝ) (hv : 0 < v) (hl : 0 < lambda) :
 theorem ew_mHiggs_sq (v lambda mu_sq : ℝ) (hv : 0 < v) (hl : 0 < lambda)
     (hmu : mu_sq < 0) (hvev : v^2 = -mu_sq / lambda) :
     mHiggs v lambda ^ 2 = -2 * mu_sq := by
-  sorry
+  simp only [mHiggs, mul_pow]
+  rw [Real.sq_sqrt (by positivity : 0 ≤ 2 * lambda), hvev]
+  field_simp [hl.ne']
 
 -- ── Numerical verification (experimental values) ──────────────────────────────
 -- With gw = 0.653, gb from sin²θW = 0.2276, v ≈ 246 GeV, the formulas
@@ -141,7 +152,7 @@ noncomputable def v_num : ℝ := 246.22  -- GeV
 example : mW gw_num v_num = mZ gw_num gb_num v_num * cosW gw_num gb_num :=
   ew_weinberg_mass_relation gw_num gb_num v_num
     (by norm_num [gw_num])
-    (by simp only [gb_num]; positivity)
+    (by simp only [gb_num, gw_num, sin2W_num]; positivity)
     (by norm_num [v_num])
 
 end NumericalCheck

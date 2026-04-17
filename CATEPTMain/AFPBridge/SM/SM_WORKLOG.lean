@@ -183,7 +183,7 @@ Translation challenge: LOW
   obsolete (superseded by existing Mathlib lemmas). Strategy: audit each lemma
   against Mathlib, emit each either as a `theorem ... := by exact` using Mathlib
   name, or as `sorry` stub if no Mathlib analog exists.
-Validation: `lake build CATEPTMain.AFPBridge.SM.Theories.Analysis_More` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.SM.Analysis_More` EXIT:0
 -/
 
 /-!
@@ -201,7 +201,7 @@ Translation challenge: MEDIUM
   - Phase-2: `def IsSmoothOn f s := ContDiffOn ℝ ⊤ f s`
   - Chain rule: `ContDiffOn.comp` in Mathlib
 Key theorems: smooth_on_comp, smooth_const, smooth_id
-Validation: `lake build CATEPTMain.AFPBridge.SM.Theories.Smooth` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.SM.Smooth` EXIT:0
 -/
 
 /-!
@@ -218,7 +218,7 @@ Translation challenge: MEDIUM
     with axiom `exists_bump_fn : IsOpen U → p ∈ U → HasBumpFn M p U`
   - Phase-2: use `Mathlib.Analysis.SpecialFunctions.Bump.basic`
 Key theorem: exists_smooth_bump_function (existence result)
-Validation: `lake build CATEPTMain.AFPBridge.SM.Theories.Bump_Function` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.SM.Bump_Function` EXIT:0
 -/
 
 /-!
@@ -244,7 +244,7 @@ Translation challenge: HIGH
 Key theorems: chart_cover_is_open, chart_transition_smooth, atlas_closed_under_comp
 Validation:
   - `grep "Chart\|chartSource\|chartMap" SMPrelude.lean Theories/Chart.lean` → ≥1 each
-  - `lake build CATEPTMain.AFPBridge.SM.Theories.Chart` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.SM.Chart` EXIT:0
 -/
 
 /-!
@@ -259,7 +259,7 @@ Translation challenge: MEDIUM
   - Lean 4 Mathlib: `TopologicalManifold H M` or `ChartedSpace H M` + Hausdorff + σ-compact.
   - Phase-1: axiom `IsTopManifold (n : ℕ) (M : Type) : Prop`
 Key theorems: top_manifold_is_hausdorff, top_manifold_paracompact
-Validation: `lake build CATEPTMain.AFPBridge.SM.Theories.Topological_Manifold` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.SM.Topological_Manifold` EXIT:0
 -/
 
 /-!
@@ -278,7 +278,7 @@ Key theorems: smooth_mfd_hausdorff, smooth_comp, smooth_iff_locally_smooth,
   smooth_invariant_under_diffeo
 Validation:
   - `grep "IsSmoothMfd\|IsSmoothOn\|IsSmooth" Theories/Differentiable_Manifold.lean` → ≥1
-  - `lake build CATEPTMain.AFPBridge.SM.Theories.Differentiable_Manifold` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.SM.Differentiable_Manifold` EXIT:0
 -/
 
 /-!
@@ -295,7 +295,7 @@ Translation challenge: MEDIUM
   - Phase-1: axiom `ExistsPartUnity (M : Type) (n : ℕ) (Uα : I → Set M) : Prop`
   - Phase-2: use Mathlib.Topology.PartitionOfUnity
 Key theorem: smooth_partition_of_unity_exists
-Validation: `lake build CATEPTMain.AFPBridge.SM.Theories.Partition_Of_Unity` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.SM.Partition_Of_Unity` EXIT:0
 -/
 
 /-!
@@ -318,7 +318,7 @@ Key theorems: tangent_linear_map, tangent_comp_chain_rule, cotangent_duality,
   fundamental_theorem_path_integral
 Validation:
   - `grep "TangentVec\|TangentMap\|CotangentVec" Theories/Tangent_Space.lean` → ≥1
-  - `lake build CATEPTMain.AFPBridge.SM.Theories.Tangent_Space` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.SM.Tangent_Space` EXIT:0
 -/
 
 /-!
@@ -337,7 +337,7 @@ Translation challenge: MEDIUM
   - Projective space: `Mathlib.Geometry.ProjectiveSpace` (if available).
   Phase-1: sorry-stubs for concrete manifold instances. Phase-2: Mathlib instances.
 Batch note: merge three files into Theories/Concrete_Manifolds.lean for efficiency.
-Validation: `lake build CATEPTMain.AFPBridge.SM.Theories.Concrete_Manifolds` EXIT:0
+Validation: `lake build CATEPTMain.AFPBridge.SM.Concrete_Manifolds` EXIT:0
 -/
 
 /-!
@@ -347,8 +347,8 @@ Severity: P2
 Target file: CATEPTMain/Integration/SMBridge.lean
 Content plan:
   import CATEPTMain.AFPBridge.SM.SMPrelude
-  import CATEPTMain.AFPBridge.SM.Theories.Differentiable_Manifold
-  import CATEPTMain.AFPBridge.SM.Theories.Tangent_Space
+  import CATEPTMain.AFPBridge.SM.Differentiable_Manifold
+  import CATEPTMain.AFPBridge.SM.Tangent_Space
   set_option autoImplicit false
   namespace CATEPTMain.Integration
   /-- Contract: a smooth manifold has a tangent bundle. -/
@@ -416,5 +416,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-SM is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.SM.Theories.*`  →  `CATEPTMain.AFPBridge.SM.*`
+  `CATEPTMain.AFPBridge.SM.*`  →  `CATEPTMain.AFPBridge.SM.*`
 -/

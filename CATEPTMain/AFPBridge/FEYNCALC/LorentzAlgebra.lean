@@ -191,6 +191,7 @@ theorem lorentzProduct_symm (p q : FCIdx → ℝ) :
 --   explicit index) → essentially the same formula as for the slashes"
 -- Combines Contract.m (Lorentz) with DiracTrick.m (Dirac) for slash-metric products.
 
+set_option maxHeartbeats 800000 in
 /-- `p̸² = p·p · 1₄`  (slashed momentum squared).
   `pSlash(p)² = (Σ_μ p_μ γ^μ)² = Σ_{μν} p_μ p_ν γ^μ γ^ν
               = Σ_{μν} p_μ p_ν · ½{γ^μ,γ^ν}
@@ -198,7 +199,15 @@ theorem lorentzProduct_symm (p q : FCIdx → ℝ) :
   FeynCalc: `DiracSimplify[Slash[p]^2]` → `Pair[p, p]`. -/
 theorem pSlash_sq (p : FCIdx → ℝ) :
     pSlash p * pSlash p = smulEnd ((lorentzProduct p p : ℂ)) oneEnd := by
-  sorry  -- phase2_high: expand pSlash, use gamma_anticommute + Finset.sum linearity
+  -- Brute-force matrix expansion: unfold everything to concrete ℂ entries, then ring.
+  simp only [pSlash, smulEnd, oneEnd, gamma, lorentzProduct, eta, FCIdx, Fin.sum_univ_four]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply,
+               Fin.sum_univ_four, diracGamma, diracGamma0, diracGamma1, diracGamma2, diracGamma3,
+               Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.head_fin_const,
+               Complex.I_sq] <;>
+    push_cast <;> ring
 
 /-- Dirac equation substitute: for an on-shell spinor u with pu = m u,
   `(p̸ − m) u = 0`.  This is the Dirac equation; stated as an axiom here

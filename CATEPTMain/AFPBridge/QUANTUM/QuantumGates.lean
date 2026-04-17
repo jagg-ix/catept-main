@@ -24,7 +24,7 @@ The lean4-quantum theorems use a custom `qMatrix` instance with its own
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs require the real tactics.
 
 namespace CATEPTMain.AFPBridge.QUANTUM
 
@@ -104,26 +104,53 @@ noncomputable def ketPsiMinus : QVec 4 :=
   ![![0], ![(1 / Real.sqrt 2 : ℝ)], ![-(1 / Real.sqrt 2 : ℝ)], ![0]]
 
 -- ── Gate unitarity ────────────────────────────────────────────────────────────
-/-- X is unitary: X†X = 1.
-  Proof: X has real entries and X² = 1 (involution). -/
+/-- X is unitary: X†X = 1. (X is real, self-adjoint, and involutive.) -/
 lemma gateX_unitary : adjoint gateX * gateX = 1 := by
-  sorry
+  simp only [gateX, adjoint, Matrix.conjTranspose]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply,
+          Matrix.conjTranspose_apply, RCLike.star_def]
 
 /-- Z is unitary: Z†Z = 1. -/
 lemma gateZ_unitary : adjoint gateZ * gateZ = 1 := by
-  sorry
+  simp only [gateZ, adjoint, Matrix.conjTranspose]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply,
+          Matrix.conjTranspose_apply, RCLike.star_def]
 
 /-- CNOT is unitary: CNOT†·CNOT = 1. -/
 lemma gateCNOT_unitary : adjoint gateCNOT * gateCNOT = 1 := by
-  sorry  -- phase2_low: CNOT has {0,1} entries, unitary by explicit 4×4 computation
+  have h : adjoint gateCNOT = gateCNOT := by
+    simp only [gateCNOT, adjoint, Matrix.conjTranspose]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [Matrix.conjTranspose_apply, RCLike.star_def]
+  rw [h]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [gateCNOT, Matrix.mul_apply, Fin.sum_univ_four, Matrix.one_apply]
 
 /-- H is unitary: H†H = 1. -/
 lemma gateH_unitary : adjoint gateH * gateH = 1 := by
-  sorry  -- phase2_medium: requires Real.mul_self_sqrt, 1/√2·1/√2 + 1/√2·1/√2 = 1
+  have hH : adjoint gateH = gateH := by
+    simp only [gateH, adjoint, Matrix.conjTranspose]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [Matrix.conjTranspose_apply, RCLike.star_def, Complex.conj_ofReal]
+  rw [hH]
+  have hne : Real.sqrt 2 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num)
+  -- post-norm_cast goal form: (√2)⁻¹ ^ 2 * 2 = 1
+  have hkey2 : (Real.sqrt 2)⁻¹ ^ 2 * 2 = 1 := by
+    have h : (Real.sqrt 2)⁻¹ ^ 2 * Real.sqrt 2 ^ 2 = 1 := by
+      rw [inv_pow]; exact inv_mul_cancel₀ (pow_ne_zero 2 hne)
+    rwa [Real.sq_sqrt (show (0:ℝ) ≤ 2 by norm_num)] at h
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [gateH, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply] <;>
+    norm_cast <;>
+    (try ring) <;>
+    linarith [hkey2]
 
 /-- SWAP is self-inverse: SWAP·SWAP = 1. -/
 lemma gateSWAP_involutive : gateSWAP * gateSWAP = 1 := by
-  sorry  -- phase2_low: 4×4 integer matrix, SWAP² = I by explicit computation
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [gateSWAP, Matrix.mul_apply, Fin.sum_univ_four, Matrix.one_apply]
 
 -- ── Gate Hermiticity ──────────────────────────────────────────────────────────
 /-- X is Hermitian. -/
@@ -140,7 +167,9 @@ lemma gateZ_hermitian : adjoint gateZ = gateZ := by
 
 /-- H is Hermitian (all entries real → adjoint = transpose = H since H is symmetric). -/
 lemma gateH_hermitian : adjoint gateH = gateH := by
-  sorry  -- phase2_low: entries are (1/√2 : ℝ) cast to ℂ, conj = id; H = Hᵀ
+  simp only [gateH, adjoint, Matrix.conjTranspose]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [Matrix.conjTranspose_apply, RCLike.star_def, Complex.conj_ofReal]
 
 -- ── CNOT circuit identities ───────────────────────────────────────────────────
 /-- CNOT on |00⟩ = |00⟩. -/

@@ -185,7 +185,7 @@ Translation challenge: MEDIUM
 Key theorems: mat_hermitian_iff, pos_semidef_iff_eigenvalues_nonneg,
   orthogonal_proj_sum_eq_id, proj_op_comp
 Validation:
-  - `lake build CATEPTMain.AFPBridge.PM.Theories.Linear_Algebra_Complements` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.PM.Linear_Algebra_Complements` EXIT:0
 -/
 
 /-!
@@ -222,7 +222,7 @@ Key theorem names to preserve (PM-PRE-005 analog):
   non_selective_meas_is_psd, observable_expected_value
 Validation:
   - `grep "pvm_sum_proj\|born_rule\|post_meas_state" Theories/Projective_Measurements.lean`
-  - `lake build CATEPTMain.AFPBridge.PM.Theories.Projective_Measurements` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.PM.Projective_Measurements` EXIT:0
 -/
 
 /-!
@@ -255,7 +255,7 @@ Phase-2 upgrade path: reduce quantum violation to `norm_num` + `native_decide` o
   the explicit 4×4 density matrix computation with Bell00 state.
 Validation:
   - `grep "chsh_inequality\|no_lhv\|chsh_quantum" Theories/CHSH_Inequality.lean`
-  - `lake build CATEPTMain.AFPBridge.PM.Theories.CHSH_Inequality` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.PM.CHSH_Inequality` EXIT:0
 -/
 
 /-!
@@ -266,7 +266,7 @@ Target file: CATEPTMain/Integration/PMBridge.lean
 Namespace: CATEPTMain.Integration
 Content plan:
   import CATEPTMain.AFPBridge.PM.PMPrelude
-  import CATEPTMain.AFPBridge.PM.Theories.Projective_Measurements
+  import CATEPTMain.AFPBridge.PM.Projective_Measurements
   import CATEPTMain.AFPBridge.IMD.Theories.Quantum
   set_option autoImplicit false
   namespace CATEPTMain.Integration
@@ -349,5 +349,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-PM is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.PM.Theories.*`  →  `CATEPTMain.AFPBridge.PM.*`
+  `CATEPTMain.AFPBridge.PM.*`  →  `CATEPTMain.AFPBridge.PM.*`
 -/

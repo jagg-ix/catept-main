@@ -1,5 +1,6 @@
 import CATEPTMain.AFPBridge.FBD.OmegaMatrices
 import CATEPTMain.AFPBridge.FEYNCALC.DiracTrace
+import Mathlib.Tactic
 /-!
 # FBD — QED Process Amplitudes (Phase 1)
 
@@ -28,7 +29,7 @@ All squared amplitudes reduce to traces over γ-matrices via
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs require the real tactics.
 open CATEPTMain.AFPBridge.FEYNCALC
 open CATEPTMain.AFPBridge.FBD
 
@@ -66,7 +67,7 @@ noncomputable def mandelstam_u (p1 p4 : FourMom) : ℝ :=
 theorem compton_amplitude_sq (s u : ℝ) (hs : s ≠ 0) (hu : u ≠ 0) :
     -- |M̄|²_Compton / e⁴ = -2(s/u + u/s) in massless limit
     -2 * (s/u + u/s) = -2 * (s^2 + u^2) / (s * u) := by
-  sorry
+  field_simp [hs, hu]
 
 /-- **CS-2**: Compton amplitude symmetry under s ↔ u (crossing symmetry). -/
 theorem compton_crossing_symmetry (s u : ℝ) :

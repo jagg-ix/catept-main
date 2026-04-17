@@ -313,7 +313,7 @@ Emit strategy:
   - Target: all Basics lemmas are definitional or simp-derivable in phase 2.
   - Import: `Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic` for sin/cos/exp.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Basics` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Basics` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-002  Theory: Binary_Nat (P2)
@@ -332,7 +332,7 @@ Emit strategy:
   - Phase 1: `def binRep (n i : ℕ) : List ℕ := ...` via `Nat.testBit`
   - Phase 2: prove all lemmas using `Nat.testBit_lt_two`, `Nat.sum_testBit` etc.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Binary_Nat` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Binary_Nat` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-003  Theory: Complex_Vectors (P2)
@@ -350,7 +350,7 @@ Translation challenge: HIGH
 Key theorems: cpx_vec_length_inner_prod, inner_prod_cnj, inner_prod_is_linear,
   inner_prod_is_sesquilinear (bilinearity over ℂ).
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Complex_Vectors` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Complex_Vectors` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-004  Theory: Quantum (P1 — highest complexity)
@@ -401,7 +401,7 @@ Validation:
   - No `CpxSqrMat → QMat` function-type binders (IMD-PRE-004 rule)
   - No notation for `†` that shadows Mathlib `ᴴ`
   - Name list check (IMD-PRE-005): all 30 named lemmas present
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Quantum` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Quantum` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-005  Theory: Tensor (P1)
@@ -424,7 +424,7 @@ Translation challenge: HIGH
 Key theorems: dagger_tensor (M ⊗ N)† = M† ⊗ N†; dim_tensor; tensor_gate (gate composites).
 Validation:
   - No `⊗` notation defined in Theories/Tensor.lean or IMDPrelude.lean
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Tensor` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Tensor` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-006  Theory: More_Tensor (P2)
@@ -438,7 +438,7 @@ Translation challenge: MEDIUM-HIGH
   - In Lean 4: `Matrix.kronecker_mul_kronecker` exists in Mathlib.
   - `ptensor_mat` (partial tensor) requires careful index handling.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.More_Tensor` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.More_Tensor` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-007  Theory: Measurement (P2)
@@ -453,7 +453,7 @@ Translation challenge: HIGH
   - Phase-2: use `Matrix.IsHermitian` and `Matrix.IsProjection` from Mathlib.
   - Key invariant: probabilities sum to 1 (requires norm lemmas from Complex_Vectors).
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Measurement` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Measurement` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-008  Theory: Entanglement (P2)
@@ -467,7 +467,7 @@ Translation challenge: HIGH
   - Key predicate: `separable n m v` ↔ ∃ v1 v2, v = v1 ⊗ v2.
   - In Lean 4: `separable` as `∃ (v1 : QVec) (v2 : QVec), v = tensorMat v1 v2`.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Entanglement` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Entanglement` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-009  Theory: Quantum_Teleportation (P2)
@@ -482,7 +482,7 @@ Translation challenge: HIGH
   - Phase-1: sorry-stub proofs are acceptable; the theorem statements must be
     faithfully translated (no sorry in hypothesis/conclusion types).
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Quantum_Teleportation` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Quantum_Teleportation` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-010  Theory: Deutsch (P2)
@@ -497,7 +497,7 @@ Translation challenge: MEDIUM
   - In Lean 4: `def IsDeutschConst (f : Bool → Bool) : Prop := f 0 = f 1`
   - Phase-1: sorry proofs; phase-2: decide by cases (finite type).
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Deutsch` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Deutsch` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-011  Theory: Deutsch_Jozsa (P2)
@@ -510,7 +510,7 @@ Translation challenge: MEDIUM-HIGH
   - Requires `n`-fold Kronecker product of H: `H^⊗n` — emit as `tensorPow H n` axiom.
   - `dim_row (tensorPow H n) = 2^n` — requires IMD-TH-001 arithmetic lemmas.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Deutsch_Jozsa` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Deutsch_Jozsa` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-012  Theory: No_Cloning (P2)
@@ -526,7 +526,7 @@ Translation challenge: MEDIUM
 Key theorem name: `no_cloning` (AFP theorem) — must appear verbatim (IMD-PRE-005).
 Validation:
   - `grep "no_cloning" Theories/No_Cloning.lean` → 1+ hits
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.No_Cloning` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.No_Cloning` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-TH-013  Theory: Quantum_Prisoners_Dilemma (P2)
@@ -540,7 +540,7 @@ Translation challenge: MEDIUM-HIGH
   - Has no equivalent in prior AFP work in this repo — novel territory.
   - Phase-1: axiom stubs for payoff functions; sorry proofs for Nash equilibrium.
 Validation:
-  - `lake build CATEPTMain.AFPBridge.IMD.Theories.Quantum_Prisoners_Dilemma` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.IMD.Quantum_Prisoners_Dilemma` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## IMD-INT-001  Integration bridge: CATEPTMain.Integration.DiracBridge (P2)
@@ -555,8 +555,8 @@ Target file: CATEPTMain/Integration/DiracBridge.lean
 Namespace: CATEPTMain.Integration
 Content plan:
   import CATEPTMain.AFPBridge.IMD.IMDPrelude
-  import CATEPTMain.AFPBridge.IMD.Theories.Quantum
-  import CATEPTMain.AFPBridge.IMD.Theories.No_Cloning
+  import CATEPTMain.AFPBridge.IMD.Quantum
+  import CATEPTMain.AFPBridge.IMD.No_Cloning
   set_option autoImplicit false
   namespace CATEPTMain.Integration
   /-- Contract: a quantum gate preserves the norm of quantum states. -/
@@ -677,7 +677,7 @@ Checks (NoFTL-derived, adapted for IMD):
      for thy in Basics Binary_Nat Complex_Vectors Quantum Tensor More_Tensor
                 Measurement Entanglement Quantum_Teleportation Deutsch
                 Deutsch_Jozsa No_Cloning Quantum_Prisoners_Dilemma ; do
-       lake build CATEPTMain.AFPBridge.IMD.Theories.$thy → must EXIT:0
+       lake build CATEPTMain.AFPBridge.IMD.$thy → must EXIT:0
      done
 IMD-specific additional checks (no analog in check_noftl_output.sh):
   11. dagger emitted correctly (not collapsed):
@@ -859,5 +859,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-IMD is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.IMD.Theories.*`  →  `CATEPTMain.AFPBridge.IMD.*`
+  `CATEPTMain.AFPBridge.IMD.*`  →  `CATEPTMain.AFPBridge.IMD.*`
 -/

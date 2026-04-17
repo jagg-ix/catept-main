@@ -206,7 +206,7 @@ Phase-2 upgrade path:
 Validation:
   - `grep "qft_is_unitary\|qft_correct\|qftCircuit_unitary" Theories/QFT.lean` → ≥1 each
   - `grep "IsQFTCorrect" Theories/QFT.lean` → ≥1 (correctness predicate present)
-  - `lake build CATEPTMain.AFPBridge.QFT.Theories.QFT` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.QFT.QFT` EXIT:0
 -/
 
 /-!
@@ -217,7 +217,7 @@ Target file: CATEPTMain/Integration/QFTBridge.lean
 Namespace: CATEPTMain.Integration
 Content plan:
   import CATEPTMain.AFPBridge.QFT.QFTPrelude
-  import CATEPTMain.AFPBridge.QFT.Theories.QFT
+  import CATEPTMain.AFPBridge.QFT.QFT
   import CATEPTMain.AFPBridge.IMD.Theories.Quantum
   set_option autoImplicit false
   namespace CATEPTMain.Integration
@@ -314,5 +314,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-QFT is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.QFT.Theories.*`  →  `CATEPTMain.AFPBridge.QFT.*`
+  `CATEPTMain.AFPBridge.QFT.*`  →  `CATEPTMain.AFPBridge.QFT.*`
 -/

@@ -35,7 +35,7 @@ After spontaneous symmetry breaking via the Higgs mechanism:
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs require the real tactics.
 
 namespace CATEPTMain.AFPBridge.ELECTROWEAK
 
@@ -67,11 +67,17 @@ noncomputable def sinW (gw gb : ℝ) : ℝ :=
 /-- sin²(θW) + cos²(θW) = 1. -/
 theorem sinW_sq_add_cosW_sq (gw gb : ℝ) (hgw : 0 < gw) (hgb : 0 < gb) :
     sinW gw gb ^ 2 + cosW gw gb ^ 2 = 1 := by
-  sorry
+  unfold sinW cosW
+  have hpos : (0 : ℝ) < gw ^ 2 + gb ^ 2 := by positivity
+  have hne : Real.sqrt (gw ^ 2 + gb ^ 2) ≠ 0 := Real.sqrt_ne_zero'.mpr hpos
+  rw [div_pow, div_pow, ← add_div, Real.sq_sqrt hpos.le]
+  rw [show gb ^ 2 + gw ^ 2 = gw ^ 2 + gb ^ 2 from by ring]
+  exact div_self (ne_of_gt hpos)
 
 /-- cos(θW) > 0 when gw > 0, gb > 0. -/
 theorem cosW_pos (gw gb : ℝ) (hgw : 0 < gw) (hgb : 0 < gb) : 0 < cosW gw gb := by
-  sorry
+  unfold cosW
+  exact div_pos hgw (Real.sqrt_pos.mpr (by positivity))
 
 -- ── Gauge boson masses ────────────────────────────────────────────────────────
 /-- W boson mass: mW = gw · v / 2.
@@ -93,7 +99,8 @@ theorem mW_pos (gw v : ℝ) (hgw : 0 < gw) (hv : 0 < v) : 0 < mW gw v := by
 /-- mZ > 0 when gw > 0, gb > 0, v > 0. -/
 theorem mZ_pos (gw gb v : ℝ) (hgw : 0 < gw) (hgb : 0 < gb) (hv : 0 < v) :
     0 < mZ gw gb v := by
-  sorry
+  unfold mZ
+  exact mul_pos (by linarith) (Real.sqrt_pos.mpr (by positivity))
 
 -- ── Pauli matrices (SU(2) generators) ────────────────────────────────────────
 /-- Pauli matrix σ¹ = [[0,1],[1,0]].  Source: notebook — "Pauli matrices for bosons". -/
@@ -145,6 +152,7 @@ noncomputable def higgsvev_from_potential (mu_sq lambda : ℝ) : ℝ :=
 theorem vev_from_potential_sq (mu_sq lambda : ℝ)
     (hmu : mu_sq < 0) (hlambda : 0 < lambda) :
     higgsvev_from_potential mu_sq lambda ^ 2 = -mu_sq / lambda := by
-  sorry
+  unfold higgsvev_from_potential
+  exact Real.sq_sqrt (div_nonneg (by linarith) hlambda.le)
 
 end CATEPTMain.AFPBridge.ELECTROWEAK

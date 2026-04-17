@@ -166,9 +166,10 @@ theorem euclidean_fk_measure_is_real_valued
   have hweq : ∀ x, m.weight x = (m.damping x : ℂ) :=
     fun x => euclidean_weight_is_real_positive m hRe x
   simp_rw [hweq]
-  -- phase2: integral_im on set integrals (notation ↔ restrict pattern mismatch)
-  -- Key: ∫_A (real : ℂ) dμ is real-valued since im (↑r) = 0 pointwise
-  sorry
+  -- ∫_A (damping x : ℂ) dμ = ↑(∫_A damping x dμ) since damping is real-valued
+  rw [show ∫ x in s, (m.damping x : ℂ) ∂m.μ =
+          ↑(∫ x in s, m.damping x ∂m.μ) from integral_ofReal (𝕜 := ℂ)]
+  exact Complex.ofReal_im _
 
 /-- The FK partition function Z₀ = ∫ exp(−S_I/ħ) dγ bounds the total variation of ν.
     This is the Feynman–Kac normalization: |ν|(α) ≤ Z₀ < ∞. -/

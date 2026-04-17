@@ -67,5 +67,5 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-MINK is DONE, all imports of this module change from
-  `CATEPTMain.AFPBridge.MINK.Theories.*`  →  `CATEPTMain.AFPBridge.MINK.*`
+  `CATEPTMain.AFPBridge.MINK.*`  →  `CATEPTMain.AFPBridge.MINK.*`
 -/

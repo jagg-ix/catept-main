@@ -28,7 +28,7 @@ Fix target (prelude):
 Validation:
   - Regenerate Points.lean, Functions.lean, Translations.lean
   - All 4 Point params in Points.lean should have type `NoFTLObj`, not `→ NoFTLObj`
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.Points` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.Points` EXIT:0
 TLA+ model: translator_control_loop.tla — add guard
   `binderInferenceSafe: ¬(isApplied v body) ⇒ emit v : NoFTLObj`
 
@@ -49,7 +49,7 @@ Fix target (translator):
   Preferred form: `(h : f x = y)` when `f` is a functional relation (maps x to y).
 Validation:
   - Regenerate MainLemma.lean: `(f00 : f origin = origin)` not `(f00 : f origin origin)`
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.MainLemma` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.MainLemma` EXIT:0
 TLA+ model: afp_lean4_translation_error_classes.tla — add new error class
   `E6_coe_fun_relation_collapse` : `CoeFun` head causes binary relation to
   type-check as application, not proposition.
@@ -76,7 +76,7 @@ Fix target (prelude):
 Validation:
   - Regenerate TangentLineLemma.lean: no `(wvtFunc : NoFTLObj)` params
   - All occurrences of `affineApprox A` must be followed by `toFunc (wvt m k)`, not free name
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.TangentLineLemma` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.TangentLineLemma` EXIT:0
 TLA+ model: translator_control_loop.tla — add guard
   `wvtFuncInjectionSafe: free(wvtFunc) ∧ usedIn(affineApprox) ⇒ emit toFunc(wvt m k)`
 
@@ -101,7 +101,7 @@ Fix target (translator):
 Validation:
   - Regenerate Classification.lean: all line variables typed `NoFTLSet`
   - Grep: `grep "(l : NoFTLObj)" CATEPTMain/AFPBridge/NoFTL/Theories/*.lean` → 0 hits
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.Classification` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.Classification` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## TRL-005  Chained comparison operators emitted verbatim
@@ -119,7 +119,7 @@ Fix target (translator):
     `a ≤ b ≤ c`    → `a ≤ b ∧ b ≤ c`
 Validation:
   - Search emitted files: `grep -Pn "[0-9] < .* < " CATEPTMain/AFPBridge/NoFTL/Theories/*.lean` → 0 hits
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.Sorts EXIT:0`
+  - `lake build CATEPTMain.AFPBridge.NoFTL.Sorts EXIT:0`
 
 ────────────────────────────────────────────────────────────────────────────────
 ## TRL-006  Missing prelude axioms for AFP-local predicates
@@ -171,7 +171,7 @@ Fix target (prelude):
   Already removed in commit 900c0446. Do not re-add.
 Validation:
   - `grep -n "notation.*sees" CATEPTMain/AFPBridge/NoFTL/NoFTLPrelude.lean` → 0 hits
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.Proposition3` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.Proposition3` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## TRL-008  Hypothesis parameter aliasing: `(l : l = line B D)` pattern
@@ -194,7 +194,7 @@ Fix target (translator):
 Validation:
   - `grep -n "(l : l =" CATEPTMain/AFPBridge/NoFTL/Theories/*.lean` → 0 hits
   - `grep -n "(X : X =" CATEPTMain/AFPBridge/NoFTL/Theories/*.lean` → 0 hits
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.Classification` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.Classification` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## TRL-009  `(sComponent D) s (sComponent X)` — spatial dot via CoeFun
@@ -247,7 +247,7 @@ Fix target (translator):
   The safe fallback combinator should be: `simp_all | omega | linarith | exact rfl | sorry`.
 Validation:
   - `grep -rn "first | intro _" CATEPTMain/AFPBridge/NoFTL/Theories/*.lean` → 0 hits
-  - `lake build CATEPTMain.AFPBridge.NoFTL.Theories.Translations` EXIT:0
+  - `lake build CATEPTMain.AFPBridge.NoFTL.Translations` EXIT:0
 
 ────────────────────────────────────────────────────────────────────────────────
 ## TRL-012  `invFunc (asFunc T)` double-wrapping
@@ -526,7 +526,7 @@ Phase 1 move record:
 
 Action required here: none — moves are handled by the Phase 1 procedure.
 After RS-P1-NOFTL is DONE, all imports change from
-  `CATEPTMain.AFPBridge.NoFTL.Theories.*`  →  `CATEPTMain.AFPBridge.NoFTL.*`
+  `CATEPTMain.AFPBridge.NoFTL.*`  →  `CATEPTMain.AFPBridge.NoFTL.*`
 
 NOTE: `NoFTL/NoFTLPrelude.lean` is already at module root (not in Theories/).
 Verify it contains no `Theories.` import paths before executing the move.
