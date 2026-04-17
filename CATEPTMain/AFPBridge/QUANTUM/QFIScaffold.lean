@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.QUANTUM.DensityMatrix
+import Mathlib.Tactic
 /-!
 # Quantum Port — Quantum Fisher Information Scaffold (Phase 1)
 
@@ -121,8 +122,8 @@ theorem cramer_rao_scalar {n : ℕ}
     (hF : 0 < qfi_family ρ_fam θ)
     (varEstim : ℝ) (hVar : 0 ≤ varEstim)
     (hCR : varEstim * qfi_family ρ_fam θ ≥ 1) :
-    varEstim ≥ 1 / qfi_family ρ_fam θ := by
-  sorry
+    varEstim ≥ 1 / qfi_family ρ_fam θ :=
+  (div_le_iff₀ hF).mpr hCR
 
 -- ── GHZ QFI ──────────────────────────────────────────────────────────────────
 /-- QFI of an n-qubit GHZ state under collective phase rotation

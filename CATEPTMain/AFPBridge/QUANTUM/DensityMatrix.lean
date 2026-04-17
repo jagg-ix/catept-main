@@ -31,7 +31,7 @@ Source: QFI-Toolbox (MATLAB/Octave) — PartialTrace.m, PartialTranspose.m,
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs require the real tactics.
 
 namespace CATEPTMain.AFPBridge.QUANTUM
 
@@ -56,16 +56,33 @@ noncomputable def pureDM {n : ℕ} (s : PureState n) : DensityMatrix n where
   herm := proj_hermitian s.vec
   psd  := by
     intro v
-    simp only [proj, isPSD]
+    simp only [proj, adjoint]
     -- ⟨v|(|ψ⟩⟨ψ|)|v⟩ = |⟨ψ|v⟩|² ≥ 0
-    sorry  -- phase2_high: unfold proj, use Matrix.mul_assoc, normSq ≥ 0
+    -- Step 1: reassociate v† * (ψ * ψ†) * v = (v† * ψ) * (ψ† * v)
+    rw [← Matrix.mul_assoc (Matrix.conjTranspose v) s.vec (Matrix.conjTranspose s.vec),
+        Matrix.mul_assoc (Matrix.conjTranspose v * s.vec) (Matrix.conjTranspose s.vec) v]
+    -- Step 2: v† * ψ = (ψ† * v)†
+    have htrans : Matrix.conjTranspose v * s.vec =
+        Matrix.conjTranspose (Matrix.conjTranspose s.vec * v) := by
+      rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
+    rw [htrans]
+    set w := Matrix.conjTranspose s.vec * v
+    -- Step 3: for a 1×1 matrix, (w† * w) 0 0 = star(w 0 0) * w 0 0
+    have hentry : (Matrix.conjTranspose w * w) 0 0 = star (w 0 0) * w 0 0 := by
+      simp [Matrix.mul_apply, Matrix.conjTranspose_apply]
+    rw [hentry]
+    -- Step 4: (conj z * z).re = normSq z ≥ 0
+    have hre : (star (w 0 0) * w 0 0).re = Complex.normSq (w 0 0) := by
+      simp only [Complex.normSq_apply, Complex.mul_re, Complex.star_def,
+                 Complex.conj_re, Complex.conj_im]
+      ring
+    rw [hre]
+    exact Complex.normSq_nonneg _
   tr1  := by
     simp only [proj, qTrace]
-    -- Tr(|ψ⟩⟨ψ|) = ⟨ψ|ψ⟩ = 1  (since s is a unit state)
-    rw [Matrix.trace_mul_comm]
-    simp [adjoint]
-    -- ⟨ψ|ψ⟩ = (ψ† * ψ) 0 0 = 1  from s.unit
-    sorry  -- phase2_high: from s.unit : ψ†ᵩ * ψ = 1
+    -- Tr(|ψ⟩⟨ψ|) = Tr(⟨ψ|ψ⟩) = Tr(1 : QSquare 1) = 1
+    rw [Matrix.trace_mul_comm, s.unit, Matrix.trace_one]
+    simp [Fintype.card_fin]
 
 -- ── DM-5–8: Partial trace properties ─────────────────────────────────────────
 /-- DM-5: Partial trace of a product state:

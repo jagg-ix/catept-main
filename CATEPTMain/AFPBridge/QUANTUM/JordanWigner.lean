@@ -46,7 +46,7 @@ Phase-2: prove the JW isomorphism using:
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs required.
 
 namespace CATEPTMain.AFPBridge.QUANTUM
 
@@ -69,14 +69,14 @@ noncomputable def spinMinus : QSquare 2 :=
 /-- σ⁺ = [[0,1],[0,0]]  (explicit form). -/
 lemma spinPlus_explicit :
     spinPlus = ![![0, 1], ![0, 0]] := by
-  simp [spinPlus, sX, sY, Matrix.smul_apply, Matrix.add_apply]
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Complex.I_sq]; ring
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [spinPlus, sX, sY]; ring
 
 /-- σ⁻ = [[0,0],[1,0]]  (explicit form). -/
 lemma spinMinus_explicit :
     spinMinus = ![![0, 0], ![1, 0]] := by
-  simp [spinMinus, sX, sY, Matrix.smul_apply, Matrix.sub_apply]
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Complex.I_sq]; ring
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [spinMinus, sX, sY]; ring
 
 -- ── Tensor embedding of local operators ───────────────────────────────────────
 /-- Embed a 2×2 operator on site k into the full 2^L Hilbert space.

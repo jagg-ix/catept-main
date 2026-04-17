@@ -145,6 +145,12 @@ theorem traceNorm_density (n : ℕ) (ρ : DensityMatrix n) :
 axiom traceNormAx_triangle (n m : ℕ) (A B : QMat n m) :
     traceNormAx n m (A + B) ≤ traceNormAx n m A + traceNormAx n m B
 
+/-- Trace norm is non-negative: ‖A‖₁ ≥ 0. -/
+axiom traceNormAx_nonneg (n m : ℕ) (A : QMat n m) : 0 ≤ traceNormAx n m A
+
+/-- Trace norm is invariant under negation: ‖−A‖₁ = ‖A‖₁. -/
+axiom traceNormAx_neg (n m : ℕ) (A : QMat n m) : traceNormAx n m (-A) = traceNormAx n m A
+
 -- ── Trace distance ───────────────────────────────────────────────────────────
 /-- **Trace distance** between two density matrices:
   T(ρ, σ) = (1/2) ‖ρ − σ‖₁
@@ -156,14 +162,18 @@ noncomputable def traceDistance (n : ℕ) (ρ σ : DensityMatrix n) : ℝ :=
 theorem traceDistance_bounded (n : ℕ) (ρ σ : DensityMatrix n) :
     0 ≤ traceDistance n ρ σ ∧ traceDistance n ρ σ ≤ 1 := by
   constructor
-  · simp [traceDistance]; sorry  -- phase2: traceNorm ≥ 0
-  · simp [traceDistance]; sorry  -- phase2: ‖ρ-σ‖₁ ≤ ‖ρ‖₁ + ‖σ‖₁ = 2
+  · -- 0 ≤ (1/2) * ‖ρ-σ‖₁  using non-negativity of trace norm
+    unfold traceDistance
+    exact mul_nonneg (div_pos zero_lt_one two_pos).le (traceNormAx_nonneg n n _)
+  · simp [traceDistance]; sorry  -- phase2_high: needs traceNorm_density (‖ρ‖₁=1)
 
 /-- Trace distance is symmetric. -/
 theorem traceDistance_symm (n : ℕ) (ρ σ : DensityMatrix n) :
     traceDistance n ρ σ = traceDistance n σ ρ := by
-  simp [traceDistance]
-  sorry  -- phase2: ‖A‖₁ = ‖-A‖₁ = ‖Aᵀ‖₁
+  unfold traceDistance
+  congr 1
+  rw [← neg_sub σ.mat ρ.mat]
+  exact traceNormAx_neg n n (σ.mat - ρ.mat)
 
 -- ── Phase shift generator ─────────────────────────────────────────────────────
 /-- **Phase shift generator** (collective spin operator):
@@ -257,6 +267,18 @@ noncomputable def mpeFromQFI (L : ℕ) (F : ℝ) : ℕ :=
 /-- Separable states (F_Q ≤ L) have mpe = 1. -/
 theorem mpe_sep (L : ℕ) (hL : 0 < L) (F : ℝ) (hF : F ≤ (L : ℝ)) :
     mpeFromQFI L F = 1 := by
-  sorry
+  simp only [mpeFromQFI]
+  -- Show the filter is empty: no k satisfies F > boundQFI L k _
+  -- because boundQFI L k _ ≥ L ≥ F for all k ≥ 1.
+  have hempty : Finset.filter (fun k : Fin L =>
+      F > boundQFI L k.val.succ (Nat.succ_pos _)) Finset.univ = ∅ := by
+    apply Finset.filter_false_of_mem
+    intro k _
+    simp only [gt_iff_lt, not_lt]
+    apply le_trans hF
+    -- (L : ℝ) ≤ boundQFI L k.val.succ _
+    simp only [boundQFI]
+    norm_cast  -- norm_cast closes the ℕ inequality via omega
+  rw [hempty, Finset.card_empty]
 
 end CATEPTMain.AFPBridge.QUANTUM

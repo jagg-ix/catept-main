@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.FBD.FBDPrelude
+import Mathlib.Tactic
 /-!
 # FBD — Omega Matrix Properties (Phase 1)
 
@@ -26,7 +27,7 @@ The notebook verifies this numerically; phase-2 proves it algebraically.
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs required.
 open CATEPTMain.AFPBridge.FEYNCALC
 open CATEPTMain.AFPBridge.FBD
 
@@ -37,11 +38,9 @@ namespace CATEPTMain.AFPBridge.FBD
   Both are (γ₀ + γ₃)/2 in the notebook's final form — the definition makes
   them equal by construction. -/
 theorem omega0_eq_omega3 : omega0 = omega3 := by
-  simp only [omega0, omega3, addEnd]
-  -- smulEnd (1/2) (addEnd γ₀ γ₃) = smulEnd (1/2) (addEnd γ₃ γ₀)
-  -- follows from commutativity of addEnd (which is mul in FCEnd)
-  -- In phase-2 this is immediate from commutativity of matrix addition
-  sorry  -- phase2_low: addEnd commutes (matrices); follows from FCEnd ring axioms
+  unfold omega0 omega3
+  congr 1
+  exact add_comm _ _
 
 -- ── OM-2: ω anticommutation relations ────────────────────────────────────────
 -- Notebook summary: ω-matrix anticommutators differ from the standard Clifford
@@ -87,8 +86,11 @@ theorem omegaSlash_sq (A : FCIdx → ℝ) :
 /-- **OM-5**: ω₀ + ω₃ = (γ₀ + γ₃) (unnormalized light-cone combination). -/
 theorem omega0_add_omega3 :
     addEnd omega0 omega3 = addEnd (gamma ⟨0, by norm_num⟩) (gamma ⟨3, by norm_num⟩) := by
-  simp only [omega0, omega3, addEnd, smulEnd]
-  sorry  -- phase2_low: smulEnd (1/2) x + smulEnd (1/2) x = x (scalar distributivity)
+  simp only [omega0, omega3, show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+  rw [add_comm (gamma ⟨3, by omega⟩) (gamma ⟨0, by omega⟩),
+      ← smulEnd_addScalar,
+      show (1/2 : ℂ) + 1/2 = 1 from by norm_num,
+      smulEnd_one_right]
 
 -- ── Cross-anticommutation with γ matrices ─────────────────────────────────────
 /-- ω matrices and γ matrices share the same transverse components,

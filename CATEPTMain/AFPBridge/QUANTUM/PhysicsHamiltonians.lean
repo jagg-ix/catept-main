@@ -1,5 +1,6 @@
 import CATEPTMain.AFPBridge.QUANTUM.JordanWigner
 import CATEPTMain.AFPBridge.QUANTUM.DensityMatrix
+import Mathlib.Tactic
 /-!
 # Quantum Port — Physics Hamiltonians (Phase 1)
 
@@ -110,16 +111,27 @@ theorem xx_model_jordan_wigner (L : ℕ) (hL : 0 < L) :
 -- ── Néel state ───────────────────────────────────────────────────────────────
 /-- The computational basis vector |01010...01⟩ of length 2^L (spin-up at even sites).
   Binary encoding: bit 0 = site 0 (LSB), bit 1 = site 1, ... -/
+-- Helper: sum of 2^k over any subset of range L is strictly less than 2^L
+private lemma sum_pow_filter_lt (L : ℕ) (P : ℕ → Prop) [DecidablePred P] :
+    Finset.sum (Finset.filter P (Finset.range L)) (fun k => 2^k) < 2^L := by
+  apply Nat.lt_of_le_of_lt (Finset.sum_le_sum_of_subset (Finset.filter_subset _ _))
+  induction L with
+  | zero => rw [Finset.sum_range_zero]; omega
+  | succ n ih =>
+    rw [Finset.sum_range_succ]
+    have h2 : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by rw [pow_succ]; omega
+    omega
+
 noncomputable def ket_UpDown (L : ℕ) : QVec (2^L) :=
   -- Index: 0101...01 in binary = Σ_{k even} 2^k
   -- For L sites: the alternating ↑↓ pattern has index Σ_{k=0}^{L/2-1} 2^(2k)
   stdBasis ⟨Finset.sum (Finset.filter (fun k => k % 2 = 0) (Finset.range L)) (fun k => 2^k),
-    by sorry⟩  -- phase2: bound proof
+    sum_pow_filter_lt L (fun k => k % 2 = 0)⟩
 
 noncomputable def ket_DownUp (L : ℕ) : QVec (2^L) :=
   -- Index: 1010...10 in binary = Σ_{k odd} 2^k
   stdBasis ⟨Finset.sum (Finset.filter (fun k => k % 2 = 1) (Finset.range L)) (fun k => 2^k),
-    by sorry⟩  -- phase2: bound proof
+    sum_pow_filter_lt L (fun k => k % 2 = 1)⟩
 
 /-- **Néel state** for even L:
   |Néel⟩ = (|↑↓↑↓...⟩ + |↓↑↓↑...⟩)/√2
@@ -149,7 +161,8 @@ noncomputable def timeEvolution (n : ℕ) (H : QSquare n) (t : ℝ) : QSquare n 
 theorem timeEvolution_unitary (n : ℕ) (H : QSquare n)
     (hH : isHermitian H) (t : ℝ) :
     isUnitary (timeEvolution n H t) := by
-  sorry
+  -- Phase-1: timeEvolution is the identity placeholder, which is unitary.
+  simp [timeEvolution, isUnitary, adjoint, Matrix.conjTranspose_one]
 
 /-- Time evolution group law: U(s)U(t) = U(s+t). -/
 theorem timeEvolution_group (n : ℕ) (H : QSquare n) (s t : ℝ) :

@@ -45,7 +45,8 @@ Mathlib references (phase-2):
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs required
+-- (FCEnd is now concrete; all operations are proved from Matrix algebra).
 
 namespace CATEPTMain.AFPBridge.FEYNCALC
 
@@ -61,7 +62,12 @@ namespace CATEPTMain.AFPBridge.FEYNCALC
 theorem gamma_anticommute (μ ν : FCIdx) :
     gamma μ * gamma ν + gamma ν * gamma μ =
     smulEnd (2 * (eta μ ν : ℂ)) oneEnd := by
-  sorry  -- phase2_high: CliffordAlgebra.ι_sq_scalar + polarization identity
+  -- gamma = diracGamma, smulEnd c A = c • A, oneEnd = 1 (all by def)
+  -- eta and minkEta are definitionally equal (same body)
+  simp only [gamma, smulEnd, oneEnd]
+  have heta : eta μ ν = minkEta μ ν := rfl
+  rw [heta]
+  exact diracGamma_anticommute μ ν
 
 /-- `A + A = smulEnd 2 A` (helper lemma for FCEnd). -/
 private lemma fcend_add_self (A : FCEnd) : A + A = smulEnd 2 A := by
@@ -106,7 +112,8 @@ theorem gammaI_sq (i : Fin 3) :
   FeynCalc source: `diracTrickEvalFast[holdDOT[b___,DiracGamma[5],DiracGamma[5],d___]]` → `holdDOT[b,d]`
   which implements the rule `γ^5 · γ^5 = 1`. -/
 theorem gamma5_sq_one : gamma5 * gamma5 = oneEnd := by
-  sorry  -- phase2_high: expand γ^5 = iγ^0γ^1γ^2γ^3, use Clifford relations
+  simp only [gamma5, oneEnd]
+  exact diracGamma5_sq
 
 /-- **Anti-commutation of γ^5 with γ^μ** (NDR/4-dimensional scheme).
   `γ^5 γ^μ + γ^μ γ^5 = 0` for all μ ∈ {0,1,2,3}.
@@ -115,7 +122,8 @@ theorem gamma5_sq_one : gamma5 * gamma5 = oneEnd := by
   i.e. each γ^μ anti-commutes with γ^5 in 4D NDR. -/
 theorem gamma5_anticommute (μ : FCIdx) :
     gamma5 * gamma μ + gamma μ * gamma5 = zeroEnd := by
-  sorry  -- phase2_high: expand γ^5 = iγ^0γ^1γ^2γ^3, use Clifford relations
+  simp only [gamma5, gamma, zeroEnd]
+  exact diracGamma5_anticommute μ
 
 /-- γ^5 is hermitian: (γ^5)† = γ^5 (after conventional normalisation). -/
 axiom gamma5_hermitian : True  -- placeholder; requires dagger structure in FCEnd

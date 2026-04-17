@@ -49,7 +49,7 @@ the omega-matrix extension.
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
+-- Note: TacticStubs NOT opened here — real Mathlib proofs required.
 
 namespace CATEPTMain.AFPBridge.FBD
 
@@ -80,20 +80,53 @@ noncomputable def projRight : FCEnd :=
 
 /-- P_L + P_R = 1. -/
 theorem projLeft_add_projRight : addEnd projLeft projRight = oneEnd := by
-  simp only [projLeft, projRight, addEnd, smulEnd, addEnd]
-  sorry  -- phase2_medium: 1/2*(1-γ⁵) + 1/2*(1+γ⁵) = 1 (algebra)
+  simp only [projLeft, projRight,
+             show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+  -- Factor out smulEnd (1/2): smulEnd (1/2) A + smulEnd (1/2) B = smulEnd (1/2) (A + B)
+  rw [← smulEnd_add]
+  -- Rearrange inner sum: (1 + (-1)γ⁵) + (1 + γ⁵) → (1+1) + ((-1)γ⁵ + γ⁵)
+  have hg5 : smulEnd (-1:ℂ) gamma5 + gamma5 = zeroEnd := by
+    nth_rw 2 [show gamma5 = smulEnd (1:ℂ) gamma5 from (smulEnd_one_right gamma5).symm]
+    rw [← smulEnd_addScalar, show (-1:ℂ) + 1 = 0 by norm_num, smulEnd_zero_scalar]
+  have h11 : oneEnd + oneEnd = smulEnd (2:ℂ) oneEnd := by
+    rw [show (2:ℂ) = 1 + 1 by norm_num, smulEnd_addScalar]; simp only [smulEnd_one_right]
+  -- (1 + (-1)γ⁵) + (1 + γ⁵) = (1+1) + ((-1)γ⁵ + γ⁵) = smulEnd 2 · 1 + 0 = smulEnd 2 · 1
+  rw [addEnd_assoc oneEnd (smulEnd (-1:ℂ) gamma5) (oneEnd + gamma5),
+      ← addEnd_assoc (smulEnd (-1:ℂ) gamma5) oneEnd gamma5,
+      addEnd_comm (smulEnd (-1:ℂ) gamma5) oneEnd,
+      addEnd_assoc oneEnd (smulEnd (-1:ℂ) gamma5) gamma5,
+      ← addEnd_assoc oneEnd oneEnd (smulEnd (-1:ℂ) gamma5 + gamma5),
+      hg5, add_zeroEnd_right, h11, ← smulEnd_comp,
+      show (1/2:ℂ) * 2 = 1 by norm_num, smulEnd_one_right]
 
-/-- P_L is idempotent: P_L² = P_L. -/
+/-- P_L is idempotent: P_L² = P_L.
+  Follows from chiralP7_idempotent after identifying projLeft = chiralP7. -/
 theorem projLeft_idempotent : projLeft * projLeft = projLeft := by
-  sorry  -- phase2_high: (1-γ⁵)²/4 = (2-2γ⁵)/4 = (1-γ⁵)/2 using γ⁵² = 1
+  have h : projLeft = CATEPTMain.AFPBridge.FEYNCALC.chiralP7 := by
+    simp only [projLeft, CATEPTMain.AFPBridge.FEYNCALC.chiralP7,
+               show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+    congr 1; rw [← negEnd_eq_smulNeg]
+  rw [h]; exact CATEPTMain.AFPBridge.FEYNCALC.chiralP7_idempotent
 
-/-- P_R is idempotent: P_R² = P_R. -/
+/-- P_R is idempotent: P_R² = P_R.
+  Follows from chiralP6_idempotent after identifying projRight = chiralP6. -/
 theorem projRight_idempotent : projRight * projRight = projRight := by
-  sorry  -- phase2_high: symmetric to projLeft_idempotent
+  have h : projRight = CATEPTMain.AFPBridge.FEYNCALC.chiralP6 := by
+    simp only [projRight, CATEPTMain.AFPBridge.FEYNCALC.chiralP6,
+               show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+  rw [h]; exact CATEPTMain.AFPBridge.FEYNCALC.chiralP6_idempotent
 
-/-- P_L P_R = 0: chiral projectors are orthogonal. -/
+/-- P_L P_R = 0: chiral projectors are orthogonal.
+  Follows from chiralP7_chiralP6_zero after identifying projLeft=chiralP7, projRight=chiralP6. -/
 theorem projLeft_projRight_zero : projLeft * projRight = zeroEnd := by
-  sorry  -- phase2_high: (1-γ⁵)(1+γ⁵)/4 = (1 - γ⁵²)/4 = 0
+  have hl : projLeft = CATEPTMain.AFPBridge.FEYNCALC.chiralP7 := by
+    simp only [projLeft, CATEPTMain.AFPBridge.FEYNCALC.chiralP7,
+               show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+    congr 1; rw [← negEnd_eq_smulNeg]
+  have hr : projRight = CATEPTMain.AFPBridge.FEYNCALC.chiralP6 := by
+    simp only [projRight, CATEPTMain.AFPBridge.FEYNCALC.chiralP6,
+               show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+  rw [hl, hr]; exact CATEPTMain.AFPBridge.FEYNCALC.chiralP7_chiralP6_zero
 
 -- ── V-A current ──────────────────────────────────────────────────────────────
 /-- The V-A vertex factor γ^μ(1 - γ⁵) = 2 γ^μ P_L.
@@ -104,8 +137,10 @@ noncomputable def vaVertex (μ : FCIdx) : FCEnd :=
 /-- V-A vertex in terms of chiral projector: γ^μ(1-γ⁵) = 2γ^μ P_L. -/
 theorem vaVertex_eq_chiral (μ : FCIdx) :
     vaVertex μ = smulEnd 2 (gamma μ * projLeft) := by
-  simp only [vaVertex, projLeft]
-  sorry  -- phase2_medium: algebra
+  simp only [vaVertex, projLeft,
+             show ∀ (a b : FCEnd), addEnd a b = a + b from fun _ _ => rfl]
+  -- 2·(γ^μ · (1/2)·(1-γ⁵)) = (2·(1/2))·(γ^μ·(1-γ⁵)) = 1·(γ^μ·(1-γ⁵)) = γ^μ·(1-γ⁵)
+  rw [smulEnd_mul_right, ← smulEnd_comp, show (2:ℂ) * (1/2:ℂ) = 1 by norm_num, smulEnd_one_right]
 
 -- ── Muon decay amplitude squared ──────────────────────────────────────────────
 /-- **Muon decay amplitude squared** |M|² for μ⁻ → e⁻ ν̄_e ν_μ.
@@ -147,7 +182,9 @@ noncomputable def muonDecayRate : ℝ :=
 /-- Muon decay rate is positive. -/
 theorem muonDecayRate_pos : 0 < muonDecayRate := by
   unfold muonDecayRate fermiconstant muonMass
-  positivity
+  apply div_pos
+  · exact mul_pos (pow_pos (by norm_num) 2) (pow_pos (by norm_num) 5)
+  · exact mul_pos (by norm_num) (pow_pos Real.pi_pos 3)
 
 /-- Muon lifetime τ_μ = 1/Γ_μ. -/
 noncomputable def muonLifetime : ℝ := 1 / muonDecayRate
@@ -197,6 +234,9 @@ axiom muonDecayRate_from_amplitude :
   Follows directly from dimensional analysis (G_F has dimension [mass]⁻²). -/
 theorem muonDecayRate_mass_scaling (m : ℝ) (hm : 0 < m) :
     fermiconstant^2 * m^5 / (192 * Real.pi^3) > 0 := by
-  positivity
+  unfold fermiconstant
+  apply div_pos
+  · exact mul_pos (pow_pos (by norm_num) 2) (pow_pos hm 5)
+  · exact mul_pos (by norm_num) (pow_pos Real.pi_pos 3)
 
 end CATEPTMain.AFPBridge.FBD

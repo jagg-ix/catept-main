@@ -202,62 +202,9 @@ theorem spinorTrace_recursion_two (μ₁ μ₂ μ₃ μ₄ : FCIdx) :
     (eta μ₁ μ₂ : ℂ) * spinorTrace (gamma μ₃ * gamma μ₄)
     - (eta μ₁ μ₃ : ℂ) * spinorTrace (gamma μ₂ * gamma μ₄)
     + (eta μ₁ μ₄ : ℂ) * spinorTrace (gamma μ₂ * gamma μ₃) := by
-  -- Pass γ¹ through the chain via anticommutation: γ¹γⁱ = 2η^{1i}·1 - γⁱγ¹
-  -- Step 1: γ¹γ² = smulEnd(2η₁₂)1 - γ²γ¹
-  have hac12 : gamma μ₁ * gamma μ₂ = smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd - gamma μ₂ * gamma μ₁ := by
-    have := gamma_anticommute μ₁ μ₂
-    have hsub : smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd - gamma μ₂ * gamma μ₁ =
-                gamma μ₁ * gamma μ₂ := by
-      rw [show smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd - gamma μ₂ * gamma μ₁ =
-              smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd + negEnd (gamma μ₂ * gamma μ₁) from rfl,
-          ← negEnd_eq_smulNeg, ← add_negEnd_self (gamma μ₂ * gamma μ₁),
-          ← addEnd_assoc, this, zeroEnd_add_left]
-    exact hsub.symm
-  -- Step 2: similarly for μ₁,μ₃ and μ₁,μ₄
-  have hac13 : gamma μ₁ * gamma μ₃ = smulEnd (2 * (eta μ₁ μ₃ : ℂ)) oneEnd - gamma μ₃ * gamma μ₁ := by
-    have := gamma_anticommute μ₁ μ₃
-    have hsub : smulEnd (2 * (eta μ₁ μ₃ : ℂ)) oneEnd - gamma μ₃ * gamma μ₁ =
-                gamma μ₁ * gamma μ₃ := by
-      rw [show smulEnd (2 * (eta μ₁ μ₃ : ℂ)) oneEnd - gamma μ₃ * gamma μ₁ =
-              smulEnd (2 * (eta μ₁ μ₃ : ℂ)) oneEnd + negEnd (gamma μ₃ * gamma μ₁) from rfl,
-          ← negEnd_eq_smulNeg, ← add_negEnd_self (gamma μ₃ * gamma μ₁),
-          ← addEnd_assoc, this, zeroEnd_add_left]
-    exact hsub.symm
-  have hac14 : gamma μ₁ * gamma μ₄ = smulEnd (2 * (eta μ₁ μ₄ : ℂ)) oneEnd - gamma μ₄ * gamma μ₁ := by
-    have := gamma_anticommute μ₁ μ₄
-    have hsub : smulEnd (2 * (eta μ₁ μ₄ : ℂ)) oneEnd - gamma μ₄ * gamma μ₁ =
-                gamma μ₁ * gamma μ₄ := by
-      rw [show smulEnd (2 * (eta μ₁ μ₄ : ℂ)) oneEnd - gamma μ₄ * gamma μ₁ =
-              smulEnd (2 * (eta μ₁ μ₄ : ℂ)) oneEnd + negEnd (gamma μ₄ * gamma μ₁) from rfl,
-          ← negEnd_eq_smulNeg, ← add_negEnd_self (gamma μ₄ * gamma μ₁),
-          ← addEnd_assoc, this, zeroEnd_add_left]
-    exact hsub.symm
-  -- Step 3: cancel factor of 2 from the final equation
-  apply mul_left_cancel₀ (show (2 : ℂ) ≠ 0 by norm_num)
-  -- The proof: 2·Tr(γ¹γ²γ³γ⁴)
-  -- = Tr(γ¹γ²γ³γ⁴) + Tr(γ¹γ²γ³γ⁴)   by ring
-  -- Pass γ¹ right past γ² in first copy; right past γ²γ³ past γ⁴ in second…
-  -- use cyclicity Tr(γ²γ³γ⁴γ¹) = Tr(γ¹γ²γ³γ⁴) so we can set up the cancellation.
-  -- Simpler: use the two traces with the anticommutator
-  --   First copy: rewrite γ¹γ²→ anticomm = (2η₁₂·1 - γ²γ¹)
-  --   Track: Tr((2η₁₂·1 - γ²γ¹)γ³γ⁴) = 2η₁₂·Tr(γ³γ⁴) - Tr(γ²γ¹γ³γ⁴)
-  --   Second copy: leave as is, use cyclicity to match
-  -- Actually use the one-step chain passing γ¹ through everything, ending with cyclicity.
-  -- Tr(γ¹γ²γ³γ⁴) from first copy (rewrite γ¹γ²):
-  have step12 : spinorTrace (gamma μ₁ * gamma μ₂ * gamma μ₃ * gamma μ₄) =
-      (2 * (eta μ₁ μ₂ : ℂ)) * spinorTrace (gamma μ₃ * gamma μ₄) -
-      spinorTrace (gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄) := by
-    rw [show gamma μ₁ * gamma μ₂ * gamma μ₃ * gamma μ₄ =
-            (smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd - gamma μ₂ * gamma μ₁) * gamma μ₃ * gamma μ₄ by
-          rw [← hac12],
-        show (smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd - gamma μ₂ * gamma μ₁) * gamma μ₃ * gamma μ₄ =
-             smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd * gamma μ₃ * gamma μ₄ -
-             gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄ from by
-          simp only [sub_eq_add_neg, negEnd_eq_smulNeg,
-                     smulEnd_mul_left, smulEnd_mul_right, compEnd_distrib_right,
-                     ← negEnd_eq_smulNeg]; ring_nf
-                     ]
-    sorry
+  -- phase2_high: pass γ^μ₁ through the chain via anticommutation
+  -- γ^μ₁γ^μᵢ = 2η^{μ₁μᵢ}·1 - γ^μᵢγ^μ₁  (from gamma_anticommute)
+  -- Expand: Tr(γ¹γ²γ³γ⁴) using Thomas Hahn Trace4 recursion
   sorry
 
 -- ── TR-4: Trace of four gammas ────────────────────────────────────────────────
