@@ -74,7 +74,9 @@ This is useful as a theorem target for later strengthening.
 -/
 theorem effectiveIrreversibility_implies_nonflat
   (F : AdvancedFoundations) :
-  HasEffectiveIrreversibility F → ¬ FlatSector F := sorry
+  HasEffectiveIrreversibility F → ¬ FlatSector F := by
+  intro hH hFlat
+  exact hH (F.HI_vanishes_if_flat hFlat)
 
 /-- Section XI entropic-locality reading:
 flat sector restores exact locality. -/

@@ -54,7 +54,11 @@ theorem entropicTimeExpectation_kI_flip
   (J : ℝ) (kR kI : Fin n → ℝ) :
   entropicTimeExpectation J kR (fun j => - kI j)
     =
-    - entropicTimeExpectation J kR kI := sorry
+    - entropicTimeExpectation J kR kI := by
+  unfold entropicTimeExpectation
+  simp_rw [Real.sinh_neg, mul_neg]
+  rw [← Finset.sum_neg_distrib]
+  exact mul_neg J _
 
 /-- Abstract Hamiltonian split used after tracing out temporal order. -/
 structure SplitHamiltonian (ψ : Type) where
@@ -80,7 +84,7 @@ def SatisfiesArrowFromTemporalOrder
 tracing out `HI` yields effective irreversibility in `HR`. -/
 theorem tracingOut_HI_yields_effective_dissipation
   (S : TwoSectorSystem) :
-  True := sorry
+  True := trivial
 
 
 end CATEPT

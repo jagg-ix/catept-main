@@ -181,7 +181,7 @@ theorem spinorTrace_gammaI_sq (i : Fin 3) :
   rw [spinorTrace_two]
   -- η(μ,μ) = -1 since μ.val = i.val + 1 ≥ 1 ≠ 0
   have hne : μ.val ≠ 0 := by simp only [μ]; omega
-  simp only [eta, if_pos (show μ = μ from rfl), if_neg hne]
+  simp only [eta, if_neg hne]
   norm_num
 
 -- ── TR-6: Trace recursion (Thomas Hahn Trace4) ───────────────────────────────
@@ -195,6 +195,21 @@ theorem spinorTrace_gammaI_sq (i : Fin 3) :
     `traceNo5[SI1_, SI2__] :=
       Plus @@ MapIndexed[((s = -s) Pair[SI1, #1] Drop[head[SI2], #2]) &, {SI2}]`
   This expands the first index against all others with alternating signs. -/
+-- Helper: spinorTrace distributes over subtraction
+private lemma spinorTrace_sub (A B : FCEnd) :
+    spinorTrace (A - B) = spinorTrace A - spinorTrace B := by
+  simp [spinorTrace, Matrix.trace_sub]
+
+-- Helper: scalar-times-identity times matrix simplifies to scalar-times-matrix
+private lemma smulEnd_one_mul (c : ℂ) (A : FCEnd) :
+    smulEnd c oneEnd * A = smulEnd c A := by
+  simp [smulEnd, oneEnd]
+
+-- Helper: matrix times scalar-times-identity simplifies to scalar-times-matrix
+private lemma mul_smulEnd_one (A : FCEnd) (c : ℂ) :
+    A * smulEnd c oneEnd = smulEnd c A := by
+  simp [smulEnd, oneEnd]
+
 theorem spinorTrace_recursion_two (μ₁ μ₂ μ₃ μ₄ : FCIdx) :
     -- 4-gamma case: Tr(γ^μ₁ γ^μ₂ γ^μ₃ γ^μ₄)
     --  = g^{μ₁μ₂} Tr(γ^μ₃ γ^μ₄) - g^{μ₁μ₃} Tr(γ^μ₂ γ^μ₄) + g^{μ₁μ₄} Tr(γ^μ₂ γ^μ₃)
@@ -202,10 +217,57 @@ theorem spinorTrace_recursion_two (μ₁ μ₂ μ₃ μ₄ : FCIdx) :
     (eta μ₁ μ₂ : ℂ) * spinorTrace (gamma μ₃ * gamma μ₄)
     - (eta μ₁ μ₃ : ℂ) * spinorTrace (gamma μ₂ * gamma μ₄)
     + (eta μ₁ μ₄ : ℂ) * spinorTrace (gamma μ₂ * gamma μ₃) := by
-  -- phase2_high: pass γ^μ₁ through the chain via anticommutation
-  -- γ^μ₁γ^μᵢ = 2η^{μ₁μᵢ}·1 - γ^μᵢγ^μ₁  (from gamma_anticommute)
-  -- Expand: Tr(γ¹γ²γ³γ⁴) using Thomas Hahn Trace4 recursion
-  sorry
+  -- From γ^a·γ^b = smulEnd (2η^{ab}) oneEnd - γ^b·γ^a (anticommutator rearranged)
+  have hg12 : gamma μ₁ * gamma μ₂ =
+      smulEnd (2 * (eta μ₁ μ₂ : ℂ)) oneEnd - gamma μ₂ * gamma μ₁ :=
+    eq_sub_of_add_eq (gamma_anticommute μ₁ μ₂)
+  have hg13 : gamma μ₁ * gamma μ₃ =
+      smulEnd (2 * (eta μ₁ μ₃ : ℂ)) oneEnd - gamma μ₃ * gamma μ₁ :=
+    eq_sub_of_add_eq (gamma_anticommute μ₁ μ₃)
+  have hg14 : gamma μ₁ * gamma μ₄ =
+      smulEnd (2 * (eta μ₁ μ₄ : ℂ)) oneEnd - gamma μ₄ * gamma μ₁ :=
+    eq_sub_of_add_eq (gamma_anticommute μ₁ μ₄)
+  -- Step 1: Tr(γ¹γ²γ³γ⁴) = 2η¹²·Tr(γ³γ⁴) - Tr(γ²γ¹γ³γ⁴)
+  have step1 :
+      spinorTrace (gamma μ₁ * gamma μ₂ * gamma μ₃ * gamma μ₄) =
+      2 * (eta μ₁ μ₂ : ℂ) * spinorTrace (gamma μ₃ * gamma μ₄)
+      - spinorTrace (gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄) := by
+    have : gamma μ₁ * gamma μ₂ * gamma μ₃ * gamma μ₄ =
+        smulEnd (2*(eta μ₁ μ₂:ℂ)) (gamma μ₃ * gamma μ₄) -
+        gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄ := by
+      rw [show gamma μ₁ * gamma μ₂ * gamma μ₃ * gamma μ₄ = (gamma μ₁ * gamma μ₂) * (gamma μ₃ * gamma μ₄) by (repeat rw [mul_assoc]), hg12]
+      simp [smulEnd, oneEnd, sub_mul, mul_assoc]
+    rw [this, spinorTrace_sub, spinorTrace_smul]
+  have step2 :
+      spinorTrace (gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄) =
+      2 * (eta μ₁ μ₃ : ℂ) * spinorTrace (gamma μ₂ * gamma μ₄)
+      - spinorTrace (gamma μ₂ * gamma μ₃ * gamma μ₁ * gamma μ₄) := by
+    have : gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄ =
+        smulEnd (2*(eta μ₁ μ₃:ℂ)) (gamma μ₂ * gamma μ₄) -
+        gamma μ₂ * gamma μ₃ * gamma μ₁ * gamma μ₄ := by
+      rw [show gamma μ₂ * gamma μ₁ * gamma μ₃ * gamma μ₄ = gamma μ₂ * (gamma μ₁ * gamma μ₃) * gamma μ₄ by (repeat rw [mul_assoc]), hg13]
+      simp [smulEnd, oneEnd, mul_sub, sub_mul, mul_assoc]
+    rw [this, spinorTrace_sub, spinorTrace_smul]
+  have step3 :
+      spinorTrace (gamma μ₂ * gamma μ₃ * gamma μ₁ * gamma μ₄) =
+      2 * (eta μ₁ μ₄ : ℂ) * spinorTrace (gamma μ₂ * gamma μ₃)
+      - spinorTrace (gamma μ₂ * gamma μ₃ * gamma μ₄ * gamma μ₁) := by
+    have : gamma μ₂ * gamma μ₃ * gamma μ₁ * gamma μ₄ =
+        smulEnd (2*(eta μ₁ μ₄:ℂ)) (gamma μ₂ * gamma μ₃) -
+        gamma μ₂ * gamma μ₃ * gamma μ₄ * gamma μ₁ := by
+      rw [show gamma μ₂ * gamma μ₃ * gamma μ₁ * gamma μ₄ = (gamma μ₂ * gamma μ₃) * (gamma μ₁ * gamma μ₄) by (repeat rw [mul_assoc]), hg14]
+      simp [smulEnd, oneEnd, mul_sub, mul_assoc]
+    rw [this, spinorTrace_sub, spinorTrace_smul]
+  -- Step 4: cyclicity Tr(γ²γ³γ⁴γ¹) = Tr(γ¹γ²γ³γ⁴)
+  have hcyc :
+      spinorTrace (gamma μ₂ * gamma μ₃ * gamma μ₄ * gamma μ₁) =
+      spinorTrace (gamma μ₁ * gamma μ₂ * gamma μ₃ * gamma μ₄) := by
+    have h := spinorTrace_cyclic (gamma μ₁) (gamma μ₂ * gamma μ₃ * gamma μ₄)
+    simp only [← mul_assoc] at h
+    exact h.symm
+  -- Combine: T = η¹²T₁₂ - η¹³T₁₃ + η¹⁴T₁₄  via linear_combination ½*step1 - ...
+  linear_combination (1/2 : ℂ) * step1 - (1/2 : ℂ) * step2 +
+                     (1/2 : ℂ) * step3 - (1/2 : ℂ) * hcyc
 
 -- ── TR-4: Trace of four gammas ────────────────────────────────────────────────
 /-- `Tr(γ^μ γ^ν γ^ρ γ^σ) = 4 (g^μν g^ρσ − g^μρ g^νσ + g^μσ g^νρ)`.
@@ -236,7 +298,12 @@ theorem spinorTrace_four_gamma5 (μ ν ρ σ : FCIdx) :
 /-- Tr(γ^μ γ^ν γ^5) = 0  (only 2 gammas before γ^5, gives length 2 < 4). -/
 theorem spinorTrace_two_gamma5_zero (μ ν : FCIdx) :
     spinorTrace (gamma μ * gamma ν * gamma5) = 0 := by
-  sorry  -- phase2_high: DiracTrace.m L343 — fewer than 4 gammas with γ^5 vanishes
+  fin_cases μ <;> fin_cases ν <;>
+    simp [spinorTrace, gamma, gamma5,
+      diracGamma, diracGamma0, diracGamma1, diracGamma2, diracGamma3, diracGamma5,
+      Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_four,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+      Complex.I_mul_I]
 
 -- ── TR-8: Cyclicity ──────────────────────────────────────────────────────────
 /-- Cyclic property: `Tr(γ^μ γ^ν) = Tr(γ^ν γ^μ)`.  Follows from TR-2 + eta symmetry. -/
@@ -270,36 +337,15 @@ theorem spinorTrace_slash_slash (p q : FCIdx → ℝ) :
     4 * (Finset.univ (α := FCIdx)).sum (fun μ =>
           (Finset.univ (α := FCIdx)).sum (fun ν =>
             (eta μ ν : ℂ) * (p μ : ℂ) * (q ν : ℂ))) := by
-  -- Unfold pSlash: p̸ = p₀γ⁰ − p₁γ¹ − p₂γ² − p₃γ³
-  simp only [pSlash]
-  -- Expand the product of two 4-term sums to 16 individual products
-  simp only [compEnd_distrib_right, compEnd_distrib_left]
-  -- Distribute spinorTrace over + and apply trace_smul_gamma_mul to each term
-  simp only [spinorTrace_add, trace_smul_gamma_mul]
-  -- Expand the RHS Finset.univ double sum to 16 explicit terms
+  -- Step 1: expand pSlash (4-term explicit sum) and distribute the product
+  simp only [pSlash, add_mul, mul_add, spinorTrace_add]
+  -- Step 2: extract scalars via smulEnd bimodule lemmas, then apply Tr(γμ γν) = 4 ημν
+  simp_rw [smulEnd_mul_left, smulEnd_mul_right, ← smulEnd_comp,
+           spinorTrace_smul, spinorTrace_two]
+  -- Step 3: expand the RHS double Finset.sum over FCIdx = Fin 4
   simp only [Fin.sum_univ_four]
-  -- Evaluate η at all 16 index pairs (off-diagonal → 0; diagonal: η(0,0)=1, η(i,i)=-1)
-  simp only [eta,
-    if_pos (show (0 : FCIdx) = 0 from rfl),
-    if_pos (show (1 : FCIdx) = 1 from rfl),
-    if_pos (show (2 : FCIdx) = 2 from rfl),
-    if_pos (show (3 : FCIdx) = 3 from rfl),
-    if_neg (show ¬(0 : FCIdx) = 1 from by decide),
-    if_neg (show ¬(0 : FCIdx) = 2 from by decide),
-    if_neg (show ¬(0 : FCIdx) = 3 from by decide),
-    if_neg (show ¬(1 : FCIdx) = 0 from by decide),
-    if_neg (show ¬(1 : FCIdx) = 2 from by decide),
-    if_neg (show ¬(1 : FCIdx) = 3 from by decide),
-    if_neg (show ¬(2 : FCIdx) = 0 from by decide),
-    if_neg (show ¬(2 : FCIdx) = 1 from by decide),
-    if_neg (show ¬(2 : FCIdx) = 3 from by decide),
-    if_neg (show ¬(3 : FCIdx) = 0 from by decide),
-    if_neg (show ¬(3 : FCIdx) = 1 from by decide),
-    if_neg (show ¬(3 : FCIdx) = 2 from by decide),
-    if_pos (show (0 : FCIdx).val = 0 from rfl),
-    if_neg (show ¬(1 : FCIdx).val = 0 from by decide),
-    if_neg (show ¬(2 : FCIdx).val = 0 from by decide),
-    if_neg (show ¬(3 : FCIdx).val = 0 from by decide)]
-  push_cast
+  -- Step 4: evaluate eta at all 16 concrete (μ,ν) pairs; off-diagonal → 0
+  -- simp (not simp only) uses ite_true/ite_false + DecidableEq (Fin 4) to evaluate if conditions
+  simp [eta]; ring
 
 end CATEPTMain.AFPBridge.FEYNCALC

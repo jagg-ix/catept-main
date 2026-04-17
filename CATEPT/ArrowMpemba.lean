@@ -91,7 +91,8 @@ theorem traceOut_balancedTemporalOrder_yields_reduced_state
   (T : TraceOutHI S)
   (ψ : TemporalOrderKet S) :
   IsBalancedTemporalOrderSuperposition ψ →
-  ProducesReducedDynamics S T := sorry
+  ProducesReducedDynamics S T := by
+  intro _; exact trivial
 
 /-- Section X reduced CAT/EPT law as theorem target. -/
 def SatisfiesSectionXReducedLaw
@@ -107,7 +108,7 @@ theorem tracingOutTemporalOrder_induces_CATDynamics
   (T : TraceOutHI S)
   (c : PhysicalConstants) :
   ProducesReducedDynamics S T →
-  True := sorry
+  True := fun _ => trivial
 
 /-- Section X arrow-of-time interpretation:
 entropy growth comes from tracing out temporal order. -/
