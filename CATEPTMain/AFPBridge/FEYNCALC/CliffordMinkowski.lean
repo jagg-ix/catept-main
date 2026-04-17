@@ -74,15 +74,25 @@ private lemma diracGamma_sq_eq (μ : Fin 4) :
 
 -- ── Off-diagonal anticommutation: γ^μγ^ν + γ^νγ^μ = 0 for μ ≠ ν ────────────
 
-/-- For μ ≠ ν, the anticommutator vanishes. -/
+/-- Helper: every element of Fin 4 is one of 0, 1, 2, 3 (via rfl, no (fun i => i) wrapper). -/
+private lemma fin4_cases_eq (i : Fin 4) :
+    i = ⟨0, by omega⟩ ∨ i = ⟨1, by omega⟩ ∨ i = ⟨2, by omega⟩ ∨ i = ⟨3, by omega⟩ := by
+  rcases i with ⟨k, hk⟩; interval_cases k <;> simp
+
+set_option maxHeartbeats 800000 in
+/-- For μ ≠ ν, the anticommutator vanishes.
+    Uses `rcases`+`rfl` throughout (not chained `fin_cases`) to avoid
+    the `(fun i => i)` beta-unreduced wrapper that prevents simp unfolding.
+    Heartbeat limit raised to handle 12 concrete matrix cases × 16 entries. -/
 private lemma diracGamma_anticomm_neq (μ ν : Fin 4) (h : μ ≠ ν) :
     diracGamma μ * diracGamma ν + diracGamma ν * diracGamma μ = 0 := by
-  fin_cases μ <;> fin_cases ν <;>
+  rcases fin4_cases_eq μ with rfl | rfl | rfl | rfl <;>
+  rcases fin4_cases_eq ν with rfl | rfl | rfl | rfl <;>
     first
     | exact absurd rfl h
-    | (simp only [];
-       ext i j; fin_cases i <;> fin_cases j;
-       simp only [];
+    | (ext i j
+       rcases fin4_cases_eq i with rfl | rfl | rfl | rfl <;>
+       rcases fin4_cases_eq j with rfl | rfl | rfl | rfl <;>
        simp [diracGamma, diracGamma0, diracGamma1, diracGamma2, diracGamma3,
              Matrix.mul_apply, Matrix.add_apply, Fin.sum_univ_four, Matrix.zero_apply,
              Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.head_fin_const,

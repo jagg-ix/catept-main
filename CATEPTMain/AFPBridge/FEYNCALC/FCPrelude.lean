@@ -74,17 +74,17 @@ axiom leviCivita_antisymm_last (μ ν ρ σ : FCIdx) :
 
 -- ── FCEnd algebra (named aliases for Matrix operations) ───────────────────────
 -- Endomorphism composition (matrix multiplication).
-def compEnd  (A B : FCEnd) : FCEnd := A * B
+noncomputable def compEnd  (A B : FCEnd) : FCEnd := A * B
 -- Scalar multiple of a spinor endomorphism.
-def smulEnd  (c : ℂ) (A : FCEnd) : FCEnd := c • A
+noncomputable def smulEnd  (c : ℂ) (A : FCEnd) : FCEnd := c • A
 -- Addition of endomorphisms.
-def addEnd   (A B : FCEnd) : FCEnd := A + B
+noncomputable def addEnd   (A B : FCEnd) : FCEnd := A + B
 -- Identity endomorphism (4×4 identity matrix).
 noncomputable def oneEnd   : FCEnd := 1
 -- Zero endomorphism.
-def zeroEnd  : FCEnd := 0
+noncomputable def zeroEnd  : FCEnd := 0
 -- Negation.
-def negEnd   (A : FCEnd) : FCEnd := -A
+noncomputable def negEnd   (A : FCEnd) : FCEnd := -A
 -- Trace of a spinor endomorphism (complex-valued, Tr(1) = 4).
 noncomputable def spinorTrace (A : FCEnd) : ℂ := Matrix.trace A
 
@@ -95,7 +95,7 @@ noncomputable def spinorTrace (A : FCEnd) : ℂ := Matrix.trace A
 /-- Dirac gamma matrices γ^μ ∈ End(ℂ^4), indexed by Lorentz index μ ∈ {0,1,2,3}.
   Dirac representation, +−−− signature.
   Proved to satisfy `{γ^μ, γ^ν} = 2η^{μν}·1₄` in CliffordMinkowski.lean. -/
-def gamma (μ : FCIdx) : FCEnd := diracGamma μ
+noncomputable def gamma (μ : FCIdx) : FCEnd := diracGamma μ
 
 /-- Chiral matrix γ⁵ = i γ⁰ γ¹ γ² γ³ (Dirac representation).
   Proved to satisfy `(γ⁵)² = 1` and `{γ⁵, γ^μ} = 0` in CliffordMinkowski.lean. -/
@@ -114,7 +114,7 @@ noncomputable def chiralP7 : FCEnd :=
 -- ── Dirac slash notation ──────────────────────────────────────────────────────
 /-- Feynman slash: pslash(p) = p^μ γ_μ = ∑_μ p μ * gamma μ.
   Source: FeynCalc `DiracGamma[Momentum[p, D]]`. -/
-def pSlash (p : FCIdx → ℝ) : FCEnd :=
+noncomputable def pSlash (p : FCIdx → ℝ) : FCEnd :=
   (smulEnd ((p 0 : ℂ)) (gamma 0)) +
   (smulEnd (-(p 1 : ℂ)) (gamma 1)) +
   (smulEnd (-(p 2 : ℂ)) (gamma 2)) +
