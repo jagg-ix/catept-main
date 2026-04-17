@@ -75,3 +75,16 @@ Record:
   - Proves: matExp (A+B) = matExp A * matExp B when A*B = B*A
   - Directly applied: matExp_add_commute A B hComm (no sorry)
   - NS-P1 path: skew-Hermitian one-parameter unitary group identity
+
+/-!
+## RS-P1-MODE-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-MODE)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-MODE is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.MODE.Theories.*`  →  `CATEPTMain.AFPBridge.MODE.*`
+-/

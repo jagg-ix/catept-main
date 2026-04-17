@@ -514,3 +514,20 @@ Validation:
 -- TRL-* = translator fix targets
 -- TLA-* = TLA+ model update targets
 -- QA-*  = validation / quality gate targets
+
+/-!
+## RS-P1-NoFTL-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+It is the largest module to migrate (26 theory files, deep internal deps).
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-NOFTL)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-NOFTL is DONE, all imports change from
+  `CATEPTMain.AFPBridge.NoFTL.Theories.*`  →  `CATEPTMain.AFPBridge.NoFTL.*`
+
+NOTE: `NoFTL/NoFTLPrelude.lean` is already at module root (not in Theories/).
+Verify it contains no `Theories.` import paths before executing the move.
+-/

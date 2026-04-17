@@ -848,3 +848,16 @@ Build result: 2087 jobs, EXIT:0.
 Sorry count: ALL IMD theory files now at 0 real sorrys (only header-comment occurrences remain).
 IMD phase-2 sorry removal COMPLETE across all 13 theory files.
 -/
+
+/-!
+## RS-P1-IMD-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-IMD)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-IMD is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.IMD.Theories.*`  →  `CATEPTMain.AFPBridge.IMD.*`
+-/

@@ -208,3 +208,17 @@ Record:
   - Proof: unfold constSpeedOfLight; rw [physMk_val]; norm_num (no sorry)
   - PHQ-INT-001 partial: positivity certificate done; noFTL binding remains
   - Next: relate constSpeedOfLight to CATEPTSpacetimeModel.noFTL
+
+/-!
+## RS-P2-PHQ-BACKREF  Restructuring Phase 2 back-reference
+
+This module is a stub-only module (Prelude + WORKLOG, no Theories/).
+It is a candidate for consolidation in AFPBridge Phase 2.
+
+Phase 2 decision and procedure:
+  → CATEPTMain/AFPBridge/PHASE2_STUBS_WORKLOG.lean  (RS-P2-ASSESS, RS-P2-MERGE)
+
+Action required here: none until RS-P2-ASSESS decides MERGE.
+If MERGE is decided, this directory will be removed and its namespace
+content folded into CATEPTMain/AFPBridge/Stubs.lean.
+-/

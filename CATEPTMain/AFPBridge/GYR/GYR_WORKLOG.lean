@@ -231,3 +231,17 @@ Record:
   - Abstract analogue of catept_gyr_einstein_noftl_consistent.
   - gyroNorm_gyroAut closes the norm-invariance leg.
   - GYR-INT-001 Phase-2 deferred item fully discharged.
+
+/-!
+## RS-P2-GYR-BACKREF  Restructuring Phase 2 back-reference
+
+This module is a stub-only module (Prelude + WORKLOG, no Theories/).
+It is a candidate for consolidation in AFPBridge Phase 2.
+
+Phase 2 decision and procedure:
+  → CATEPTMain/AFPBridge/PHASE2_STUBS_WORKLOG.lean  (RS-P2-ASSESS, RS-P2-MERGE)
+
+Action required here: none until RS-P2-ASSESS decides MERGE.
+If MERGE is decided, this directory will be removed and its namespace
+content folded into CATEPTMain/AFPBridge/Stubs.lean.
+-/

@@ -188,3 +188,17 @@ Record:
   - Master catept_self_consistent witness and refine tuple updated
   - repos.yaml entry added: poincare-disc-afp (afp_transpile_lean4)
   Phase-2: PDC-INT-001: pdcDist_triangle + pdcMobius_isometry → EPT hyperboloid slice
+
+/-!
+## RS-P2-PDC-BACKREF  Restructuring Phase 2 back-reference
+
+This module is a stub-only module (Prelude + WORKLOG, no Theories/).
+It is a candidate for consolidation in AFPBridge Phase 2.
+
+Phase 2 decision and procedure:
+  → CATEPTMain/AFPBridge/PHASE2_STUBS_WORKLOG.lean  (RS-P2-ASSESS, RS-P2-MERGE)
+
+Action required here: none until RS-P2-ASSESS decides MERGE.
+If MERGE is decided, this directory will be removed and its namespace
+content folded into CATEPTMain/AFPBridge/Stubs.lean.
+-/

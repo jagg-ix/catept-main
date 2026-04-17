@@ -63,3 +63,16 @@ Record:
   - Master catept_self_consistent witness and refine tuple updated
   - repos.yaml entry added: matrix-tensor-afp (afp_transpile_lean4)
   Phase-2: kronecker_assoc + kronecker_transpose → C*-algebra for multi-qubit gates.
+
+/-!
+## RS-P1-MTN-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-MTN)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-MTN is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.MTN.Theories.*`  →  `CATEPTMain.AFPBridge.MTN.*`
+-/

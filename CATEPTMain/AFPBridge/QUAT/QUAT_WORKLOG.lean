@@ -62,3 +62,16 @@ Record:
   - CATEPTSelfConsistencyContract extended with w.quat_rotation_consistent conjunct
   - Master catept_self_consistent witness and refine tuple updated
   - repos.yaml entry added: quaternions-afp (afp_transpile_lean4)
+
+/-!
+## RS-P1-QUAT-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-QUAT)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-QUAT is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.QUAT.Theories.*`  →  `CATEPTMain.AFPBridge.QUAT.*`
+-/

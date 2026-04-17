@@ -205,3 +205,17 @@ Record:
   - Directly applied: schutz_S1 e (no sorry)
   - SCHTZ-INT-001 partial: S1 is the base causal axiom; O1-O6 mapping remains
   - Next: relate SchutzEvent to CATEPTSpacetimeModel.SpaceTime via τ-ordering
+
+/-!
+## RS-P2-SCHTZ-BACKREF  Restructuring Phase 2 back-reference
+
+This module is a stub-only module (Prelude + WORKLOG, no Theories/).
+It is a candidate for consolidation in AFPBridge Phase 2.
+
+Phase 2 decision and procedure:
+  → CATEPTMain/AFPBridge/PHASE2_STUBS_WORKLOG.lean  (RS-P2-ASSESS, RS-P2-MERGE)
+
+Action required here: none until RS-P2-ASSESS decides MERGE.
+If MERGE is decided, this directory will be removed and its namespace
+content folded into CATEPTMain/AFPBridge/Stubs.lean.
+-/

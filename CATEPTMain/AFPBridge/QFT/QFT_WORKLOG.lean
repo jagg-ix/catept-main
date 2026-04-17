@@ -303,3 +303,16 @@ Validation: add QFT metrics to `scripts/check_qft_output.sh` summary section.
 
 -- This file is a worklog / issue tracker. No runnable Lean 4 code is defined here.
 -- Records are sorted by phase then severity: PRE (P1) → TH (P1) → INT → TLA → QA.
+
+/-!
+## RS-P1-QFT-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-QFT)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-QFT is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.QFT.Theories.*`  →  `CATEPTMain.AFPBridge.QFT.*`
+-/

@@ -56,3 +56,16 @@ Record:
   - Master catept_self_consistent witness and refine tuple updated
   - repos.yaml entry added: minkowskis-theorem-afp (afp_transpile_lean4)
   Phase-2: instantiate minkowski_theorem with EPT spectral ball to close NS-P2.
+
+/-!
+## RS-P1-MINK-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-MINK)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-MINK is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.MINK.Theories.*`  →  `CATEPTMain.AFPBridge.MINK.*`
+-/

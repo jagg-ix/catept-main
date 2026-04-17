@@ -4,6 +4,18 @@
 Imports every AFP bridge subsystem that has been ported to Lean 4.29 in this
 repo.  Subsystem layout:
 
+## Restructuring plan
+
+This file and the AFPBridge/ directory tree are subject to a flattening and
+thematic-regrouping plan documented in:
+  CATEPTMain/AFPBridge/RESTRUCTURE_WORKLOG.lean    (master orchestration)
+  CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean (remove Theories/ layer)
+  CATEPTMain/AFPBridge/PHASE2_STUBS_WORKLOG.lean   (consolidate stub modules)
+  CATEPTMain/AFPBridge/PHASE3_THEMATIC_WORKLOG.lean (thematic regrouping)
+See RS-MASTER-001 before making any file moves.
+
+## Subsystem layout
+
 | Code  | AFP Entry (Isabelle)                  | Status   |
 |-------|---------------------------------------|----------|
 | CBO   | Complex_Bounded_Operators             | Phase 1  |

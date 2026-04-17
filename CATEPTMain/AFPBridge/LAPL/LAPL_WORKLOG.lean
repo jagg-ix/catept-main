@@ -55,3 +55,16 @@ Record:
   - CATEPTSelfConsistencyContract extended with w.lapl_transform_consistent conjunct
   - Master catept_self_consistent witness and refine tuple updated
   - repos.yaml entry added: laplace-transform-afp (afp_transpile_lean4)
+
+/-!
+## RS-P1-LAPL-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-LAPL)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-LAPL is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.LAPL.Theories.*`  →  `CATEPTMain.AFPBridge.LAPL.*`
+-/

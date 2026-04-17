@@ -291,3 +291,16 @@ Phase-2 targets: faithful_proof ≥ 0.7 (change-of-variables and IBP have direct
 -/
 
 -- This file is a worklog / issue tracker. No runnable Lean 4 code is defined here.
+
+/-!
+## RS-P1-LSI-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-LSI)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-LSI is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.LSI.Theories.*`  →  `CATEPTMain.AFPBridge.LSI.*`
+-/

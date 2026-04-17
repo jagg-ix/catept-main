@@ -338,3 +338,16 @@ Validation: add PM metrics output to `scripts/check_pm_output.sh` summary sectio
 
 -- This file is a worklog / issue tracker. No runnable Lean 4 code is defined here.
 -- Records are sorted by phase then severity: PRE (P1) → TH (P1/P2) → INT → TLA → QA.
+
+/-!
+## RS-P1-PM-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-PM)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-PM is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.PM.Theories.*`  →  `CATEPTMain.AFPBridge.PM.*`
+-/

@@ -88,3 +88,16 @@ Record:
   - Proves: odeFlow n f (t₁+t₂) x₀ = odeFlow n f t₂ (odeFlow n f t₁ x₀)
   - Directly applied: odeFlow_semigroup n f t₁ t₂ x₀ (no sorry)
   - NS-P1 path: operator splitter uses this as the half-step composition law
+
+/-!
+## RS-P1-ODE-BACKREF  Restructuring Phase 1 back-reference
+
+This module has a `Theories/` subdirectory scheduled for removal in Phase 1.
+
+Phase 1 move record:
+  → CATEPTMain/AFPBridge/PHASE1_FLATTEN_WORKLOG.lean  (RS-P1-ODE)
+
+Action required here: none — moves are handled by the Phase 1 procedure.
+After RS-P1-ODE is DONE, all imports of this module change from
+  `CATEPTMain.AFPBridge.ODE.Theories.*`  →  `CATEPTMain.AFPBridge.ODE.*`
+-/
