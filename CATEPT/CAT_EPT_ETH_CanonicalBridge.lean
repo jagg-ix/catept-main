@@ -37,25 +37,32 @@ def canonicalDiagonalETHValue {X : Type} (p : CanonicalETHBridgeParams X)
 
 /-- Ensure the diagonal tau matches the entropic proper time -/
 theorem canonicalTauDiag_is_tauEnt {X : Type} (p : CanonicalETHBridgeParams X) :
-    ∀ x, canonicalTauDiag p x = (p.beta_I * p.I x) / p.hbar := sorry
+    ∀ x, canonicalTauDiag p x = (p.beta_I * p.I x) / p.hbar := fun _ => rfl
 
 /-- Diagonal ETH value assumes a generic form -/
 theorem canonicalDiagonalETHValue_is_generic {X : Type} (p : CanonicalETHBridgeParams X)
     (O_thermal : X → ℝ) (varepsilon : X → ℝ) :
-    ∀ x, canonicalDiagonalETHValue p O_thermal varepsilon x = 
-      O_thermal x + Real.exp (-((p.beta_I * p.I x) / p.hbar)) * varepsilon x := sorry
+    ∀ x, canonicalDiagonalETHValue p O_thermal varepsilon x =
+      O_thermal x + Real.exp (-((p.beta_I * p.I x) / p.hbar)) * varepsilon x := by
+  intro x; rfl
 
 /-- If information is zero, the canonical tau is zero -/
-theorem canonicalTauDiag_zero_of_info_zero {X : Type} (p : CanonicalETHBridgeParams X) (x : X) 
-    (hI : p.I x = 0) : canonicalTauDiag p x = 0 := sorry
+theorem canonicalTauDiag_zero_of_info_zero {X : Type} (p : CanonicalETHBridgeParams X) (x : X)
+    (hI : p.I x = 0) : canonicalTauDiag p x = 0 := by
+  unfold canonicalTauDiag; simp [hI]
 
 /-- Derived from action density's imaginary part -/
 theorem canonicalTauDiag_from_actionDensity_im {X : Type} (p : CanonicalETHBridgeParams X) :
-    ∀ x, canonicalTauDiag p x = p.actionDensity_im x / p.hbar := sorry
+    ∀ x, canonicalTauDiag p x = p.actionDensity_im x / p.hbar := by
+  intro x
+  unfold canonicalTauDiag
+  rw [p.action_eq_info x]
 
 /-- If tau is zero, the suppression factor is 1 -/
 theorem canonicalSuppressionFactor_of_tau_zero {X : Type} (p : CanonicalETHBridgeParams X) (x : X)
-    (htau : canonicalTauDiag p x = 0) : canonicalSuppressionFactor p x = 1 := sorry
+    (htau : canonicalTauDiag p x = 0) : canonicalSuppressionFactor p x = 1 := by
+  unfold canonicalSuppressionFactor
+  rw [htau]; simp
 
 /-- Main Bridge Structure encapsulating relations -/
 structure CanonicalETHBridge (X : Type) where

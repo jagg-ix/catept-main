@@ -58,6 +58,9 @@ theorem oscillator_dissipation_ETH_value (p : DampedOscillatorParams)
       varepsilon 
       J =
     microcanonicalAverage (oscillatorMicrocanonicalShell p targetE deltaE' delta_pos) (mechanicalEnergyDerivAtJet p) +
-    Real.exp (-((beta_I' * info_density J) / hbar')) * varepsilon J := sorry
+    Real.exp (-((beta_I' * info_density J) / hbar')) * varepsilon J := by
+  unfold canonicalDiagonalETHValue canonicalSuppressionFactor canonicalTauDiag oscillatorETHParams
+  simp only
+  rw [← h_avg]
 
 end CATEPT

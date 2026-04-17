@@ -1,6 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import CATEPT.ClassicalCore
 
 noncomputable section
 set_option autoImplicit false
@@ -34,11 +35,6 @@ structure HerglotzJet where
 def SatisfiesHerglotzEL (J : HerglotzJet) : Prop :=
   J.ddt_dL_dv - J.dL_dq = J.dL_ds * J.dL_dv
 
-structure DampedOscillatorParams where
-  m : ℝ
-  k : ℝ
-  gamma : ℝ
-  m_pos : 0 < m
 
 def effectiveHerglotzLagrangian (Lre : ℝ → ℝ → ℝ → ℝ) (contactRate : ℝ → ℝ → ℝ → ℝ) : ℝ → ℝ → ℝ → ℝ → ℝ :=
   fun q v t s => Lre q v t - contactRate q v t * s
