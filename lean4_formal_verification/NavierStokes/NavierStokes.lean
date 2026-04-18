@@ -87,6 +87,7 @@ import NavierStokes.NSArakiRelativeEntropyBridge
 import NavierStokes.Bridges.NSArakiRelativeEntropyBridge
 import NavierStokes.NSImaginaryActionConcavityBridge
 import NavierStokes.Bridges.NSImaginaryActionConcavityBridge
+import NavierStokes.NS2DImaginaryActionBridge
 import NavierStokes.NSAdSCFTBottleneckBridge
 import NavierStokes.NSCanonicalNoGravityEntropicBridge
 import NavierStokes.NSModularForcingBridge
@@ -119,3 +120,4 @@ import NavierStokes.YangMillsMassGapBridge
 import NavierStokes.YangMillsStatusReport
 import NavierStokes.MillenniumAuditCertificate
 import NavierStokes.NSCameronKoopmanBridge
+import NavierStokes.NSCameronMLConnectionBridge
