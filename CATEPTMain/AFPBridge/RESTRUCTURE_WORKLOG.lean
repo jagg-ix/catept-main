@@ -147,9 +147,10 @@ Progress (2026-04-18):
   - CALC-005 DONE (Attention softmax + SDPA subset port builds)
   - CALC-006 DONE (AFPBridge barrel import + table row)
   - CALC-007 DONE (`hyers_ulam_weight_stability` sorry retired in CATEPT bridge)
-  - CALC-008 IN-PROGRESS (full build/audits complete; commit/push pending)
+  - CALC-008 DONE (full build/audits + commit/push complete)
+  - CALC-009 DONE (documented leverage map from lean4-mlir to CATEPT)
 
-### Status: IN-PROGRESS
+### Status: DONE
 -/
 
 /-!

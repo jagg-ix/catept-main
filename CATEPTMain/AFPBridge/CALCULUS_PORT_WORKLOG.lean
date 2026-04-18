@@ -380,7 +380,15 @@ Full validation after all CALC-00x tasks are DONE.
 
 6. Update this worklog: set all CALC-00x Status → DONE.
 
-### Status: IN-PROGRESS (2026-04-18; build + audits done, commit pending)
+### Validation
+  `lake build CATEPTMain.AFPBridge` → EXIT 0.
+  `rg -n "^\s*sorry\b" CATEPTMain/AFPBridge/CALCULUS --glob "*.lean"` → no matches.
+  `grep -r "^axiom" CATEPTMain/AFPBridge/CALCULUS/ --include="*.lean" | wc -l` → 12.
+  Commit landed and pushed:
+  `d29c23496 feat(afpbridge): port CALCULUS attention bridge and retire hyers-ulam stub`
+  to `navier-stokes/main`.
+
+### Status: DONE (2026-04-18)
 -/
 
 /-!
