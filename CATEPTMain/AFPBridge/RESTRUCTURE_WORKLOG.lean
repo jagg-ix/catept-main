@@ -122,6 +122,37 @@ Blocking condition: None — this phase is purely optional.
 -/
 
 /-!
+## RS-MASTER-006  CALCULUS bridge — lean4-mlir VJP framework port
+
+Scope:   New `AFPBridge/CALCULUS/` module porting the verified differentiation
+         library from the local `lean4-mlir` repo into catept-main.
+Detail:  → CATEPTMain/AFPBridge/CALCULUS_PORT_WORKLOG.lean
+Records: CALC-001 (pre-flight) … CALC-008 (validate + commit)
+
+Summary:
+  Source: `lean4-mlir/LeanMlir/Proofs/Tensor.lean` (8 axioms, 0 sorry)
+          + BatchNorm.lean (3 axioms) + Attention.lean (1 axiom; SDPA subset)
+  Target: `CATEPTMain/AFPBridge/CALCULUS/`
+  Payoff: `vjp_comp`, `biPath_has_vjp`, `elemwiseProduct_has_vjp` —
+          proved theorems that retire sorry stubs in CATEPT/EPT.
+
+Prerequisite: None (independent of RS-MASTER-001..005).
+Blocking condition: None — additive, no existing file moves.
+
+Progress (2026-04-18):
+  - CALC-001 DONE (pre-flight audit)
+  - CALC-002 DONE (CALCULUS module skeleton landed)
+  - CALC-003 DONE (Differentiation/Tensor port builds)
+  - CALC-004 DONE (BatchNorm/Normalization port builds)
+  - CALC-005 DONE (Attention softmax + SDPA subset port builds)
+  - CALC-006 DONE (AFPBridge barrel import + table row)
+  - CALC-007 DONE (`hyers_ulam_weight_stability` sorry retired in CATEPT bridge)
+  - CALC-008 IN-PROGRESS (full build/audits complete; commit/push pending)
+
+### Status: IN-PROGRESS
+-/
+
+/-!
 ## RS-MASTER-005  Post-restructure documentation update
 
 After Phase 1 (minimum) is complete, update:

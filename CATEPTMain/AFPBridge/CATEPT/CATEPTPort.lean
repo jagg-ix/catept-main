@@ -47,6 +47,7 @@ This barrel file aggregates all CATEPT submodules in dependency order.
     • `page_wootters_time_eq_accumulated_modular_flow` — PW time = ∫ λ dτ
     • `connes_rovelli_time_eq_accumulated_modular_flow` — CR time = ∫ λ dτ
     • `relational_time_eq_thermal_time`  — PW clock = CR clock
+    • `hyers_ulam_weight_stability`      — FK damping is (1/ħ)-Lipschitz in S_I
 
   ComplexMeasureBridge:
     • `weight_integrable_of_damping_integrable` — damping ∈ L¹ → w ∈ L¹
@@ -68,14 +69,12 @@ This barrel file aggregates all CATEPT submodules in dependency order.
   ModularFlowBridge:
     • `kms_condition`         — KMS from modular flow theory (Type III₁)
     • `cameron_martin_girsanov` — absolute continuity w.r.t. Wiener measure
-    • `hyers_ulam_weight_stability` — 1 sorry stub (needs MVT on exp(-·/ħ))
 
   ComplexMeasureBridge:
     • `cameron_martin_quasi_invariance` — d(T_h)*ν/dν Radon-Nikodym (Phase 2)
 
 ## Phase-2 roadmap
 
-  HIGH: `hyers_ulam_weight_stability` — fill 2 sorry with MVT argument
   HIGH: `kms_condition` — derive from modular Hamiltonian K = −ln ρ = τ_ent
   HIGH: `cameron_martin_girsanov` — Radon-Nikodym dμ/dμ_W = exp(−τ_ent)
   MED:  `complex_FK_bridge` — Itô diffusion on α + complex parabolic PDE

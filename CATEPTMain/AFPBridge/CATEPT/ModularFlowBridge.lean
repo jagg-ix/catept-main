@@ -126,13 +126,76 @@ theorem relational_time_eq_thermal_time
 /-- Hyers-Ulam stability: the FK damping is (1/ħ)-Lipschitz in S_I.
     |exp(−S_I'/ħ) − exp(−S_I/ħ)| ≤ |S_I' − S_I| / ħ -/
 theorem hyers_ulam_weight_stability
-    (S_I S_I' hbar : ℝ) (hh : 0 < hbar) (hSI : 0 ≤ S_I) :
+    (S_I S_I' hbar : ℝ) (hh : 0 < hbar) (hSI : 0 ≤ S_I) (hSI' : 0 ≤ S_I') :
     |Real.exp (-S_I' / hbar) - Real.exp (-S_I / hbar)| ≤ |S_I' - S_I| / hbar := by
-  -- phase2: full proof via MVT applied to exp(-·/ħ): Lipschitz constant 1/ħ
-  -- Step 1: exp(-S_I/ħ) ≤ 1 since S_I ≥ 0
-  -- Step 2: |exp(-Δ/ħ) - 1| ≤ |Δ|/ħ via mean value theorem
-  -- Step 3: combine via exp(-S_I/ħ) · |exp(-Δ/ħ) - 1| ≤ |Δ|/ħ
-  sorry  -- phase2: MVT on exp(-·/ħ)
+  have hordered :
+      ∀ {a b : ℝ}, 0 ≤ a → 0 ≤ b → a ≤ b →
+        |Real.exp (-b / hbar) - Real.exp (-a / hbar)| ≤ |b - a| / hbar := by
+    intro a b ha hb hab
+    have hmono : Real.exp (-b / hbar) ≤ Real.exp (-a / hbar) := by
+      apply Real.exp_le_exp.mpr
+      have hdiv : a / hbar ≤ b / hbar := div_le_div_of_nonneg_right hab hh.le
+      have hnegdiv : -(b / hbar) ≤ -(a / hbar) := neg_le_neg hdiv
+      simpa [neg_div] using hnegdiv
+    have habs :
+        |Real.exp (-b / hbar) - Real.exp (-a / hbar)| =
+          Real.exp (-a / hbar) - Real.exp (-b / hbar) := by
+      rw [abs_sub_comm]
+      exact abs_of_nonneg (sub_nonneg.mpr hmono)
+    have hexp :
+        Real.exp (-b / hbar) =
+          Real.exp (-(b - a) / hbar) * Real.exp (-a / hbar) := by
+      rw [← Real.exp_add]
+      congr 1
+      ring
+    have hfactor :
+        Real.exp (-a / hbar) - Real.exp (-b / hbar) =
+          Real.exp (-a / hbar) * (1 - Real.exp (-(b - a) / hbar)) := by
+      rw [hexp]
+      ring
+    have hfirst_le_one : Real.exp (-a / hbar) ≤ 1 := by
+      apply (Real.exp_le_one_iff).2
+      have hadiv_nonneg : 0 ≤ a / hbar := div_nonneg ha hh.le
+      have hneg_nonpos : -(a / hbar) ≤ 0 := neg_nonpos.mpr hadiv_nonneg
+      simpa [neg_div] using hneg_nonpos
+    have hterm_nonneg : 0 ≤ 1 - Real.exp (-(b - a) / hbar) := by
+      have hExpLeOne : Real.exp (-(b - a) / hbar) ≤ 1 := by
+        apply (Real.exp_le_one_iff).2
+        have hneg_nonpos : -(b - a) / hbar ≤ 0 := by
+          have hnum_nonpos : -(b - a) ≤ 0 := by linarith [sub_nonneg.mpr hab]
+          exact div_nonpos_of_nonpos_of_nonneg hnum_nonpos hh.le
+        exact hneg_nonpos
+      linarith
+    have hterm_le : 1 - Real.exp (-(b - a) / hbar) ≤ (b - a) / hbar := by
+      have haux : 1 - (b - a) / hbar ≤ Real.exp (-(b - a) / hbar) := by
+        calc
+          1 - (b - a) / hbar ≤ Real.exp (-((b - a) / hbar)) :=
+            Real.one_sub_le_exp_neg ((b - a) / hbar)
+          _ = Real.exp (-(b - a) / hbar) := by ring_nf
+      linarith
+    have hprod :
+        Real.exp (-a / hbar) * (1 - Real.exp (-(b - a) / hbar)) ≤ (b - a) / hbar := by
+      have h1 :
+          Real.exp (-a / hbar) * (1 - Real.exp (-(b - a) / hbar))
+            ≤ 1 * (1 - Real.exp (-(b - a) / hbar)) :=
+        mul_le_mul_of_nonneg_right hfirst_le_one hterm_nonneg
+      have h2 :
+          1 * (1 - Real.exp (-(b - a) / hbar))
+            ≤ 1 * ((b - a) / hbar) :=
+        mul_le_mul_of_nonneg_left hterm_le (by positivity : (0 : ℝ) ≤ 1)
+      linarith
+    calc
+      |Real.exp (-b / hbar) - Real.exp (-a / hbar)|
+          = Real.exp (-a / hbar) * (1 - Real.exp (-(b - a) / hbar)) := by
+              rw [habs, hfactor]
+      _ ≤ (b - a) / hbar := hprod
+      _ = |b - a| / hbar := by rw [abs_of_nonneg (sub_nonneg.mpr hab)]
+  by_cases hle : S_I ≤ S_I'
+  · exact hordered hSI hSI' hle
+  · have hle' : S_I' ≤ S_I := le_of_not_ge hle
+    have hswap : |Real.exp (-S_I / hbar) - Real.exp (-S_I' / hbar)| ≤ |S_I - S_I'| / hbar :=
+      hordered hSI' hSI hle'
+    simpa [abs_sub_comm] using hswap
 
 -- ── KMS condition ─────────────────────────────────────────────────────────────
 
