@@ -1,5 +1,8 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.AFPBridge.CATEPT.ModularFlowBridge
+import CATEPTMain.Integration.AdSCFT1907Port
+import CATEPTMain.Integration.AdSCFT1907Phase2Bridge
+import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
 /-!
 # Unified Theory Spine — Concrete Plugin Instances
 
@@ -44,6 +47,31 @@ open CATEPTMain.Integration
 namespace CATEPTMain.Integration.UnifiedSpine
 
 noncomputable section
+
+open CATEPTMain.Integration.AdSCFT.Headrick1907
+open CATEPTMain.Integration.AdSCFT.EntropicEinsteinLocality
+
+/-- Re-export the canonical phase-1 Headrick-1907 toy witness through the
+unified integration umbrella surface. -/
+def headrick1907Phase1ToyPort : Headrick1907PortWitness :=
+  phase1PortWitness_pureToy
+
+/-- Re-export the canonical phase-2 Headrick-1907 toy witness:
+phase-1 1907 port + replica analytic contract + NHQM EP continuity lane. -/
+def headrick1907Phase2ToyPort
+    (N : ℕ) (H : CATEPTMain.AFPBridge.NHQM.NHHamiltonian N)
+    (β μ ħ : ℝ) (hħ : 0 < ħ) :
+    Headrick1907Phase2Witness N H β μ ħ hħ :=
+  phase2PortWitness_pureToy N H β μ ħ hħ
+
+/-- Re-export the phase-1 AdSCFT × Entropic-Einstein-locality unification
+witness through the unified spine surface. -/
+noncomputable def adscftEntropicEinsteinLocalityPhase1Witness
+    (constants : CATEPT.PhysicalConstants)
+    (locality : CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+    AdSCFTEntropicEinsteinLocalityWitness :=
+  phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP
 
 -- ── Step 1: CATEPTPluginSlot from an entropic modular flow clock ──────────────
 
