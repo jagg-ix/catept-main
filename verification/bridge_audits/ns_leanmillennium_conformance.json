@@ -1,0 +1,119 @@
+{
+  "artifact_id": "ns_leanmillennium_conformance_v1",
+  "generated_at": "2026-04-18T04:50:53+00:00",
+  "inputs": {
+    "benchmark_map": "/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/docs/workstation/NS_LEAN_MILLENNIUM_BENCHMARK_MAP.json"
+  },
+  "benchmark_source": {
+    "upstream_repo_url": "https://github.com/lean-dojo/LeanMillenniumPrizeProblems.git",
+    "upstream_commit": "540da94826f70f3edf4d4fc66ce6cda20e903f61",
+    "local_commit": "a34fccaf1fba5e907225f8bd02a860c136be4800"
+  },
+  "symbol_map_coverage": {
+    "required_ids": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "DISJ"
+    ],
+    "present_ids": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "DISJ"
+    ],
+    "missing_required_ids": [],
+    "mapped_required_count": 5,
+    "required_total_count": 5,
+    "coverage_ratio": 1.0
+  },
+  "mappings": [
+    {
+      "id": "A",
+      "external_symbol": "MillenniumNSRDomain.FeffermanA",
+      "local_symbol": "NavierStokes.Millennium.millennium_A_whole_space_existence_smoothness",
+      "local_bridge_symbol": "NavierStokes.Benchmark.local_A_implies_external_A",
+      "mapping_status_raw": "mapped_theorem_bridge",
+      "mapping_status": "theorem",
+      "local_proof_basis": "theorem",
+      "gate": "pass",
+      "reason": ""
+    },
+    {
+      "id": "B",
+      "external_symbol": "MillenniumNS_BoundedDomain.FeffermanB",
+      "local_symbol": "NavierStokes.Millennium.millennium_B_whole_space_breakdown_counterexample",
+      "local_bridge_symbol": "NavierStokes.Benchmark.local_B_implies_external_B",
+      "mapping_status_raw": "mapped_axiom_backed_theorem_bridge",
+      "mapping_status": "axiom-backed",
+      "local_proof_basis": "axiom_anchor",
+      "gate": "warn",
+      "reason": "explicit_axiom_anchor_allowed_warn"
+    },
+    {
+      "id": "C",
+      "external_symbol": "MillenniumNSRDomain.FeffermanC",
+      "local_symbol": "NavierStokes.Millennium.millennium_C_periodic_existence_smoothness",
+      "local_bridge_symbol": "NavierStokes.Benchmark.local_C_implies_external_C",
+      "mapping_status_raw": "mapped_theorem_bridge",
+      "mapping_status": "theorem",
+      "local_proof_basis": "theorem",
+      "gate": "pass",
+      "reason": ""
+    },
+    {
+      "id": "D",
+      "external_symbol": "MillenniumNS_BoundedDomain.FeffermanD",
+      "local_symbol": "NavierStokes.Millennium.millennium_D_periodic_breakdown_counterexample",
+      "local_bridge_symbol": "NavierStokes.Benchmark.local_D_implies_external_D",
+      "mapping_status_raw": "mapped_axiom_backed_theorem_bridge",
+      "mapping_status": "axiom-backed",
+      "local_proof_basis": "axiom_anchor",
+      "gate": "warn",
+      "reason": "explicit_axiom_anchor_allowed_warn"
+    },
+    {
+      "id": "DISJ",
+      "external_symbol": "MillenniumNavierStokes.NavierStokesMillenniumProblem",
+      "local_symbol": "NavierStokes.Benchmark.ExternalNavierStokesMillenniumProblemProp",
+      "local_bridge_symbol": "NavierStokes.Benchmark.local_endpoints_imply_external_millennium_disjunction",
+      "mapping_status_raw": "mapped_theorem_bridge",
+      "mapping_status": "theorem",
+      "local_proof_basis": "theorem",
+      "gate": "pass",
+      "reason": ""
+    }
+  ],
+  "counts": {
+    "theorem": 3,
+    "axiom_backed": 2,
+    "missing": 0,
+    "warnings": 2
+  },
+  "policy": {
+    "policy_id": "ns_leanmillennium_conformance_policy_v1",
+    "hard_fail_on_missing_symbol": true,
+    "hard_fail_on_unpinned_upstream": true,
+    "warn_on_axiom_backed_B_or_D": true,
+    "hard_fail_reasons": []
+  },
+  "warnings": [
+    {
+      "id": "B",
+      "type": "axiom_backed_endpoint",
+      "message": "B/D endpoint remains axiom-backed by declared policy"
+    },
+    {
+      "id": "D",
+      "type": "axiom_backed_endpoint",
+      "message": "B/D endpoint remains axiom-backed by declared policy"
+    }
+  ],
+  "overall": {
+    "status": "pass_with_warnings",
+    "hard_pass": true,
+    "pass_fail_policy_result": "pass"
+  }
+}
