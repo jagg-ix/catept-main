@@ -27,6 +27,8 @@ import NavierStokesClean.CameronPopkov.SpectralGapCertificate
 -- Phase 5: Galerkin existence + vorticity liminf decompositions
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
+-- Stage 294: concrete Fourier triadic kernel (triadicKCoeff as definition, not axiom)
+import NavierStokesClean.Galerkin.FourierTriadicKernel
 
 -- Phase 17+20: Aubin-Lions compactness decomposition (L² → a.e. via Mathlib)
 import NavierStokesClean.Galerkin.CantorDiagonal

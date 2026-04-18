@@ -326,11 +326,16 @@ structure WolframDecisionRecord where
   subcriticalProved           : Bool := true
   /-- Supercritical regime: single open content (unchanged). -/
   supercriticalOpen           : Bool := true
-  /-- The real remaining open axiom is galerkin_ns_defect_limit_transport.
-      ns_supercritical_signal_integrity is now a THEOREM (Stage 231), proved from
-      galerkin_kinetic_defect_nonneg + galerkin_ns_defect_limit_transport. -/
+  /-- Stage 255: ns_defect_nonneg_from_galerkin_wlsc (SA-G4) is now a THEOREM, proved from
+      realNoetherToSliceVS_global_contract (ThermodynamicRegularityBridge). Sole irreducible
+      base on the VS≤νP critical path is that contract.
+      Stage 259: nsStaticCompatibilityContract retired as axiom → theorem via K-Y sub-axioms.
+      Stage 260: ml_stabilization_implies_precise_gap proved as theorem via
+      temam_galerkin_completeness; PreciseGapStatement critical path now has one open axiom. -/
   irreducibleAxiom            : String :=
-    "galerkin_ns_defect_limit_transport (Stage 231): Galerkin-level defect ≥ 0 transports to NS limit via weak LSC"
+    "realNoetherToSliceVS_global_contract (ThermodynamicRegularityBridge, .openBridge): " ++
+    "VS ≤ νP for all NS trajectories — the sole Millennium content on the VS≤νP critical path. " ++
+    "PreciseGapStatement critical path: temam_galerkin_completeness (.openBridge, Temam 1984 Ch.III Thm 3.1)."
 
 def canonicalWolframDecision : WolframDecisionRecord := {}
 

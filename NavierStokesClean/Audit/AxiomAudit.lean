@@ -1,6 +1,7 @@
 import NavierStokesClean.Millennium.DualRouteCertificate
 import NavierStokesClean.Galerkin.GalerkinExistence
 import NavierStokesClean.Galerkin.VorticityLiminf
+import NavierStokesClean.Galerkin.FourierTriadicKernel
 import NavierStokesClean.Galerkin.CantorDiagonal
 import NavierStokesClean.Galerkin.AubinLionsCompact
 import NavierStokesClean.CameronPopkov.NativeSumCertificate
@@ -25,6 +26,9 @@ epistemic content — per-T extraction is the true mathematical primitive).
 Phase 19: `simon1987_ae_tendsto_from_galerkin` axiom deleted; 6 → 5.
 Phase 18: restricted Fatou chain retires Simon from the critical path.
 Phase 15: `SatisfiesNSPDE` made transparent; net count 7 → 5 there.
+Stage 294: `triadicKCoeff` is now a concrete definition in
+`Galerkin/FourierTriadicKernel.lean` (off-resonance/resonant cases as theorems,
+0 new axioms).
 
 ## Axioms promoted to theorems
 
