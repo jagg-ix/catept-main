@@ -5,3 +5,6 @@ build/
 *.ilean
 *.trace
 *.hash
+.recovery/
+__pycache__/
+*.pyc
