@@ -45,3 +45,12 @@ cd /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main
 bash scripts/sync_repo_matrix.sh
 bash scripts/build_direct_lane.sh
 ```
+
+## Verification
+
+- Operational verification guide: `VERIFICATION.md`
+- NS contract checks: `tools/verification/check_ns_semantic_strictness.py` and
+  `tools/verification/check_ns_physical_theorem_contracts.py`
+- LeanMillennium statement-conformance benchmark:
+  - metadata map: `docs/workstation/NS_LEAN_MILLENNIUM_BENCHMARK_MAP.json`
+  - local gate command: `python3 tools/verification/run_ns_leanmillennium_conformance_bundle.py`
