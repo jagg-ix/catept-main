@@ -1,0 +1,191 @@
+{
+  "generated": "2026-02-19T19:06:00Z",
+  "description": "CAT/EPT temporal double-slit simulation outputs for paper analysis",
+  "total_simulations_run": 697,
+  "total_figures": 25,
+  "total_csv_files": 16,
+
+  "physics_model": {
+    "name": "Temporal Double-Slit Spectral Diffraction",
+    "framework": "CAT/EPT (Categorical Ambient Thermodynamics / Entropic Production of Time)",
+    "reference": "Tirole et al. temporal double-slit experiment",
+    "equations": {
+      "slit_profile": "sigma(t) = A * logistic_rise(t; alpha) * exp(-beta*t) + B * logistic_rise(t-S; alpha) * exp(-beta*(t-S))",
+      "spectral_diffraction": "I(nu) = |FT[sigma(t) * E_probe(t)]|^2",
+      "visibility_decay_coherence": "V(S) = exp(-lambda_ent * S)",
+      "visibility_decay_amplitude": "V(S) = integral weighted by exp(-gamma * tau_ent(t))",
+      "geometric_enhancement": "lambda_ENZ = lambda_thermal * (c / v_g)",
+      "drude_group_velocity": "v_g = c * sqrt(1 - (lambda/lambda_p)^2)"
+    }
+  },
+
+  "base_parameters": {
+    "f0_hz": 2.302e14,
+    "f0_THz": 230.2,
+    "probe_fwhm_field_s": 7.94e-13,
+    "probe_fwhm_field_fs": 794,
+    "alpha_inv_s": 5.0e14,
+    "beta_inv_s": 2.5e12,
+    "slit_amplitude_A": 0.5,
+    "slit_amplitude_B": 0.5,
+    "dt_s": 2.0e-16,
+    "t_window_s": 6.0e-12,
+    "analysis_band_THz": 10.0,
+    "spectral_half_width_hz": 1.5e13
+  },
+
+  "cat_ept_parameters": {
+    "cat_mode_coherence": {
+      "description": "Decoherence on two-slit cross term only",
+      "lambda_ent_inv_s_values": [0, 1.0e11, 2.5e11, 5.0e11, 7.5e11, 1.0e12, 1.5e12, 2.0e12],
+      "formula": "g(S) = exp(-lambda_ent * S)"
+    },
+    "cat_mode_amplitude": {
+      "description": "Complex-action amplitude weight",
+      "gamma_entropic_values": [0.1, 0.5, 1.0, 2.0],
+      "formula": "weight = exp(-gamma * tau_ent(t))"
+    }
+  },
+
+  "enz_enhancement": {
+    "plasma_wavelength_nm": 1550,
+    "lambda_thermal_inv_s": 1.0e12,
+    "wavelength_range_nm": [900, 2000],
+    "key_values": {
+      "1000nm": {"v_g_over_c": 0.764, "enhancement": 1.31},
+      "1200nm": {"v_g_over_c": 0.633, "enhancement": 1.58},
+      "1400nm": {"v_g_over_c": 0.429, "enhancement": 2.33},
+      "1500nm": {"v_g_over_c": 0.252, "enhancement": 3.97},
+      "1530nm": {"v_g_over_c": 0.160, "enhancement": 6.25},
+      "1545nm": {"v_g_over_c": 0.080, "enhancement": 12.46}
+    }
+  },
+
+  "figures": {
+    "fig2_spectral_series.png": {
+      "script": "sim_01",
+      "paper_figure": "Fig 2a-d",
+      "priority": "CRITICAL",
+      "description": "Spectral diffraction at 8 separations (200-1400 fs), standard vs CAT/EPT with 4 lambda_ent values",
+      "simulations": 40,
+      "separations_fs": [200, 400, 500, 600, 800, 1000, 1200, 1400],
+      "lambda_ent_values": [0, 5.0e11, 1.0e12, 1.5e12]
+    },
+    "fig2e_period_vs_separation.png": {
+      "script": "sim_02",
+      "paper_figure": "Fig 2e",
+      "priority": "CRITICAL",
+      "description": "Fringe spacing vs slit separation with theoretical 1/S overlay",
+      "simulations": 50,
+      "separations_fs": "200 to 1400, step 50"
+    },
+    "fig2f_interferogram.png": {
+      "script": "sim_03",
+      "paper_figure": "Fig 2f",
+      "priority": "CRITICAL",
+      "description": "2D interferogram heatmap (separation x frequency), side-by-side standard vs CAT/EPT",
+      "simulations": 114,
+      "separations_fs": "-1400 to +1400, step 50"
+    },
+    "fig_visibility_decay.png": {
+      "script": "sim_04",
+      "paper_figure": "Central equation",
+      "priority": "CRITICAL",
+      "description": "V(S) = exp(-lambda_ent * S) decay curves for 6 lambda_ent values",
+      "simulations": 462,
+      "separations_fs": "100 to 2000, step 25",
+      "lambda_ent_values": [0, 1.0e11, 5.0e11, 1.0e12, 1.5e12, 2.0e12]
+    },
+    "fig_visibility_logV_vs_S.png": {
+      "script": "sim_04",
+      "description": "log(V) vs S linearity check confirming exponential decay"
+    },
+    "fig_visibility_robust_decay.png": {
+      "script": "sim_04",
+      "description": "V_robust (percentile-based) decay comparison"
+    },
+    "sim05_panelA_r_vs_t.png": {
+      "script": "sim_05",
+      "paper_figure": "Extended Fig 1a",
+      "priority": "HIGH",
+      "description": "|r(t)| time-domain reflectivity for 5 separations"
+    },
+    "sim05_panelB_lambda_t.png": {
+      "script": "sim_05",
+      "description": "lambda(t) entropic rate at S=800 fs"
+    },
+    "sim05_panelC_tau_ent_t.png": {
+      "script": "sim_05",
+      "description": "Cumulative tau_ent(t) with |r(t)| overlay at S=800 fs"
+    },
+    "sim06_panelA_V_vs_rise.png": {
+      "script": "sim_06",
+      "paper_figure": "Extended Fig 1c",
+      "priority": "HIGH",
+      "description": "Visibility vs slit rise time (2-40 fs)"
+    },
+    "sim06_panelB_V_vs_decay.png": {
+      "script": "sim_06",
+      "description": "Visibility vs slit decay time (100-800 fs)"
+    },
+    "sim06_panelC_fringe_vs_rise.png": {
+      "script": "sim_06",
+      "description": "Fringe spacing vs slit rise time"
+    },
+    "sim07_model_comparison_5panel.png": {
+      "script": "sim_07",
+      "paper_figure": "Extended Fig 3",
+      "priority": "CRITICAL",
+      "description": "3-model comparison (standard/coherence/amplitude) at 5 separations"
+    },
+    "sim08_panelA_vg_vs_wavelength.png": {
+      "script": "sim_08",
+      "paper_figure": "Fig 5",
+      "priority": "HIGH",
+      "description": "Group velocity v_g/c vs wavelength near ENZ"
+    },
+    "sim08_panelB_enhancement_vs_wavelength.png": {
+      "script": "sim_08",
+      "description": "Enhancement factor c/v_g vs wavelength"
+    },
+    "sim08_panelC_V_vs_S.png": {
+      "script": "sim_08",
+      "description": "V(S) standard vs ENZ-enhanced at 3 wavelengths"
+    },
+    "probe_parameter_study.png": {
+      "script": "sim_09",
+      "priority": "MEDIUM",
+      "description": "3-panel: V vs probe FWHM, carrier freq, band width"
+    },
+    "full_grid_heatmaps.png": {
+      "script": "sim_10",
+      "priority": "MEDIUM",
+      "description": "2D heatmaps: V(S, lambda_ent) and fringe_spacing(S, lambda_ent)"
+    },
+    "full_grid_V_vs_lambda.png": {
+      "script": "sim_10",
+      "description": "V vs lambda_ent for selected separations"
+    },
+    "cat_mode_comparison.png": {
+      "script": "sim_11",
+      "priority": "MEDIUM",
+      "description": "Coherence vs amplitude mode V(S) comparison"
+    }
+  },
+
+  "key_results": {
+    "visibility_at_S800fs": {
+      "standard": 0.9524,
+      "coherence_lambda1e12": 0.6155,
+      "ratio": 0.646
+    },
+    "visibility_at_S1200fs": {
+      "standard": 0.8695,
+      "coherence_lambda1e12": 0.4208,
+      "ratio": 0.484
+    },
+    "fringe_spacing_law": "Delta_nu ~ 1/S (confirmed by sim_02)",
+    "exponential_decay_confirmed": "log(V) vs S is linear (confirmed by sim_04)",
+    "enz_enhancement_at_1545nm": "12.46x enhancement, lambda_ENZ = 1.25e13 /s"
+  }
+}

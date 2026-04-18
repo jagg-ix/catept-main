@@ -1,0 +1,97 @@
+From: CAT/EPT Navier-Stokes Bridge Program
+Date: 2026-03-08
+Subject: [PATCH] Add CAT/EPT entropic-time bridge for PyAnsys (PyMAPDL + PyFluent + PyAEDT)
+
+Applies to: multiphysics/integration/ (not upstream pymapdl/pyfluent/pyaedt)
+
+This patch is NOT applied to the upstream PyAnsys packages. The upstream
+repos (pymapdl, pyfluent, pyaedt) are used as-is via their published Python
+APIs. All CAT/EPT integration code lives within the entropic-time repo.
+
+The upstream packages are tracked in external_clone mode in:
+  tools/multiphysics/vendor_workflow_manifest.json
+
+Vendor metadata:
+  multiphysics/external/pymapdl_vendor_metadata.yaml
+  multiphysics/external/pyfluent_vendor_metadata.yaml
+  multiphysics/external/pyaedt_vendor_metadata.yaml
+
+--------------------------------------------------------------------
+Summary of CAT/EPT additions (new files in this repo):
+--------------------------------------------------------------------
+
+  multiphysics/integration/pyansys_entropic_bridge.py
+    Three-backend entropic bridge for ANSYS physics:
+      run_pyansys_mapdl_thermal()   — thermal-structural (PyMAPDL)
+      run_pyansys_fluent_cfd()      — CFD thermal-hydraulics (PyFluent)
+      run_pyansys_maxwell_em()      — Maxwell EM field solve (PyAEDT)
+
+    Each function:
+      - Accepts CAT/EPT contract inputs: tau_ent_0, lambda_rate, dt
+      - Returns CAT/EPT contract outputs: tau_ent_next, delta_s_i, lambda_eff,
+        residual_norm, constraint_norm, converged
+      - Supports backend_mode in {stub, analytical, native, native_strict}
+      - Returns interop dict for: geant4, opentopas, qutip, mapdl/fluent/maxwell, pynucastro
+
+  tools/multiphysics/validate_pyansys_mapdl_native_strict.py
+    Preflight validator for MAPDL bridge (7 check groups, exit 0/1/2).
+
+  multiphysics/integration/registry.py  (modified)
+    Added 3 registry entries:
+      pyansys_mapdl_thermal_entropic
+      pyansys_fluent_cfd_entropic
+      pyansys_maxwell_em_entropic
+
+  multiphysics/qf_qutip_dsl/ir.py  (modified)
+    Added 3 IR dataclass nodes:
+      PyAnsysMAPDLThermalNode
+      PyAnsysFluentCFDNode
+      PyAnsysMaxwellEMNode
+
+--------------------------------------------------------------------
+Physics coupling chain:
+--------------------------------------------------------------------
+
+  Geant4/OpenTOPAS  →  dose_gy
+       ↓
+  PyMAPDL thermal   →  temperature_max_k, thermal_stress_mpa
+       ↓
+  PyFluent CFD      →  outlet_temperature_k, heat_removal_w, pressure_drop_pa
+       ↓
+  PyAEDT Maxwell    →  b_field_max_t, force_n, inductance_h
+       ↓
+  Geant4            ←  G4UniformMagField (beam optics)
+
+--------------------------------------------------------------------
+Entropic coupling formulas:
+--------------------------------------------------------------------
+
+  MAPDL:   lambda_eff = lambda_rate * (1 + alpha_T  * delta_T)
+  Fluent:  lambda_eff = lambda_rate * (1 + beta_flow * delta_T_coolant)
+  Maxwell: lambda_eff = lambda_rate * (1 + gamma_B  * B_max_T)
+
+  where delta_T = T_max_k - T_ambient,  delta_T_coolant = T_outlet - T_inlet
+
+--------------------------------------------------------------------
+Environment variables for native backend configuration:
+--------------------------------------------------------------------
+
+  CATEPT_PYANSYS_MAPDL_HOST        (default: 127.0.0.1)
+  CATEPT_PYANSYS_MAPDL_PORT        (default: 50052)
+  CATEPT_PYANSYS_FLUENT_HOST       (default: 127.0.0.1)
+  CATEPT_PYANSYS_FLUENT_PORT       (default: 50051)
+  CATEPT_PYANSYS_AEDT_VERSION      (e.g. "2024.2"; default: latest)
+  CATEPT_PYANSYS_NATIVE_TIMEOUT    (gRPC timeout in seconds)
+  CATEPT_PYANSYS_NATIVE_MOCK       (set "1" to force fallback; for CI/testing)
+
+--------------------------------------------------------------------
+No modifications to upstream source required.
+--------------------------------------------------------------------
+diff --git a/multiphysics/integration/pyansys_entropic_bridge.py b/multiphysics/integration/pyansys_entropic_bridge.py
+new file mode 100644
+index 0000000..catept1
+--- /dev/null
++++ b/multiphysics/integration/pyansys_entropic_bridge.py
+@@ -0,0 +1,1 @@
++# See full file at multiphysics/integration/pyansys_entropic_bridge.py
++# (~700 lines; three-backend CAT/EPT bridge for PyMAPDL, PyFluent, PyAEDT)

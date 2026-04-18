@@ -1,0 +1,7 @@
+source_key: materials_project
+upstream: https://materialsproject.org/
+subset: "No bulk data vendored. Placeholders only."
+how_generated: "Empty placeholder directory shipped for reproducible structure. Use scripts/fetch_materials_project.py to download your own subset."
+license: "CC BY 4.0 (upstream); this repo ships no MP dataset"
+last_verified: "2026-01-20"
+files: []

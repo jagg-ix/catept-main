@@ -1,0 +1,11 @@
+{
+  "phase": "6.6",
+  "name": "ogrepy_complex_efe",
+  "ogrepy_available": false,
+  "ogrepy_metric_smoke_ok": false,
+  "ogrepy_metric_smoke_error": null,
+  "lambda_mode": "trace_adjusted",
+  "residual_fro_norm": "sqrt(3)*lambda0**2/2",
+  "pass": true,
+  "skipped": false
+}

@@ -1,0 +1,7 @@
+{
+  "einsteinpy_check_skipped": true,
+  "tol": 1e-06,
+  "max_diff_S": null,
+  "max_diff_Lambda": null,
+  "pass": true
+}

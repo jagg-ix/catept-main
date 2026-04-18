@@ -1,0 +1,44 @@
+# Paper3 geometric tensors configuration
+#
+# This config controls how the Paper3-inspired *imaginary curvature* tensor
+# (Lambda_{mu nu}) is constructed for diagnostics and demo scenarios.
+#
+# IMPORTANT:
+#   - These are *modeling choices* (not ground truth).
+#   - Gates enforce correspondence (constant phi => imaginary sector vanishes).
+
+lambda_tensor:
+  # Supported modes:
+  #   - hessian
+  #   - trace_adjusted            (default)
+  #   - einstein_like
+  #   - trace_adjusted_weighted
+  mode: trace_adjusted
+
+  # Only used for trace_adjusted_weighted
+  alpha: 0.25
+
+entropic_time:
+  # If true, demo computations will reparameterize the metric time coordinate
+  # using d tau = lambda dt for *constant* lambda in the demo.
+  enabled: false
+
+  # Constant lambda used for the entropic-time demo metric rescaling
+  lambda_const_s_inv: 1.0e12
+
+gates:
+  tol: 1.0e-12
+
+phi_profile:
+  # If true (default), Phase 6.4 will reconstruct a paper-style reflectivity r(t)
+  # for each S and build phi(t)=∫lambda(t) dt, exporting *evolved* tensors across
+  # the temporal slit. If false, Phase 6.4 falls back to the legacy "window" mode.
+  enabled: true
+
+  # Downsample points for each exported profile CSV.
+  downsample_points: 220
+
+  # lambda(t) proxy controls (see compute_lambda_from_reflection in the simulator).
+  # lambda(t) = lambda0 + lambda_kappa * |d/dt log(1+|r(t)|)|, clipped to floor.
+  lambda_kappa: 1.0
+  lambda_floor_inv_s: 0.0

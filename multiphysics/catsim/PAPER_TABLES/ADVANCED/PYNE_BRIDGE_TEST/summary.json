@@ -1,0 +1,23 @@
+{
+  "phase": "6.12b",
+  "name": "pyne_quantum_bridge",
+  "config": "configs/pyne_bridge.yaml",
+  "nuclide": "X",
+  "half_life_s": 0.001,
+  "lambda_eff_min": 693.1471805599452,
+  "lambda_eff_max": 693.1471805599452,
+  "qutip": {
+    "status": "SKIP: ImportError",
+    "ok": false
+  },
+  "pyscf": {
+    "status": "SKIP: pyscf not installed",
+    "ok": false
+  },
+  "outputs": [
+    "spacetime_coupler.csv",
+    "pyne_decay_timeseries.csv",
+    null,
+    null
+  ]
+}

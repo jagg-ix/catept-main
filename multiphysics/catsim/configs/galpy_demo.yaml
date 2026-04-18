@@ -1,0 +1,32 @@
+# galpy demo configuration (optional)
+
+galpy_demo:
+  # Coordinate-time sampling (treated as seconds by catsim exports; galpy is unit-agnostic unless using astropy units)
+  t0_s: 0.0
+  dt_s: 0.02
+  n_steps: 600
+
+  # Simple orbit initial conditions (galpy Orbit initialization)
+  # These are intentionally dimensionless demo values.
+  orbit:
+    # galpy Orbit inputs: [R, vR, vT, z, vz, phi]
+    init: [1.0, 0.0, 1.1, 0.0, 0.0, 0.0]
+
+  # Potential choice
+  potential:
+    kind: logarithmic_halo
+    # galpy LogarithmicHaloPotential parameters
+    q: 1.0
+    vo: 1.0
+    ro: 1.0
+
+cat_ept:
+  enabled: true
+  lambda_const_s_inv: 2.0
+
+outputs:
+  out_dir: PAPER_TABLES/ADVANCED/GALPY_DEMO
+  filename: timeline.csv
+
+gates:
+  require_schema_time_tau_lambda: true

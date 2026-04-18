@@ -1,0 +1,42 @@
+# ENZ dielectric configuration for Phase 6.1 (ADVANCED diagnostics)
+#
+# mode:
+#   - drude: uses eps_inf, omega_p, gamma (placeholders unless you replace with SI/fit values)
+#   - table: loads complex permittivity from a CSV file and computes n(ω) numerically
+#
+# Traceability:
+# - ENZ frequency ~227 THz (1320 nm) is reported in Tirole et al., arXiv:2206.04362v2.
+# - That paper references previous work (Ref. 16) for full sample characterization; the SI PDF
+#   text does not provide explicit Drude parameter values. Therefore, Drude parameters here are
+#   defaults for reproducibility, and must be replaced to claim “paper-locked material model.”
+
+material: ITO
+enz_frequency_THz: 227.0
+
+# ENZ gate tolerance for Phase 6.1: estimated ENZ frequency must be within this window
+# of enz_frequency_THz for PASS.
+enz_tolerance_THz: 5.0
+
+mode: drude
+
+# --- Drude model (placeholders unless replaced) ---
+# eps(ω) = eps_inf - omega_p^2 / (ω^2 + i*gamma*ω)
+# Units: omega_p, gamma in rad/s
+
+eps_inf: 3.9
+# Choose omega_p so that Re(eps)=0 occurs near the configured ENZ anchor
+# when damping is modest: omega_p ≈ omega_ENZ * sqrt(eps_inf), with
+# omega_ENZ = 2π * enz_frequency_THz * 1e12.
+omega_p: 2.816683366100322e15
+gamma: 1.0e14
+
+# Optional provenance notes (free text). These are copied into PARAMETERS.txt by Phase 6.1.
+drude_param_note: "Literature-proxy Drude parameters for ITO (not provided explicitly in Tirole v2 text). Treat as a reproducible proxy baseline; prefer switching to mode=table with measured eps(ω) for paper-locked material response."
+drude_param_source: "Dev-team proxy baseline (ITO Drude typical range); not from Tirole SI text. Replace with fit/measured values when available."
+
+# --- Table mode (optional) ---
+# CSV columns required (header names):
+#   f_THz, eps_real, eps_imag
+# If provided and mode=table, table values override drude.
+
+eps_table_csv: "data/materials/ITO_eps_table_proxy.csv"

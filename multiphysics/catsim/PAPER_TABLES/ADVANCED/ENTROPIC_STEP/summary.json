@@ -1,0 +1,18 @@
+{
+  "case1": {
+    "dt": 1e-12,
+    "dtau": 0.001,
+    "passed_cfl": true,
+    "n_reductions": 0
+  },
+  "case2": {
+    "dt": 2.5e-09,
+    "dtau": 2.5,
+    "passed_cfl": true,
+    "n_reductions": 2
+  },
+  "notes": {
+    "expect_case1_reductions": 0,
+    "expect_case2_reductions_ge1": true
+  }
+}

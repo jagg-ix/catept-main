@@ -1,0 +1,12 @@
+{
+  "experiment": "temporal",
+  "f_min_hz": -5.0e13,
+  "f_max_hz": 5.0e13,
+  "n_points": 4001,
+  "separation_s": 2.0e-14,
+  "slit_rise_s": 3.0e-15,
+  "visibility0": 1.0,
+  "mode": "standard",
+  "gamma_s_inv": 0.0,
+  "lambda_ent_s_inv": 0.0
+}

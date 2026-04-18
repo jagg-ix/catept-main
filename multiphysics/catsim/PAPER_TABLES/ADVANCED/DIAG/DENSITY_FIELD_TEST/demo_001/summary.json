@@ -1,0 +1,40 @@
+{
+  "backend": "fallback_multi",
+  "channels": [
+    "dephasing",
+    "relax",
+    "excite"
+  ],
+  "gamma_int": 0.007794743429286609,
+  "phi_final_rad": 2.999999999999999,
+  "scale_stats": {
+    "max": 11.0,
+    "mean": 3.9,
+    "min": 1.0
+  },
+  "scene_ctx": {
+    "scene_bh_a_star": 0.0,
+    "scene_bh_center_xy_m": [
+      -0.01,
+      -0.01
+    ],
+    "scene_bh_mass_kg": 1.0,
+    "scene_bh_placement": "bottom_left",
+    "scene_bh_radius_m": 0.002,
+    "scene_mass_density_kg_m3": 1.1126500560536184e-16,
+    "scene_matter_center_xy_m": [
+      0.01,
+      0.01
+    ],
+    "scene_matter_energy_density_J_m3": 10.0,
+    "scene_matter_placement": "top_right",
+    "scene_matter_radius_m": 0.003,
+    "scene_region_center_xy_m": [
+      0.0,
+      0.0
+    ],
+    "scene_region_height_m": 0.02,
+    "scene_region_width_m": 0.02
+  },
+  "visibility": 0.004926350667172038
+}

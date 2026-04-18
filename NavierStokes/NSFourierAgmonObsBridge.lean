@@ -48,7 +48,7 @@ namespace NavierStokes.FourierAgmonObsBridge
 set_option autoImplicit false
 set_option maxHeartbeats 400000
 
-open NavierStokes.Millennium hiding interpretAsFourier
+open NavierStokes.Millennium
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface
@@ -114,14 +114,12 @@ theorem bkmVorticityIntegralObs_agmon_eq_fourier
     bkmVorticityIntegralObs fourierNSObsInstance_agmon traj T =
     integratedEnstrophyF (liftTrajToFourier traj) T +
     integratedPalinstrophyF (liftTrajToFourier traj) T := by
-  -- Step 1: rewrite pointwise to the lifted Fourier field via liftTrajToFourier_fieldAt
+  -- Step 1: rewrite pointwise to the lifted Fourier field
   have heq : bkmVorticityIntegralObs fourierNSObsInstance_agmon traj T =
       discreteIntegral (fun t =>
         enstrophyFTraj (liftTrajToFourier traj) t +
         palinstrophyFTraj (liftTrajToFourier traj) t) T := by
-    unfold bkmVorticityIntegralObs fourierNSObsInstance_agmon enstrophyFTraj palinstrophyFTraj
-    congr 1; ext t
-    exact congrArg (fun f => enstrophyF f + palinstrophyF f) (liftTrajToFourier_fieldAt traj t)
+    rfl
   rw [heq]
   -- Step 2: split the discrete integral of a sum
   unfold integratedEnstrophyF integratedPalinstrophyF discreteIntegral
@@ -137,19 +135,14 @@ theorem entropicProperTimeObs_agmon_eq_fourier
     (traj : Trajectory NSField) (T : Rat) :
     entropicProperTimeObs fourierNSObsInstance_agmon traj T =
     entropicProperTimeF (liftTrajToFourier traj) T := by
-  unfold entropicProperTimeObs fourierNSObsInstance_agmon entropicProperTimeF integratedEnstrophyF
-    enstrophyFTraj
-  congr 2; ext t
-  exact congrArg enstrophyF (liftTrajToFourier_fieldAt traj t)
+  rfl
 
 /-- Palinstrophy integral for agmon instance equals `integratedPalinstrophyF` of the lift. -/
 theorem palinstrophyIntegralObs_agmon_eq_fourier
     (traj : Trajectory NSField) (T : Rat) :
     palinstrophyIntegralObs fourierNSObsInstance_agmon traj T =
     integratedPalinstrophyF (liftTrajToFourier traj) T := by
-  unfold palinstrophyIntegralObs fourierNSObsInstance_agmon integratedPalinstrophyF palinstrophyFTraj
-  congr 1; ext t
-  exact congrArg palinstrophyF (liftTrajToFourier_fieldAt traj t)
+  rfl
 
 /-! ## Stage 146 theorem in Obs-land -/
 
@@ -281,11 +274,13 @@ theorem obs_certificate_chain (K : Rat) (hK : 0 ≤ K) :
 
 /-- Semantic nontriviality of the palinstrophy channel in `interpretAsFourier`'s image.
 
-    THEOREM from `NavierStokes.Millennium.nsFourierInterp.nontrivial_pal` — no new axiom.
-    Stage 242: retired the `.openBridge` axiom; derived from the bundle. -/
+    With the concrete Stage-218 shim (`interpretAsFourier` = one-mode field with
+    `freq = 1`, `amp = 1`), palinstrophy is strictly positive by direct evaluation. -/
 theorem interpretAsFourier_palinstrophy_nontrivial :
-    ∃ v : NSField, 0 < palinstrophyF (interpretAsFourier v) :=
-  NavierStokes.Millennium.nsFourierInterp.nontrivial_pal
+    ∃ v : NSField, 0 < palinstrophyF (interpretAsFourier v) := by
+  refine ⟨fun _ => (1, 0), ?_⟩
+  unfold interpretAsFourier palinstrophyF
+  norm_num
 
 /-- The Agmon instance is distinct from the τ-only instance.
 

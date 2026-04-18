@@ -1,0 +1,35 @@
+{
+  "gate_A1": {
+    "n": 15,
+    "k_fit": 1636.6500179732934,
+    "mare": 0.05108241065295241,
+    "r2": 0.9741089264330541
+  },
+  "gate_A2": {
+    "n": 15,
+    "high_detuning_fraction_mae": 0.0015882613170895314
+  },
+  "gate_A3": {
+    "n": 15,
+    "cal_S_fs": 499.999999999924,
+    "phase_fit": {
+      "phi0": 0.47058913760356524,
+      "phi1_rad_per_s": 553820680893.1825,
+      "phi2_rad_per_s2": 7.484427754934142e+23
+    },
+    "fit_loss": 0.0009753495095934549,
+    "sign_match_rate": 1.0
+  },
+  "thresholds": {
+    "A1_mare_max": 0.15,
+    "A1_r2_min": 0.85,
+    "A2_high_frac_mae_max": 0.2,
+    "A3_sign_match_min": 0.7
+  },
+  "pass_fail": {
+    "A1": true,
+    "A2": true,
+    "A3": true,
+    "overall": true
+  }
+}

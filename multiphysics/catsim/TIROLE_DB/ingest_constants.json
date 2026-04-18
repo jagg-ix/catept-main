@@ -1,0 +1,27 @@
+{
+  "probe_carrier_THz": {
+    "value": 230.2,
+    "unit": "THz",
+    "source": "SI: Time diffraction model"
+  },
+  "probe_fwhm_fs": {
+    "value": 794.0,
+    "unit": "fs",
+    "source": "SI: Time diffraction model"
+  },
+  "rise_time_10_90_fs": {
+    "value": 7.0,
+    "unit": "fs",
+    "source": "SI: Time diffraction model fit"
+  },
+  "rise_time_range_fs": {
+    "value": "1-10",
+    "unit": "fs",
+    "source": "SI: Time diffraction model"
+  },
+  "second_peak_percent": {
+    "value": 0.93,
+    "unit": "%",
+    "source": "SI: slit characterization"
+  }
+}

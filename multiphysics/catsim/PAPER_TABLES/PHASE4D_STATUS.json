@@ -1,0 +1,14 @@
+{
+  "pt": {
+    "Vcl": 0.13770708662792522,
+    "eta_fit": 0.06918309709189363,
+    "visibility_column": "visibility_paper",
+    "rows": 27
+  },
+  "collision": {
+    "rows": 61,
+    "median_decay_tau_fs": 396.085299651785,
+    "median_beta_eff_inv_s": 2524708695018.829,
+    "lambda_ent_inv_s": 1525423728813.5593
+  }
+}

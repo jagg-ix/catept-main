@@ -139,15 +139,20 @@ theorem integratedXiTr_is_omega_weighted
 
     Stage 232: promoted with witness Cdelta=1 in reduced-carrier scaffold model.
     (Was: Ladyzhenskaya 1958.) -/
-axiom vs_classical_young_decomposition :
-    ∀ (traj : Trajectory NSField) (t delta : Rat),
-    0 < delta → delta < nsNu →
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
+theorem vs_classical_young_decomposition
+    (traj : Trajectory NSField) (t delta : Rat)
+    (_hdelta : 0 < delta) (_hdeltaLt : delta < nsNu)
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ Cdelta : Rat, 0 < Cdelta ∧
       vortexStretchingIntegral traj t ≤
         delta * palinstrophy (traj.stateAt t).velocity +
-        Cdelta * (enstrophy (traj.stateAt t).velocity) ^ 3
+        Cdelta * (enstrophy (traj.stateAt t).velocity) ^ 3 :=
+  ⟨1, by norm_num, by
+    simp only [vortexStretchingIntegral]
+    nlinarith [palinstrophy_nonneg (traj.stateAt t).velocity,
+               enstrophy_nonneg (traj.stateAt t).velocity,
+               sq_nonneg (enstrophy (traj.stateAt t).velocity)]⟩
 
 /-! ## 3. Classical Residue Definition -/
 

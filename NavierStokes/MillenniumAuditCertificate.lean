@@ -11,19 +11,17 @@ import Mathlib.Tactic.NormNum
 Formalizes the honest audit status for the five Clay Millennium closure paths
 (A/B/C/D/E) in the Navier-Stokes program.
 
-## Core claim (Stage 286+ strict lifecycle update)
+## Core claim
 
-Paths C and E are `Proved` (no `.openBridge` blockers). Paths A, B, D remain
-`ConditionallyProved`.
+Every path in the audit is `ConditionallyProved`, not `Proved`.
 
 The distinction:
 - `ConditionallyProved`: the Lean4 theorem has 0 sorry and the formal proof
   chain is complete, but at least one axiom in the chain is `.openBridge`
   (an unproved conjecture, not standard published mathematics).
-- `Proved`: no `.openBridge` axioms on the critical path; `.partiallyVerified`
-  assumptions may still remain.
-- `Proven`: strict first-principles tier — all assumptions are fully formalized
-  in Lean from first principles (no load-bearing imported assumptions).
+- `Proved`: every axiom in the chain is either a Lean4 theorem (proved from
+  first principles) or `.partiallyVerified` (published, peer-reviewed, and
+  not novel content). No `.openBridge` axioms on the critical path.
 
 ## What each path actually contains
 
@@ -31,9 +29,9 @@ The distinction:
 |------|-----------------|-----------------|
 | A    | theorem ← ForwardBridgeObligation + BackwardBridgeObligation | BackwardBridge Steps 3/5/6/7 (.openBridge) |
 | B    | theorem = one-line wrapper around bare axiom | millennium_B_axiom (.openBridge — counterexample not constructed) |
-| C    | millennium_C_closed_via_pipeline | unit_torus_route6_closed + bkm_t3_global_existence (.partiallyVerified) — **PROVED** |
+| C    | same structure as A | same open axioms as A, periodic setting |
 | D    | theorem = one-line wrapper around bare axiom | millennium_D_axiom (.openBridge — counterexample not constructed) |
-| E    | unit_torus_route6_closed (quantitative_route6_pipeline) | ml_stabilization_implies_precise_gap (.partiallyVerified, Temam 1984) — **PROVED** |
+| E    | chain through Cameron/Popkov | ns_galerkin_cameron_governs_trajectory, popkov_zeno_bound (.openBridge) |
 
 ## References
 - PDEInterfaces.lean: ForwardBridgeObligation, BackwardBridgeObligation
@@ -55,19 +53,16 @@ noncomputable section
 
 /-- The allowed lifecycle states for a Millennium closure certificate.
     Mirrors the JSON `allowed_status_lifecycle` field in each certificate file.
-    `proven` is the strict first-principles tier. -/
+    A certificate must reach `Proved` to satisfy the Clay Prize standard. -/
 inductive CertificateLifecycle : Type
   | notEvaluated        : CertificateLifecycle
   | inProgress          : CertificateLifecycle
   | blocked             : CertificateLifecycle
   /-- Formal proof chain complete; at least one axiom is `.openBridge`. -/
   | conditionallyProved : CertificateLifecycle
-  /-- No `.openBridge` blockers on the critical path; `.partiallyVerified`
-      assumptions may still remain. -/
+  /-- All axioms on critical path are `.verified` or `.partiallyVerified`
+      (standard published mathematics, no novel conjectures). -/
   | proved              : CertificateLifecycle
-  /-- Strict first-principles closure:
-      all assumptions are formalized in Lean (no load-bearing imported assumptions). -/
-  | proven              : CertificateLifecycle
   deriving DecidableEq
 
 /-! ## 1b. Semantic Layer Tagging -/
@@ -133,9 +128,6 @@ structure MillenniumPathCertificate where
   hasSorry          : Bool
   /-- Current lifecycle status. -/
   status            : CertificateLifecycle
-  /-- Strict contract flag: true iff all assumptions on the critical path are
-      fully formalized from first principles in Lean. -/
-  assumptionsFirstPrinciples : Bool
   /-- The open axioms that prevent advancement to `Proved`. -/
   openAxioms        : List OpenAxiomRecord
   /-- Non-axiomatic semantic risks (e.g., reduced-carrier shims). -/
@@ -146,14 +138,10 @@ structure MillenniumPathCertificate where
 /-- A certificate is honest iff:
     - it has no sorry
     - its status is `ConditionallyProved` iff it has at least one open axiom blocker
-    - its status is `Proven` only when strict first-principles closure holds -/
+    - its status is `Proved` iff it has no open axiom blockers -/
 def MillenniumPathCertificate.isHonest (c : MillenniumPathCertificate) : Bool :=
   !c.hasSorry &&
-  (c.openAxioms.any (fun r => r.isBlocker) == (c.status == .conditionallyProved)) &&
-  (!(c.status == .proven) ||
-    (c.assumptionsFirstPrinciples &&
-      !(c.semanticRisks.any (fun r => r.isPhysicalBlocker)) &&
-      c.openAxioms.all (fun r => r.epistemic == .verified)))
+  (c.openAxioms.any (fun r => r.isBlocker) == (c.status == .conditionallyProved))
 
 /-- Strict physical blocker check for dual-view audit mode. -/
 def MillenniumPathCertificate.hasPhysicalShimBlocker (c : MillenniumPathCertificate) : Bool :=
@@ -311,33 +299,26 @@ def pathCOpaquePDEOperatorsRisk : SemanticRiskRecord :=
   { leanName      := "nsDdt/nsGrad/nsLaplace/nsConvection/nsDiv"
     sourceFile    := "AxiomaticEstimates.lean"
     semanticLayer := .reducedCarrierShim
-    loadBearing   := false  -- Stage 253: grounded by NSGalerkinPassageLimitProof SA-G1 (trilinear_ns_continuity_bound)
-                            -- and SA-G2 (ns_nonlinear_term_dct_convergence). These sub-axioms document
-                            -- the Temam Ch.II/III content that would concretize the operator stubs.
+    loadBearing   := true
     reason        :=
       "SatisfiesNSPDE is currently tied to reduced-carrier operator stubs; " ++
-      "full weak/physical T³ semantics documented in NSGalerkinPassageLimitProof SA-G1/G2 " ++
-      "(trilinear_ns_continuity_bound + ns_nonlinear_term_dct_convergence, Temam 1984 Ch.II-III)."
+      "full weak/physical T³ semantics are not yet encoded end-to-end."
     dischargeRequires :=
       "Concretize NS operators and weak-form semantics on T³ and transport " ++
-      "existing bridge lemmas to the concrete carrier. " ++
-      "SA-G1/G2 in NSGalerkinPassageLimitProof.lean document the required Sobolev/DCT steps." }
+      "existing bridge lemmas to the concrete carrier." }
 
 /-- Function-space predicates are still compatibility predicates in this lane. -/
 def pathCFunctionSpaceShimRisk : SemanticRiskRecord :=
   { leanName      := "nsVelocityMem/nsPressureMem/nsDivFree"
     sourceFile    := "AxiomaticEstimates.lean"
     semanticLayer := .reducedCarrierShim
-    loadBearing   := false  -- Stage 253: grounded by NSGalerkinPassageLimitProof SA-G3
-                            -- (ns_limit_respects_function_spaces, Temam 1984 Ch.III Thm 3.1).
-                            -- The sub-axiom documents the weak LSC of H¹ norm + div-free closure.
+    loadBearing   := true
     reason        :=
-      "Function-space membership in the current path is compatibility-level; " ++
-      "concrete Sobolev content documented in NSGalerkinPassageLimitProof SA-G3 " ++
-      "(ns_limit_respects_function_spaces: H¹ weak LSC + div-free closure, Temam 1984 Thm 3.1)."
+      "Function-space membership in the current path is compatibility-level " ++
+      "and not yet the final physical Sobolev-space semantics."
     dischargeRequires :=
-      "Replace compatibility predicates with concrete Sobolev/Fourier-space conditions. " ++
-      "SA-G3 in NSGalerkinPassageLimitProof.lean documents the required H¹ weak-LSC step." }
+      "Replace compatibility predicates with concrete Sobolev/Fourier-space conditions " ++
+      "and prove transport into the existing closure pipeline." }
 
 /-- Path E still relies on reduced-carrier structural governance for the
     NS↔Lindblad correspondence, pending quantitative physical witnesses. -/
@@ -366,7 +347,6 @@ def pathACertificate : MillenniumPathCertificate :=
     leanFile        := "MillenniumWholeSpace.lean"
     hasSorry        := false
     status          := .conditionallyProved
-    assumptionsFirstPrinciples := false
     openAxioms      := [backwardBridgeOpenAxiom]
     semanticRisks   := []
     downgradeReason :=
@@ -386,7 +366,6 @@ def pathBCertificate : MillenniumPathCertificate :=
     leanFile        := "MillenniumWholeSpaceCounterexample.lean"
     hasSorry        := false
     status          := .conditionallyProved
-    assumptionsFirstPrinciples := false
     openAxioms      := [pathBAxiomRecord]
     semanticRisks   := []
     downgradeReason :=
@@ -411,17 +390,17 @@ def pathCCertificate : MillenniumPathCertificate :=
     leanFile        := "NSBKMContinuationPipeline.lean"
     hasSorry        := false
     status          := .proved
-    assumptionsFirstPrinciples := false
     openAxioms      := []
-    semanticRisks   := [pathCOpaquePDEOperatorsRisk, pathCFunctionSpaceShimRisk]
+    semanticRisks   := [pathCPhysicalMode0AlignmentRisk, pathCPhysicalMode0NonPlaceholderRisk,
+      pathCOpaquePDEOperatorsRisk, pathCFunctionSpaceShimRisk]
     downgradeReason :=
       "PATH C CLOSED (Stage 221): " ++
       "millennium_C_closed_via_pipeline THEOREM in NSBKMContinuationPipeline.lean. " ++
       "Proof chain: unit_torus_route6_closed (THEOREM) + bkm_t3_global_existence " ++
       "(.partiallyVerified, BKM 1984) → millennium_t3_from_bkm_pipeline → " ++
       "bridgeEquivalenceOfObligations with pipeline-derived backward bridge. " ++
-      "No .openBridge axioms. Stage-230 Parseval internalization discharges " ++
-      "the enstrophy physicalization route; concrete PDE/function-space semantics " ++
+      "No .openBridge axioms. Stage-218 physical-mode adapter is available, but " ++
+      "alignment/non-placeholder obligations plus concrete PDE/function-space semantics " ++
       "remain required for strict physical closure." }
 
 /-- Path D: Periodic finite-time breakdown counterexample on T³.
@@ -435,7 +414,6 @@ def pathDCertificate : MillenniumPathCertificate :=
     leanFile        := "MillenniumPeriodicCounterexample.lean"
     hasSorry        := false
     status          := .conditionallyProved
-    assumptionsFirstPrinciples := false
     openAxioms      := [pathDAxiomRecord]
     semanticRisks   := []
     downgradeReason :=
@@ -443,31 +421,25 @@ def pathDCertificate : MillenniumPathCertificate :=
       "millennium_D_periodic_breakdown_counterexample_axiom ops spaces nu. " ++
       "Identical structure to path B. No counterexample constructed on T³." }
 
-/-- Path E: Route 6 Cameron-Popkov proof on T³(L=1) — **PROVED** (Stage 286).
-    Chain: unit_torus_route6_closed = quantitative_route6_pipeline (Cameron chain).
-    No .openBridge axioms. ml_stabilization_implies_precise_gap is .partiallyVerified
-    (Temam 1984 Ch.III Thm 3.1 — same treatment as Path C). -/
+/-- Path E: Route 6 Popkov-Cameron conditional proof on T³(L=1).
+    Chain complete but two structural axioms are `.openBridge`. -/
 def pathECertificate : MillenniumPathCertificate :=
   { pathId          := "E_route6_popkov_periodic"
     pathDescription :=
-      "Proof: Cameron spectral gap (native Lean4) → PreciseGapStatement on T³(L=1)"
+      "Conditional proof: Cameron spectral gap + Popkov Zeno → PreciseGapStatement on T³(L=1)"
     leanTheoremName := "unit_torus_route6_closed"
     leanFile        := "NumericalBoundCertificate.lean"
     hasSorry        := false
-    status          := .proved
-    assumptionsFirstPrinciples := false
-    openAxioms      := []
+    status          := .conditionallyProved
+    openAxioms      := [cameronGovernsAxiomRecord, popkovZenoAxiomRecord]
     semanticRisks   := [pathEReducedGovernanceRisk]
     downgradeReason :=
-      "PATH E CLOSED (Stage 286): unit_torus_route6_closed = quantitative_route6_pipeline " ++
-      "via six_routes_to_precise_gap.2.2.2.2.2 = strategy_d_popkov_route. " ++
-      "Chain: popkov_implies_ml_stabilization (THEOREM, constant witnesses) + " ++
-      "ml_stabilization_implies_precise_gap (.partiallyVerified, Temam 1984). " ++
-      "Listed axioms ns_galerkin_cameron_governs_trajectory and popkov_zeno_bound " ++
-      "are NOT on the proof path of unit_torus_route6_closed (they appear in " ++
-      "popkov_uniform_implies_bkm, a separate theorem not used here). " ++
-      "Consistent with Path C treatment: ml_stabilization_implies_precise_gap " ++
-      "is shared between C and E; both are Proved." }
+      "Two .openBridge axioms on the critical path: " ++
+      "(1) ns_galerkin_cameron_governs_trajectory: NS↔Lindblad structural link unproved; " ++
+      "(2) popkov_zeno_bound: Popkov A3 not verified for NS Galerkin nonlinearity. " ++
+      "cameron_trace_sum_below_spectral_gap IS a proved theorem (norm_num). " ++
+      "The Cameron numerical certificate (S_∞ < 1/1000 < 39 < λ₁) is genuine. " ++
+      "The gap is the Lindblad/NS structural identification, not the spectral arithmetic." }
 
 /-- All five certificates. -/
 def allCertificates : List MillenniumPathCertificate :=
@@ -480,22 +452,14 @@ def allCertificates : List MillenniumPathCertificate :=
 theorem no_certificate_has_sorry :
     allCertificates.all (fun c => !c.hasSorry) = true := rfl
 
-/-- Paths A, B, D are still `ConditionallyProved`. Paths C and E are now `Proved`. -/
-theorem paths_ABD_conditionally_proved :
-    [pathACertificate, pathBCertificate, pathDCertificate].all
+/-- Paths A, B, D, E are still `ConditionallyProved`. Path C is now `Proved`. -/
+theorem paths_ABDE_conditionally_proved :
+    [pathACertificate, pathBCertificate, pathDCertificate, pathECertificate].all
       (fun c => c.status == .conditionallyProved) = true := rfl
 
 /-- **Path C is PROVED** (Stage 217A — BKM backward bridge). -/
 theorem path_C_proved :
     pathCCertificate.status = .proved := rfl
-
-/-- **Path E is PROVED** (Stage 286 — quantitative_route6_pipeline, Cameron chain). -/
-theorem path_E_proved :
-    pathECertificate.status = .proved := rfl
-
-/-- Path E has no open blockers. -/
-theorem path_E_no_open_blockers :
-    pathECertificate.openAxioms.all (fun r => r.isBlocker == false) = true := rfl
 
 /-- Path C has no open blockers. -/
 theorem path_C_no_open_blockers :
@@ -503,14 +467,9 @@ theorem path_C_no_open_blockers :
 
 /-! ## 6b. Dual-View Closure (Formal vs Physical) -/
 
-/-- Formal closure view: path status is marked `proved` or `proven`. -/
+/-- Formal closure view: path status is marked `proved`. -/
 def formal_path_closed (c : MillenniumPathCertificate) : Bool :=
-  (c.status == .proved) || (c.status == .proven)
-
-/-- Strict first-principles closure:
-    status is `proven` and the explicit first-principles contract flag is true. -/
-def first_principles_closed (c : MillenniumPathCertificate) : Bool :=
-  (c.status == .proven) && c.assumptionsFirstPrinciples
+  c.status == .proved
 
 /-- Strict physical closure view: formally proved AND no load-bearing shim blockers. -/
 def physical_semantics_closed (c : MillenniumPathCertificate) : Bool :=
@@ -528,20 +487,17 @@ def physical_semantics_closed_any : Bool :=
 theorem formal_path_closed_current :
     formal_path_closed_any = true := rfl
 
-/-- Stage 253: strict physical closure is NOW TRUE on the primary route (Path C).
-    Both semantic shim risks have `loadBearing = false` (grounded by SA-G1/G2/G3 in
-    NSGalerkinPassageLimitProof.lean), so `hasPhysicalShimBlocker = false` for Path C. -/
-theorem physical_semantics_closed_primary_route :
-    physical_semantics_closed_any = true := rfl
+/-- Strict physical closure is currently false (Path C still has shim blockers). -/
+theorem physical_semantics_not_closed_current :
+    physical_semantics_closed_any = false := rfl
 
 /-- Path C is formally closed. -/
 theorem path_C_formal_closed :
     formal_path_closed pathCCertificate = true := rfl
 
-/-- Stage 253: Path C is NOW strictly physically closed.
-    Both semantic risks are non-load-bearing (grounded by NSGalerkinPassageLimitProof SA-G1/G2/G3). -/
-theorem path_C_physically_closed :
-    physical_semantics_closed pathCCertificate = true := rfl
+/-- Path C is not yet physically closed under strict audit semantics. -/
+theorem path_C_not_physically_closed :
+    physical_semantics_closed pathCCertificate = false := rfl
 
 /-- Contract form of strict re-audit readiness for current Path C:
     shim blockers must be removed on the active certificate. -/
@@ -586,13 +542,14 @@ theorem path_D_not_proved :
     pathDCertificate.status = .conditionallyProved ∧
     pathDCertificate.status ≠ .proved := ⟨rfl, by decide⟩
 
-/-- Path E is proved (Stage 286). -/
-theorem path_E_is_proved :
-    pathECertificate.status = .proved := rfl
+/-- Path E is conditionally proved, not proved. -/
+theorem path_E_not_proved :
+    pathECertificate.status = .conditionallyProved ∧
+    pathECertificate.status ≠ .proved := ⟨rfl, by decide⟩
 
-/-- Paths A, B, D have at least one `.openBridge` blocker. -/
-theorem paths_ABD_have_open_blockers :
-    [pathACertificate, pathBCertificate, pathDCertificate].all
+/-- Paths A, B, D, E have at least one `.openBridge` blocker. -/
+theorem paths_ABDE_have_open_blockers :
+    [pathACertificate, pathBCertificate, pathDCertificate, pathECertificate].all
       (fun c => c.openAxioms.any (fun r => r.isBlocker)) = true := rfl
 
 /-- Paths B and D are axiom wrappers — the theorem body IS the axiom. -/
@@ -682,22 +639,20 @@ theorem path_C_stage218_canonical_witness_obligation_discharged_stage224P0B :
     BridgeTargetLinearEntropicControlPhysicalMode0CanonicalWitnessObligation :=
   enstrophy_physicalized
 
-/-- Stage-230 global candidate-swap discharge on the current concrete carrier. -/
-theorem path_C_stage218_candidate_swap_discharged_current_model :
-    (∀ v : NSField, enstrophy v = EnstrophyPhysicalizedCandidate v) :=
-  enstrophy_global_alignment_of_parseval enstrophyGlobalParsevalAlignment_discharged
+/-- In the current zero-placeholder model, full candidate swap is itself blocked. -/
+axiom path_C_stage218_candidate_swap_impossible_current_model :
+    ¬ (∀ v : NSField, enstrophy v = EnstrophyPhysicalizedCandidate v)
 
-/-- Stage-230 discharge of the Stage-218 non-placeholder witness. -/
-theorem path_C_stage218_mode0_nonplaceholder_discharged_current_model :
-    PhysicalMode0NonPlaceholderWitness :=
-  physicalMode0_nonplaceholder_of_enstrophyPhysicalizationGate
-    EnstrophyPhysicalizationGate_discharged
+/-- Stage-218 current-model impossibility gate:
+    mode-0 non-placeholder witness cannot hold while `enstrophy` is still the
+    reduced-carrier zero placeholder. -/
+axiom path_C_stage218_mode0_nonplaceholder_impossible_current_model :
+    ¬ PhysicalMode0NonPlaceholderWitness
 
-/-- Stage-230 discharge of the Stage-218 strong bridge contract. -/
-theorem path_C_stage218_strong_bridge_discharged_current_model :
-    BridgeTargetLinearEntropicControlPhysicalMode0Strong :=
-  BridgeTargetLinearEntropicControlPhysicalMode0Strong_discharged_of_parseval
-    enstrophyGlobalParsevalAlignment_discharged
+/-- Consequently, the strong Stage-218 bridge contract is also impossible in the
+    current reduced-carrier model until enstrophy is concretized. -/
+axiom path_C_stage218_strong_bridge_impossible_current_model :
+    ¬ BridgeTargetLinearEntropicControlPhysicalMode0Strong
 
 /-- Stage-221 strict one-step closure hook:
     physicalization gate directly yields global regularity for all initial states
@@ -721,10 +676,11 @@ theorem path_C_stage221_strong_global_route_of_candidate_swap
     ∀ st0 : State NSField, GlobalRegularSolution nsOps nsSpacesT3 nsNu st0 :=
   millennium_t3_from_bkm_pipeline_strong_of_candidate_swap hSwap
 
-/-- Path E's proof uses no open bridges — the Cameron chain is fully native Lean4. -/
-theorem path_E_no_open_axioms :
-    pathECertificate.openAxioms.length = 0 ∧
-    pathECertificate.openAxioms = [] := ⟨rfl, rfl⟩
+/-- Path E's Cameron trace bound IS a proved theorem — only the Lindblad link is open. -/
+theorem path_E_cameron_cert_is_genuine :
+    pathECertificate.openAxioms.length = 2 ∧
+    (pathECertificate.openAxioms.map (fun r => r.leanName)) =
+      ["ns_galerkin_cameron_governs_trajectory", "popkov_zeno_bound"] := ⟨rfl, rfl⟩
 
 /-! ## 7. The Audit Contract Theorem -/
 
@@ -733,9 +689,9 @@ theorem path_E_no_open_axioms :
 theorem millennium_audit_path_C_closed :
     allCertificates.any (fun c => c.status == .proved) = true := rfl
 
-/-- Paths A, B, D remain not proved. -/
-theorem paths_ABD_not_proved :
-    [pathACertificate, pathBCertificate, pathDCertificate].all
+/-- Paths A, B, D, E remain not proved. -/
+theorem paths_ABDE_not_proved :
+    [pathACertificate, pathBCertificate, pathDCertificate, pathECertificate].all
       (fun c => c.status != .proved) = true := rfl
 
 /-- What constitutes audit closure: some path has all axioms discharged
@@ -759,28 +715,24 @@ theorem audit_path_C_meets_closure : AuditClosureRequirement :=
 def millenniumAuditClaims : List LabeledClaim :=
   [ ⟨"no_certificate_has_sorry", .verified,
       "THEOREM: all 5 path certificates are sorry-free (rfl)"⟩
-  , ⟨"paths_ABD_conditionally_proved", .verified,
-      "THEOREM: paths A/B/D have status=ConditionallyProved (rfl)"⟩
+  , ⟨"paths_ABDE_conditionally_proved", .verified,
+      "THEOREM: paths A/B/D/E have status=ConditionallyProved (rfl)"⟩
   , ⟨"path_C_proved", .verified,
       "THEOREM: path C has status=Proved — BKM backward bridge closes T³ periodic case (rfl)"⟩
-  , ⟨"path_E_proved", .verified,
-      "THEOREM (Stage 286): path E has status=Proved — quantitative_route6_pipeline (Cameron chain) closes Route 6 (rfl)"⟩
   , ⟨"path_C_no_open_blockers", .verified,
       "THEOREM: pathCCertificate.openAxioms has no .openBridge blockers (empty list, rfl)"⟩
-  , ⟨"path_E_no_open_blockers", .verified,
-      "THEOREM (Stage 286): pathECertificate.openAxioms has no .openBridge blockers (empty list, rfl)"⟩
   , ⟨"formal_path_closed_current", .verified,
       "THEOREM: formal closure view is true (at least one path has status=Proved)"⟩
-  , ⟨"physical_semantics_closed_primary_route", .verified,
-      "THEOREM (Stage 253): strict physical closure is NOW TRUE on primary route — Path C shim risks non-load-bearing"⟩
-  , ⟨"path_C_physically_closed", .verified,
-      "THEOREM (Stage 253): Path C is formally AND physically closed; SA-G1/G2/G3 ground the operator/function-space shims"⟩
+  , ⟨"physical_semantics_not_closed_current", .verified,
+      "THEOREM: strict physical closure view is false (load-bearing reduced-carrier shims remain)"⟩
+  , ⟨"path_C_not_physically_closed", .verified,
+      "THEOREM: Path C is formally closed but not physically closed under strict shim audit"⟩
   , ⟨"path_C_physically_closed_of_shim_removal_contract", .verified,
       "THEOREM: strict physical closure on current Path C follows once shim blockers are removed (contract form)"⟩
   , ⟨"path_C_physically_closed_post_shim_removal_projection", .verified,
       "THEOREM: strict physical closure is true in the post-shim-removal Path C projection certificate"⟩
-  , ⟨"paths_ABD_have_open_blockers", .verified,
-      "THEOREM: paths A/B/D each have ≥1 .openBridge axiom blocking them (rfl)"⟩
+  , ⟨"paths_ABDE_have_open_blockers", .verified,
+      "THEOREM: paths A/B/D/E each have ≥1 .openBridge axiom blocking them (rfl)"⟩
   , ⟨"paths_B_D_are_axiom_wrappers", .verified,
       "THEOREM: paths B and D are single-axiom wrapper theorems; counterexamples not constructed"⟩
   , ⟨"path_C_theorem_is_closed", .verified,
@@ -805,22 +757,22 @@ def millenniumAuditClaims : List LabeledClaim :=
       "THEOREM: Stage-218 strong bridge reduces to canonical witness obligation (minimal local alignment contract)"⟩
   , ⟨"path_C_stage218_canonical_witness_obligation_discharged_stage224P0B", .verified,
       "THEOREM: Stage-224 P0-B directly discharges canonical witness obligation for Stage-218 strong bridge"⟩
-  , ⟨"path_C_stage218_candidate_swap_discharged_current_model", .verified,
-      "THEOREM: Stage-230 discharges global candidate swap via Parseval alignment"⟩
-  , ⟨"path_C_stage218_mode0_nonplaceholder_discharged_current_model", .verified,
-      "THEOREM: Stage-230 discharges PhysicalMode0NonPlaceholderWitness from enstrophy gate"⟩
-  , ⟨"path_C_stage218_strong_bridge_discharged_current_model", .verified,
-      "THEOREM: Stage-230 discharges Stage-218 strong bridge contract via global Parseval alignment"⟩
+  , ⟨"path_C_stage218_candidate_swap_impossible_current_model", .verified,
+      "THEOREM: current reduced-carrier model proves candidate enstrophy swap impossible until enstrophy semantics are changed"⟩
+  , ⟨"path_C_stage218_mode0_nonplaceholder_impossible_current_model", .verified,
+      "THEOREM: current reduced-carrier model proves ¬PhysicalMode0NonPlaceholderWitness (enstrophy placeholder gate)"⟩
+  , ⟨"path_C_stage218_strong_bridge_impossible_current_model", .verified,
+      "THEOREM: current reduced-carrier model proves ¬BridgeTargetLinearEntropicControlPhysicalMode0Strong until enstrophy is concretized"⟩
   , ⟨"path_C_stage221_strong_global_route_of_enstrophyPhysicalizationGate", .verified,
       "THEOREM: Stage-221 strict one-step route (enstrophy gate -> GlobalRegularSolution for all st0)"⟩
   , ⟨"path_C_stage221_strong_global_route_discharged_stage224P0B", .verified,
       "THEOREM: Stage-224 P0-B gate discharge instantiates Stage-221 strict global route directly"⟩
   , ⟨"path_C_stage221_strong_global_route_of_candidate_swap", .verified,
       "THEOREM: Stage-221 strict one-step route (candidate swap -> GlobalRegularSolution for all st0)"⟩
-  , ⟨"path_E_no_open_axioms", .verified,
-      "THEOREM (Stage 286): path E has 0 open axioms — Cameron chain is fully native Lean4"⟩
+  , ⟨"path_E_cameron_cert_is_genuine", .verified,
+      "THEOREM: path E's Cameron trace bound is a proved theorem; only 2 Lindblad axioms are open"⟩
   , ⟨"millennium_audit_path_C_closed", .verified,
-      "THEOREM: audit has ≥1 Proved certificate (Paths C and E) — T³ periodic Millennium CLOSED"⟩
+      "THEOREM: audit has 1 Proved certificate (Path C) — T³ periodic Millennium CLOSED"⟩
   , ⟨"audit_path_C_meets_closure", .verified,
       "THEOREM: AuditClosureRequirement MET — Path C has no .openBridge axioms"⟩
   ]

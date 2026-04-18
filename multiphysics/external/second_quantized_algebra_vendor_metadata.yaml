@@ -1,0 +1,157 @@
+name: second_quantized_algebra
+upstream_url: https://github.com/qojulia/SecondQuantizedAlgebra.jl.git
+upstream_ref: main
+pip_package: null            # Julia package — not pip installable
+import_method: julia_package # installed via `julia -e 'using Pkg; Pkg.add("SecondQuantizedAlgebra")'`
+role: symbolic_quantum_algebra
+license: MIT
+version_stable: "0.4.4"
+julia_uuid: "f7aa4685-e143-4cb6-a7f3-073579757907"
+stars: ~100
+language: Julia 1.10+
+
+overview: |
+  SecondQuantizedAlgebra.jl (part of the qojulia ecosystem) provides symbolic
+  second-quantized quantum operator algebra extracted from QuantumCumulants.jl.
+
+  Core capabilities:
+    - Bosonic Fock spaces: Create/Destroy operators, automatic [a, a†] = 1
+    - N-level atomic systems: Transition operators |i⟩⟨j| with σ_{ij}
+    - Spin spaces: Pauli operators (σx, σy, σz) and collective Sx/Sy/Sz
+    - Algebraic simplification, normal ordering, cluster expansion
+    - Symbolic averaging: ⟨O⟩ expectation values as symbolic expressions
+    - Double sums over indexed operators (Σᵢ aᵢ†aᵢ patterns)
+    - LaTeX output via Latexify.jl
+
+  Relationship to QuTiP maturity model:
+    QuTiP            → numerical simulation (density matrices, time evolution)
+    SecondQuantizedAlgebra → symbolic pre-processing (commutators, EOM derivation)
+
+  The two are complementary: SecondQuantizedAlgebra derives symbolic equations
+  of motion that feed into QuTiP (or QuantumOptics.jl) for numerical integration.
+
+  CAT/EPT coupling:
+    commutator_complexity = Σ_k |{(i,j) : |[H, O_k]_{ij}| > ε}|
+    lambda_eff = lambda_rate · (1 + log(1 + complexity / d)) + ε_corr · S_vN
+    delta_s_i  = lambda_eff · dt · (1 + 0.05·(d - 2))
+
+  Supported system types:
+    fock            — pure bosonic cavity (H = ωa†a)
+    nlevel          — N-level atom (ladder transitions)
+    spin            — collective N×spin-1/2 (Dicke model)
+    jaynes_cummings — single atom + cavity (default)
+    tavis_cummings  — N atoms + cavity (superradiance)
+
+architecture_summary:
+  package_structure:
+    SecondQuantizedAlgebra.jl:  "Main module exports"
+    fock.jl:                    "FockSpace, Create, Destroy operators"
+    nlevel.jl:                  "NLevelSpace, Transition operators"
+    spin.jl:                    "SpinSpace, PauliSpace, Sx/Sy/Sz"
+    hilbertspace.jl:            "ProductSpace tensor products"
+    commutator.jl:              "commutator(A,B) = AB - BA with auto-simplify"
+    average.jl:                 "average(O), undo_average — expectation value algebra"
+    qnumber.jl:                 "QNumber, QSym, QMul, QAdd base types"
+    indexing.jl:                "IndexedOperator, DoubleSum summations (35KB)"
+    cluster.jl:                 "Cluster expansion for repeated subsystems"
+    phase_space.jl:             "Wigner/Husimi quasi-probability distributions"
+
+  key_types:
+    FockSpace:            "Bosonic Hilbert space declaration"
+    NLevelSpace:          "N-level atomic Hilbert space"
+    SpinSpace:            "N spin-1/2 particles"
+    ProductSpace:         "⊗ tensor product spaces"
+    Destroy/Create:       "a, a† bosonic ladder operators"
+    Transition:           "σ_{ij} atomic transition operators"
+    Pauli/Spin:           "σx,σy,σz / Sx,Sy,Sz operators"
+    QNumber:              "Base type for all quantum operator expressions"
+    AvgSym:               "Averaged operator ⟨O⟩ symbolic placeholder"
+
+  key_functions:
+    commutator(A, B):     "[A, B] = AB - BA with automatic simplification"
+    simplify(expr):       "Algebraic simplification via SymbolicUtils"
+    normalorder(expr):    "Normal ordering: move a† left of a"
+    average(expr):        "Replace O → ⟨O⟩ symbolic average"
+    substitute(expr, D):  "Symbolic substitution mapping"
+
+  dependencies:
+    SymbolicUtils:        ">=3.6.0  — core symbolic expression engine"
+    Symbolics:            ">=6.0    — extended symbolic math"
+    Combinatorics:        ">=1.0    — combinatorial utilities"
+    QuantumOpticsBase:    ">=0.4    — interface compatibility"
+    Latexify:             "optional — LaTeX rendering"
+    JSON:                 ">=0.21   — required for CAT/EPT subprocess bridge"
+
+  ci_quality:
+    tests:                "15 test files (test_fock.jl, test_nlevel.jl, test_spin.jl ...)"
+    ci_workflows:         "Tests + Docs + Format + CompatHelper + Downstream + Benchmarks"
+    code_style:           "Blue formatting (enforced)"
+    qa_tools:             "Aqua.jl (type stability), JET.jl (static analysis)"
+    coverage:             "Codecov tracking"
+    julia_versions:       "LTS + latest (v1)"
+
+catept_integration:
+  bridge_file: "multiphysics/integration/second_quantized_algebra_bridge.py"
+  native_backend: "multiphysics/core/second_quantized_algebra_native_backend.py"
+  ir_node: "SecondQuantizedAlgebraNode (ir.py)"
+  command_type: "SECOND_QUANTIZED_ALGEBRA (compat.py)"
+  registry_ids:
+    - "second_quantized_algebra"       # Python analytical mode
+    - "second_quantized_algebra_native" # Julia symbolic mode
+  example_targets:
+    - "multiphysics/qf_qutip_dsl/examples/second_quantized_algebra_sample_target.json"
+    - "multiphysics/qf_qutip_dsl/examples/second_quantized_algebra_tavis_cummings_target.json"
+
+integration_phases:
+  phase1_stub:
+    status: complete
+    description: |
+      DONE: Bridge + IR node + CommandType + compiler dispatch + registry (2 entries)
+      DONE: Python analytical Lindblad solver (fock/nlevel/spin/JC/TC)
+      DONE: Commutator complexity via matrix algebra
+      DONE: Von Neumann entropy from steady-state density matrix
+      DONE: Symbolic EOM strings (quantum optical Bloch equations)
+      DONE: Mock native backend (CATEPT_SQA_JULIA_PROVIDER=mock)
+      DONE: Validator with --allow-missing-julia-pass
+      DONE: 9 tests covering all system types, DTL contract, mock backend, pipeline
+      DONE: 2 example JSON targets (JC + Tavis-Cummings)
+
+  phase2_julia_subprocess:
+    effort_weeks: 1-2
+    risk: low
+    description: |
+      Julia script generation + subprocess call (CATEPT_SQA_JULIA_BINARY).
+      SecondQuantizedAlgebra.jl symbolic commutator → true term count as JSON.
+      Requires: julia>=1.10, Pkg.add("SecondQuantizedAlgebra"), Pkg.add("JSON")
+      No changes to bridge API; symbolic term counts replace stub counts.
+
+  phase3_juliacall:
+    effort_weeks: 2-3
+    risk: medium
+    description: |
+      In-process Julia via juliacall (pip install juliacall).
+      Eliminates subprocess JSON round-trip overhead.
+      Enables: symbolic LaTeX EOM export, cluster expansion, indexed operators.
+
+  phase4_multistage_pipeline:
+    effort_weeks: 3-4
+    risk: medium
+    description: |
+      SecondQuantizedAlgebra → QuantumOptics.jl numerical integration pipeline.
+      Symbolic EOM → QuantumCumulants.jl → time series → tau_ent(t).
+      Multi-stage target: sqa_qo_jl_pipeline_target.json
+
+dtl_mapping:
+  tau_ent_next: "tau_ent_0 + lambda_eff * dt * (1 + 0.05*(d-2))"
+  delta_s_i:    "lambda_eff * dt * (1 + 0.05*(d-2))"
+  lambda_eff:   "lambda_rate * (1 + log1p(complexity/d)) + entropy_correction * S_vN"
+  backend_used: "second_quantized_algebra_python | second_quantized_algebra_julia | second_quantized_algebra_mock"
+  native_hook_status: "native_ok | julia_unavailable"
+
+julia_installation:
+  quick_start: |
+    julia -e 'using Pkg; Pkg.add("SecondQuantizedAlgebra"); Pkg.add("JSON")'
+    export CATEPT_SQA_JULIA_BINARY=$(which julia)
+    python3 tools/multiphysics/validate_second_quantized_algebra.py
+  verify: |
+    julia -e 'using SecondQuantizedAlgebra; h = FockSpace(:c); a = Destroy(h, :a); println(commutator(a'"'"'*a, a))'

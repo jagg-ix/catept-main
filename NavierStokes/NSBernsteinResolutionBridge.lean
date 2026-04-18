@@ -126,7 +126,7 @@ theorem bkm_physical_le_bernstein_times_enstrophy
 
 /-- **EPT is nondecreasing**: τ_ent(s) ≤ τ_ent(t) for 0 ≤ s ≤ t. -/
 theorem entropicProperTime_mono (traj : Trajectory NSField) (s t : Rat)
-    (_hs : 0 ≤ s) (hst : s ≤ t) :
+    (hs : 0 ≤ s) (hst : s ≤ t) :
     entropicProperTime traj s ≤ entropicProperTime traj t := by
   unfold entropicProperTime integratedEnstrophy
   apply mul_le_mul_of_nonneg_left
@@ -157,9 +157,9 @@ theorem enstrophy_gronwall_uniform
     The integratedEnstrophy is a finite Riemann sum — hence M is finite. -/
 theorem bkm_physical_integral_converges
     (traj : Trajectory NSField)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (T    : Rat) (_hT : 0 < T) :
+    (hNS  : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS  : RespectsFunctionSpaces nsSpacesR3 traj)
+    (T    : Rat) (hT : 0 < T) :
     ∃ M : Rat, bkmVorticityIntegralPhysical traj T ≤ M :=
   ⟨bernsteinConst *
      collapseMaxWavenumber * collapseMaxWavenumber * collapseMaxWavenumber *

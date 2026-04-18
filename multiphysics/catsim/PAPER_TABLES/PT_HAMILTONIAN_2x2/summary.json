@@ -1,0 +1,15 @@
+{
+  "lambda_ent_best_inv_s": 370370370370.3703,
+  "b_inv_s": 185185185185.18515,
+  "count_S": 19,
+  "count_unbroken": 19,
+  "worst_cond_eta": 1.1659793384656365,
+  "worst_pseudoherm_resid": 0.027621961943132718,
+  "notes": [
+    "This is a reduced 2x2 PT-like diagnostic model.",
+    "b is set from fitted coherence decay (lambda_ent/2).",
+    "c is set by c=pi/(|S| seconds) to tie coupling timescale to the delay.",
+    "Metric eta is constructed as eta=(V^{-1})^H (V^{-1}).",
+    "C is exported only in the unbroken region |b|<|c|."
+  ]
+}

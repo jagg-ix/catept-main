@@ -1,5 +1,4 @@
 import NavierStokes.NSGalerkinConvectionInterface
-import NavierStokes.NSGalerkinConvDef
 
 /-!
 # Stage 163 — NSGalerkinConvectionBridge: Trilinear B + Energy Cancellation
@@ -8,20 +7,21 @@ Introduces the Galerkin convection operator and its key energy identity.
 
 ## Three new items
 
-1. **`galerkinConvection`** — concrete Galerkin-truncated bilinear operator
+1. **`galerkinConvection`** — abstract Galerkin-truncated bilinear operator
    `(basis : GalerkinBasis N) → CoeffC N → CoeffC N → CoeffC N`.
-   Defined at the interface layer from the triadic kernel in `GalerkinBasis`.
+   Left abstract at the interface layer to avoid dependence on a concrete
+   wavevector index map.
 
-2. **`B_energy_cancel`** — the trilinear antisymmetry theorem:
+2. **`B_energy_cancel`** — the trilinear antisymmetry axiom:
    `∑ᵢ Re(ūᵢ · (B(u,u))ᵢ) = 0`.
-   Transported from the concrete-def layer (`NSGalerkinConvDef`).
+   No hidden `rfl` hypothesis; `basis` is explicit.
 
 3. **`GalerkinBasis N`** — now imported from `NSGalerkinConvectionCore`
    (shared across bridge and definitional modules).
 
 ## Derived energy balance
 
-With the concrete bridge in place, the *complete* kinetic energy rate decomposes as:
+With the axioms in place, the *complete* kinetic energy rate decomposes as:
 
 ```
 d/dt (½‖u‖²) = Re⟨B(u,u), u⟩ + Re⟨viscous, u⟩
@@ -33,10 +33,16 @@ The first term vanishes by `B_energy_cancel`; the second is computed by
 `viscous_energy_production` (a pure algebraic identity, 0 axioms).
 `galerkin_energy_balance` assembles both into a single equality.
 
+## Epistemic status
+
+* `galerkinConvection` — `.openBridge` (concrete triadic sum not yet formalized)
+* `B_energy_cancel`    — `.partiallyVerified` (Temam 1984, Ch. II §1, Lemma 1.1;
+  follows from integration by parts + ∇·u = 0 on the torus)
+
 ## Net counts
 
-  - New axioms:   0
-  - New theorems: 5
+  - New axioms:   1  (B_energy_cancel; `galerkinConvection` lives in interface)
+  - New theorems: 4
   - sorry:        0
   - warnings:     0
 -/
@@ -73,10 +79,9 @@ theorem realInnerC_add_right (z w w' : CRat) :
     by skew-symmetry `b(u,v,w) = −b(u,w,v)` (integration by parts on T³ + ∇·u = 0),
     so `b(u,u,u) = 0`.
 
-    Discharged here by transport from the concrete conv-definition layer. -/
-theorem B_energy_cancel {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N) :
-    ∑ i : Fin N, realInnerC (u i) (galerkinConvection basis u u i) = 0 :=
-  NavierStokes.GalerkinConvDef.B_energy_cancel_from_def basis u
+    Epistemic status: `.partiallyVerified` (Temam 1984, Ch. II §1, Lemma 1.1). -/
+axiom B_energy_cancel {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N) :
+    ∑ i : Fin N, realInnerC (u i) (galerkinConvection basis u u i) = 0
 
 /-! ## Viscous damping -/
 
@@ -141,10 +146,10 @@ theorem galerkin_field_energy_balance (v : NSFieldGalerkinK) (ν : Rat) :
 
 def stage163Summary : String :=
   "Stage 163: NSGalerkinConvectionBridge — GalerkinBasis N (wvec + freq_le), " ++
-  "galerkinConvection (basis u v : CoeffC N) : CoeffC N (concrete interface def). " ++
-  "B_energy_cancel: ∑ Re(ū·(B(u,u))) = 0 (theorem via NSGalerkinConvDef transport). " ++
+  "galerkinConvection (basis u v : CoeffC N) : CoeffC N (.openBridge, Temam triadic sum). " ++
+  "B_energy_cancel: ∑ Re(ū·(B(u,u))) = 0 (.partiallyVerified, Temam 1984 Lemma II.1.1). " ++
   "viscousDamping + viscous_energy_production (0 axioms, ring). " ++
   "galerkin_energy_balance: ∑ Re(ū·(B+visc)) = -ν·enstrophyK (from B_cancel + visc). " ++
-  "+0 axioms, +5 theorems, 0 sorry."
+  "+2 axioms, +4 theorems, 0 sorry."
 
 end NavierStokes.GalerkinConvection

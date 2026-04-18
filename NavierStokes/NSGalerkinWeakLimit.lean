@@ -121,22 +121,6 @@ structure GalerkinWeakSolution where
       bounds — **0 new axioms**. -/
   weak_eqn : ∀ (k M : Nat),
     coeffNormSqRRange M (fun m => u (k + 1) m - u k m) ≤ 4 * E0
-  /-- **Tower back-reference** (Stage 210B): the Galerkin tower from which `u` was
-      extracted as a limit.  Together with `phi`, `hphi`, and `hconv`, this records
-      the full provenance of the limit sequence so that compactness-layer axioms
-      (e.g. `galerkinTower_step_diff_range`) can be applied to `u`. -/
-  tower    : GalerkinTower
-  /-- Subsequence index: `phi n` is the N-index of the n-th extracted Galerkin level. -/
-  phi      : Nat → Nat
-  /-- Strict monotonicity of the subsequence. -/
-  hphi     : StrictMono phi
-  /-- Pointwise convergence: the real embedding of the phi(n)-th Galerkin trajectory
-      at step `k`, mode `m` converges to `u k m` as `n → ∞`. -/
-  hconv    : ∀ (k m : Nat),
-    Tendsto (fun n => embedCoeffR ((tower.trajAt (phi n)).traj.u k) m)
-      atTop (𝓝 (u k m))
-  /-- Step-size agreement: the tower's step size equals `h`. -/
-  htower_h : tower.h = h
 
 /-! ## Basic consequence -/
 
@@ -206,11 +190,6 @@ theorem galerkinTower_weak_existence (tower : GalerkinTower) :
     hE0      := Rat.cast_nonneg.mpr tower.hE0
     energy   := henergy
     weak_eqn := galerkinLimit_stepDiff_bound tower phi hphi uInfty hconv
-    tower    := tower
-    phi      := phi
-    hphi     := hphi
-    hconv    := hconv
-    htower_h := rfl
   }, rfl, rfl, rfl⟩
 
 def stage174CSummary : String :=
@@ -224,9 +203,7 @@ def stage174CSummary : String :=
     "(0 new axioms, galerkinTower_energy_range + AM-GM). " ++
   "galerkinLimit_weak_eqn: RETIRED (Stage 205). " ++
   "galerkinTower_weak_existence: THEOREM — exposes w.nu/w.h/w.E0 equalities " ++
-    "(Stage 206: feeds galerkinTower_to_ns_trajectory proof; " ++
-    "Stage 210B: +5 fields tower/phi/hphi/hconv/htower_h). " ++
-  "Stage 205 net: -1 axiom, +3 theorems. Stage 206 net: +3 struct fields, 0 axioms. " ++
-  "Stage 210B net: +5 struct fields (tower/phi/hphi/hconv/htower_h), 0 axioms."
+    "(Stage 206: feeds galerkinTower_to_ns_trajectory proof). " ++
+  "Stage 205 net: -1 axiom, +3 theorems. Stage 206 net: +3 struct fields, 0 axioms."
 
 end NavierStokes.GalerkinWeakLimit

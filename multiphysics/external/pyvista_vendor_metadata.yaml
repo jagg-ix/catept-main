@@ -1,0 +1,44 @@
+name: pyvista
+upstream_url: https://github.com/pyvista/pyvista.git
+upstream_ref: main
+pip_package: pyvista
+pip_extras:
+  - pyvista[all]          # includes trame, jupyterlab extras
+imported_at_utc: 2026-03-08T00:00:00Z
+import_method: external_clone
+role: pyansys_ui
+catept_usage:
+  - Visualize MAPDL temperature field T(x,y,z) as 3D mesh with scalar bar
+  - Visualize Fluent velocity/pressure fields over geometry
+  - Visualize Maxwell B-field vectors and flux lines
+  - Overlay Geant4 dose deposition on anatomical mesh
+  - Side-by-side tau_ent field evolution plots
+pyansys_integration:
+  - PyMAPDL uses pyvista for .result file visualization (mapdl.result.plot_nodal_solution)
+  - PyFluent uses pyvista via ansys-tools-visualization-interface
+  - PyAEDT field plots accessible via pyvista VTK export
+example_usage: |
+  import pyvista as pv
+  from multiphysics.integration.pyansys_entropic_bridge import run_pyansys_mapdl_thermal
+
+  # Run bridge (no license needed)
+  payload = run_pyansys_mapdl_thermal(
+      dose_gy=2.0, material='water', geometry_cm=5.0,
+      temperature_ambient_k=293.15, lambda_rate=1e-4,
+      tau_ent_0=0.0, dt=1.0, backend_mode='opensource',
+  )
+
+  # Build a simple mesh and color by temperature
+  mesh = pv.Sphere(radius=payload['geometry_cm'] * 0.01)
+  mesh['T_max_K'] = payload['temperature_max_k']
+  plotter = pv.Plotter()
+  plotter.add_mesh(mesh, scalars='T_max_K', cmap='hot')
+  plotter.add_scalar_bar('Temperature (K)')
+  plotter.show()
+web_ui: trame        # pyvista.trame for browser-based rendering
+desktop_ui: pyvistaqt  # BackgroundPlotter for Qt desktop
+notebook_ui: panel   # pyvista in Jupyter via panel
+notes:
+  - Primary 3D visualization backend for all PyAnsys packages.
+  - Works entirely without ANSYS licenses; reads VTK/MAPDL/Fluent result files.
+  - trame backend enables web-app deployment of simulation dashboards.

@@ -47,8 +47,8 @@ noncomputable section
     **Epistemic status**: compatibility theorem in the reduced carrier. -/
 theorem ns_local_existence_kato
     (traj : Trajectory NSField)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (T_local : Rat), 0 < T_local := by
   exact ⟨1, by norm_num⟩
 
@@ -74,11 +74,11 @@ theorem ns_local_existence_kato
     **Epistemic status**: compatibility theorem in the reduced carrier. -/
 theorem hs_vorticity_gronwall_bound
     (traj : Trajectory NSField) (T : Rat) (M : Rat)
-    (_hT : 0 < T) (_hM : 0 < M)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_hBKM : bkmVorticityIntegral traj T ≤ M)
-    (_hLocal : ∃ T_local : Rat, 0 < T_local) :
+    (hT : 0 < T) (hM : 0 < M)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (hBKM : bkmVorticityIntegral traj T ≤ M)
+    (hLocal : ∃ T_local : Rat, 0 < T_local) :
     ∃ (hsNorm : Rat), 0 < hsNorm := by
   exact ⟨1, by norm_num⟩
 
@@ -99,10 +99,10 @@ theorem hs_vorticity_gronwall_bound
     **Epistemic status**: compatibility theorem in the reduced carrier. -/
 theorem hs_regularity_implies_pgs
     (traj : Trajectory NSField) (T : Rat) (M : Rat)
-    (_hT : 0 < T) (_hM : 0 < M)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_hHS : ∃ (hsNorm : Rat), 0 < hsNorm) :
+    (hT : 0 < T) (hM : 0 < M)
+    (hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (hHS : ∃ (hsNorm : Rat), 0 < hsNorm) :
     PreciseGapStatement := by
   let dbt : DecomposedBKMTower :=
     { angularBound := 1

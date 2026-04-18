@@ -589,7 +589,11 @@ theorem convStepH_increment_bound {N : Nat} (basis : GalerkinBasis N)
     simp only [coeffNormSq, coeffSub]
     simp_rw [convStepH_cayley_eq basis h u, CRat_smul_normSqC]
     rw [← Finset.mul_sum]
-    simp_rw [galerkinConvDef_is_galerkinConvection]
+    congr 1
+    apply Finset.sum_congr rfl; intro i _
+    exact congr_arg normSqC
+      (galerkinConvDef_is_galerkinConvection basis u
+        (fun j => convStepH basis h u j + u j) i).symm
   rw [hnorm_eq]
   calc (h / 2) ^ 2 * coeffNormSq (galerkinConvDef (standardTriadK basis) u
           (fun j => convStepH basis h u j + u j))
@@ -734,7 +738,7 @@ theorem convStepH_first_order_remainder_sq {N : Nat} (basis : GalerkinBasis N)
 
     **Net: 0 new axioms** (pure algebra from viscStep definition). -/
 theorem viscStep_first_order_remainder_sq {N : Nat} (basis : GalerkinBasis N)
-    (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (_hE₀ : 0 ≤ E₀)
+    (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (hE₀ : 0 ≤ E₀)
     (u : CoeffC N) (hu : coeffNormSq u ≤ E₀) :
     coeffNormSq (fun i =>
       viscStep basis ν h u i - u i -

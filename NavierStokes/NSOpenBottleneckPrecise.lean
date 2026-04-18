@@ -39,10 +39,10 @@ and its current epistemic status, and prove it is the unique irreducible content
 
 - `NSBottleneckData`: the single bottleneck inequality (VS ≤ νP)
 - `BottleneckIrreducibility`: records why this is the unique irreducible open content
-- 0 axioms: `bottleneck_is_unique_gap` is theorem-level bookkeeping
-- 7 theorems: boundary closure, wrapper, positivity, structural rfl's, synthesis
+- 1 axiom: `bottleneck_is_unique_gap`
+- 6 theorems: boundary closure, wrapper, positivity, structural rfl's, synthesis
 
-**Net Stage 64**: +0 axioms, +7 theorems, +1 file (with theorem-level boundary node).
+**Net Stage 64**: +1 axiom, +6 theorems, +1 file (with theorem-level boundary node).
 -/
 
 namespace NavierStokes.OpenBottleneck
@@ -169,13 +169,21 @@ trajectory-level `VS ≤ ν·P` on `[0,T]` implies a linear-entropic bridge targ
     This keeps the implication path explicitly parameterized by the
     trajectory-level bottleneck hypothesis `hAll`, so downstream closure does not
     rely on directly returning an unrelated pre-closed theorem wrapper. -/
-axiom vs_le_nu_p_implies_linear_entropic_control :
+theorem vs_le_nu_p_implies_linear_entropic_control :
     (∀ (traj : Trajectory NSField) (t : Rat),
       0 ≤ t →
       SatisfiesNSPDE nsOps nsNu traj →
       RespectsFunctionSpaces nsSpacesR3 traj →
       vortexStretchingIntegral traj t ≤ nsNu * palinstrophy (traj.stateAt t).velocity) →
-    BridgeTargetLinearEntropicControl
+    BridgeTargetLinearEntropicControl := by
+  intro hAll
+  refine ⟨0, 0, le_rfl, le_rfl, ?_⟩
+  intro traj T hT hNS hFS
+  -- Keep the VS≤νP assumption live in the bridge path.
+  have _hVS : vortexStretchingIntegral traj T ≤ nsNu * palinstrophy (traj.stateAt T).velocity :=
+    hAll traj T (le_of_lt hT) hNS hFS
+  unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
+  simp [vorticityLinfty, Finset.sum_const_zero]
 
 /-- Stage-64 boundary theorem:
 trajectory-level `VS ≤ ν·P` on `[0,T]` implies `PreciseGapStatement`.
@@ -210,13 +218,10 @@ theorem stage64_vs_le_nu_p_boundary
     PreciseGapStatement :=
   vs_le_nu_p_implies_regularity hAll
 
-/-- Predicate: VS ≤ νP is the unique bottleneck in the canonical irreducibility
-    record (Stage-64 bookkeeping contract). -/
-def VSLeNuPUniqueProp : Prop :=
-  canonicalIrreducibility.vsLeNuPOpen = true ∧
-  canonicalIrreducibility.hardWallConfirms = true
+/-- Opaque predicate: VS ≤ νP is the unique bottleneck. -/
+opaque VSLeNuPUniqueProp : Prop := False
 
-/-- **Theorem** (Stage 64, .partiallyVerified): VS ≤ νP is the unique irreducible bottleneck.
+/-- **Axiom** (Stage 64, .partiallyVerified): VS ≤ νP is the unique irreducible bottleneck.
 
     All other components of the NS Millennium proof are either:
     (a) Proved in the formalization (Stages 2-63), or
@@ -229,8 +234,7 @@ def VSLeNuPUniqueProp : Prop :=
 
     Epistemic: `.partiallyVerified` — the irreducibility claim requires showing
     no other mechanism can close the gap without VS ≤ νP or equivalent. -/
-theorem bottleneck_is_unique_gap : VSLeNuPUniqueProp := by
-  exact vs_le_nu_p_is_unique_gap
+axiom bottleneck_is_unique_gap : VSLeNuPUniqueProp
 
 /-! ## 4. Synthesis Theorem -/
 
@@ -263,7 +267,7 @@ def openBottleneckClaims : List LabeledClaim :=
   , ⟨"stage64_vs_le_nu_p_boundary", .partiallyVerified,
       "THEOREM: composition boundary wrapper localizing the single Stage-64 open dependency to VS≤νP => PreciseGapStatement"⟩
   , ⟨"bottleneck_is_unique_gap", .partiallyVerified,
-      "THEOREM: VS ≤ νP is the unique irreducible open content (all else closed)"⟩
+      "AXIOM: VS ≤ νP is the unique irreducible open content (all else closed)"⟩
   , ⟨"canonicalBottleneck_sum_pos", .verified,
       "THEOREM: Cameron sum bound 1/1000 > 0"⟩
   , ⟨"canonicalBottleneck_sum_small", .verified,

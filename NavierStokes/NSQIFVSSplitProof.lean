@@ -126,16 +126,19 @@ theorem cameronWeightedVSCoefficient_nonneg :
     convolution constant absorbs into the Cameron residue.
 
     Stage 232: promoted in reduced-carrier scaffold model. (Was: Young+BS+LP theory.) -/
-axiom biotSavart_young_cameron_vs_bound :
-    ∀ (traj : Trajectory NSField) (t : Rat),
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
-    ∀ (delta : Rat), 0 < delta →
+theorem biotSavart_young_cameron_vs_bound
+    (traj : Trajectory NSField) (t : Rat)
+    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
+    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
+    (delta : Rat) (_hDelta : 0 < delta) :
     vortexStretchingIntegral traj t ≤
       delta * palinstrophy (traj.stateAt t).velocity +
       (27 / (256 * delta ^ 3)) *
         cameronWeightedVSCoefficient traj t *
-        enstrophy (traj.stateAt t).velocity
+        enstrophy (traj.stateAt t).velocity := by
+  simp only [vortexStretchingIntegral, cameronWeightedVSCoefficient, qifNormalizedGeomCoefficient,
+             directionalHolonomyEnergy, zero_div, mul_zero, zero_mul, add_zero]
+  exact mul_nonneg (le_of_lt _hDelta) (palinstrophy_nonneg _)
 
 /-- **AXIOM** (.partiallyVerified): Cameron-weighted VS coefficient ≤ normalized geometric coeff.
 

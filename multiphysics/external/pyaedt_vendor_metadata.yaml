@@ -1,0 +1,38 @@
+name: pyaedt
+upstream_url: https://github.com/ansys/pyaedt.git
+upstream_ref: main
+pip_package: pyaedt
+imported_at_utc: 2026-03-08T00:00:00Z
+import_method: external_clone
+catept_bridge: multiphysics/integration/pyansys_entropic_bridge.py
+catept_bridge_function: run_pyansys_maxwell_em
+catept_registry_id: pyansys_maxwell_em_entropic
+catept_ir_node: PyAnsysMaxwellEMNode
+catept_scale: electromagnetic_field
+catept_ir_op: PyAnsysMaxwellEM
+validator: tools/multiphysics/validate_pyansys_maxwell_native_strict.py
+backend_modes:
+  - stub
+  - analytical
+  - native
+  - native_strict
+env_vars:
+  - CATEPT_PYANSYS_AEDT_VERSION   # e.g. "2024.2" (default: latest)
+  - CATEPT_PYANSYS_NATIVE_MOCK    # set to "1" to force fallback
+  - CATEPT_PYANSYS_NATIVE_TIMEOUT
+interop_keys:
+  - geant4       # b_field_max_t → G4UniformMagField for beam optics
+  - opentopas    # B-field map for charged-particle beam transport
+  - qutip        # Zeeman / spin coupling Hamiltonian
+  - mapdl        # temperature_ambient_k from MAPDL thermal solve
+  - pynucastro   # core material activation and transmutation
+physics_coupling: >
+  PyFluent heat_removal_w → Maxwell thermal derating → coil resistance correction →
+  b_field_max_t, force_n, inductance_h → G4UniformMagField (Geant4 beam optics).
+notes:
+  - CAT/EPT Maxwell EM backend for accelerator magnets, MRI, and beam-steering coils.
+  - PyAEDT controls ANSYS Electronics Desktop (AEDT) Maxwell 3D via COM/gRPC.
+  - Requires AEDT installation (Windows preferred; Linux via AEDT server mode).
+  - Stub and analytical modes work without any ANSYS installation.
+  - Core material library covers iron, silicon_steel, ferrite, permalloy, air, copper.
+  - Apply pyansys_catept.patch for any local upstream modifications.

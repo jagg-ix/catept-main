@@ -38,8 +38,7 @@ blow up before T.  For **all** T > 0, this gives global regularity.
 | 174B | `galerkinTower_energy_range` | `.partiallyVerified` (Fatou) |
 | 174B | `galerkinTower_energy_tsum` | `.partiallyVerified` (monotone convergence) |
 | 174C | `galerkinLimit_stepDiff_bound` | **THEOREM** (AM-GM + Stage 174B range bounds, 0 axioms; Stage 205 retired `galerkinLimit_weak_eqn`) |
-| 174D | `galerkinWeakSolution_to_ns_trajectory` | `.partiallyVerified` (Fourier id + Temam 1984 III.3.1; Stage 206 narrowed from tower to weak solution) |
-| 174D | `galerkinTower_to_ns_trajectory` | **THEOREM** (Stage 206, 0 new axioms; proved via weak_existence + new axiom above) |
+| 174D | `galerkinTower_to_ns_trajectory` | `.partiallyVerified` (Temam 1984 III.3.1) |
 | (pre) | `cameron_trace_sum_below_spectral_gap` | `.partiallyVerified` (Wolfram T³(L=1)) |
 
 **0 `.openBridge` axioms in this chain.**

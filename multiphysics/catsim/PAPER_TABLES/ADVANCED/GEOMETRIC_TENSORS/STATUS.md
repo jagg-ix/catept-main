@@ -1,0 +1,8 @@
+# GEOMETRIC_TENSORS STATUS
+preferred_lambda_mode: trace_adjusted
+entropic_time_enabled: False
+connection_equilibrium_pass: True
+constant_phi_gate_hessian_pass: True
+constant_phi_gate_trace_adjusted_pass: True
+constant_phi_gate_einstein_like_pass: True
+constant_phi_gate_trace_adjusted_weighted_pass: True

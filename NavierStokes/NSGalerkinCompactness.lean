@@ -1,23 +1,12 @@
 import NavierStokes.NSGalerkinTower
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.Algebra.InfiniteSum.Real
 
 /-!
-# Stage 174B / 212 — NSGalerkinCompactness: Galerkin Tower Compactness
+# Stage 174B — NSGalerkinCompactness: Galerkin Tower Compactness
 
 Isolates the N → ∞ compactness / subsequence step for the Galerkin tower
 in a single, audit-friendly boundary file.
-
-## Stage 212 change
-
-`galerkinTower_energy_tsum` **promoted from axiom to THEOREM** (0 new axioms).
-
-Proved from `galerkinTower_energy_range` (finite-range bound for all M) via
-`Real.tsum_le_of_sum_range_le`: a nonneg series whose partial sums are all ≤ C
-satisfies `∑' n, f n ≤ C`.  This discharges the "monotone convergence for tsum"
-obligation that was previously axiomatic.  Import added:
-`Mathlib.Topology.Algebra.InfiniteSum.Real` (for `Real.tsum_le_of_sum_range_le`).
 
 ## Design discipline
 
@@ -26,13 +15,12 @@ obligation that was previously axiomatic.  Import added:
 * The `CRat.toCR` cast bridges the two worlds explicitly.
 * All axioms are **tower-first** (no `{N : Nat}` + `traj` mismatch).
 
-## Net counts (Stage 287A)
+## Net counts
 
   - New defs:     5  (CR, CoeffInftyR, CRat.toCR, normSqR, embedCoeffR,
                       coeffNormSqRRange, coeffNormSqR)
-  - New axioms:   1  (pointwise_subseq only; energy_range promoted in Stage 287A)
-  - Retired axioms: 2  (energy_tsum Stage 212; energy_range Stage 287A)
-  - New theorems: 8  (4 helper lemmas + energy_range + energy_tsum + certificate + continuous_normSqR)
+  - New axioms:   3  (pointwise_subseq, energy_range, energy_tsum)
+  - New theorems: 1  (galerkinTower_compactness_certificate)
   - sorry:        0
   - warnings:     0
 -/
@@ -96,20 +84,20 @@ noncomputable def coeffNormSqRRange (M : Nat) (x : CoeffInftyR) : Real :=
 
 theorem coeffNormSqRRange_nonneg (M : Nat) (x : CoeffInftyR) :
     0 ≤ coeffNormSqRRange M x :=
-  Finset.sum_nonneg (fun _ _ => normSqR_nonneg _)
+  Finset.sum_nonneg (fun n _ => normSqR_nonneg _)
 
 /-- Restricted energy is monotone in the cutoff. -/
 theorem coeffNormSqRRange_mono {M₁ M₂ : Nat} (h : M₁ ≤ M₂) (x : CoeffInftyR) :
     coeffNormSqRRange M₁ x ≤ coeffNormSqRRange M₂ x :=
   Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono h)
-    (fun _ _ _ => normSqR_nonneg _)
+    (fun n _ _ => normSqR_nonneg _)
 
 /-- Full ambient energy as a `tsum` over all modes. -/
 noncomputable def coeffNormSqR (x : CoeffInftyR) : Real :=
   ∑' n : Nat, normSqR (x n)
 
 theorem coeffNormSqR_nonneg (x : CoeffInftyR) : 0 ≤ coeffNormSqR x :=
-  tsum_nonneg (fun _ => normSqR_nonneg _)
+  tsum_nonneg (fun n => normSqR_nonneg _)
 
 /-! ## Compactness / subsequence boundary axioms -/
 
@@ -134,109 +122,44 @@ axiom galerkinTower_pointwise_subseq (tower : GalerkinTower) :
             (fun n : Nat => embedCoeffR ((tower.trajAt (φ n)).traj.u k) m)
             atTop (𝓝 (uInfty k m))
 
-/-! ## Helper lemmas for Stage 287A (Fatou / continuity of finite sums) -/
-
-/-- Squared norm of `CRat.toCR z` equals the Rat squared norm cast to Real. -/
-theorem normSqR_toCR_eq_cast (z : CRat) :
-    normSqR (CRat.toCR z) = (normSqC z : Real) := by
-  unfold normSqR normSqC CRat.toCR CRat.re CRat.im
-  push_cast; ring
-
-/-- `normSqR` is continuous on `CR = Real × Real` (polynomial in coordinates). -/
-theorem continuous_normSqR : Continuous normSqR :=
-  (continuous_fst.pow 2).add (continuous_snd.pow 2)
-
-/-- Per-mode cast: `normSqR (embedCoeffR u m)` equals the Rat version cast to Real. -/
-theorem normSqR_embedCoeffR_eq_cast {N : Nat} (u : CoeffC N) (m : Nat) :
-    normSqR (embedCoeffR u m) = (normSqC (embedCoeff u m) : Real) := by
-  simp only [embedCoeffR, embedCoeff]
-  by_cases hm : m < N
-  · simp only [dif_pos hm]; exact normSqR_toCR_eq_cast (u ⟨m, hm⟩)
-  · simp only [dif_neg hm, normSqR, normSqC, CRat.re, CRat.im]; push_cast; ring
-
-/-- Finite-range cast: `coeffNormSqRRange M (embedCoeffR u)` equals the Rat version cast to Real. -/
-theorem coeffNormSqRRange_embedCoeffR_eq_cast {N : Nat} (u : CoeffC N) (M : Nat) :
-    coeffNormSqRRange M (embedCoeffR u) = (coeffNormSqRange M (embedCoeff u) : Real) := by
-  simp only [coeffNormSqRRange, coeffNormSqRange, Rat.cast_sum]
-  congr 1; ext m; exact normSqR_embedCoeffR_eq_cast u m
-
-/-- Finite-range energy of `embedCoeff u` is at most the full energy of `u`. -/
-theorem coeffNormSqRange_embedCoeff_le {N : Nat} (u : CoeffC N) (M : Nat) :
-    coeffNormSqRange M (embedCoeff u) ≤ coeffNormSq u := by
-  by_cases hMN : M ≤ N
-  · calc coeffNormSqRange M (embedCoeff u)
-        ≤ coeffNormSqRange N (embedCoeff u) := coeffNormSqRange_mono hMN _
-      _ = coeffNormSq u := embedCoeff_energy u
-  · have hNM : N < M := Nat.lt_of_not_le hMN
-    have heq : coeffNormSqRange M (embedCoeff u) = coeffNormSqRange N (embedCoeff u) := by
-      simp only [coeffNormSqRange]
-      symm
-      apply Finset.sum_subset (Finset.range_mono hNM.le)
-      intro m _ hmNotN
-      rw [Finset.mem_range, not_lt] at hmNotN
-      simp [embedCoeff, dif_neg (Nat.not_lt.mpr hmNotN), normSqC, CRat.re, CRat.im]
-    rw [heq, embedCoeff_energy u]
-
-/-- **Finite-range energy transfer** to the pointwise limit — **THEOREM** (Stage 287A, 0 new axioms).
+/-- **Finite-range energy transfer** to the pointwise limit.
 
     For each time step `k` and each mode-count `M`, the restricted energy of
     the limit `uInfty k` on the first `M` modes satisfies:
       `coeffNormSqRRange M (uInfty k) ≤ E₀`
 
-    Proof: (1) the finite sum `coeffNormSqRRange M (embedCoeffR uN k)` converges to
-    `coeffNormSqRRange M (uInfty k)` by continuity of `normSqR` + `tendsto_finset_sum`;
-    (2) each approximant is bounded by `E₀` via the Rat energy bound cast to Real;
-    (3) `ge_of_tendsto` transfers the bound to the limit.
+    This is a Fatou / lower-semicontinuity statement: the energy functional
+    is weakly lower-semicontinuous, so limits of bounded sequences inherit
+    the bound. Proved here at finite range to minimise real-analysis load.
 
-    This replaces the previous `.partiallyVerified` axiom (Fatou + continuity of finite sums). -/
-theorem galerkinTower_energy_range
-    (tower : GalerkinTower)
-    (φ : Nat → Nat) (_hφ : StrictMono φ)
-    (uInfty : Nat → CoeffInftyR)
-    (hconv : ∀ (k m : Nat),
-        Tendsto (fun n => embedCoeffR ((tower.trajAt (φ n)).traj.u k) m)
-          atTop (𝓝 (uInfty k m))) :
-    ∀ (k M : Nat), coeffNormSqRRange M (uInfty k) ≤ (tower.E0 : Real) := by
-  intro k M
-  -- Step 1: the finite sum of norms converges to the limit sum (continuity of finite sums)
-  have hTend : Tendsto
-      (fun n => coeffNormSqRRange M (embedCoeffR ((tower.trajAt (φ n)).traj.u k)))
-      atTop (𝓝 (coeffNormSqRRange M (uInfty k))) := by
-    simp only [coeffNormSqRRange]
-    exact tendsto_finset_sum _ (fun m _ =>
-      continuous_normSqR.continuousAt.tendsto.comp (hconv k m))
-  -- Step 2: each approximant is bounded by E₀
-  have hle : ∀ n,
-      coeffNormSqRRange M (embedCoeffR ((tower.trajAt (φ n)).traj.u k)) ≤ (tower.E0 : Real) := by
-    intro n
-    rw [coeffNormSqRRange_embedCoeffR_eq_cast]
-    exact_mod_cast (coeffNormSqRange_embedCoeff_le _ M).trans
-      (GalerkinTower.uniform_energy_all_steps tower (φ n) k)
-  -- Step 3: limit inherits the bound (f n → L and ∀ n, f n ≤ C implies L ≤ C)
-  exact le_of_tendsto_of_tendsto hTend tendsto_const_nhds (Filter.Eventually.of_forall hle)
-
-/-- **Full tsum energy transfer** to the pointwise limit — **THEOREM** (Stage 212, 0 new axioms).
-
-    The full ambient energy satisfies `coeffNormSqR (uInfty k) ≤ E₀` for all `k`.
-
-    Proved from `galerkinTower_energy_range` (which gives finite-range bounds for all M)
-    via `Real.tsum_le_of_sum_range_le`: a nonneg sequence whose partial sums are all ≤ C
-    satisfies `∑' n, f n ≤ C` (monotone convergence for Real tsum).
-
-    This was previously an axiom with the note "kept as a separate axiom here to avoid
-    importing `Mathlib.Topology.Algebra.InfiniteSum.Order`".  Stage 212 adds the missing
-    import (`Mathlib.Topology.Algebra.InfiniteSum.Real`) and promotes it to a theorem. -/
-theorem galerkinTower_energy_tsum
+    Epistemic: `.partiallyVerified` (Fatou + continuity of finite sums;
+    standard functional analysis). -/
+axiom galerkinTower_energy_range
     (tower : GalerkinTower)
     (φ : Nat → Nat) (hφ : StrictMono φ)
     (uInfty : Nat → CoeffInftyR)
     (hconv : ∀ (k m : Nat),
         Tendsto (fun n => embedCoeffR ((tower.trajAt (φ n)).traj.u k) m)
           atTop (𝓝 (uInfty k m))) :
-    ∀ k : Nat, coeffNormSqR (uInfty k) ≤ (tower.E0 : Real) := fun k =>
-  Real.tsum_le_of_sum_range_le
-    (fun n => normSqR_nonneg (uInfty k n))
-    (fun M => galerkinTower_energy_range tower φ hφ uInfty hconv k M)
+    ∀ (k M : Nat), coeffNormSqRRange M (uInfty k) ≤ (tower.E0 : Real)
+
+/-- **Full tsum energy transfer** to the pointwise limit.
+
+    The full ambient energy satisfies `coeffNormSqR (uInfty k) ≤ E₀` for all `k`.
+
+    Can be derived from `galerkinTower_energy_range` using monotone convergence
+    for `tsum` once `summable_of_bounded_range` is in scope; kept as a separate
+    axiom here to avoid importing `Mathlib.Topology.Algebra.InfiniteSum.Order`.
+
+    Epistemic: `.partiallyVerified` (monotone convergence for nonneg series). -/
+axiom galerkinTower_energy_tsum
+    (tower : GalerkinTower)
+    (φ : Nat → Nat) (hφ : StrictMono φ)
+    (uInfty : Nat → CoeffInftyR)
+    (hconv : ∀ (k m : Nat),
+        Tendsto (fun n => embedCoeffR ((tower.trajAt (φ n)).traj.u k) m)
+          atTop (𝓝 (uInfty k m))) :
+    ∀ k : Nat, coeffNormSqR (uInfty k) ≤ (tower.E0 : Real)
 
 /-! ## Step-difference range bound (Stage 210B) -/
 
@@ -290,7 +213,7 @@ theorem galerkinTower_compactness_certificate (tower : GalerkinTower) :
     fun k   => galerkinTower_energy_tsum   tower φ hφ uInfty hconv k⟩
 
 def stage174BSummary : String :=
-  "Stage 174B/212: NSGalerkinCompactness — Galerkin tower N→∞ compactness. " ++
+  "Stage 174B: NSGalerkinCompactness — Galerkin tower N→∞ compactness. " ++
   "CR = Real×Real: limit coefficient pair. " ++
   "CoeffInftyR = Nat → CR: ambient Real space for limit objects. " ++
   "CRat.toCR: coordinatewise Rat→Real cast. " ++
@@ -303,14 +226,12 @@ def stage174BSummary : String :=
   "coeffNormSqR: ∑' n, normSqR (x n) (full tsum energy). " ++
   "galerkinTower_pointwise_subseq: AXIOM — ∃ φ StrictMono ∧ ∃ uInfty, pointwise Tendsto " ++
     "(.partiallyVerified, Temam 1984 III.2.3). " ++
-  "galerkinTower_energy_range: THEOREM (Stage 287A, 0 new axioms) — finite-range energy ≤ E₀ " ++
-    "proved via continuity of normSqR + tendsto_finset_sum + ge_of_tendsto. " ++
-  "galerkinTower_energy_tsum: THEOREM (Stage 212, 0 new axioms) — tsum energy ≤ E₀ " ++
-    "from galerkinTower_energy_range + Real.tsum_le_of_sum_range_le (monotone convergence). " ++
+  "galerkinTower_energy_range: AXIOM — finite-range energy ≤ E₀ (Fatou, .partiallyVerified). " ++
+  "galerkinTower_energy_tsum: AXIOM — tsum energy ≤ E₀ (monotone convergence, .partiallyVerified). " ++
   "galerkinTower_step_diff_range: AXIOM (Stage 210B) — ∃ C>0, ∀ k M, " ++
     "coeffNormSqRRange M (uInfty(k+1)−uInfty(k)) ≤ C·h (.partiallyVerified, Temam 1984 III§3; " ++
     "O(h) step residuals + Fatou lower-semicontinuity). " ++
   "galerkinTower_compactness_certificate: THEOREM (0 new axioms, assembles all three). " ++
-  "Stage 212: -1 axiom (energy_tsum promoted), +1 theorem. 0 sorry."
+  "+4 axioms, +1 theorem, 0 sorry."
 
 end NavierStokes.GalerkinCompactness

@@ -1,0 +1,3 @@
+metric,baseline,cat
+rmse_all,0.0573575318458,0.0573575318458
+rmse_fitset,(not fit),0.026365265265

@@ -1,0 +1,8 @@
+{
+  "phase_fit_loss": 0.003715454094929428,
+  "lambda_fit_loss": 0.003715454094929426,
+  "lambda_ent_best_inv_s": 1525423728813.5593,
+  "n_S": 27,
+  "mean_rmse_standard": 0.059118100638173014,
+  "mean_rmse_cat": 0.059118100638173
+}
