@@ -3,22 +3,22 @@ import NavierStokesClean.Core.Types
 /-!
 # Differential operators — Phase 11 concrete enstrophy
 
-Phase 11: `enstrophy` and `palinstrophy` are made concrete on the `NSField = ℝ × ℝ`
+Phase 11: `enstrophy` and `palinstrophy` are made concrete on the `NSField = EuclideanSpace ℝ (Fin 3)`
 carrier, discharging 3 axioms as theorems.
 
-## Enstrophy: ‖u‖² on the mock 2D carrier
+## Enstrophy: ‖u‖² on the Phase 1 carrier
 
   `enstrophy u := ‖u‖^2`
 
-This is the squared L² norm of the velocity vector. On `ℝ × ℝ` (product sup-norm),
-`‖u‖^2 = (max |u.1| |u.2|)^2 ≥ 0` by `sq_nonneg`.
+This is the squared L² norm of the velocity vector. On `EuclideanSpace ℝ (Fin 3)`,
+`‖u‖^2 ≥ 0` by `sq_nonneg`.
 
 `enstrophy_nonneg` is now a theorem (0 new axioms).
 
-## Palinstrophy: zero on the mock carrier
+## Palinstrophy: zero placeholder
 
-`palinstrophy` requires `‖∇ω‖²_{L²}`, which is undefined on the abstract `ℝ × ℝ`
-carrier (no spatial gradient structure). Placeholder: `palinstrophy _ := 0`.
+`palinstrophy` requires `‖∇ω‖²_{L²}`, which requires the Phase 5 spatial carrier
+upgrade. Placeholder: `palinstrophy _ := 0`.
 
 `palinstrophy_nonneg` is now a theorem (0 new axioms).
 
@@ -36,13 +36,12 @@ namespace NavierStokesClean
 
 /-! ## §1. Enstrophy and palinstrophy -/
 
-/-- Enstrophy Ω[u] = ‖u‖² on the mock `NSField = ℝ × ℝ` carrier.
+/-- Enstrophy Ω[u] = ‖u‖² on `NSField = EuclideanSpace ℝ (Fin 3)`.
 
-    Phase 11: made concrete as the squared norm. On the 2D mock carrier this is
-    `(max |u.1| |u.2|)^2`, which is nonneg by `sq_nonneg`.
+    Phase 11: made concrete as the squared L² norm.  Nonneg by `sq_nonneg`.
 
-    Phase 5 target: upgrade `NSField` to `Space → EuclideanSpace ℝ (Fin 3)` and
-    redefine as `‖∇ × u‖²_{L²}` (vorticity L² norm). -/
+    Phase 5 target: redefine as `‖∇ × u‖²_{L²}` (vorticity L² norm) once
+    `Trajectory` is upgraded to the spatial carrier `NSSpaceTrajectory`. -/
 noncomputable def enstrophy (u : NSField) : ℝ := ‖u‖ ^ 2
 
 /-- Enstrophy is nonneg — proved from `sq_nonneg`. 0 new axioms. -/
@@ -50,9 +49,8 @@ theorem enstrophy_nonneg (u : NSField) : (0 : ℝ) ≤ enstrophy u := sq_nonneg 
 
 /-- Palinstrophy P[u] = ‖∇ω‖²_{L²}.
 
-    Phase 11: placeholder `0` on the mock carrier (no spatial gradient structure
-    available on `ℝ × ℝ`). Phase 5 target: concrete definition when `NSField` is
-    upgraded to `Space → EuclideanSpace ℝ (Fin 3)`. -/
+    Phase 11: placeholder `0` (no spatial gradient structure yet; requires the
+    Phase 5 upgrade to `NSSpaceTrajectory`). -/
 noncomputable def palinstrophy (_ : NSField) : ℝ := 0
 
 /-- Palinstrophy is nonneg — trivially, since `palinstrophy _ = 0`. 0 new axioms. -/
@@ -72,14 +70,10 @@ theorem initialEnstrophy_nonneg (traj : Trajectory) : 0 ≤ initialEnstrophy tra
     The identity ∇ ⬝ (∇ × f) = 0 is proved with 0 new axioms via PhysLean
     (`div_of_curl_eq_zero`, `PhysLean.SpaceAndTime.Space.Derivatives.Curl`).
 
-    This abstract axiom bridges the Phase 0 carrier (`NSField = ℝ × ℝ`) to the
-    concrete 3D result. Phase 5 will discharge it when `NSField` is upgraded to
-    `Space → EuclideanSpace ℝ (Fin 3)`.
-
     **Phase 11**: the conclusion is `True` (placeholder), so this is now a theorem.
     The substantive content (divergence-free condition from the concrete 3D proof in
-    PhysLean/DivCurlIdentity.lean) will be connected when `NSField` is upgraded in
-    Phase 5. -/
+    PhysLean/DivCurlIdentity.lean) will be connected in Phase 5 when `Trajectory`
+    is upgraded to the spatial carrier `NSSpaceTrajectory`. -/
 theorem ns_divergence_free_satisfied : ∀ (traj : Trajectory),
     SatisfiesNSPDE nsNu traj → True :=
   fun _ _ => trivial

@@ -120,7 +120,7 @@ Record:
 - `vmlKineticPlugin_catept_consistent`: full TheoryPlugin spine constraint.
 
 ## VML-P2-004  CATEPTSelfConsistency VML lane — native proof (P2)
-Status: TODO
+Status: DONE
 Severity: P2
 Goal:
 - Replace `catept_vml_steady_state_consistent : True := trivial` with a proof
@@ -129,3 +129,15 @@ Acceptance:
 - catept_vml_steady_state_consistent proves the actual VMLSteadyStateIntegrationContract
   without relying on True witnesses.
 - Uses vmlMaxwellian_matches_kineticWeight and vml_steadyState_is_kineticCATEPT.
+Record:
+- Replaced `catept_vml_steady_state_consistent : True := trivial` with:
+    theorem catept_vml_steady_state_consistent :
+        cateptSpineConstraint (vmlKineticPlugin 1 one_pos) :=
+      vmlKineticPlugin_catept_consistent 1 one_pos
+- Updated `catept_self_consistent` witness field position 15:
+    vml_steady_state_consistent :=
+      cateptSpineConstraint (VMLCATEPTBridge.vmlKineticPlugin 1 one_pos)
+- Refine position 15 now calls:
+    VMLCATEPTBridge.vmlKineticPlugin_catept_consistent 1 one_pos
+- VML lane is the first of 26 module lanes in CATEPTSelfConsistencyContract
+  to carry a non-trivial Prop and a zero-axiom proof.

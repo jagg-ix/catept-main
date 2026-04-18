@@ -1,3 +1,7 @@
+
+
+set_option autoImplicit false
+
 /-!
 # CATEPT.DSL.Syntax
 
@@ -25,4 +29,3 @@ structure Command where
   deriving DecidableEq, Repr
 
 end CATEPT.DSL
-

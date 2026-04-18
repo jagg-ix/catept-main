@@ -1,3 +1,12 @@
+import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Topology.MetricSpace.Basic
+import Mathlib.LinearAlgebra.Matrix.Hermitian
+
+set_option autoImplicit false
+
 /-
 Copyright (c) 2026 CAT/EPT Verification Project
 Released under Apache 2.0 license
@@ -22,12 +31,6 @@ rigorous mathematical foundations for quantum gravity, black hole physics,
 and cosmological applications.
 -/
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import Mathlib.Topology.MetricSpace.Basic
-import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
 
 noncomputable section
 

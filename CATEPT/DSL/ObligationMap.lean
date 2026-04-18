@@ -1,6 +1,8 @@
 import NavierStokesClean.CATEPT.DSL.BackendContracts
 import NavierStokesClean.CATEPT.DSL.LambdaMetaTheory
 
+set_option autoImplicit false
+
 /-!
 # NavierStokesClean.CATEPT.DSL.ObligationMap
 

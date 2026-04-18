@@ -126,6 +126,13 @@ theorem paper_eq_27_landauer_principle (k_B T : ℝ)
     0 < landauer_cost k_B T :=
   eq027_landauer_principle k_B T hkB hT
 
+/-! ## Eq 49-51: quantum-gravity thermal + constraint + normalization identities -/
+
+theorem paper_eq_49_unruh_temperature_positive (hbar κ_B c k_B : ℝ)
+    (hh : 0 < hbar) (hκ : 0 < κ_B) (hc : 0 < c) (hkB : 0 < k_B) :
+    0 < unruh_temperature hbar κ_B c k_B :=
+  eq049_unruh_temperature_positive hbar κ_B c k_B hh hκ hc hkB
+
 /-! ## Eq 20,21,25,26,27: coercivity/propagator bridge -/
 
 theorem paper_eq_20_cameron_condition (hbar S_I : ℝ)

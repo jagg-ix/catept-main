@@ -1,5 +1,7 @@
 import NavierStokesClean.CATEPT.DSL.CompilerCorrectness
 
+set_option autoImplicit false
+
 /-!
 # NavierStokesClean.CATEPT.DSL.Lowering
 

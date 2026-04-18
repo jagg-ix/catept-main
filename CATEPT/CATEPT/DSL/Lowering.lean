@@ -1,5 +1,7 @@
 import CATEPT.DSL.CompilerCorrectness
 
+set_option autoImplicit false
+
 /-!
 # CATEPT.DSL.Lowering
 

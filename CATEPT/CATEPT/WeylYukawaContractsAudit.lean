@@ -1,6 +1,8 @@
 import CATEPT.WeylYukawaContracts
 import Mathlib.Data.List.Basic
 
+set_option autoImplicit false
+
 /-
 # CATEPT.WeylYukawaContractsAudit
 

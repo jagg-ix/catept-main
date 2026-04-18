@@ -1,3 +1,12 @@
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.Topology.MetricSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.LinearAlgebra.Matrix.Hermitian
+
+set_option autoImplicit false
+
 /-
 Copyright (c) 2026 CAT/EPT Formal Verification Project
 Released under Apache 2.0 license
@@ -22,12 +31,6 @@ equations in the CAT/EPT framework.
 - Landauer principle (Eq 27)
 -/
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Topology.MetricSpace.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.LinearAlgebra.Matrix.Hermitian
 
 noncomputable section
 

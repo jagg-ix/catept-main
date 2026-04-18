@@ -1,5 +1,7 @@
 import Mathlib
 
+set_option autoImplicit false
+
 /-!
 # CATEPT.QFTGRClosures
 

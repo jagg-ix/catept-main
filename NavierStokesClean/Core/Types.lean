@@ -1,4 +1,4 @@
-import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Core types — Phase 0 scaffold
@@ -33,9 +33,11 @@ namespace NavierStokesClean
 /-! ## §1. Abstract field carrier -/
 
 /-- Abstract velocity field type.
-    Phase 0: concrete alias `ℝ × ℝ` (Inhabited for free, no axioms).
-    Phase 1: replace with `EuclideanSpace ℝ (Fin 3)` or PhysLean vector field. -/
-abbrev NSField := ℝ × ℝ
+    Phase 1: `EuclideanSpace ℝ (Fin 3)` — Hilbert space with L² norm and spatial
+    Euclidean structure.  Replaces the Phase 0 mock `ℝ × ℝ` carrier.
+    All downstream uses rely only on `‖·‖`, `AddCommGroup`, and `Module ℝ`,
+    so the upgrade is backward-compatible. -/
+abbrev NSField := EuclideanSpace ℝ (Fin 3)
 
 /-- A trajectory: time-parameterized family of velocity fields. -/
 abbrev Trajectory := ℝ → NSField
@@ -59,8 +61,9 @@ theorem hbar_pos : (0 : ℝ) < hbar :=
 
 /-- A trajectory satisfies the NS PDE with viscosity ν.
     **Phase 15**: made transparent as a single-field structure bundling C⁰ continuity.
-    The full NS equation requires the Phase 5 carrier upgrade from `NSField = ℝ × ℝ`
-    to `Space → EuclideanSpace ℝ (Fin 3)`. With the current abstract carrier the only
+    Phase 1: `NSField = EuclideanSpace ℝ (Fin 3)`.  The full NS equation requires the
+    Phase 5 carrier upgrade from `Trajectory = ℝ → NSField` to `NSSpaceTrajectory =
+    ℝ → (Space → NSField)`.  With the current abstract carrier the only
     decidable consequence of "being an NS solution" is that the trajectory is continuous
     in time (Temam 1984, Ch.III: Galerkin solutions are in C⁰([0,T]; H)).
 

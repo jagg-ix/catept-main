@@ -1,3 +1,11 @@
+import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import Mathlib.Analysis.Complex.Basic
+import CATEPT.Foundations
+import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
+
+set_option autoImplicit false
+
 /-
 # CAT/EPT Framework - Complete Formal Verification
 # Part 2: Path Integrals and QFT (Equations 54-76)
@@ -10,11 +18,6 @@ FORMAL PROOFS of:
 - Yukawa screening (Eq 76)
 -/
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
-import CATEPT.Foundations
 
 noncomputable section
 

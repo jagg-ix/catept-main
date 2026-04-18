@@ -1,5 +1,7 @@
 import CATEPT.DSL.Semantics
 
+set_option autoImplicit false
+
 /-
 # CATEPT.DSL.CompilerCorrectness
 

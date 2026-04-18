@@ -66,7 +66,7 @@ structure DiscretenessWitness (plugin : TheoryPlugin) where
   scale : ℝ
 
   /-- The mapping from the discrete ensemble to the continuous manifold points. -/
-  continuum_map : DiscreteNode → SpacetimePoint
+  continuum_map : DiscreteNode → plugin.SpacetimePointTy
 
   /-- Abstract distance/adjacency mapping on the discrete graph structure -/
   distance_bound : DiscreteNode → DiscreteNode → ℝ
@@ -111,7 +111,7 @@ If every continuous spacetime point is within the image of a discrete node under
 the continuum is entirely derived from the discrete substrate.
 -/
 def FullyBackgroundIndependent (plugin : TheoryPlugin) (dw : DiscretenessWitness plugin) : Prop :=
-  ∀ p : SpacetimePoint, ∃ n : dw.DiscreteNode, dw.continuum_map n = p
+  ∀ p : plugin.SpacetimePointTy, ∃ n : dw.DiscreteNode, dw.continuum_map n = p
 
 /--
 If the space is background independent, the bridge mapping transfers the local flatness
@@ -119,7 +119,7 @@ everywhere across the continuous manifold.
 -/
 theorem derived_background_independence (plugin : TheoryPlugin) (dw : DiscretenessWitness plugin)
     (h_indep : FullyBackgroundIndependent plugin dw) :
-    ∀ p : SpacetimePoint, plugin.locallyFlat plugin.metric p := by
+  ∀ p : plugin.SpacetimePointTy, plugin.locallyFlat plugin.metric p := by
   intro p
   have ⟨n, hn⟩ := h_indep p
   rw [← hn]
@@ -158,8 +158,11 @@ structure AlgebraicHomomorphismWitness (plugin : TheoryPlugin) (dw : Discretenes
       continuum_op_mul (dw.discrete_operator_mapping n) (dw.discrete_operator_mapping m)
 
   /-- The continuous operator product must remain within the valid quantum operation set -/
-  continuum_mul_closed : ∀ O₁ O₂ ∈ plugin.quantumOps,
-    continuum_op_mul O₁ O₂ ∈ plugin.quantumOps
+  continuum_mul_closed :
+    ∀ O₁ O₂ : plugin.QuantumOpTy,
+      O₁ ∈ plugin.quantumOps →
+      O₂ ∈ plugin.quantumOps →
+      continuum_op_mul O₁ O₂ ∈ plugin.quantumOps
 
 /--
 If an algebraic homomorphism holds, then products of the discrete generators
@@ -174,9 +177,15 @@ theorem homomorphism_unitarity_preservation
       plugin.semiclassicalCorrespondence plugin.curvature
         (alg_witness.continuum_op_mul (dw.discrete_operator_mapping n) (dw.discrete_operator_mapping m)) := by
   intro n m
-  have h_op := h_quantum _ (alg_witness.continuum_mul_closed
-    (dw.discrete_operator_mapping n) (dw.operators_valid n)
-    (dw.discrete_operator_mapping m) (dw.operators_valid m))
+  have h_closed :
+      alg_witness.continuum_op_mul (dw.discrete_operator_mapping n) (dw.discrete_operator_mapping m)
+        ∈ plugin.quantumOps :=
+    alg_witness.continuum_mul_closed
+      (dw.discrete_operator_mapping n)
+      (dw.discrete_operator_mapping m)
+      (dw.operators_valid n)
+      (dw.operators_valid m)
+  have h_op := h_quantum _ h_closed
   exact h_op
 
 /--

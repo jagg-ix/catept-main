@@ -74,7 +74,7 @@ namespace CATEPTMain.Integration.CATEPTSpaceTime
     exactly this type rather than `NSTorusVelocityField`, because:
     (a) `spatialMeasure` below is proved safe here, and
     (b) `equivIocBridge` provides the isomorphism to the torus side. -/
-def CATEPTVelocityField : Type := (Fin 3 → ℝ) → (Fin 3 → ℝ)
+abbrev CATEPTVelocityField : Type := (Fin 3 → ℝ) → (Fin 3 → ℝ)
 
 /-- Phase-1 axiom: a norm on `CATEPTVelocityField = (Fin 3 → ℝ) → (Fin 3 → ℝ)`.
 

@@ -22,6 +22,14 @@ require cslib from git
 require pphi2 from git
   "file:///Users/macbookpro/lab/tau/tau-information-dynamics/pphi2" @ "b0cbac4"
 
+require MarkovSemigroups from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/markov-semigroups"
+
+-- Override transitive GaussianField (from LGT/pphi2) with an editable local source.
+-- This avoids patching `.lake/packages/GaussianField` directly.
+require GaussianField from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/gaussian-field"
+
 -- pphi2N: O(N) linear sigma model, large-N mass gap via Hubbard-Stratonovich.
 -- Requires pphi2 (above) + MarkovSemigroups (transitive via pphi2).
 require pphi2N from
@@ -50,4 +58,17 @@ require mathlib from git
 
 @[default_target]
 lean_lib CATEPTMain where
+  srcDir := "."
+
+lean_lib CATEPT where
+  srcDir := "."
+
+-- NavierStokes module hierarchy (NavierStokes/*.lean).
+-- These are imported directly by BianchiKucharEPTBridge and ComplexFunctionalsBridge.
+lean_lib NavierStokes where
+  srcDir := "."
+
+-- NavierStokesClean module hierarchy (NavierStokesClean/*.lean).
+-- Imported by CATEPTSelfConsistency and related integration modules.
+lean_lib NavierStokesClean where
   srcDir := "."

@@ -1,5 +1,7 @@
 import NavierStokesClean.CATEPT.DSL.Lowering
 
+set_option autoImplicit false
+
 /-!
 # NavierStokesClean.CATEPT.DSL.WorkflowCorrectness
 

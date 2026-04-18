@@ -1,5 +1,7 @@
 import CATEPT.DSL.WorkflowCorrectness
 
+set_option autoImplicit false
+
 /-!
 # CATEPT.DSL.BackendContracts
 

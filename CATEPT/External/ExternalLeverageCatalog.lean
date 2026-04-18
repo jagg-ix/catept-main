@@ -1,3 +1,7 @@
+
+
+set_option autoImplicit false
+
 /-!
 # CATEPT External Leverage Catalog
 
@@ -5,7 +9,6 @@ Lean-side catalog of prioritized external module targets for opt-in integration.
 This file encodes the non-duplicated source queue as theorem-addressable data.
 -/
 
-set_option autoImplicit false
 
 namespace NavierStokesClean.CATEPT.External
 

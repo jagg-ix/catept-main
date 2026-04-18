@@ -1,21 +1,23 @@
-import NavierStokesClean.CATEPT.External.BochnerMinlosInterface
-import NavierStokesClean.CATEPT.External.HilleYosidaInterface
+import NavierStokesClean.CATEPT.External.ETHGibbsBrownianIntegration
+import NavierStokesClean.CATEPT.External.ExternalLeverageCatalog
+import NavierStokesClean.CATEPT.External.ThermodynamicsEntropyInterface
+import NavierStokesClean.CATEPT.External.GibbsMeasureInterface
+import NavierStokesClean.CATEPT.External.CarlesonInterface
+import NavierStokesClean.CATEPT.External.Pphi2OSInterface
 import NavierStokesClean.CATEPT.External.NoFasterThanLightInterface
 import NavierStokesClean.CATEPT.External.NoFasterThanLightTranslatorSnapshot
-import NavierStokesClean.CATEPT.External.IsabelleMarriesDiracInterface
-import NavierStokesClean.CATEPT.External.Pphi2OSInterface
-import NavierStokesClean.CATEPT.External.ThermodynamicsEntropyInterface
-import NavierStokesClean.CATEPT.External.ExternalLeverageCatalog
-import NavierStokesClean.CATEPT.External.IntegratedEquationContracts
-import NavierStokesClean.CATEPT.External.BellEntanglementRelativityBridge
-import NavierStokesClean.CATEPT.External.CarlesonInterface
 import NavierStokesClean.CATEPT.External.ETHQuantumThermalizationBridge
-import NavierStokesClean.CATEPT.External.GibbsMeasureInterface
+import NavierStokesClean.CATEPT.External.IntegratedEquationContracts
 import NavierStokesClean.CATEPT.External.BrownianMotionInterface
-import NavierStokesClean.CATEPT.External.ETHGibbsBrownianIntegration
-import NavierStokesClean.CATEPT.External.KolmogorovComplexityInterface
+import NavierStokesClean.CATEPT.External.BochnerMinlosInterface
+import NavierStokesClean.CATEPT.External.HilleYosidaInterface
 import NavierStokesClean.CATEPT.External.QuantumInfoInterface
+import NavierStokesClean.CATEPT.External.IsabelleMarriesDiracInterface
 import NavierStokesClean.CATEPT.External.CslibFoundationInterface
+import NavierStokesClean.CATEPT.External.KolmogorovComplexityInterface
+import NavierStokesClean.CATEPT.External.BellEntanglementRelativityBridge
+
+set_option autoImplicit false
 
 /-!
 # CATEPT External Opt-In Surface

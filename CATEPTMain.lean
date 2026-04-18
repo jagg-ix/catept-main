@@ -24,6 +24,7 @@ import CATEPTMain.Integration.QuantumInfoFisherBridge
 import CATEPTMain.Integration.GravitasBridge
 import CATEPTMain.Integration.BCJBridge
 import CATEPTMain.Integration.TheoryPluginArchitecture
+import CATEPTMain.Integration.TheoryPluginClassicalETHBridge
 import CATEPTMain.Integration.UnifiedTheorySpine
 import CATEPTMain.Integration.QuantumCATEPTBridge
 import CATEPTMain.Integration.ElectroweakCATEPTBridge
@@ -36,9 +37,11 @@ import CATEPTMain.Integration.TheoryPluginDimCore
 import CATEPTMain.Integration.TheoryPluginDimCategory
 import CATEPTMain.Integration.TheoryPluginDimFundamental
 import CATEPTMain.Integration.TheoryPluginQTMBridge
+import CATEPTMain.Integration.QuantumMpembaUnificationBridge
 import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
 import CATEPTMain.Integration.TheoryPluginOriginBridge
 import CATEPTMain.Integration.TheoryPluginThermodynamicsOfChoiceBridge
+import CATEPTMain.Integration.TheoryPluginPhyslibConstructBridge
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 

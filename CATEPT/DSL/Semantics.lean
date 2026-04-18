@@ -1,6 +1,8 @@
 import Mathlib
 import NavierStokesClean.CATEPT.DSL.Syntax
 
+set_option autoImplicit false
+
 /-!
 # NavierStokesClean.CATEPT.DSL.Semantics
 

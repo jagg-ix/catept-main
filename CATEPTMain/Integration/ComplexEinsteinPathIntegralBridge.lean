@@ -1,18 +1,23 @@
-import Mathlib
+-- Replaced `import Mathlib` with targeted imports to avoid Distribution collision
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
 import CATEPTMain.Integration.BianchiKucharEPTBridge
-import CATEPTMain.Integration.AlphaPathIntegralIntegration
 import CATEPTMain.Integration.ComplexFunctionalsBridge
+import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Gravitas.EinsteinTensor
 import Aristotle.Landau.main.Theorem42
 
 set_option autoImplicit false
 
+open MeasureTheory VML
+
 namespace CATEPTMain.Integration.ComplexEinsteinPathIntegral
 
 open CATEPTMain.Integration.BianchiKuchar
-open CATEPTMain.Integration.PathIntegral
 open CATEPTMain.Integration.ComplexFunctionals
-open CATEPTMain.Gravitas
+open CATEPTMain.Integration
+open Gravitas
 
 /-!
 # Complex Einstein Path Integral Bridge
@@ -42,8 +47,8 @@ def complex_einstein_divergence_free_constraint (G : Gravitas.Mat) : Prop :=
 -/
 theorem complex_path_integral_recovers_efe
     {X : Type*} [VML.FlatTorus3 X]
-    (plugin : CATEPTMain.Integration.TheoryPluginArchitecture.TheoryPlugin)
-    (h_localGlobal : CATEPTMain.Integration.TheoryPluginArchitecture.localGlobalPluginConstraint plugin)
+    (plugin : TheoryPlugin)
+    (h_localGlobal : localGlobalPluginConstraint plugin)
     (f : X → (Fin 3 → ℝ) → ℝ)
     (E B : X → (Fin 3 → ℝ))
     (Ψ : ℝ → ℝ) (ν ρ_ion : ℝ)
@@ -58,12 +63,12 @@ theorem complex_path_integral_recovers_efe
     (hDivB : ∀ x, VML.FlatTorus3.divX B x = 0)
     (hDiff_B : ∀ i, VML.FlatTorus3.IsSpatiallySmooth 2 (fun y => B y i))
     (hVla : ∀ x v,
-      Matrix.dotProduct v (VML.FlatTorus3.gradX (fun y => f y v) x) +
-      Matrix.dotProduct (E x + VML.cross v (B x)) (VML.vGrad (f x) v) =
+      dotProduct v (VML.FlatTorus3.gradX (fun y => f y v) x) +
+      dotProduct (E x + VML.cross v (B x)) (VML.vGrad (f x) v) =
       ν * VML.LandauOperator Ψ (f x) v)
     (hDiff_fv : ∀ v, VML.FlatTorus3.IsSpatiallySmooth 2 (fun x => f x v))
     (hDecay : VML.VelocityDecayConditions Ψ f E B) :
-    complex_einstein_divergence_free_constraint 0 := by
+    complex_einstein_divergence_free_constraint #[] := by
   have H_struct := VML.Theorem42 f E B Ψ ν ρ_ion hν hρ hΨ hf_pos hf_smooth hf_int hAmp hGauss hDivB hDiff_B hVla hDiff_fv hDecay
   obtain ⟨T_eq, B₀, hT, _⟩ := H_struct
   exact ⟨T_eq, B₀, hT⟩

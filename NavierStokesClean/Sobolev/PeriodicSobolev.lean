@@ -6,6 +6,10 @@ import Mathlib.Analysis.Normed.Group.InfiniteSum
 import Mathlib.Algebra.Module.ZLattice.Summable
 import Mathlib.Analysis.Calculus.FDeriv.Mul
 import Mathlib.Analysis.Calculus.FDeriv.Prod
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.Normed.MulAction
 import NavierStokesClean.Core.SpatialTypes
 import NavierStokesClean.Core.Operators
 
@@ -377,6 +381,13 @@ Proof: `HasFDerivAt.finset_prod` (product rule) + `hasDerivAt_fourier` (1D chain
 -- We need Fact (0 < (1 : ℝ)) for hasDerivAt_fourier with T = 1
 private noncomputable instance factPeriodOne : Fact (0 < (1 : ℝ)) := ⟨one_pos⟩
 
+-- Bridge the SMul diamond: ℝ acting on ℂ via Complex.instRCLike.toSMul has a bounded norm.
+-- This is needed by ContinuousLinearMap.smulRight (1 : ℝ →L[ℝ] ℝ) (c : ℂ).
+-- The canonical IsBoundedSMul ℝ ℂ from NormedSpace.toIsBoundedSMul uses a different SMul
+-- instance path, causing synthesis failure. Explicit construction via norm_smul_le fixes it.
+private noncomputable instance : IsBoundedSMul ℝ ℂ :=
+  IsBoundedSMul.of_norm_smul_le fun r z => NormedSpace.norm_smul_le r z
+
 -- Abbreviation for the 1D derivative scalar of fourier k at a point
 private noncomputable abbrev fourierDeriv1D (k : ℤ) (xi : AddCircle (1 : ℝ)) : ℂ :=
   2 * ↑Real.pi * Complex.I * (k : ℂ) * fourier k xi
@@ -565,5 +576,93 @@ def periodicSobolevAxiomSurface : List String :=
   , "agmon_h2_fourier_bound — NSP38-C1: Cauchy-Schwarz + Agmon H² Fourier bound on T³"
   , "agmon_vorticity_rep_t3 — NSP38-C2: Space ↔ UnitAddTorus vorticity rep bridge"
   ]
+
+/-! ## §6. T³ velocity field types and operators (NSC-P56/P57/P58) -/
+
+/-- Torus velocity field: a map from T³ to ℝ³ velocity vectors. -/
+abbrev NSTorusVelocityField := UnitAddTorus (Fin 3) → EuclideanSpace ℝ (Fin 3)
+
+/-- **Torus vorticity** `torusVorticity u z`: the curl of `u : NSTorusVelocityField` at
+    `z : UnitAddTorus (Fin 3)`, computed via the Jacobian of the flat lift
+    `u_flat : (Fin 3 → ℝ) → EuclideanSpace ℝ (Fin 3)`, where `u_flat x = u (↑x)`.
+
+    The canonical representative `x₀(z) ∈ (0,1]³` is provided by `AddCircle.equivIoc`.
+    The curl components follow the standard formula:
+      component 0 = J₁₂ − J₂₁
+      component 1 = J₂₀ − J₀₂
+      component 2 = J₀₁ − J₁₀
+    where `Jₐᵦ = (WithLp.equiv 2 (Fin 3 → ℝ) (fderiv ℝ u_flat x₀ (Pi.single a 1))) b`. -/
+noncomputable def torusVorticity (u : NSTorusVelocityField)
+    (z : UnitAddTorus (Fin 3)) : EuclideanSpace ℝ (Fin 3) :=
+  let x₀ : Fin 3 → ℝ := fun k => (AddCircle.equivIoc (1:ℝ) 0 (z k)).val
+  let u_flat := fun x : Fin 3 → ℝ => u (fun i => (x i : AddCircle (1:ℝ)))
+  let J : Fin 3 → Fin 3 → ℝ := fun a b =>
+    (WithLp.equiv 2 (Fin 3 → ℝ) (fderiv ℝ u_flat x₀ (Pi.single a 1))) b
+  (WithLp.equiv 2 (Fin 3 → ℝ)).symm ![J 1 2 - J 2 1, J 2 0 - J 0 2, J 0 1 - J 1 0]
+
+/-- **Torus enstrophy**: `∫_{T³} ‖torusVorticity u t‖² dt`. -/
+noncomputable def torusEnstrophy (u : NSTorusVelocityField) : ℝ :=
+  ∫ t : UnitAddTorus (Fin 3), ‖torusVorticity u t‖ ^ 2
+
+/-- **Torus palinstrophy**: `∫_{T³} ‖∇(curl u_flat)(x₀(t))‖² dt` where `u_flat` is the flat lift.
+
+    Since `UnitAddTorus` is not an ℝ-module, we cannot apply `fderiv ℝ` to `torusVorticity u`
+    directly. Instead we differentiate the flat vorticity map
+    `ω_flat : (Fin 3 → ℝ) → EuclideanSpace ℝ (Fin 3)` at the representative `x₀(t) ∈ (0,1]³`. -/
+noncomputable def torusPalinstrophy (u : NSTorusVelocityField) : ℝ :=
+  let u_flat := fun x : Fin 3 → ℝ => u (fun i => (x i : AddCircle (1:ℝ)))
+  ∫ t : UnitAddTorus (Fin 3),
+    ‖fderiv ℝ (fun x : Fin 3 → ℝ =>
+        let J : Fin 3 → Fin 3 → ℝ := fun a b =>
+          (WithLp.equiv 2 (Fin 3 → ℝ) (fderiv ℝ u_flat x (Pi.single a 1))) b
+        (WithLp.equiv 2 (Fin 3 → ℝ)).symm ![J 1 2 - J 2 1, J 2 0 - J 0 2, J 0 1 - J 1 0])
+      (fun k => (AddCircle.equivIoc (1:ℝ) 0 (t k)).val)‖ ^ 2
+
+/-- **Measure-preserving map T³ → [0,1]³** (NSC-P59).
+
+    The map `φ t i = (AddCircle.equivIoc 1 0 (t i)).val` from `UnitAddTorus (Fin 3)`
+    to `Fin 3 → ℝ` is measure-preserving for the product measure on `(0,1]³`.
+
+    **Proof route**: Fubini decomposition + each coordinate `AddCircle.equivIoc 1 0`
+    is measure-preserving from `(AddCircle 1, haarAddCircle)` to `((0,1], volume.restrict)`.
+    This is a standard periodization fact (Temam 1984 §I.1). -/
+axiom cateptTorus_measurePreserving :
+    MeasureTheory.MeasurePreserving
+      (fun t : UnitAddTorus (Fin 3) => fun i : Fin 3 => (AddCircle.equivIoc (1:ℝ) 0 (t i)).val)
+      (volume : Measure (UnitAddTorus (Fin 3)))
+      (Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1)))
+
+/-- **T³ vorticity Lp bridge** (NSC-P58): for a periodic scalar field `ω` with appropriate
+    H¹ bounds, there exists an `Lp ℂ 2` representative on `T³` with matching enstrophy,
+    mean-zero Fourier coefficient, and H¹ seminorm bounded by `torusPalinstrophy`.
+
+    **Proof route**: construct the representative as the composition `ω ∘ φ` where
+    `φ t i = (equivIoc 1 0 (t i)).val` (NSC-P59 measure bridge), then verify:
+    - mean-zero: from `h_mean_zero` via `integral_map + cateptTorus_measurePreserving`
+    - L² norm: from `h_ens_eq` via the same measure bridge
+    - H¹ seminorm: `h_otf_h1` provides the bound directly. -/
+axiom space_torus_vorticity_bridge_torus
+    (u : NSTorusVelocityField)
+    (ω : (Fin 3 → ℝ) → ℂ)
+    (hCont_ω : Continuous ω)
+    (hPer : ∀ (x : Fin 3 → ℝ) (i : Fin 3), ω (Function.update x i (x i + 1)) = ω x)
+    (h_ens_nonneg : 0 ≤ torusEnstrophy u)
+    (h_ens_le_pal : torusEnstrophy u ≤ torusPalinstrophy u)
+    (h_ens_eq : ∫ x : Fin 3 → ℝ, ‖ω x‖ ^ 2
+        ∂Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1)) =
+        torusEnstrophy u)
+    (h_mean_zero : ∫ x : Fin 3 → ℝ, ω x
+        ∂Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1)) = 0)
+    (h_otf_summable : Summable (h1FourierSemiNormCoeffs
+        (ω ∘ fun t : UnitAddTorus (Fin 3) => fun i : Fin 3 =>
+          (AddCircle.equivIoc (1:ℝ) 0 (t i)).val)))
+    (h_otf_h1 : h1FourierSemiNorm
+        (ω ∘ fun t : UnitAddTorus (Fin 3) => fun i : Fin 3 =>
+          (AddCircle.equivIoc (1:ℝ) 0 (t i)).val) ≤ torusPalinstrophy u) :
+    ∃ omega_tilde : Lp ℂ 2 (volume : Measure (UnitAddTorus (Fin 3))),
+      mFourierCoeff (omega_tilde : UnitAddTorus (Fin 3) → ℂ) 0 = 0 ∧
+      Summable (h1FourierSemiNormCoeffs (omega_tilde : UnitAddTorus (Fin 3) → ℂ)) ∧
+      ∫ t, ‖(omega_tilde : UnitAddTorus (Fin 3) → ℂ) t‖ ^ 2 = torusEnstrophy u ∧
+      h1FourierSemiNorm (omega_tilde : UnitAddTorus (Fin 3) → ℂ) ≤ torusPalinstrophy u
 
 end NavierStokesClean.Sobolev

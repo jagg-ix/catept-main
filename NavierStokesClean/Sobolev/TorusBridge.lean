@@ -75,7 +75,7 @@ noncomputable def unitAddTorusEquivIoc (n : ℕ) :
   MeasurableEquiv.piCongrRight (fun _ => AddCircle.measurableEquivIoc 1 0)
 
 -- The target measure: product of comap-Lebesgue on each `Ioc 0 (0+1)` component.
-private noncomputable def piIoc (n : ℕ) : Measure (Fin n → Set.Ioc (0 : ℝ) (0 + 1)) :=
+noncomputable def piIoc (n : ℕ) : Measure (Fin n → Set.Ioc (0 : ℝ) (0 + 1)) :=
   Measure.pi fun _ => Measure.comap Subtype.val (volume : Measure ℝ)
 
 /-- The componentwise `AddCircle.measurableEquivIoc 1 0` is measure-preserving:
@@ -268,8 +268,31 @@ theorem space_torus_bridge_zero_witness (u : NSVelocityField)
       mFourierCoeff (omega_tilde : UnitAddTorus (Fin 3) → ℂ) 0 = 0 ∧
       Summable (h1FourierSemiNormCoeffs (omega_tilde : UnitAddTorus (Fin 3) → ℂ)) ∧
       ∫ t, ‖(omega_tilde : UnitAddTorus (Fin 3) → ℂ) t‖ ^ 2 = spatialEnstrophy u ∧
-      h1FourierSemiNorm (omega_tilde : UnitAddTorus (Fin 3) → ℂ) ≤ palinstrophySpatial u :=
-  space_torus_vorticity_bridge_zero u h_zero_enstrophy
+      h1FourierSemiNorm (omega_tilde : UnitAddTorus (Fin 3) → ℂ) ≤ palinstrophySpatial u := by
+  have coe_zero_ae : ∀ᵐ t ∂(volume : Measure (UnitAddTorus (Fin 3))),
+      (⇑(0 : Lp ℂ 2 (volume : Measure (UnitAddTorus (Fin 3))))) t = (0 : ℂ) :=
+    (Lp.coeFn_zero ℂ 2 _).mono fun t ht => by simpa [Pi.zero_apply] using ht
+  have hmfc_zero : ∀ k : Fin 3 → ℤ, mFourierCoeff
+      (⇑(0 : Lp ℂ 2 (volume : Measure (UnitAddTorus (Fin 3))))) k = 0 := fun k => by
+    simp only [mFourierCoeff]
+    exact integral_eq_zero_of_ae (coe_zero_ae.mono fun t ht => by
+      simp only [ht, smul_zero, Pi.zero_apply])
+  have hcoeffs_zero : h1FourierSemiNormCoeffs
+      (⇑(0 : Lp ℂ 2 (volume : Measure (UnitAddTorus (Fin 3))))) = fun _ => 0 := by
+    funext k
+    simp only [h1FourierSemiNormCoeffs, hmfc_zero k, norm_zero,
+      ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, mul_zero]
+  refine ⟨0, ?_, ?_, ?_, ?_⟩
+  · exact hmfc_zero 0
+  · rw [hcoeffs_zero]; exact summable_zero
+  · rw [h_zero_enstrophy]
+    exact integral_eq_zero_of_ae (coe_zero_ae.mono fun t ht => by
+      simp only [ht, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+        Pi.zero_apply])
+  · have h1_zero : h1FourierSemiNorm
+        (⇑(0 : Lp ℂ 2 (volume : Measure (UnitAddTorus (Fin 3))))) = 0 := by
+      simp only [h1FourierSemiNorm, hcoeffs_zero, tsum_zero]
+    linarith [palinstrophySpatial_nonneg u]
 
 end ZeroWitness
 

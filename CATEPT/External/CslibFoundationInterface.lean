@@ -1,5 +1,7 @@
 import NavierStokesClean.CATEPT.External.IntegratedEquationContracts
 
+set_option autoImplicit false
+
 /-!
 # CATEPT External Interface: CSLib Foundations
 
@@ -16,7 +18,6 @@ Relevant CSLib surfaces for this bridge include:
 - `Cslib.Foundations.Syntax.Context`
 -/
 
-set_option autoImplicit false
 
 open MeasureTheory
 

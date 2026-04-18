@@ -1,4 +1,6 @@
-import Mathlib
+-- Replaced `import Mathlib` with targeted imports to avoid
+-- Physlib.Mathematics.Distribution.Basic vs Mathlib.Analysis.Distribution.Distribution collision
+import Mathlib.Data.Complex.Basic
 import CATEPTMain.Gravitas.Basic
 import CATEPTMain.Gravitas.MetricTensor
 import CATEPTMain.Gravitas.EinsteinTensor
@@ -9,7 +11,8 @@ set_option autoImplicit false
 namespace CATEPTMain.Integration.ComplexFunctionals
 
 open Complex
-open NavierStokes.Millennium
+open NavierStokes.FourierAgmonObsBridge
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface
@@ -27,10 +30,10 @@ or Agmon/BKM formalizations from the namespace `NavierStokes.FourierAgmonObsBrid
 /-- 1. Einstein Metric Tensor to Fourier Space
     Instead of full analytic differentials on covariant tensors, we interpret
     the spatial perturbations h_ij directly via `NSFieldFourier`. -/
-def metric_perturbation_fourier (h_components : Gravitas.Mat) : NSFieldFourier :=
-  -- This creates an explicit bridge from Gravitas algebraic matrix to Fourier modes.
-  -- For scaffolding, we project to a zero metric representation in Fourier space.
-  0
+noncomputable def metric_perturbation_fourier (h_components : Gravitas.Mat) : NSFieldFourier :=
+  -- Bridge from Gravitas algebraic matrix to Fourier modes.
+  -- Zero-mode stub: N=0 empty Fourier series (phase-1 scaffolding).
+  ⟨0, Fin.elim0, Fin.elim0⟩
 
 /-- 2. Dirac Spinor momentum coupling
     The action i / 2 γ^μ ∂_μ  becomes  - π γ^μ k_μ in Fourier space, represented algebraically.

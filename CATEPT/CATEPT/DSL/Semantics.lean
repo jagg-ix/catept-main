@@ -1,6 +1,8 @@
 import Mathlib
 import CATEPT.DSL.Syntax
 
+set_option autoImplicit false
+
 /-!
 # CATEPT.DSL.Semantics
 

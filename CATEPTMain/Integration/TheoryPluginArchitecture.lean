@@ -1,5 +1,7 @@
-import Mathlib
+-- Replaced `import Mathlib` with targeted imports to avoid Distribution collision
 import Mathlib.Geometry.Manifold.IsManifold.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Tactic.Linarith
 import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
 
 open Manifold MeasureTheory

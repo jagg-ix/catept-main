@@ -1,3 +1,13 @@
+import Mathlib.Data.Complex.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Matrix.Basic
+import CATEPT.Foundations
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Data.Matrix.Diagonal
+import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+
+set_option autoImplicit false
+
 /-
 # Weyl/Yukawa Contracts (Compile-Safe Bridge)
 
@@ -10,13 +20,6 @@ Design goals:
 - Reuse CAT/EPT foundations (`ComplexAction`) via a clean adapter.
 -/
 
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Diagonal
-import Mathlib.LinearAlgebra.Matrix.ConjTranspose
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import CATEPT.Foundations
 
 noncomputable section
 

@@ -1,5 +1,10 @@
-import Mathlib
-import Mathlib.Topology.Instances.AddCircle
+-- Replaced `import Mathlib` with targeted imports to avoid
+-- Physlib.Mathematics.Distribution.Basic vs Mathlib.Analysis.Distribution.Distribution collision
+-- (both define Distribution._proof_1; Mathlib.lean is the only importer of the Mathlib version)
+import Mathlib.Topology.Instances.AddCircle.Real
+import Mathlib.Data.Fin.Tuple.Basic
+import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Data.Complex.Basic
 import CATEPTMain.AFPBridge.LSI.Theories.Lebesgue_Stieltjes_Integral
 import NavierStokes.NSFourierAgmonObsBridge
 
@@ -9,9 +14,10 @@ namespace CATEPTMain.Integration.BianchiKuchar
 
 open CategoryTheory
 open Complex
+open CATEPTMain.AFPBridge.LSI
 open CATEPTMain.AFPBridge.LSI.Theories.Lebesgue_Stieltjes_Integral
 open NavierStokes.FourierAgmonObsBridge
-open NavierStokes.Millennium
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface
@@ -31,7 +37,7 @@ abbrev T2 := Fin 2 → UnitAddCircle
 
 /-- 1. piFinSuccAbove_iso: Isomorphism splitting the T³ coordinate manifold into T¹_i ⊗ T²_rest -/
 def piFinSuccAbove_iso (i : Fin 3) : T3 ≃ (T1 × T2) :=
-  Equiv.piFinSuccAbove (fun _ => UnitAddCircle) i
+  (Fin.insertNthEquiv (fun _ => UnitAddCircle) i).symm
 
 /-- 2. fubini_nat_trans: Formal Fubini Tensoriality Natural Transformation
     ∫_{T³} ⟹ ∫_{T²} ∘ ∫_{T¹} -/
@@ -59,7 +65,7 @@ theorem periodicity_quotient (z : ℂ) : id z = z := rfl
 
 /-- Semantic definitions from the existing CAT/EPT theorem library
     We replace the abstract `mFourierCoeff` with the concrete `interpretAsFourier` and `NSFieldFourier` representations. -/
-def ept_fourier_coefficients (v : NSField) : NSFieldFourier :=
+noncomputable def ept_fourier_coefficients (v : NSField) : NSFieldFourier :=
   interpretAsFourier v
 
 /-- §8: Strict Fourier-Plancherel Lie Generator Action on the i-th torus slice

@@ -1,3 +1,10 @@
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import CATEPT.Foundations
+import Mathlib.Geometry.Manifold.MFDeriv.Basic
+import CATEPT.PathIntegrals
+
+set_option autoImplicit false
+
 /-
 # CAT/EPT Framework - Complete Formal Verification
 # Part 3: Quantum Gravity & Black Hole Physics (Equations 46-52, 115-152)
@@ -10,10 +17,6 @@ FORMAL PROOFS of:
 - Bekenstein-Hawking entropy (complete proof)
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Geometry.Manifold.MFDeriv.Basic
-import CATEPT.Foundations
-import CATEPT.PathIntegrals
 
 noncomputable section
 

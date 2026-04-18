@@ -124,6 +124,23 @@ theorem spatialEnstrophy_zero_of_const (v : EuclideanSpace ℝ (Fin 3)) :
   have h : vorticity (fun _ => v) = fun _ => 0 := vorticity_zero_of_const v
   simp [spatialEnstrophy, h]
 
+/-! ## §3B. Spatial palinstrophy -/
+
+/-- Spatial palinstrophy: `∫_{Space} ‖∇(∇ × u)(x)‖² dx`.
+
+    This is the H² vorticity seminorm — the L² norm of the gradient of the vorticity.
+    It appears in the Agmon interpolation and Simon Lemma 5 estimates.
+
+    Phase 5 definition: Fréchet derivative of vorticity, integrated over Space.
+    Phase 5 target: connect to concrete H² structure once `NSSpaceTrajectory` is
+    fully upgraded. -/
+noncomputable def palinstrophySpatial (u : NSVelocityField) : ℝ :=
+  ∫ x : Space, ‖fderiv ℝ (vorticity u) x‖ ^ 2
+
+/-- Spatial palinstrophy is nonneg (integral of nonneg function). -/
+theorem palinstrophySpatial_nonneg (u : NSVelocityField) : 0 ≤ palinstrophySpatial u :=
+  integral_nonneg fun _ => sq_nonneg _
+
 /-! ## §4. L^∞ vorticity norm and BKM integral -/
 
 /-- L^∞ norm of the vorticity field at a fixed time.

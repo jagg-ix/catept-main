@@ -1,5 +1,7 @@
 import CATEPT.DSL.Lowering
 
+set_option autoImplicit false
+
 /-!
 # CATEPT.DSL.WorkflowCorrectness
 

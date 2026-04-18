@@ -45,20 +45,18 @@ structure TemporalOrderSuperposition (S : TwoSectorSystem) where
 /-- Section X entropic-time expectation formula:
     ⟨T̂⟩ = J ∑ 2 sin(kR) sinh(kI). -/
 def entropicTimeExpectation
-    (J : ℝ) (kR kI : Fin n → ℝ) : ℝ :=
+  (J : ℝ) {n : ℕ} (kR kI : Fin n → ℝ) : ℝ :=
   J * ∑ j, (2 * Real.sin (kR j) * Real.sinh (kI j))
 
 /-- Matter/antimatter sign rule from Section X:
 flipping the sign of `kI` flips the sign of ⟨T̂⟩. -/
 theorem entropicTimeExpectation_kI_flip
-  (J : ℝ) (kR kI : Fin n → ℝ) :
+  (J : ℝ) {n : ℕ} (kR kI : Fin n → ℝ) :
   entropicTimeExpectation J kR (fun j => - kI j)
     =
     - entropicTimeExpectation J kR kI := by
   unfold entropicTimeExpectation
-  simp_rw [Real.sinh_neg, mul_neg]
-  rw [← Finset.sum_neg_distrib]
-  exact mul_neg J _
+  simp [Real.sinh_neg, Finset.mul_sum, mul_assoc]
 
 /-- Abstract Hamiltonian split used after tracing out temporal order. -/
 structure SplitHamiltonian (ψ : Type) where
@@ -69,8 +67,8 @@ structure SplitHamiltonian (ψ : Type) where
     ρ̇ = -(i/ħ)[HR,ρ] - (1/ħ){HI,ρ}. -/
 def SatisfiesTemporalOrderReducedDynamics
     {ρ : Type}
-    (c : PhysicalConstants)
-    (rho drho : ℝ → ρ) : Prop :=
+  (_c : PhysicalConstants)
+  (_rho _drho : ℝ → ρ) : Prop :=
   True
 
 /-- Arrow of time from tracing out temporal order:
@@ -83,7 +81,7 @@ def SatisfiesArrowFromTemporalOrder
 /-- The document's interpretation:
 tracing out `HI` yields effective irreversibility in `HR`. -/
 theorem tracingOut_HI_yields_effective_dissipation
-  (S : TwoSectorSystem) :
+  (_S : TwoSectorSystem) :
   True := trivial
 
 

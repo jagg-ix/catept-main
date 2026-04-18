@@ -1,5 +1,6 @@
 import CATEPTMain.AFPBridge.FEYNCALC.DiracAlgebra
 import CATEPTMain.AFPBridge.FEYNCALC.LorentzAlgebra
+import CATEPTMain.AFPBridge.FEYNCALC.LeviCivita4D
 /-!
 # FeynCalc Port — Dirac Trace Formulas (Phase 1)
 
@@ -37,8 +38,6 @@ When FCEnd → `Matrix (Fin 4) (Fin 4) ℂ`:
 -/
 
 set_option autoImplicit false
-
-open CATEPTMain.AFPBridgeFramework.TacticStubs
 
 namespace CATEPTMain.AFPBridge.FEYNCALC
 
@@ -100,10 +99,11 @@ theorem spinorTrace_three_zero (μ ν ρ : FCIdx) :
       _ = spinorTrace (negEnd A) := by rw [hpass]
       _ = -spinorTrace A := hneg
   -- 2·Tr(A) = 0 and 2 ≠ 0 in ℂ, so Tr(A) = 0
-  have h2 : (2 : ℂ) * spinorTrace A = 0 := by linarith
-  rcases mul_eq_zero.mp h2 with h | h
-  · norm_num at h
-  · exact h
+  have hadd : spinorTrace A + spinorTrace A = 0 := by
+    exact eq_neg_iff_add_eq_zero.mp hself
+  have h2 : (2 : ℂ) * spinorTrace A = 0 := by
+    simpa [two_mul] using hadd
+  exact (mul_eq_zero.mp h2).resolve_left (by norm_num)
 
 /-- `Tr(γ^5) = 0`. -/
 axiom spinorTrace_gamma5_zero : spinorTrace gamma5 = 0
@@ -127,10 +127,11 @@ theorem spinorTrace_gamma_gamma5_zero (μ : FCIdx) :
       _ = spinorTrace (negEnd (gamma μ) * gamma5) := by rw [hpass]
       _ = spinorTrace (negEnd (gamma μ * gamma5)) := by rw [hnegmul]
       _ = -spinorTrace (gamma μ * gamma5) := hneg
-  have h2 : (2 : ℂ) * spinorTrace (gamma μ * gamma5) = 0 := by linarith
-  rcases mul_eq_zero.mp h2 with h | h
-  · norm_num at h
-  · exact h
+  have hadd : spinorTrace (gamma μ * gamma5) + spinorTrace (gamma μ * gamma5) = 0 := by
+    exact eq_neg_iff_add_eq_zero.mp hself
+  have h2 : (2 : ℂ) * spinorTrace (gamma μ * gamma5) = 0 := by
+    simpa [two_mul] using hadd
+  exact (mul_eq_zero.mp h2).resolve_left (by norm_num)
 
 /-- `Tr(γ^5 γ^μ) = 0`  (cyclic form). -/
 theorem spinorTrace_gamma5_gamma_zero (μ : FCIdx) :
@@ -284,16 +285,116 @@ theorem spinorTrace_four (μ ν ρ σ : FCIdx) :
   ring
 
 -- ── TR-7: Trace with γ^5 ────────────────────────────────────────────────────
-/-- `Tr(γ^μ γ^ν γ^ρ γ^σ γ^5) = 4i ε^μνρσ`  (4-dimensional, West convention).
+/-- `Tr(γ^μ γ^ν γ^ρ γ^σ γ^5) = -4i ε^μνρσ`  (4-dimensional, West convention).
   Source: `spur5In4Dim` / `trace5Wrap` in `DiracTrace.m` L655-710:
     `spur5In4Dim[x__DiracGamma, DiracGamma[5]] :=`
     `  trace5Wrap[First/@{x,DiracGamma[5]}]  /; EvenQ[Length[{x}]]`
   which ultimately yields `4I * Eps[μ,ν,ρ,σ]` for the 4-index case.
   The `leviCivitaSign` parameter is +1 (West convention, FeynCalc default). -/
+private lemma lc_0123 : leviCivita 0 1 2 3 = 1 := leviCivita_0123
+
+private lemma lc_0132 : leviCivita 0 1 3 2 = -1 := leviCivita_0132_neg
+
+private lemma lc_0213 : leviCivita 0 2 1 3 = -1 := leviCivita_0213_neg
+
+private lemma lc_0231 : leviCivita 0 2 3 1 = 1 := by
+  have h := leviCivita_antisymm_last (μ := 0) (ν := 2) (ρ := 1) (σ := 3)
+  linarith [h, lc_0213]
+
+private lemma lc_0312 : leviCivita 0 3 1 2 = 1 := by
+  have h := leviCivita_antisymm_12 (μ := 0) (ν := 1) (ρ := 3) (σ := 2)
+  linarith [h, lc_0132]
+
+private lemma lc_0321 : leviCivita 0 3 2 1 = -1 := by
+  have h := leviCivita_antisymm_last (μ := 0) (ν := 3) (ρ := 1) (σ := 2)
+  linarith [h, lc_0312]
+
+private lemma lc_1023 : leviCivita 1 0 2 3 = -1 := leviCivita_1023_neg
+
+private lemma lc_1032 : leviCivita 1 0 3 2 = 1 := by
+  have h := leviCivita_antisymm_last (μ := 1) (ν := 0) (ρ := 2) (σ := 3)
+  linarith [h, lc_1023]
+
+private lemma lc_1203 : leviCivita 1 2 0 3 = 1 := by
+  have h := leviCivita_antisymm_12 (μ := 1) (ν := 0) (ρ := 2) (σ := 3)
+  linarith [h, lc_1023]
+
+private lemma lc_1230 : leviCivita 1 2 3 0 = -1 := by
+  have h := leviCivita_antisymm_last (μ := 1) (ν := 2) (ρ := 0) (σ := 3)
+  linarith [h, lc_1203]
+
+private lemma lc_1302 : leviCivita 1 3 0 2 = -1 := by
+  have h := leviCivita_antisymm_12 (μ := 1) (ν := 0) (ρ := 3) (σ := 2)
+  linarith [h, lc_1032]
+
+private lemma lc_1320 : leviCivita 1 3 2 0 = 1 := by
+  have h := leviCivita_antisymm_last (μ := 1) (ν := 3) (ρ := 0) (σ := 2)
+  linarith [h, lc_1302]
+
+private lemma lc_2013 : leviCivita 2 0 1 3 = 1 := by
+  have h := leviCivita_antisymm_01 (μ := 0) (ν := 2) (ρ := 1) (σ := 3)
+  linarith [h, lc_0213]
+
+private lemma lc_2031 : leviCivita 2 0 3 1 = -1 := by
+  have h := leviCivita_antisymm_last (μ := 2) (ν := 0) (ρ := 1) (σ := 3)
+  linarith [h, lc_2013]
+
+private lemma lc_2103 : leviCivita 2 1 0 3 = -1 := by
+  have h := leviCivita_antisymm_01 (μ := 1) (ν := 2) (ρ := 0) (σ := 3)
+  linarith [h, lc_1203]
+
+private lemma lc_2130 : leviCivita 2 1 3 0 = 1 := by
+  have h := leviCivita_antisymm_last (μ := 2) (ν := 1) (ρ := 0) (σ := 3)
+  linarith [h, lc_2103]
+
+private lemma lc_2301 : leviCivita 2 3 0 1 = 1 := by
+  have h := leviCivita_antisymm_12 (μ := 2) (ν := 0) (ρ := 3) (σ := 1)
+  linarith [h, lc_2031]
+
+private lemma lc_2310 : leviCivita 2 3 1 0 = -1 := by
+  have h := leviCivita_antisymm_last (μ := 2) (ν := 3) (ρ := 0) (σ := 1)
+  linarith [h, lc_2301]
+
+private lemma lc_3012 : leviCivita 3 0 1 2 = -1 := by
+  have h := leviCivita_antisymm_01 (μ := 0) (ν := 3) (ρ := 1) (σ := 2)
+  linarith [h, lc_0312]
+
+private lemma lc_3021 : leviCivita 3 0 2 1 = 1 := by
+  have h := leviCivita_antisymm_last (μ := 3) (ν := 0) (ρ := 1) (σ := 2)
+  linarith [h, lc_3012]
+
+private lemma lc_3102 : leviCivita 3 1 0 2 = 1 := by
+  have h := leviCivita_antisymm_01 (μ := 1) (ν := 3) (ρ := 0) (σ := 2)
+  linarith [h, lc_1302]
+
+private lemma lc_3120 : leviCivita 3 1 2 0 = -1 := by
+  have h := leviCivita_antisymm_last (μ := 3) (ν := 1) (ρ := 0) (σ := 2)
+  linarith [h, lc_3102]
+
+private lemma lc_3201 : leviCivita 3 2 0 1 = -1 := by
+  have h := leviCivita_antisymm_12 (μ := 3) (ν := 0) (ρ := 2) (σ := 1)
+  linarith [h, lc_3021]
+
+private lemma lc_3210 : leviCivita 3 2 1 0 = 1 := by
+  have h := leviCivita_antisymm_last (μ := 3) (ν := 2) (ρ := 0) (σ := 1)
+  linarith [h, lc_3201]
+
+set_option maxHeartbeats 1200000 in
 theorem spinorTrace_four_gamma5 (μ ν ρ σ : FCIdx) :
     spinorTrace (gamma μ * gamma ν * gamma ρ * gamma σ * gamma5) =
-    4 * Complex.I * (leviCivita μ ν ρ σ : ℂ) := by
-  sorry  -- phase2_high: spur5In4Dim from DiracTrace.m L655-710; needs γ^5 = iγ^0γ^1γ^2γ^3
+    -4 * Complex.I * (leviCivita μ ν ρ σ : ℂ) := by
+  fin_cases μ <;> fin_cases ν <;> fin_cases ρ <;> fin_cases σ <;>
+    simp [spinorTrace, gamma, gamma5,
+      diracGamma, diracGamma0, diracGamma1, diracGamma2, diracGamma3, diracGamma5,
+      Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_four,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+      leviCivita4_diagonal_01, leviCivita4_diagonal_12, leviCivita4_diagonal_23,
+      leviCivita4_diagonal_02, leviCivita4_diagonal_03, leviCivita4_diagonal_13,
+      lc_0123, lc_0132, lc_0213, lc_0231, lc_0312, lc_0321,
+      lc_1023, lc_1032, lc_1203, lc_1230, lc_1302, lc_1320,
+      lc_2013, lc_2031, lc_2103, lc_2130, lc_2301, lc_2310,
+      lc_3012, lc_3021, lc_3102, lc_3120, lc_3201, lc_3210] <;>
+    ring
 
 /-- Tr(γ^μ γ^ν γ^5) = 0  (only 2 gammas before γ^5, gives length 2 < 4). -/
 theorem spinorTrace_two_gamma5_zero (μ ν : FCIdx) :

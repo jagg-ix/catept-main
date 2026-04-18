@@ -1,3 +1,7 @@
+
+
+set_option autoImplicit false
+
 /-!
 # NavierStokesClean.CATEPT.DSL.Syntax
 

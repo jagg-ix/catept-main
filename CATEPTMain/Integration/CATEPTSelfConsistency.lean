@@ -23,6 +23,9 @@ import CATEPTMain.AFPBridge.PDC.PDCPrelude
 import CATEPTMain.AFPBridge.PHQ.PHQPrelude
 import NavierStokesClean.Sobolev.TorusBridge
 import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
+-- CATEPTNSGNEmbedding provides the sorry-free GN H¹↪L⁴ proof.
+-- It must be imported BEFORE NoFTL so that norm_num is not yet shadowed.
+import CATEPTMain.Integration.CATEPTNSGNEmbedding
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
 import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
@@ -907,37 +910,11 @@ theorem catept_ns_p1_ept_stage_b_integrability
 -- Net: 10 → 7 sorrys by closing vs_l4_holder_bound, vorticity_l4_le_enstrophy, sa_g1_jomega_integrable
 
 open MeasureTheory
-
-/-- Bump function type for periodization (T³ → R³) -/
-abbrev BumpFunction3D := (Fin 3 → ℝ) → ℝ
-
-theorem catept_ns_p2_gn_h1_l4_embedding
-    (u : CATEPTVelocityField)
-    (χ : BumpFunction3D)
-    (s : Set (Fin 3 → ℝ))
-    (h_bound : Bornology.IsBounded s)
-    (hu : ContDiff ℝ 1 u)
-    (hχ : ContDiff ℝ 1 χ)
-    (h_supp : (fun x => χ x • u x).support ⊆ s) :
-    eLpNorm (fun x => χ x • u x) 4 volume ≤
-    eLpNormLESNormFDerivOfLeConst ((Fin 3 → ℝ)) volume s 2 4 * eLpNorm (fderiv ℝ (fun x => χ x • u x)) 2 volume := by
-  -- GN inequality: p=2, q=4, n = dim(Fin 3 → ℝ) = 3.
-  -- Checks: 1 ≤ p=2; p=2 < n=3; p⁻¹ - n⁻¹ = 1/2 - 1/3 = 1/6 ≤ 1/4 = q⁻¹.
-  -- Both BumpFunction3D and CATEPTVelocityField are `abbrev`, so unification is transparent.
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (Fin 3 → ℝ)) :=
-    MeasureTheory.isAddHaarMeasure_volume_pi (Fin 3)
-  have hfr : Module.finrank ℝ (Fin 3 → ℝ) = 3 := by
-    simp [Module.finrank_fintype_fun_eq_card, Fintype.card_fin]
-  have hfr_real : (Module.finrank ℝ (Fin 3 → ℝ) : ℝ) = 3 := by exact_mod_cast hfr
-  exact eLpNorm_le_eLpNorm_fderiv_of_le (μ := volume) (F := Fin 3 → ℝ) (p := 2) (q := 4)
-    (hχ.smul hu) h_supp
-    (by norm_num)
-    (by rw [hfr]; norm_cast)
-    (by rw [hfr_real]; push_cast; norm_num)
-    h_bound
+-- BumpFunction3D and catept_ns_p2_gn_h1_l4_embedding are proved sorry-free
+-- in CATEPTNSGNEmbedding.lean (imported before NoFTL to avoid norm_num shadow).
+-- They are in scope here via the import.
 -- phase2_exact: eLpNorm_le_eLpNorm_fderiv_of_le + periodization argument.
 -- Note: HasCompactSupport is recovered via bump-function χ cutoff.
-#print axioms catept_ns_p2_gn_h1_l4_embedding
 
 /-- P2: Vorticity L⁴ ≤ enstrophy.
 

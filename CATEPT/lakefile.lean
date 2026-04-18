@@ -1,12 +1,7 @@
-import Lake
-open Lake DSL
+import Mathlib
 
-package CATEPT where
-  -- Lean 4 formal verification of CAT/EPT framework
+set_option autoImplicit false
 
-require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git"
+namespace CATEPT
 
-@[default_target]
-lean_lib CATEPT where
-  -- Source files will be in CATEPT/
+end CATEPT

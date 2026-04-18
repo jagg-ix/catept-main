@@ -1,5 +1,7 @@
 import NavierStokesClean.CATEPT.DSL.WorkflowCorrectness
 
+set_option autoImplicit false
+
 /-!
 # NavierStokesClean.CATEPT.DSL.BackendContracts
 

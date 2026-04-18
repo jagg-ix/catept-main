@@ -1,5 +1,7 @@
-import CATEPT.DSL.BackendContracts
 import CATEPT.DSL.LambdaMetaTheory
+import CATEPT.DSL.BackendContracts
+
+set_option autoImplicit false
 
 /-!
 # CATEPT.DSL.ObligationMap

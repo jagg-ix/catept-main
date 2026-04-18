@@ -1,40 +1,7 @@
--- Default CATEPT surface used by NavierStokesClean.lean.
--- Keeps extracted experimental modules out of the default import path.
+import Mathlib
 
-import NavierStokesClean.CATEPT.Foundations
-import NavierStokesClean.CATEPT.PathIntegrals
-import NavierStokesClean.CATEPT.MeasurePathIntegral
-import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
-import NavierStokesClean.CATEPT.LatticeQCDBridge
-import NavierStokesClean.CATEPT.QuantumGravity
-import NavierStokesClean.CATEPT.QFTGRClosures
-import NavierStokesClean.CATEPT.CATEPTBridge
-import NavierStokesClean.CATEPT.Basic
-import NavierStokesClean.CATEPT.WeylYukawaContracts
-import NavierStokesClean.CATEPT.WeylYukawaContractsAudit
+set_option autoImplicit false
 
-import NavierStokesClean.CATEPT.ComplexEinsteinMTPIBridge
-import NavierStokesClean.CATEPT.BianchiComplexEFEContracts
-import NavierStokesClean.CATEPT.LeanMWEInteropBridge
-import NavierStokesClean.CATEPT.MTPIEinsteinDerivationBridge
-import NavierStokesClean.CATEPT.ComplexEFEQFTCompatibility
-import NavierStokesClean.CATEPT.GRTensorKernel
-import NavierStokesClean.CATEPT.SchwarzschildCurvatureIdentities
-import NavierStokesClean.CATEPT.ModularFlowKucharBridge
-import NavierStokesClean.CATEPT.PaperEqAliases
-import NavierStokesClean.CATEPT.MeasurementCommunicationEverettBridge
-import NavierStokesClean.CATEPT.ArakiRelativeEntropyBridge
-import NavierStokesClean.CATEPT.ImaginaryActionConcavityBridge
-import NavierStokesClean.CATEPT.ModularNoetherCompatibility
-import NavierStokesClean.CATEPT.MadelungADMBridge
-import NavierStokesClean.CATEPT.ADMExtrinsicCurvatureBridge
+namespace CATEPT
 
-import NavierStokesClean.CATEPT.CovariantDerivative
-import NavierStokesClean.CATEPT.CurvedMaxwellUnified
-import NavierStokesClean.CATEPT.CurvedMaxwellPhysLeanBridge
-import NavierStokesClean.CATEPT.CurvedMaxwellEinsteinDerivation
-import NavierStokesClean.CATEPT.MaxwellWaveEntropicTimePublic
-import NavierStokesClean.CATEPT.CFLClockEntropicBridge
-import NavierStokesClean.CATEPT.FLRWMetric
-import NavierStokesClean.CATEPT.KerrMetric
-import NavierStokesClean.CATEPT.IRDerivedStubs
+end CATEPT

@@ -1,5 +1,6 @@
-import Mathlib
 import Pphi2
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import CATEPTMain.Integration.CATEPTSpaceTime
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 

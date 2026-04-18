@@ -1,5 +1,5 @@
 import NavierStokesClean.Core.Types
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib
 
 /-!
 # Galerkin velocity derivative bound (Simon 1987, Lemma 5)

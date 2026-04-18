@@ -1,6 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
+import CATEPT.TemporalOrderAndReduction
 
 noncomputable section
 set_option autoImplicit false
@@ -25,19 +26,12 @@ theorem temporalOrderExpectation_flip_kI
       =
       - temporalOrderExpectation J kR kI := by
   unfold temporalOrderExpectation
-  rw [Finset.mul_sum]
-  rw [neg_mul]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro j hj
-  rw [Real.sinh_neg]
-  ring
+  simp [Real.sinh_neg, Finset.mul_sum, mul_assoc]
 
 /-- If every imaginary momentum vanishes, the temporal-order expectation
 vanishes. This is the frozen-order / Process A target. -/
 theorem temporalOrderExpectation_zero_if_kI_zero
-    (J : ℝ) {n : ℕ} (kR : Fin n → ℝ)
-    (hkI : ∀ j, (0 : ℝ) = 0) :
+    (J : ℝ) {n : ℕ} (kR : Fin n → ℝ) :
     temporalOrderExpectation J kR (fun _ => 0) = 0 := by
   unfold temporalOrderExpectation
   simp
@@ -68,7 +62,7 @@ structure TraceOutHI (S : TwoSectorSystem) where
 /-- Section X reduction principle:
 tracing out temporal order produces an effective reduced dynamics on `HR`. -/
 def ProducesReducedDynamics
-    (S : TwoSectorSystem) (T : TraceOutHI S) : Prop :=
+  (_S : TwoSectorSystem) (_T : TraceOutHI _S) : Prop :=
   True
 
 /-- Section X superposition state object. -/
@@ -81,7 +75,7 @@ structure TemporalOrderKet (S : TwoSectorSystem) where
 /-- Interface for the coherent temporal-order superposition. -/
 def IsBalancedTemporalOrderSuperposition
     {S : TwoSectorSystem}
-    (ψ : TemporalOrderKet S) : Prop :=
+  (_ψ : TemporalOrderKet S) : Prop :=
   True
 
 /-- Tracing out the temporal-order sector destroys balanced coherent access
@@ -97,8 +91,8 @@ theorem traceOut_balancedTemporalOrder_yields_reduced_state
 /-- Section X reduced CAT/EPT law as theorem target. -/
 def SatisfiesSectionXReducedLaw
     {ρ : Type}
-    (c : PhysicalConstants)
-    (rho drho : ℝ → ρ) : Prop :=
+  (_c : PhysicalConstants)
+  (_rho _drho : ℝ → ρ) : Prop :=
   True
 
 /-- Main theorem target from Section X:
@@ -106,7 +100,7 @@ the traced-out temporal-order sector induces the reduced CAT/EPT evolution on `H
 theorem tracingOutTemporalOrder_induces_CATDynamics
   (S : TwoSectorSystem)
   (T : TraceOutHI S)
-  (c : PhysicalConstants) :
+  (_c : PhysicalConstants) :
   ProducesReducedDynamics S T →
   True := fun _ => trivial
 
@@ -129,7 +123,7 @@ theorem constant_temporalOrder_has_zero_tick
     funext x
     exact hconst x 0
   rw [hfun]
-  simpa using (hasDerivAt_const t (Texp 0)).deriv
+  simp
 
 
 end CATEPT

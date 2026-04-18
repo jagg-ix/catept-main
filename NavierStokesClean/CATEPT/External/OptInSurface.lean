@@ -15,6 +15,7 @@ import NavierStokesClean.CATEPT.External.BrownianMotionInterface
 import NavierStokesClean.CATEPT.External.ETHGibbsBrownianIntegration
 import NavierStokesClean.CATEPT.External.KolmogorovComplexityInterface
 import NavierStokesClean.CATEPT.External.QuantumInfoInterface
+import NavierStokesClean.CATEPT.External.HyperbolicUnificationInterface
 import NavierStokesClean.CATEPT.External.CslibFoundationInterface
 
 /-!
@@ -38,5 +39,6 @@ It provides an optional import layer for external theorem-bridge contracts:
 - ETH-Gibbs-Brownian integration layer
 - Kolmogorov-complexity / AIT interfaces
 - finite-dimensional quantum-information interfaces
+- hyperbolic-unification/Schmidt-thermal bridge interfaces
 - CSLib foundational semantics/inference interfaces (LTS, bisimulation, context congruence)
 -/
