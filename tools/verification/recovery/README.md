@@ -12,6 +12,11 @@ Reusable utilities for deterministic cherry-pick recovery workflows.
   - Replays a queue onto a fresh branch from a base branch.
   - Applies strict safe conflict rules and writes structured JSONL logs.
 
+- `audit_isolated_stage_ports.py`
+  - Audits isolated-stage leverage coverage for stages `248/256/257/258/260/294`.
+  - Reports `exact_match`, `superseded_or_diverged`, or `missing_signals` per check.
+  - Useful as a repeatable gate to confirm actionable stage content is ported.
+
 ## Typical flow
 
 ```bash
@@ -25,6 +30,11 @@ python3 tools/verification/recovery/build_recovery_queue.py \
 python3 tools/verification/recovery/run_recovery_replay.py \
   --queue .recovery/recovery_queue_priority.json \
   --base main
+
+# 3) Audit isolated-stage coverage
+python3 tools/verification/recovery/audit_isolated_stage_ports.py \
+  --isolated-repo /Users/macbookpro/lab/tau/tau-information-dynamics/navier-stokes-project-clean-isolated-20260409 \
+  --json-out .recovery/isolated_stage_port_audit.json
 ```
 
 ## Notes
