@@ -48,8 +48,8 @@ theorem importedRun19Count_is_2 : importedRun19Count = 2 := by
 def importedAQFT1Count : Nat :=
   NavierStokesClean.CATEPT.Imported.Batch20260419.moduleCount
 
-/-- AQFT-1 queue currently exports 2 modules (scaffold + identities). -/
-theorem importedAQFT1Count_is_2 : importedAQFT1Count = 2 := by
+/-- AQFT-1 queue currently exports 3 modules (scaffold + identities + modular bridge). -/
+theorem importedAQFT1Count_is_3 : importedAQFT1Count = 3 := by
   simpa [importedAQFT1Count]
     using NavierStokesClean.CATEPT.Imported.Batch20260419.moduleCount_matches
 
