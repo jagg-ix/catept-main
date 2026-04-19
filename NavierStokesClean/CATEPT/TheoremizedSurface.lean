@@ -6,6 +6,7 @@
 
 import NavierStokesClean.CATEPT.Imported.Batch20260408_All
 import NavierStokesClean.CATEPT.Imported.Batch20260418
+import NavierStokesClean.CATEPT.Imported.Batch20260419
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_Top20
 
 set_option autoImplicit false
@@ -42,5 +43,14 @@ def importedRun19Count : Nat :=
 theorem importedRun19Count_is_2 : importedRun19Count = 2 := by
   simpa [importedRun19Count]
     using NavierStokesClean.CATEPT.Imported.Batch20260418.moduleCount_matches
+
+/-- AQFT-1 imported scaffold module count (separate from top-20 queue). -/
+def importedAQFT1Count : Nat :=
+  NavierStokesClean.CATEPT.Imported.Batch20260419.moduleCount
+
+/-- AQFT-1 queue currently exports 2 modules (scaffold + identities). -/
+theorem importedAQFT1Count_is_2 : importedAQFT1Count = 2 := by
+  simpa [importedAQFT1Count]
+    using NavierStokesClean.CATEPT.Imported.Batch20260419.moduleCount_matches
 
 end NavierStokesClean.CATEPT.TheoremizedSurface
