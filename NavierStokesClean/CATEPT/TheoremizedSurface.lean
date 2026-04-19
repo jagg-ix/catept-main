@@ -5,6 +5,7 @@
 -- need extracted/imported + theoremized Top-20 overlays.
 
 import NavierStokesClean.CATEPT.Imported.Batch20260408_All
+import NavierStokesClean.CATEPT.Imported.Batch20260418
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_Top20
 
 set_option autoImplicit false
@@ -32,5 +33,14 @@ theorem theoremizedTop20Count_is_20 : theoremizedTop20Count = 20 := by
 /-- Count-level closure: theoremized top-20 aligns with imported top-20 scaffold count. -/
 theorem theoremized_matches_imported_count : theoremizedTop20Count = importedTop20Count := by
   rw [theoremizedTop20Count_is_20, importedTop20Count_is_20]
+
+/-- Run-19 imported scaffold module count (separate from top-20 queue). -/
+def importedRun19Count : Nat :=
+  NavierStokesClean.CATEPT.Imported.Batch20260418.moduleCount
+
+/-- Run-19 queue is currently a 2-module provenance+obligation scaffold. -/
+theorem importedRun19Count_is_2 : importedRun19Count = 2 := by
+  simpa [importedRun19Count]
+    using NavierStokesClean.CATEPT.Imported.Batch20260418.moduleCount_matches
 
 end NavierStokesClean.CATEPT.TheoremizedSurface

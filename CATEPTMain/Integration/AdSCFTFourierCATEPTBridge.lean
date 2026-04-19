@@ -3,6 +3,8 @@ import CATEPTMain.Integration.CATEPTSpaceTime
 import CATEPTMain.Integration.NSCATEPTCoreBridge
 import CATEPTMain.Integration.CarlesonBridge
 import CATEPTMain.Integration.NSEPTNoetherInvariantBridge
+import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G016_RelationalTimeProtocol0068
+import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G189_WheelerDeWittProtocol0107
 import NavierStokes.NSFourierFreqBoundBridge
 
 /-!
@@ -440,5 +442,26 @@ theorem phase2_full_stack_with_nsept_regularity
     hBounded, hAgmon, hBase, hCar, ?_⟩
   exact nsEPT_regularity_interface_noether_component c Omega Tacc TauEnt D_I
     hΩ_diff hTacc_diff hΩ_pos hbal hacc Tns hτ_bound
+
+/-- Run-19 adapter theorem:
+connects the imported `(19)` artifact queue to existing, proved WDW and
+relational-clock lanes without importing raw `sorry`-based snippets. -/
+theorem phase2_run19_wdw_clock_alignment
+    (P : NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.WheelerDeWittProtocol)
+    (s : NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016ClockState)
+    (ht : 0 ≤ s.tRel)
+    (hc : 0 ≤ s.coupling)
+    (hf : 0 ≤ s.entropyFlux) :
+    (NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.constraintSatisfied P ↔
+      NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.antiBalanceSatisfied P) ∧
+    NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016MonotoneStep s ∧
+    0 ≤ (NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016Step s).tRel := by
+  have hBundle :=
+    NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016_bundle s ht hc hf
+  exact ⟨
+    NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.constraint_iff_antiBalance P,
+    hBundle.1,
+    hBundle.2
+  ⟩
 
 end CATEPTMain.Integration.AdSCFT.FourierCATEPT
