@@ -3,7 +3,7 @@ import NavierStokesClean.CATEPT.Foundations
 import NavierStokesClean.CATEPT.Imported.Batch20260419_01_aqft1_provenance
 
 /-!
-# Batch 20260419 - Imported Scaffold 03 (AQFT-1 Modular Identities)
+# Batch 20260419 - Imported Theoremized 03 (AQFT-1 Modular Identities)
 
 Low-risk theoremization of AQFT modular rows from `aqft-1.txt`:
 - `K = -log Δ_ω`

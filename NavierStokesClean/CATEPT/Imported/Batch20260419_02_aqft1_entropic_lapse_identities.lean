@@ -3,7 +3,7 @@ import NavierStokesClean.CATEPT.Foundations
 import NavierStokesClean.CATEPT.Imported.Batch20260419_01_aqft1_provenance
 
 /-!
-# Batch 20260419 - Imported Scaffold 02 (AQFT-1 Entropic Lapse Identities)
+# Batch 20260419 - Imported Theoremized 02 (AQFT-1 Entropic Lapse Identities)
 
 Low-risk theoremization of equation rows from `aqft-1.txt`:
 - `ΔS_I = (ħ/k_B) ΔS_rel`
