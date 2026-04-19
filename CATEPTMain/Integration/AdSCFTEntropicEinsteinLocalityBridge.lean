@@ -37,12 +37,14 @@ structure AdSCFTEntropicEinsteinLocalityWitness where
   bulk_model_matches : coords.model = adscftRecord.bulkSpacetime
 
 /-- Entropic Einstein locality yields Einstein flatness on the bundled
-coordinate model (Phase-5E axiom lane). -/
+coordinate model, using the witness model's causal/no-FTL fields. -/
 theorem adscft_einstein_flat_of_locality
-    (w : AdSCFTEntropicEinsteinLocalityWitness)
-    (hArrow : True) (hNoFTL : True) :
+    (w : AdSCFTEntropicEinsteinLocalityWitness) :
     w.coords.EinsteinFlat :=
-  ept_entropic_einstein_locality w.coords hArrow hNoFTL
+  ept_entropic_einstein_locality
+    w.coords
+    w.coords.model.ept_causal_arrow
+    w.coords.model.noFTL
 
 /-- Typed assumptions wrapping the locality lane so downstream theorems do not
 take raw `True` placeholders directly.  This is a phase-2 interface hardening
@@ -66,16 +68,15 @@ theorem adscft_einstein_flat_of_typed_assumptions
     (h : EntropicEinsteinLocalityAssumptions w) :
     w.coords.EinsteinFlat := by
   have _hcore : EntropicProperTimeCoreIntegrationContract h.core := h.core_contract
-  exact adscft_einstein_flat_of_locality w w.coords.model.ept_causal_arrow w.coords.model.noFTL
+  exact adscft_einstein_flat_of_locality w
 
 /-- The bundled witness can be lifted to an `EPTVacuumRecord` using locality. -/
 theorem adscft_ept_vacuum_of_locality
-    (w : AdSCFTEntropicEinsteinLocalityWitness)
-    (hArrow : True) (hNoFTL : True) :
+    (w : AdSCFTEntropicEinsteinLocalityWitness) :
     EPTVacuumRecord w.coords := by
   refine { catept_satisfies_ept_axioms w.coords.model with
     a5_einstein_flat := ?_ }
-  exact adscft_einstein_flat_of_locality w hArrow hNoFTL
+  exact adscft_einstein_flat_of_locality w
 
 /-- Headrick-1907 RT-SSA theorem remains directly available on the same witness. -/
 theorem adscft_rt_ssa_from_area
@@ -89,13 +90,12 @@ theorem adscft_rt_ssa_from_area
 /-- Combined theorem: from one witness, get Einstein-flatness and RT-SSA. -/
 theorem adscft_locality_and_rt_ssa_bundle
     (w : AdSCFTEntropicEinsteinLocalityWitness)
-    (hArrow : True) (hNoFTL : True)
     (G_N aAB aBC aB aABC : ℝ) (hG : 0 < G_N)
     (hAreaSSA : aAB + aBC ≥ aB + aABC) :
     w.coords.EinsteinFlat ∧
     strongSubadditivity (rtEntropy aAB G_N) (rtEntropy aBC G_N)
       (rtEntropy aB G_N) (rtEntropy aABC G_N) := by
-  refine ⟨adscft_einstein_flat_of_locality w hArrow hNoFTL, ?_⟩
+  refine ⟨adscft_einstein_flat_of_locality w, ?_⟩
   exact adscft_rt_ssa_from_area w G_N aAB aBC aB aABC hG hAreaSSA
 
 /-- Typed-assumption variant of the combined Einstein-flatness + RT-SSA bundle. -/
