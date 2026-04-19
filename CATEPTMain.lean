@@ -19,6 +19,11 @@ import CATEPTMain.Integration.LatticeQCDWilsonBridge
 import CATEPTMain.Integration.NSCATEPTCoreBridge
 import CATEPTMain.Integration.NSCATEPTExtendedBridge
 import CATEPTMain.Integration.AdSCFTBridge
+import CATEPTMain.Integration.CATEPTSpaceTime
+import CATEPTMain.Integration.CarlesonBridge
+import CATEPTMain.Integration.NSEPTNoetherInvariantBridge
+import CATEPTMain.Integration.AdSCFTFourierCATEPTBridge
+import CATEPTMain.Integration.AdSCFTMonoidalUnitArtifactBridge
 import CATEPTMain.Integration.BohmianQMBridge
 import CATEPTMain.Integration.QuantumInfoFisherBridge
 import CATEPTMain.Integration.GravitasBridge
