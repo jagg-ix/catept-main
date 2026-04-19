@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import NavierStokesClean.CATEPT.Foundations
-import NavierStokesClean.CATEPT.Imported.Batch20260419_01_aqft1_scaffold
+import NavierStokesClean.CATEPT.Imported.Batch20260419_01_aqft1_provenance
 
 /-!
 # Batch 20260419 - Imported Scaffold 02 (AQFT-1 Entropic Lapse Identities)
@@ -22,7 +22,7 @@ namespace NavierStokesClean.CATEPT.Imported.Batch20260419.B02AQFT1EntropicLapse
 
 noncomputable section
 
-open NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Scaffold
+open NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Provenance
 
 /-- Minimal constants needed by the AQFT-1 lapse equations. -/
 structure AQFTLapseConstants where
@@ -122,7 +122,7 @@ def obligationHeadlines : List String := [
 theorem obligations_nonempty : obligationHeadlines.length > 0 := by
   decide
 
-theorem artifact_scaffold_nonempty :
+theorem artifact_provenance_nonempty :
     canonicalEquationArtifacts ≠ [] :=
   canonicalEquationArtifacts_nonempty
 

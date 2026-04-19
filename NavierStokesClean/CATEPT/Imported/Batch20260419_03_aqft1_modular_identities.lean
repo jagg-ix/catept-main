@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import NavierStokesClean.CATEPT.Foundations
-import NavierStokesClean.CATEPT.Imported.Batch20260419_01_aqft1_scaffold
+import NavierStokesClean.CATEPT.Imported.Batch20260419_01_aqft1_provenance
 
 /-!
 # Batch 20260419 - Imported Scaffold 03 (AQFT-1 Modular Identities)
@@ -17,7 +17,7 @@ set_option autoImplicit false
 
 namespace NavierStokesClean.CATEPT.Imported.Batch20260419.B03AQFT1ModularIdentities
 
-open NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Scaffold
+open NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Provenance
 
 noncomputable section
 
@@ -78,7 +78,7 @@ def phase2Obligations : List String := [
 theorem phase2Obligations_nonempty : phase2Obligations.length > 0 := by
   decide
 
-/-- Provenance check: modular-row canonical id appears in the AQFT-1 scaffold range. -/
+/-- Provenance check: modular-row canonical id appears in the AQFT-1 imported range. -/
 def modularRowCanonicalId : Nat := 6
 
 theorem modularRowCanonicalId_in_range :
@@ -88,4 +88,3 @@ theorem modularRowCanonicalId_in_range :
 end
 
 end NavierStokesClean.CATEPT.Imported.Batch20260419.B03AQFT1ModularIdentities
-

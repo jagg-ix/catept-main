@@ -1,5 +1,5 @@
 /-!
-# Batch 20260419 - Imported Scaffold 01 (AQFT-1)
+# Batch 20260419 - Imported Provenance 01 (AQFT-1)
 
 Source index:
 `/Users/macbookpro/Downloads/aqft-1.txt`
@@ -9,7 +9,7 @@ artifacts listed in `aqft-1.txt`.  It intentionally avoids importing raw
 snippet claims as load-bearing theorems.
 -/
 
-namespace NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Scaffold
+namespace NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Provenance
 
 /-- Canonical equation artifact entry from `aqft-1.txt`. -/
 structure AQFT1EquationArtifact where
@@ -74,5 +74,4 @@ theorem canonical_le_source_paths :
     canonicalEquationArtifacts.length ≤ sourceIndexPathCount := by
   decide
 
-end NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Scaffold
-
+end NavierStokesClean.CATEPT.Imported.Batch20260419.B01AQFT1Provenance

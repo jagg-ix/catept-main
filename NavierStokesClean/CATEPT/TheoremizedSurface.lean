@@ -13,7 +13,7 @@ set_option autoImplicit false
 
 namespace NavierStokesClean.CATEPT.TheoremizedSurface
 
-/-- Imported top-20 scaffold count. -/
+/-- Imported top-20 module count. -/
 def importedTop20Count : Nat :=
   NavierStokesClean.CATEPT.Imported.Batch20260408.All.totalModuleCount
 
@@ -21,7 +21,7 @@ def importedTop20Count : Nat :=
 def theoremizedTop20Count : Nat :=
   NavierStokesClean.CATEPT.Theoremized.Batch20260408.Top20.totalModuleCount
 
-/-- Imported scaffold surface is exactly 20 modules. -/
+/-- Imported surface is exactly 20 modules. -/
 theorem importedTop20Count_is_20 : importedTop20Count = 20 := by
   simpa [importedTop20Count]
     using NavierStokesClean.CATEPT.Imported.Batch20260408.All.totalModuleCount_is_20
@@ -31,24 +31,24 @@ theorem theoremizedTop20Count_is_20 : theoremizedTop20Count = 20 := by
   simpa [theoremizedTop20Count]
     using NavierStokesClean.CATEPT.Theoremized.Batch20260408.Top20.totalModuleCount_is_20
 
-/-- Count-level closure: theoremized top-20 aligns with imported top-20 scaffold count. -/
+/-- Count-level closure: theoremized top-20 aligns with imported top-20 module count. -/
 theorem theoremized_matches_imported_count : theoremizedTop20Count = importedTop20Count := by
   rw [theoremizedTop20Count_is_20, importedTop20Count_is_20]
 
-/-- Run-19 imported scaffold module count (separate from top-20 queue). -/
+/-- Run-19 imported module count (separate from top-20 queue). -/
 def importedRun19Count : Nat :=
   NavierStokesClean.CATEPT.Imported.Batch20260418.moduleCount
 
-/-- Run-19 queue is currently a 2-module provenance+obligation scaffold. -/
+/-- Run-19 queue currently exports 2 modules. -/
 theorem importedRun19Count_is_2 : importedRun19Count = 2 := by
   simpa [importedRun19Count]
     using NavierStokesClean.CATEPT.Imported.Batch20260418.moduleCount_matches
 
-/-- AQFT-1 imported scaffold module count (separate from top-20 queue). -/
+/-- AQFT-1 imported module count (separate from top-20 queue). -/
 def importedAQFT1Count : Nat :=
   NavierStokesClean.CATEPT.Imported.Batch20260419.moduleCount
 
-/-- AQFT-1 queue currently exports 3 modules (scaffold + identities + modular bridge). -/
+/-- AQFT-1 queue currently exports 3 modules (provenance + identities + modular bridge). -/
 theorem importedAQFT1Count_is_3 : importedAQFT1Count = 3 := by
   simpa [importedAQFT1Count]
     using NavierStokesClean.CATEPT.Imported.Batch20260419.moduleCount_matches
