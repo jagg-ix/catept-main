@@ -79,8 +79,8 @@ structure NHHamiltonian (N : ℕ) where
 -- ── Complex eigenvalues Eₙ = εₙ − iγₙ ───────────────────────────────────────
 
 /-- Real part εₙ(φ) of the n-th complex eigenvalue (flux-dependent energy). -/
-def complexEigenvalueRe (N : ℕ) (H : NHHamiltonian N) (_φ : ℝ) (n : Fin N) : ℝ :=
-  H.hopReal n
+def complexEigenvalueRe (N : ℕ) (H : NHHamiltonian N) (φ : ℝ) (n : Fin N) : ℝ :=
+  H.hopReal n + φ * ((n : ℝ) + 1)
 
 /-- Decay rate γₙ(φ) ≥ 0 of the n-th eigenvalue (imaginary part magnitude). -/
 def complexEigenvalueIm (N : ℕ) (H : NHHamiltonian N) (_φ : ℝ) (n : Fin N) : ℝ :=
@@ -102,7 +102,7 @@ def exceptionalPointAt (N : ℕ) (H : NHHamiltonian N) (φ_EP : ℝ) (m n : Fin 
   complexEigenvalueIm N H φ_EP m = complexEigenvalueIm N H φ_EP n
 
 /-- Phase-2 hook: eigenvector coalescence at an EP candidate. -/
-def eigenvectorCoalescenceAt (_N : ℕ) (_H : NHHamiltonian _N) (_φ_EP : ℝ) (_m _n : Fin _N) : Prop := True
+def eigenvectorCoalescenceAt (_N : ℕ) (_H : NHHamiltonian _N) (_φ_EP : ℝ) (m n : Fin _N) : Prop := m = n
 
 /-- Strong EP predicate: spectral coalescence + eigenvector coalescence. -/
 def exceptionalPointAtStrong (N : ℕ) (H : NHHamiltonian N) (φ_EP : ℝ) (m n : Fin N) : Prop :=
@@ -161,6 +161,33 @@ def persistentCurrentFromSpec
       nhFermiDirac β (complexEigenvalueRe N H φ n) (complexEigenvalueIm N H φ n) μ *
       complexEigenvalueRe N H φ n)
 
+theorem continuous_persistentCurrentFromSpec
+    (N : ℕ) (H : NHHamiltonian N) (β μ : ℝ) :
+    Continuous (persistentCurrentFromSpec N H β μ) := by
+  classical
+  unfold persistentCurrentFromSpec
+  refine Continuous.neg ?_
+  refine continuous_finset_sum _ ?_
+  intro n _hn
+  let d : ℝ → ℝ := fun φ =>
+    1 + Real.exp
+      (β * (complexEigenvalueRe N H φ n + complexEigenvalueIm N H φ n - μ))
+  have hd_cont : Continuous d := by
+    unfold d complexEigenvalueRe complexEigenvalueIm
+    continuity
+  have hd_ne : ∀ φ : ℝ, d φ ≠ 0 := by
+    intro φ
+    have hpos : 0 < d φ := by
+      unfold d
+      linarith [Real.exp_pos
+        (β * (complexEigenvalueRe N H φ n + complexEigenvalueIm N H φ n - μ))]
+    exact ne_of_gt hpos
+  have hε_cont : Continuous (fun φ => complexEigenvalueRe N H φ n) := by
+    unfold complexEigenvalueRe
+    continuity
+  have hinv_cont : Continuous (fun φ => (d φ)⁻¹) := hd_cont.inv₀ hd_ne
+  simpa [nhFermiDirac, d, one_div] using hinv_cont.mul hε_cont
+
 /-- **Main theorem (Shen et al., paper title result)**:
     The persistent current I(φ) is continuous at exceptional points.
 
@@ -173,8 +200,7 @@ theorem nhFermiDirac_continuousAtEP
     (_hEP : exceptionalPointAt N H φ_EP m n) :
     ContinuousAt (persistentCurrentFromSpec N H β μ) φ_EP
   := by
-  unfold persistentCurrentFromSpec
-  simp [continuousAt_const, complexEigenvalueRe, complexEigenvalueIm]
+  exact (continuous_persistentCurrentFromSpec N H β μ).continuousAt
 
 theorem nhFermiDirac_continuousAtEP_strong
     (N : ℕ) (H : NHHamiltonian N) (β μ : ℝ) (m n : Fin N) (φ_EP : ℝ)

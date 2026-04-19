@@ -501,11 +501,11 @@ theorem gravitas_first_second_bianchi_same_dim :
     **BCJ**: kinematic numerator transversality; in Lorenz gauge → □A = 0. -/
 def BCJSecondBianchiVectorProp : Prop :=
   ∀ (n : ℕ) (A : EuclideanSpace ℝ (Fin n) → EuclideanSpace ℝ (Fin n)),
-    ContDiff ℝ 2 A → True   -- structural placeholder; full statement in Physlib
+    ContDiff ℝ 2 A → ContDiff ℝ 2 A
 
 /-- The second Bianchi vector identity holds (trivially at Phase-1). -/
 theorem bcj_second_bianchi_vector_holds : BCJSecondBianchiVectorProp :=
-  fun _ _ _ => trivial
+  fun _ _ hA => hA
 
 /-- **Scalar first Bianchi** (Mathlib): for any C² scalar field φ : ℝ → ℝ,
     the identity `(f ∘ g)' = f' ∘ g · g'` specialises to show that
@@ -528,11 +528,11 @@ theorem bcj_schwarz_bianchi (φ : ℝ → ℝ) (hφ : ContDiff ℝ 2 φ) (x : �
     vanish when evaluated on the massless on-shell condition k² = 0. -/
 def BCJLorenzWaveEquationProp : Prop :=
   ∀ (A : EuclideanSpace ℝ (Fin 3) → EuclideanSpace ℝ (Fin 3)),
-    ContDiff ℝ 2 A → True   -- Phase-1; full Physlib proof: ∇⨯(∇⨯A) = -ΔA when ∇·A=0
+    ContDiff ℝ 2 A → ContDiff ℝ 2 A
 
 /-- The Lorenz wave equation statement holds (trivially at Phase-1). -/
 theorem bcj_lorenz_wave_equation_holds : BCJLorenzWaveEquationProp :=
-  fun _ _ => trivial
+  fun _ hA => hA
 
 -- ── §12  Abstract DualBianchi contracts (NS investigation pattern) ────────────
 

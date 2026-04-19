@@ -1,4 +1,4 @@
-import CATEPTMain.Integration.AdSCFTReplica1907Scaffold
+import CATEPTMain.Integration.AdSCFTReplica1907Bridge
 import Mathlib
 /-!
 # AdS/CFT 1907 Port Export
@@ -6,7 +6,7 @@ import Mathlib
 Single import surface for the Headrick-1907 integration stack:
 
 - `AdSCFTHeadrick1907Bridge` (entropy/RT equation map)
-- `AdSCFTReplica1907Scaffold` (replica-limit contract)
+- `AdSCFTReplica1907Bridge` (replica-limit contract)
 
 Downstream modules can depend on one witness type (`Headrick1907PortWitness`)
 instead of importing both modules separately.
@@ -92,13 +92,14 @@ def pureReplicaTraceData : ReplicaTraceData :=
   { trRhoPow := fun _ => 1
     trRhoPow_pos := by intro _; norm_num
     trRhoPow_one := by norm_num
-    analyticNearOne := True }
+    analyticNearOne := by
+      simpa using (continuousAt_const : ContinuousAt (fun _ : ℝ => (1 : ℝ)) (1 : ℝ)) }
 
 /-- The toy pure-state replica data satisfies the phase-2 limit contract with
 `S_vN = 0`. -/
 theorem pureReplicaLimitContract :
     ReplicaLimitContract pureReplicaTraceData 0 := by
-  refine ⟨trivial, ?_⟩
+  refine ⟨pureReplicaTraceData.analyticNearOne, ?_⟩
   simpa [renyiFromReplica, pureReplicaTraceData, renyiEntropyFormula] using
     (tendsto_const_nhds : Filter.Tendsto
       (fun _ : ℝ => (0 : ℝ))

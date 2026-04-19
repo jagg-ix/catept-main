@@ -207,7 +207,7 @@ def Headrick1907IntegrationContract (w : Headrick1907Witness) : Prop :=
   w.eq5_57_mmi
 
 /-- Phase-1 witness: algebraic core + RT bridge are wired; MMI is left as a
-    declared contract target for phase-2 geometric proof. -/
+    theoremized RT-scaled transfer lane. -/
 def phase1Headrick1907Witness : Headrick1907Witness :=
   { eq2_18_subadditivity :=
       ∀ SA SB SAB : ℝ, subadditivity SA SB SAB ↔ 0 ≤ mutualInformation SA SB SAB
@@ -224,8 +224,12 @@ def phase1Headrick1907Witness : Headrick1907Witness :=
         rtEntropyFromTwoCandidates a₁ a₂ G_N ≤ rtEntropy a₁ G_N ∧
         rtEntropyFromTwoCandidates a₁ a₂ G_N ≤ rtEntropy a₂ G_N
     eq5_57_mmi :=
-      ∀ SAB SBC SAC SA SB SC SABC : ℝ,
-        monogamyMutualInformation SAB SBC SAC SA SB SC SABC → True }
+      ∀ G_N aAB aBC aAC aA aB aC aABC : ℝ, 0 < G_N →
+        monogamyMutualInformation aAB aBC aAC aA aB aC aABC →
+          monogamyMutualInformation
+            (rtEntropy aAB G_N) (rtEntropy aBC G_N) (rtEntropy aAC G_N)
+            (rtEntropy aA G_N) (rtEntropy aB G_N) (rtEntropy aC G_N)
+            (rtEntropy aABC G_N) }
 
 theorem phase1Headrick1907Witness_valid :
     Headrick1907IntegrationContract phase1Headrick1907Witness := by
@@ -241,7 +245,7 @@ theorem phase1Headrick1907Witness_valid :
   · intro a₁ a₂ G_N hG
     exact ⟨rtEntropyFromTwoCandidates_le_left a₁ a₂ G_N hG,
            rtEntropyFromTwoCandidates_le_right a₁ a₂ G_N hG⟩
-  · intro SAB SBC SAC SA SB SC SABC _hMMI
-    trivial
+  · intro G_N aAB aBC aAC aA aB aC aABC hG hMMI
+    exact rtEntropy_mmi_of_area_mmi G_N aAB aBC aAC aA aB aC aABC hG hMMI
 
 end CATEPTMain.Integration.AdSCFT.Headrick1907

@@ -4,7 +4,7 @@ import Mathlib
 /-!
 # AdS/CFT 1907 Phase-2 Bridge (Replica Analytics + EP Continuity)
 
-Phase-2 scaffold for integrating additional reasoning from:
+Phase-2 bridge for integrating additional reasoning from:
 
   Matthew Headrick, *Lectures on entanglement entropy in field theory and holography*
   arXiv:1907.08126v1 (`~/Downloads/1907.08126v1.pdf`)
@@ -59,7 +59,7 @@ def renyiInfinityOrderLimit (R : ReplicaTraceData) (SInf : ℝ) : Prop :=
 to von Neumann entropy (`α → 1`) and Eq. (2.45) shape constraints, with
 explicit hooks for Eq. (2.41) and Eq. (2.43). -/
 structure ReplicaAnalyticPhase2Contract (R : ReplicaTraceData) (S_vN : ℝ) where
-  analyticNearOne : R.analyticNearOne
+  analyticNearOne : ContinuousAt R.trRhoPow 1
   trRhoPow_continuousOn_ge_one :
     ContinuousOn R.trRhoPow {α : ℝ | 1 ≤ α}
   continuation_from_integer_moments :
@@ -139,7 +139,7 @@ theorem renyiAlphaCurvature_pureReplica_eq_zero (α : ℝ) :
 /-- Concrete phase-2 contract for the pure-state toy replica dataset. -/
 def pureReplicaAnalyticPhase2Contract :
     ReplicaAnalyticPhase2Contract pureReplicaTraceData 0 where
-  analyticNearOne := trivial
+  analyticNearOne := pureReplicaTraceData.analyticNearOne
   trRhoPow_continuousOn_ge_one := by
     simpa [pureReplicaTraceData] using
       (continuousOn_const : ContinuousOn (fun _ : ℝ => (1 : ℝ)) {α : ℝ | 1 ≤ α})
