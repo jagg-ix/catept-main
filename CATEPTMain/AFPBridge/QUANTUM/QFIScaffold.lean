@@ -80,19 +80,21 @@ axiom qfi_nonneg {n : ℕ} (ρ : DensityMatrix n) (L : QSquare n)
 
 /-- QFI is additive for product states:
   F(ρ_A ⊗ ρ_B, L_A ⊗ 1 + 1 ⊗ L_B) = F(ρ_A, L_A) + F(ρ_B, L_B). -/
-theorem qfi_product_additive {n m : ℕ}
-    (_ : DensityMatrix n) (_ : DensityMatrix m)
-    (_ : QSquare n) (_ : QSquare m) :
-    True := by
-  trivial
+axiom qfi_product_additive {n m : ℕ}
+    (ρA : DensityMatrix n) (ρB : DensityMatrix m)
+    (LA : QSquare n) (LB : QSquare m)
+    (ρAB : DensityMatrix (n * m)) (LAB : QSquare (n * m))
+    (hTensor : True) :
+    qfi ρAB LAB = qfi ρA LA + qfi ρB LB
 
 /-- QFI is convex (concave in ρ for fixed parametrisation):
   F(λρ₁ + (1-λ)ρ₂) ≤ λ F(ρ₁) + (1-λ) F(ρ₂)  (for mixtures).
   This reflects the data-processing inequality. -/
-theorem qfi_convex {n : ℕ} (_ _ : DensityMatrix n)
-    (_ : ℝ → DensityMatrix n) (_ : ℝ)
-  (lam : ℝ) (_ : 0 ≤ lam) (_ : lam ≤ 1) :
-    True := trivial  -- placeholder; full statement requires mixed-state family
+axiom qfi_convex {n : ℕ} (ρ₁ ρ₂ : DensityMatrix n)
+    (ρ_fam : ℝ → DensityMatrix n) (θ : ℝ)
+    (lam : ℝ) (hLam : 0 ≤ lam) (hLam1 : lam ≤ 1) :
+    qfi_family ρ_fam θ ≤
+      lam * qfi ρ₁ (SLD ρ_fam θ) + (1 - lam) * qfi ρ₂ (SLD ρ_fam θ)
 
 -- ── Quantum Cramér-Rao bound ─────────────────────────────────────────────────
 /-- **Quantum Cramér-Rao bound**.
@@ -132,8 +134,10 @@ theorem cramer_rao_scalar {n : ℕ}
 axiom ghz_qfi_heisenberg_scaling (n : ℕ) (hn : 1 < n)
     (H : QSquare (2^n))  -- collective rotation generator
     (hH : True)          -- H = ∑ᵢ (σᶻᵢ/2) placeholder
-    :
-  True
+    : ∃ ρGHZ : DensityMatrix (2^n), qfi ρGHZ H = (n : ℝ)^2
+
+/-- Phase-1 placeholder for tensor-self map ρ ↦ ρ ⊗ ρ on density matrices. -/
+axiom selfTensorDM {n : ℕ} : DensityMatrix n → DensityMatrix (n * n)
 
 -- ── No-cloning from lean4-quantum (re-stated for DensityMatrix) ──────────────
 /-- No-cloning for mixed states: there is no quantum channel Λ such that
@@ -141,6 +145,7 @@ axiom ghz_qfi_heisenberg_scaling (n : ℕ) (hn : 1 < n)
   Phase-1: axiom (proved in lean4-quantum for pure states).
   Phase-2: extend lean4-quantum proof using channel representation theorem. -/
 axiom no_cloning_mixed (n : ℕ) :
-    True
+    ¬ ∃ (cloneChannel : DensityMatrix n → DensityMatrix (n * n)),
+        ∀ ρ : DensityMatrix n, cloneChannel ρ = selfTensorDM ρ
 
 end CATEPTMain.AFPBridge.QUANTUM
