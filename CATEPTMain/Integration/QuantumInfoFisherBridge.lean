@@ -1,4 +1,5 @@
 import CATEPTMain.Integration.BohmianQMBridge
+import CATEPTMain.Integration.QuantumCATEPTBridge
 import CATEPTMain.Integration.QuantumFisherBridge
 import CATEPTMain.Integration.YoshidaFreeFisherBridge
 import NavierStokesClean.CATEPT.External.QuantumInfoInterface
@@ -34,6 +35,12 @@ the CATEPT framework, connecting:
 
 - **CPTP maps / DPI** (QuantumInfoInterface): data-processing inequality
   `D(Φ(ρ)‖Φ(σ)) ≤ D(ρ‖σ)` as a contractivity certificate.
+
+- **Relative modular-weight invariance** (`QuantumCATEPTBridge`):
+  `Δ⟨K + cI⟩ = Δ⟨K⟩` (constant-shift cancellation).
+
+- **Liouville doubled-space embedding** (`QuantumCATEPTBridge`):
+  density-matrix trajectories admit a `|Ψ⟩⟩` Schrödinger-form witness.
 
 - **Measurement** (B28, G214): conditional-state normalization and Born-rule
   consistency within the CATEPT path-integral framework.
@@ -255,6 +262,24 @@ theorem fidelity_cptp_nondecreasing
       w.fidelity (w.applyChannel Φ ρ) (w.applyChannel Φ σ) :=
   w.fidelity_channel_nondecreasing Φ ρ σ
 
+/-- Relative modular-weight constant-shift invariance:
+`Δ⟨K + cI⟩ = Δ⟨K⟩` (bridge import from `QuantumCATEPTBridge`). -/
+theorem relative_modularWeight_shift_invariant
+    {n : ℕ} (ρ ρ₀ : CATEPTMain.AFPBridge.QUANTUM.DensityMatrix n)
+    (K : CATEPTMain.AFPBridge.QUANTUM.QSquare n) (c : ℂ) :
+    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀
+      (K + c • (1 : CATEPTMain.AFPBridge.QUANTUM.QSquare n)) =
+    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K :=
+  CATEPTMain.Integration.QuantumCATEPTBridge.quantum_relativeModularWeight_add_const ρ ρ₀ K c
+
+/-- Liouville-space mapping existence for any chosen effective generator
+(`d/dt|Ψ⟩⟩ = -iH_eff|Ψ⟩⟩`) imported from `QuantumCATEPTBridge`. -/
+theorem liouville_doubleSpace_mapping_for
+    (n : ℕ) (Heff : ℝ → CATEPTMain.AFPBridge.QUANTUM.QSquare (n * n)) :
+    ∃ traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n,
+      CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj :=
+  CATEPTMain.Integration.QuantumCATEPTBridge.quantum_doubleSpace_mapping_for n Heff
+
 /-- Strong subadditivity of quantum entropy. -/
 theorem strong_subadditivity
     (w : NavierStokesClean.CATEPT.External.QuantumInfoCertificate)
@@ -389,6 +414,10 @@ structure QInfoFisherWitness where
   freeFisher_defined       : Prop
   /-- CPTP maps satisfy DPI. -/
   dpi_cptp_holds           : Prop
+  /-- Relative modular-weight is invariant under `K ↦ K + cI`. -/
+  modular_const_free       : Prop
+  /-- Density-matrix dynamics admit doubled-space (Liouville) Schrödinger form. -/
+  doubleSpace_mapping      : Prop
   /-- Strong subadditivity. -/
   ssa_holds                : Prop
   /-- Conditional state normalization. -/
@@ -404,6 +433,7 @@ structure QInfoFisherWitness where
 def QInfoFisherIntegrationContract (w : QInfoFisherWitness) : Prop :=
   w.classicalFisher_nonneg ∧ w.maxEnt_density_pos ∧ w.qfi_nonneg ∧
   w.cramerRao_bound ∧ w.freeFisher_defined ∧ w.dpi_cptp_holds ∧
+  w.modular_const_free ∧ w.doubleSpace_mapping ∧
   w.ssa_holds ∧ w.cond_state_norm ∧ w.euclid_integ ∧
   w.info_conservation ∧ w.complementarity
 
@@ -428,6 +458,17 @@ def phase1QInfoFisherWitness : QInfoFisherWitness :=
         CATEPTMain.Integration.YoshidaFreeFisher.YoshidaFreeFisherIntegrationContract w →
         w.freeFisherDist_defined
     dpi_cptp_holds    := True  -- see §6 dpi_cptp for the universe-poly proof
+    modular_const_free :=
+      ∀ {n : ℕ} (ρ ρ₀ : CATEPTMain.AFPBridge.QUANTUM.DensityMatrix n)
+        (K : CATEPTMain.AFPBridge.QUANTUM.QSquare n) (c : ℂ),
+          CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀
+            (K + c • (1 : CATEPTMain.AFPBridge.QUANTUM.QSquare n)) =
+          CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K
+    doubleSpace_mapping :=
+      ∀ n : ℕ,
+        ∃ (Heff : ℝ → CATEPTMain.AFPBridge.QUANTUM.QSquare (n * n))
+          (traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n),
+            CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj
     ssa_holds         := True  -- see §6 strong_subadditivity for the proof
     cond_state_norm :=
       ∀ (psi p : ℝ), 0 < p → (psi / Real.sqrt p) ^ 2 = psi ^ 2 / p
@@ -451,10 +492,12 @@ theorem phase1_qinfo_fisher_contract :
    fun w hc => cramer_rao_from_witness w hc,                   -- cramerRao_bound
    fun w hc => freeFisherDist_defined_from_witness w hc,       -- freeFisher_defined
    trivial,                                                    -- dpi_cptp_holds = True
+   fun ρ ρ₀ K c => relative_modularWeight_shift_invariant ρ ρ₀ K c, -- modular_const_free
+   fun n => CATEPTMain.Integration.QuantumCATEPTBridge.quantum_doubleSpace_mapping_exists n,
    trivial,                                                    -- ssa_holds = True
    fun psi p hp => conditional_state_normalized psi p hp,     -- cond_state_norm
    trivial,                                                    -- euclid_integ = True
-   fun i hC => hC,                                            -- info_conservation
+   fun _ hC => hC,                                            -- info_conservation
    fun pairs => complementarity_consistent pairs⟩              -- complementarity
 
 /-- Phase-1 quantum-information / Fisher record. -/

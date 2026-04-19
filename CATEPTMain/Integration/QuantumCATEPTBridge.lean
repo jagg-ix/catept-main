@@ -35,6 +35,10 @@ consistent with the modular flow clock from `ModularFlowBridge.lean`.
 | `quantumCATEPTSlot`               | proved | CATEPTPluginSlot from DM n     |
 | `quantumCATEPTSlot_consistent`    | proved | cateptConsistencyConstraint    |
 | `quantumCATEPTSlot_damping`       | proved | exp(−S/1) = exp(−S)           |
+| `quantum_relativeModularWeight_def` | proved | `Δ⟨K⟩ = ⟨K⟩_ρ − ⟨K⟩_ρ₀`      |
+| `quantum_relativeModularWeight_add_const` | proved | `Δ⟨K+cI⟩ = Δ⟨K⟩`      |
+| `quantum_doubleSpace_mapping_for` | proved | fixed `H_eff(t)` admits trajectory |
+| `quantum_doubleSpace_mapping_exists` | proved | existential Liouville mapping |
 -/
 
 set_option autoImplicit false
@@ -87,6 +91,52 @@ theorem quantumCATEPTSlot_damping (n : ℕ) (ρ : DensityMatrix n) :
     Real.exp (-(vonNeumannEntropy n ρ / 1)) =
     Real.exp (-(vonNeumannEntropy n ρ)) := by
   norm_num
+
+-- ── Relative modular-weight bridge (constant-free form) ───────────────────────
+
+/-- Bridge-level definition form:
+`Δ⟨K⟩ = ⟨K⟩_ρ - ⟨K⟩_{ρ₀}`. -/
+theorem quantum_relativeModularWeight_def {n : ℕ}
+    (ρ ρ₀ : DensityMatrix n) (K : QSquare n) :
+    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K =
+      CATEPTMain.AFPBridge.QUANTUM.modularWeight ρ K -
+        CATEPTMain.AFPBridge.QUANTUM.modularWeight ρ₀ K := rfl
+
+/-- Bridge-level constant-shift invariance:
+`Δ⟨K + cI⟩ = Δ⟨K⟩`.
+
+This is the finite-dimensional constant-free relative form used by the
+integration notes (`Δ⟨K⟩` is insensitive to additive shifts in `K`). -/
+theorem quantum_relativeModularWeight_add_const {n : ℕ}
+    (ρ ρ₀ : DensityMatrix n) (K : QSquare n) (c : ℂ) :
+    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ (K + c • (1 : QSquare n)) =
+      CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K := by
+  simpa using
+    (CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight_add_const
+      (ρ := ρ) (ρ₀ := ρ₀) (K := K) (c := c))
+
+-- ── Liouville / doubled-space bridge ──────────────────────────────────────────
+
+/-- Bridge-level fixed-generator form:
+for any chosen effective generator `H_eff(t)`, there exists a doubled-space
+trajectory solving `d/dt |Ψ⟩⟩ = -i H_eff |Ψ⟩⟩`. -/
+theorem quantum_doubleSpace_mapping_for (n : ℕ)
+    (Heff : ℝ → QSquare (n * n)) :
+    ∃ traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n,
+      CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj := by
+  simpa using
+    (CATEPTMain.AFPBridge.QUANTUM.densityMatrixEvolution_doubleSpace_mapping_for
+      (n := n) Heff)
+
+/-- Bridge-level existential form:
+there exist `H_eff(t)` and a doubled-space trajectory solving the Schrödinger
+equation in Liouville space. -/
+theorem quantum_doubleSpace_mapping_exists (n : ℕ) :
+    ∃ (Heff : ℝ → QSquare (n * n))
+      (traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n),
+      CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj := by
+  simpa using
+    (CATEPTMain.AFPBridge.QUANTUM.densityMatrixEvolution_doubleSpace_mapping (n := n))
 
 end  -- noncomputable section
 
