@@ -22,22 +22,18 @@ require cslib from git
 require pphi2 from git
   "https://github.com/jagg-ix/pphi2.git" @ "b0cbac4703cfa6c6bb859a10687915472ad88fca"
 
--- Remaining portability blocker: local-only dependency (no git remote configured yet).
-require MarkovSemigroups from
-  "/Users/macbookpro/lab/tau/tau-information-dynamics/markov-semigroups"
-
 require GaussianField from git
   "https://github.com/jagg-ix/gaussian-field.git" @ "cacaa98743ee90a7dc9010d62eca488a8561953e"
 
 -- pphi2N: O(N) linear sigma model, large-N mass gap via Hubbard-Stratonovich.
 require pphi2N from git
-  "https://github.com/jagg-ix/pphi2N.git" @ "a915dd027465e158091209934f9ec064603ee80b"
+  "https://github.com/jagg-ix/pphi2N.git" @ "985e636af7dc4c9b7d0f66249adfc8e7b8ef19f4"
 
 -- LGT: 2D Yang-Mills mass gap via discrete differential geometry + Doeblin mixing.
--- Requires GaussianField + MarkovSemigroups (both transitive via pphi2/pphi2N).
+-- Requires GaussianField + MarkovSemigroups transitively via pphi2/pphi2N.
 -- GaugeFixing.lean has 2 localized sorries (Faddeev-Popov); bridge staged for Ph2.
 require LGT from
-  git "https://github.com/mrdouglasny/lgt.git" @ "5303f6e58348a83b2a07b2074bb73a276c18bca3"
+  git "https://github.com/jagg-ix/lgt.git" @ "9879f2cc06b507a0ba1bef9efd11ab0591a0471f"
 
 require DimensionalAnalysis from
   git "https://github.com/ATOMSLab/LeanDimensionalAnalysis.git" @ "de263eed945693058ef2b8a1fa56c2ec5642ea7a"
