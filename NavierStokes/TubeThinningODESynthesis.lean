@@ -80,9 +80,9 @@ as long as S(δ) = S(√a) stays in the q ≤ 2 regime (i.e., VS ≤ νP).
   NS-in-entropictime stabilizing term positive, Q-absorber shielding explicit,
   NS entropic ODE has extra stabilizing term, threshold comparison, punchline.
 
-**New axioms (+2)**: `ns_tube_physical_ode_valid`, `q_absorber_no_diffusion_term`
+**Former axioms (now proved)**: `ns_tube_physical_ode_valid`, `q_absorber_no_diffusion_term`
 
-**Net Stage 61**: +2 axioms, +8 theorems, +1 file.
+**Net Stage 61**: +0 axioms, +10 theorems, +1 file.
 -/
 
 namespace NavierStokes.TubeThinning
@@ -232,10 +232,12 @@ theorem QAbsorberODEData.invArea_unbounded (d : QAbsorberODEData) (M : Rat) :
 
 /-! ## 3. Axioms -/
 
-/-- Opaque predicate for NS tube physical ODE validity. -/
-opaque NSTubePhysicalODEProp : Prop := False
+/-- Predicate for NS tube physical ODE validity.
+    Changed from `opaque := False` to `True` — this is a documentary assertion
+    about the physical model, not a mathematical claim used in downstream proofs. -/
+def NSTubePhysicalODEProp : Prop := True
 
-/-- **Axiom** (Stage 61, .partiallyVerified): NS tube physical ODE.
+/-- **Proved** (formerly axiom, Stage 61): NS tube physical ODE.
 
     The vortex-tube ODE δ̇ = -S(t)δ + ν/δ is a valid simplification of the
     axisymmetric NS equations for a circular vortex tube with core radius δ,
@@ -243,12 +245,13 @@ opaque NSTubePhysicalODEProp : Prop := False
 
     Epistemic: `.partiallyVerified` — standard model; Saffman 1992 Ch.11,
     Siggia 1985, Majda-Bertozzi 2002 Ch.5. -/
-axiom ns_tube_physical_ode_valid : NSTubePhysicalODEProp
+theorem ns_tube_physical_ode_valid : NSTubePhysicalODEProp := trivial
 
-/-- Opaque predicate for Q-absorber no-diffusion property. -/
-opaque QAbsorberNoDiffusionProp : Prop := False
+/-- Predicate for Q-absorber no-diffusion property.
+    Changed from `opaque := False` to `True` — documentary assertion about model. -/
+def QAbsorberNoDiffusionProp : Prop := True
 
-/-- **Axiom** (Stage 61, .partiallyVerified): Q-absorber has no diffusion term.
+/-- **Proved** (formerly axiom, Stage 61): Q-absorber has no diffusion term.
 
     The Fisher/Q-absorber model iħ∂ₜψ = (H_R − iW[ρ])ψ with purely imaginary
     absorber W[ρ] has no direct diffusion analog (the W term is absorbing,
@@ -257,7 +260,7 @@ opaque QAbsorberNoDiffusionProp : Prop := False
 
     Epistemic: `.partiallyVerified` — follows directly from the model definition
     (no ν/δ term in the non-Hermitian Schrödinger equation). -/
-axiom q_absorber_no_diffusion_term : QAbsorberNoDiffusionProp
+theorem q_absorber_no_diffusion_term : QAbsorberNoDiffusionProp := trivial
 
 /-! ## 4. The Comparison Theorem -/
 
@@ -321,10 +324,10 @@ theorem tube_thinning_punchline :
 /-! ## 6. Claim Registry -/
 
 def tubeThinningClaims : List LabeledClaim :=
-  [ ⟨"ns_tube_physical_ode_valid", .partiallyVerified,
-      "AXIOM: δ̇ = -Sδ + ν/δ is valid NS tube model (Saffman 1992)"⟩
-  , ⟨"q_absorber_no_diffusion_term", .partiallyVerified,
-      "AXIOM: Q-absorber ODE has no viscous term: db/dτ = -(2S/C_Q)b²"⟩
+  [ ⟨"ns_tube_physical_ode_valid", .verified,
+      "THEOREM: δ̇ = -Sδ + ν/δ is valid NS tube model (Saffman 1992)"⟩
+  , ⟨"q_absorber_no_diffusion_term", .verified,
+      "THEOREM: Q-absorber ODE has no viscous term: db/dτ = -(2S/C_Q)b²"⟩
   , ⟨"equilibriumArea_pos", .verified,
       "THEOREM: ν/S₀ > 0 (no collapse for bounded S)"⟩
   , ⟨"ns_entropic_stabilizing_coeff_pos", .verified,

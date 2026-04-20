@@ -1,129 +1,83 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.TangentLineLemma
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemWVTImpliesFunction#1
-Theorem name: lemWVTImpliesFunction
-Lean tactic class: needs_human
--/
-
-theorem lemWVTImpliesFunction (k : NoFTLObj) (h : NoFTLObj) : isFunction (toFunc (wvt k h)) := by
-  first | omega | decide | norm_num | ring | linarith | field_simp | simp_all | tauto | trivial | exact rfl | sorry
-
-
-
+import CATEPTMain.AFPBridge.NoFTL.MainLemma
+import CATEPTMain.AFPBridge.NoFTL.AxDiff
+import CATEPTMain.AFPBridge.NoFTL.Cones
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemWVTCts#1
-Theorem name: lemWVTCts
-Lean tactic class: arithmetic_norm_num
+# TangentLineLemma — Worldview Transformations and Tangent Lines
+
+Shows that worldview transformations are functions, are injective, are
+continuous, and preserve tangent lines. The key result is `lemTangentLines`:
+if `A` approximates `wvt m k` at `x`, then `A` maps tangent lines of `m`'s
+worldlines at `x` to tangent lines of `k`'s worldlines at `A(x)`.
+
+Isabelle: `class TangentLineLemma = MainLemma + AxDiff + Cones`.
 -/
 
-theorem lemWVTCts (h : NoFTLObj) (k : NoFTLObj) (p : NoFTLObj) (h1 : definedAt (toFunc (wvt h k)) p) : cts (toFunc (wvt h k)) p := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
+namespace NoFTL.TangentLineLemma
 
+open NoFTL.Points NoFTL.Sorts NoFTL.Functions NoFTL.Affine
+open NoFTL.WorldView NoFTL.WorldLine NoFTL.TangentLines NoFTL.Cones
 
+variable {B Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [NoFTL.AxEField Q] [WorldViewRel B Q] [BodySorts B]
+variable [NoFTL.AxDiff.AxDiff B Q] [NoFTL.AxSelfMinus.AxSelfMinus B Q]
 
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemWVTInverse#1
-Theorem name: lemWVTInverse
-Lean tactic class: arithmetic_norm_num
--/
+theorem lemWVTImpliesFunction (k h : B) :
+    isFunction (wvtFunc (Q := Q) k h) := by
+  sorry -- phase2: uses AxDiff + affineApprox uniqueness
 
-theorem lemWVTInverse (k : NoFTLObj) (h : NoFTLObj) : invFunc (toFunc (wvt k h)) = toFunc (wvt h k) := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+theorem lemWVTCts (h k : B) (p : Point Q)
+    (hdef : definedAt (wvtFunc (Q := Q) h k) p) :
+    cts (wvtFunc (Q := Q) h k) p := by
+  sorry -- phase2: uses AxDiff + sublemma4
 
+theorem lemWVTInverse (k h : B) :
+    invFunc (wvtFunc (Q := Q) k h) = wvtFunc h k := by
+  sorry -- phase2: direct from definitions
 
+theorem lemWVTInverseCts (k h : B) (p q : Point Q)
+    (hwvt : wvtFunc (Q := Q) k h p q) :
+    cts (wvtFunc (Q := Q) h k) q := by
+  sorry -- phase2: uses lemWVTCts
 
+theorem lemWVTInjective (k h : B) :
+    injective (wvtFunc (Q := Q) k h) := by
+  sorry -- phase2: uses invFunc properties
 
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemWVTInverseCts#1
-Theorem name: lemWVTInverseCts
-Lean tactic class: arithmetic_norm_num
--/
+theorem lemPresentation (m k b : B) (x y : Point Q)
+    (l l' : Set (Point Q)) (A : Point Q → Point Q)
+    (hx : x ∈ wline (Q := Q) m b)
+    (htl : tangentLine l (wline (Q := Q) m b) x)
+    (haff : affineApprox A (wvtFunc (Q := Q) m k) x)
+    (hwvt : wvtFunc (Q := Q) m k x y)
+    (hline : applyAffineToLine A l l') :
+    tangentLine l' (wline (Q := Q) k b) y := by
+  sorry -- phase2: uses lemMainLemma
 
-theorem lemWVTInverseCts (h : NoFTLObj) (k : NoFTLObj) (q : NoFTLObj) (h1 : wvtFunc k h p q) : cts (toFunc (wvt h k)) q := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+theorem lemTangentLines (m k b : B) (x y : Point Q)
+    (l l' : Set (Point Q)) (A : Point Q → Point Q)
+    (haff : affineApprox A (wvtFunc (Q := Q) m k) x)
+    (htl : tl l m b x)
+    (hline : applyAffineToLine A l l')
+    (hwvt : wvtFunc (Q := Q) m k x y) :
+    tl l' k b y := by
+  sorry -- phase2: uses lemPresentation
 
+theorem lemSelfTangentIsTimeAxis (k : B) (x : Point Q)
+    (l : Set (Point Q))
+    (htl : tangentLine l (wline (Q := Q) k k) x) :
+    l = timeAxis := by
+  sorry -- phase2: uses AxSelfMinus + time-axis geometry
 
+theorem lemTangentLineUnique (m k : B) (x y : Point Q)
+    (l1 l2 : Set (Point Q)) (A : Point Q → Point Q)
+    (htl1 : tl l1 m k x) (htl2 : tl l2 m k x)
+    (haff : affineApprox A (wvtFunc (Q := Q) m k) x)
+    (hwvt : wvtFunc (Q := Q) m k x y)
+    (hx : x ∈ wline (Q := Q) m k) :
+    l1 = l2 := by
+  sorry -- phase2: long proof using lemPresentation + affine injectivity
 
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemWVTInjective#1
-Theorem name: lemWVTInjective
-Lean tactic class: needs_human
--/
-
-theorem lemWVTInjective (k : NoFTLObj) (h : NoFTLObj) : injective (toFunc (wvt k h)) := by
-  first | omega | decide | norm_num | ring | linarith | field_simp | simp_all | tauto | trivial | exact rfl | sorry
-
-
-
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemPresentation#1
-Theorem name: lemPresentation
-Lean tactic class: arithmetic_norm_num
--/
-
-theorem lemPresentation (tangentLine : NoFTLSet → NoFTLObj → NoFTLObj → Prop) (l' : NoFTLSet) (k : NoFTLObj) (b : NoFTLObj) (y : NoFTLObj) (h1 : x ∈ wline m b) (h2 : tangentLine l (wline m b) x) (h3 : affineApprox A (toFunc (wvt m k)) x) (h4 : wvtFunc m k x y) (h5 : applyAffineToLine A l l') : tangentLine l' (wline k b) y := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
-
-
-
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemTangentLines#1
-Theorem name: lemTangentLines
-Lean tactic class: arithmetic_norm_num
--/
-
-theorem lemTangentLines (tl : NoFTLSet → NoFTLObj → NoFTLObj → NoFTLObj → Prop) (l' : NoFTLSet) (k : NoFTLObj) (b : NoFTLObj) (y : NoFTLObj) (h1 : affineApprox A (toFunc (wvt m k)) x) (h2 : tl l m b x) (h3 : applyAffineToLine A l l') (h4 : wvtFunc m k x y) : tl l' k b y := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
-
-
-
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemSelfTangentIsTimeAxis#1
-Theorem name: lemSelfTangentIsTimeAxis
-Lean tactic class: arithmetic_norm_num
--/
-
-theorem lemSelfTangentIsTimeAxis (l : NoFTLSet) (timeAxis : NoFTLSet) (h1 : tangentLine l (wline k k) x) : l = timeAxis := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
-
-
-
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: TangentLineLemma
-Theorem id: No_FTL_observers_Gen_Rel.TangentLineLemma.lemTangentLineUnique#1
-Theorem name: lemTangentLineUnique
-Lean tactic class: arithmetic_norm_num
--/
-
-theorem lemTangentLineUnique (l1 : NoFTLSet) (h1 : tl l1 m k x) (h2 : tl l2 m k x) (h3 : affineApprox A (toFunc (wvt m k)) x) (h4 : wvtFunc m k x y) (h5 : x ∈ wline m k) : l1 = l2 := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
-
-end AFPIsabellePilot.TangentLineLemma
+end NoFTL.TangentLineLemma

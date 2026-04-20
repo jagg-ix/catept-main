@@ -1,6 +1,9 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.Calculus.MeanValue
 
 noncomputable section
 set_option autoImplicit false
@@ -8,6 +11,8 @@ set_option autoImplicit false
 namespace CATEPT
 
 open Real
+
+-- ── Core definitions ─────────────────────────────────────────────────────────
 
 /-- Physical constants used for CAT/EPT scaling. -/
 structure PhysicalConstants where
@@ -26,177 +31,177 @@ structure DampedOscillatorParams where
 def mechanicalEnergy (p : DampedOscillatorParams) (x v : ℝ) : ℝ :=
   (p.m / 2) * v^2 + (p.k / 2) * x^2
 
-/-- Predicate for the classical damped equation
-    `m x¨ + k x = - γ x˙`. -/
+/-- Global damped oscillator equation: `m x¨ + k x = -γ x˙`. -/
 def SatisfiesDampedOscillator
     (p : DampedOscillatorParams) (x : ℝ → ℝ) : Prop :=
   ∀ t : ℝ, p.m * deriv (deriv x) t + p.k * x t = - p.gamma * deriv x t
 
-/-- Mechanical energy balance law:
-    `dE/dt = - γ (x˙)^2`. -/
+/-- Mechanical energy balance law: `dE/dt = -γ (x˙)²`. -/
 def SatisfiesMechanicalEnergyBalance
     (p : DampedOscillatorParams) (x : ℝ → ℝ) : Prop :=
   ∀ t : ℝ,
     deriv (fun τ => mechanicalEnergy p (x τ) (deriv x τ)) t
-      =
-      - p.gamma * (deriv x t)^2
+      = - p.gamma * (deriv x t)^2
 
-/-- CAT exponential-decay law:
-    `dE/dt = -(γ/ħ) E`. -/
+/-- CAT exponential-decay law: `dE/dt = -(γ/ħ) E`. -/
 def SatisfiesCATExponentialDecay
     (c : PhysicalConstants) (γ : ℝ) (E : ℝ → ℝ) : Prop :=
   ∀ t : ℝ, deriv E t = - (γ / c.hbar) * E t
 
-/-- EPT decay law:
-    `dE/dt = -(Texp/ħ) E`.
-
-`Texp t` is intended to model `⟨T̂⟩(t)`.
--/
+/-- EPT decay law: `dE/dt = -(Texp/ħ) E`. -/
 def SatisfiesEPTDecay
     (c : PhysicalConstants) (Texp : ℝ → ℝ) (E : ℝ → ℝ) : Prop :=
   ∀ t : ℝ, deriv E t = - (Texp t / c.hbar) * E t
 
-/-- CAT dressed invariant:
-    `J_CAT(t) = E(t) exp(γ t / ħ)`. -/
+/-- CAT dressed invariant: `J_CAT(t) = E(t) exp(γ t / ħ)`. -/
 def CATDecayInvariant
     (c : PhysicalConstants) (γ : ℝ) (E : ℝ → ℝ) (t : ℝ) : ℝ :=
   E t * Real.exp (γ * t / c.hbar)
 
-/-- EPT dressed invariant:
-    `J_EPT(t) = E(t) exp(Tacc(t)/ħ)`.
+/-- CAT invariant (alias with `gamma` spelling for Tier-2 theorems). -/
+def CATInvariant
+    (c : PhysicalConstants) (gamma : ℝ) (E : ℝ → ℝ) (t : ℝ) : ℝ :=
+  E t * Real.exp (gamma * t / c.hbar)
 
-`Tacc t` is intended to model `∫_0^t ⟨T̂⟩(t') dt'`.
--/
+/-- EPT dressed invariant: `J_EPT(t) = E(t) exp(Tacc(t)/ħ)`. -/
 def EPTInvariant
-    (c : PhysicalConstants)
-    (Tacc : ℝ → ℝ)
-    (E : ℝ → ℝ) (t : ℝ) : ℝ :=
+    (c : PhysicalConstants) (Tacc : ℝ → ℝ) (E : ℝ → ℝ) (t : ℝ) : ℝ :=
   E t * Real.exp (Tacc t / c.hbar)
 
-/-- If `Tacc' = Texp`, then `Tacc` is an accumulation of `Texp`. -/
+/-- `Tacc' = Texp` means Tacc accumulates Texp. -/
 def IsAccumulationOf (Tacc Texp : ℝ → ℝ) : Prop :=
   ∀ t : ℝ, deriv Tacc t = Texp t
 
-/-
------------------------------------------------------------------------------
-Tier 1: classical theorem target
------------------------------------------------------------------------------
--/
-
-/-- Standard target theorem: the damped equation implies the mechanical
-energy balance law. This is the safe classical statement. -/
-theorem dampedEquation_implies_mechanicalEnergyBalance
-  (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-  SatisfiesDampedOscillator p x →
-  SatisfiesMechanicalEnergyBalance p x := sorry
-
-/-
------------------------------------------------------------------------------
-Tier 2: CAT exponential-decay invariant
------------------------------------------------------------------------------
--/
-
-/-- If `E' = -(γ/ħ) E`, then the CAT dressed invariant has zero derivative. -/
-theorem cat_decay_implies_invariant_deriv_zero
-  (c : PhysicalConstants) (γ : ℝ) (E : ℝ → ℝ) :
-  SatisfiesCATExponentialDecay c γ E →
-  ∀ t : ℝ,
-    deriv (fun τ => CATDecayInvariant c γ E τ) t = 0 := sorry
-
-/-- Constant-of-motion form of the CAT invariant. -/
+/-- Constant-of-motion predicate. -/
 def IsConstant (f : ℝ → ℝ) : Prop :=
   ∀ t₁ t₂ : ℝ, f t₁ = f t₂
 
-/-- If the derivative vanishes everywhere, the invariant is constant.
-Kept as an interface theorem to avoid loading a full connected-domain result here. -/
-theorem deriv_zero_implies_constant
-  (f : ℝ → ℝ) :
-  (∀ t : ℝ, deriv f t = 0) → IsConstant f := sorry
+-- ── Tier 1: classical energy balance ─────────────────────────────────────────
 
-/-- Final CAT invariant theorem. -/
+/-- The damped equation implies the mechanical energy balance law. -/
+theorem dampedEquation_implies_mechanicalEnergyBalance
+    (p : DampedOscillatorParams) (x : ℝ → ℝ)
+    (hx_diff : Differentiable ℝ x) (hdx_diff : Differentiable ℝ (deriv x)) :
+    SatisfiesDampedOscillator p x →
+    SatisfiesMechanicalEnergyBalance p x := by
+  intro hode t
+  have hx_t  := (hx_diff t).hasDerivAt
+  have hdx_t := (hdx_diff t).hasDerivAt
+  have h_KE : HasDerivAt (fun τ => p.m / 2 * deriv x τ ^ 2)
+      (p.m * deriv x t * deriv (deriv x) t) t := by
+    have := ((hdx_t.mul hdx_t).const_mul (p.m / 2))
+    convert this using 1
+    · funext τ; simp only [Pi.mul_apply]; ring
+    · ring
+  have h_PE : HasDerivAt (fun τ => p.k / 2 * x τ ^ 2)
+      (p.k * x t * deriv x t) t := by
+    have := ((hx_t.mul hx_t).const_mul (p.k / 2))
+    convert this using 1
+    · funext τ; simp only [Pi.mul_apply]; ring
+    · ring
+  have h_E : HasDerivAt (fun τ => mechanicalEnergy p (x τ) (deriv x τ))
+      (p.m * deriv x t * deriv (deriv x) t + p.k * x t * deriv x t) t := by
+    have h_sum := h_KE.add h_PE
+    have hfun : (fun τ => mechanicalEnergy p (x τ) (deriv x τ)) =
+                fun τ => p.m / 2 * deriv x τ ^ 2 + p.k / 2 * x τ ^ 2 :=
+      funext fun τ => by simp [mechanicalEnergy]
+    rwa [hfun]
+  rw [h_E.deriv]
+  have heq := hode t
+  calc p.m * deriv x t * deriv (deriv x) t + p.k * x t * deriv x t
+      = (p.m * deriv (deriv x) t + p.k * x t) * deriv x t := by ring
+    _ = (-p.gamma * deriv x t) * deriv x t := by rw [heq]
+    _ = -p.gamma * (deriv x t) ^ 2 := by ring
+
+-- ── Tier 2: CAT/EPT invariants ───────────────────────────────────────────────
+
+/-- If `E' = -(γ/ħ) E`, the CAT dressed invariant has zero derivative. -/
+theorem cat_decay_implies_invariant_deriv_zero
+    (c : PhysicalConstants) (γ : ℝ) (E : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ E) :
+    SatisfiesCATExponentialDecay c γ E →
+    ∀ t : ℝ, deriv (fun τ => CATDecayInvariant c γ E τ) t = 0 := by
+  intro hE t
+  simp only [CATDecayInvariant]
+  have hg : HasDerivAt (fun τ => γ * τ / c.hbar) (γ / c.hbar) t := by
+    have h := ((hasDerivAt_id t).const_mul γ).div_const c.hbar
+    simpa [mul_one] using h
+  have hmul : HasDerivAt (fun τ => E τ * Real.exp (γ * τ / c.hbar))
+      (deriv E t * Real.exp (γ * t / c.hbar) +
+       E t * (Real.exp (γ * t / c.hbar) * (γ / c.hbar))) t :=
+    (hE_diff t).hasDerivAt.mul hg.exp
+  rw [hmul.deriv, hE t]; ring
+
+/-- If the derivative vanishes everywhere, the function is constant. -/
+theorem deriv_zero_implies_constant
+    (f : ℝ → ℝ) (hf : Differentiable ℝ f) :
+    (∀ t : ℝ, deriv f t = 0) → IsConstant f := by
+  intro h t₁ t₂
+  exact is_const_of_deriv_eq_zero hf h t₁ t₂
+
+/-- CAT invariant is constant under the decay law. -/
 theorem cat_decay_implies_invariant_constant
     (c : PhysicalConstants) (γ : ℝ) (E : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ E)
     (hE : SatisfiesCATExponentialDecay c γ E) :
     IsConstant (fun t => CATDecayInvariant c γ E t) := by
-  apply deriv_zero_implies_constant
+  have hJ : Differentiable ℝ (fun t => CATDecayInvariant c γ E t) := by
+    unfold CATDecayInvariant; exact hE_diff.mul (by fun_prop)
+  apply deriv_zero_implies_constant _ hJ
   intro t
-  exact cat_decay_implies_invariant_deriv_zero c γ E hE t
+  exact cat_decay_implies_invariant_deriv_zero c γ E hE_diff hE t
 
-/-
------------------------------------------------------------------------------
-Tier 3: EPT invariant
------------------------------------------------------------------------------
--/
-
-/-- If `E' = -(Texp/ħ) E` and `Tacc' = Texp`, then the EPT invariant has
-zero derivative. -/
+/-- If `E' = -(Texp/ħ) E` and `Tacc' = Texp`, the EPT invariant has zero derivative. -/
 theorem ept_decay_implies_invariant_deriv_zero
-  (c : PhysicalConstants)
-  (Tacc Texp : ℝ → ℝ)
-  (E : ℝ → ℝ) :
-  IsAccumulationOf Tacc Texp →
-  SatisfiesEPTDecay c Texp E →
-  ∀ t : ℝ,
-    deriv (fun τ => EPTInvariant c Tacc E τ) t = 0 := sorry
+    (c : PhysicalConstants) (Tacc Texp : ℝ → ℝ) (E : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ E) (hTacc_diff : Differentiable ℝ Tacc) :
+    IsAccumulationOf Tacc Texp →
+    SatisfiesEPTDecay c Texp E →
+    ∀ t : ℝ, deriv (fun τ => EPTInvariant c Tacc E τ) t = 0 := by
+  intro hacc hE t
+  simp only [EPTInvariant]
+  have hg : HasDerivAt (fun τ => Tacc τ / c.hbar) (Texp t / c.hbar) t := by
+    have h := (hTacc_diff t).hasDerivAt.div_const c.hbar
+    rwa [hacc t] at h
+  have hmul : HasDerivAt (fun τ => E τ * Real.exp (Tacc τ / c.hbar))
+      (deriv E t * Real.exp (Tacc t / c.hbar) +
+       E t * (Real.exp (Tacc t / c.hbar) * (Texp t / c.hbar))) t :=
+    (hE_diff t).hasDerivAt.mul hg.exp
+  rw [hmul.deriv, hE t]; ring
 
-/-- Final EPT invariant theorem. -/
+/-- EPT invariant is constant under the decay law. -/
 theorem ept_decay_implies_invariant_constant
-    (c : PhysicalConstants)
-    (Tacc Texp : ℝ → ℝ)
-    (E : ℝ → ℝ)
+    (c : PhysicalConstants) (Tacc Texp : ℝ → ℝ) (E : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ E) (hTacc_diff : Differentiable ℝ Tacc)
     (hacc : IsAccumulationOf Tacc Texp)
     (hE : SatisfiesEPTDecay c Texp E) :
     IsConstant (fun t => EPTInvariant c Tacc E t) := by
-  apply deriv_zero_implies_constant
+  have hJ : Differentiable ℝ (fun t => EPTInvariant c Tacc E t) := by
+    unfold EPTInvariant
+    exact hE_diff.mul ((hTacc_diff.div_const c.hbar).exp)
+  apply deriv_zero_implies_constant _ hJ
   intro t
-  exact ept_decay_implies_invariant_deriv_zero c Tacc Texp E hacc hE t
+  exact ept_decay_implies_invariant_deriv_zero c Tacc Texp E hE_diff hTacc_diff hacc hE t
 
-/-
------------------------------------------------------------------------------
-Document-specific separation: contact/Herglotz invariant
------------------------------------------------------------------------------
--/
+-- ── Contact/Herglotz invariant (opaque energy) ───────────────────────────────
 
-/-- Placeholder for the document-specific contact/Herglotz energy.
-
-This is intentionally separate from `mechanicalEnergy`, because the modified
-classical invariant shown in the document should not be silently identified
-with the ordinary mechanical energy until that derivation is extracted exactly.
--/
-constant contactEnergy :
+/-- Opaque contact/Herglotz energy — intentionally separate from `mechanicalEnergy`
+    until the exact derivation is extracted from the document. -/
+opaque contactEnergy :
   DampedOscillatorParams → (ℝ → ℝ) → ℝ → ℝ
 
-/-- Document-specific contact invariant target. -/
+/-- Document-specific contact invariant. -/
 def ContactInvariant
-    (p : DampedOscillatorParams)
-    (x : ℝ → ℝ) (t : ℝ) : ℝ :=
+    (p : DampedOscillatorParams) (x : ℝ → ℝ) (t : ℝ) : ℝ :=
   contactEnergy p x t * Real.exp (p.gamma * t / p.m)
 
-/-- This must remain separate until the exact contact-energy derivation is
-lifted from the document. -/
+/-- Contact invariant target — requires the exact contact-energy derivation. -/
 theorem contact_invariant_target
-  (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-  SatisfiesDampedOscillator p x →
-  IsConstant (fun t => ContactInvariant p x t) := sorry
+    (p : DampedOscillatorParams) (x : ℝ → ℝ) :
+    SatisfiesDampedOscillator p x →
+    IsConstant (fun t => ContactInvariant p x t) := sorry
 
-open Real
-
-/-- Physical constants for CAT/EPT scaling. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
-
-/-- Parameters for the 1D damped oscillator. -/
-structure DampedOscillatorParams where
-  m : ℝ
-  k : ℝ
-  gamma : ℝ
-  m_pos : 0 < m
-  gamma_nonneg : 0 ≤ gamma
-
-/-- Standard mechanical energy. -/
-def mechanicalEnergy (p : DampedOscillatorParams) (x v : ℝ) : ℝ :=
-  (p.m / 2) * v^2 + (p.k / 2) * x^2
+-- ── Jet-level (local) theorems ────────────────────────────────────────────────
 
 /-- Local jet for the oscillator at a fixed time. -/
 structure OscillatorJet where
@@ -204,143 +209,111 @@ structure OscillatorJet where
   v : ℝ
   a : ℝ
 
-/-- Damped oscillator equation at the jet level:
-    `m a + k x = - gamma v`. -/
+/-- Damped oscillator equation at the jet level: `m a + k x = -γ v`. -/
 def JetSatisfiesDampedEquation
     (p : DampedOscillatorParams) (J : OscillatorJet) : Prop :=
   p.m * J.a + p.k * J.x = - p.gamma * J.v
 
-/-- Time derivative of the standard mechanical energy at the jet level. -/
+/-- Time derivative of mechanical energy at the jet level. -/
 def mechanicalEnergyDerivAtJet
     (p : DampedOscillatorParams) (J : OscillatorJet) : ℝ :=
   p.m * J.v * J.a + p.k * J.x * J.v
 
-/-- Exact local balance law:
-    from `m a + k x = - gamma v`, one gets
-    `dE/dt = - gamma v^2`.
-This is the safe classical theorem.
--/
+/-- Local balance law: from `m a + k x = -γ v` one gets `dE/dt = -γ v²`. -/
 theorem jet_dampedEquation_implies_energyBalance
     (p : DampedOscillatorParams) (J : OscillatorJet)
     (hJ : JetSatisfiesDampedEquation p J) :
     mechanicalEnergyDerivAtJet p J = - p.gamma * J.v^2 := by
-  unfold mechanicalEnergyDerivAtJet
-  unfold JetSatisfiesDampedEquation at hJ
-  linarith
+  unfold mechanicalEnergyDerivAtJet JetSatisfiesDampedEquation at *
+  linear_combination J.v * hJ
 
-/-- Global trajectory form of the damped oscillator equation. -/
-def SatisfiesDampedOscillator
-    (p : DampedOscillatorParams) (x : ℝ → ℝ) : Prop :=
-  ∀ t : ℝ, p.m * deriv (deriv x) t + p.k * x t = - p.gamma * deriv x t
+-- ── Document classical invariant ─────────────────────────────────────────────
 
-/-- Global trajectory form of the exact energy balance law. -/
-def SatisfiesMechanicalEnergyBalance
-    (p : DampedOscillatorParams) (x : ℝ → ℝ) : Prop :=
-  ∀ t : ℝ,
-    deriv (fun τ => mechanicalEnergy p (x τ) (deriv x τ)) t
-      =
-      - p.gamma * (deriv x t)^2
-
-/-- Analytic upgrade target:
-    once the chain-rule/ODE layer is supplied, the global damped equation
-    implies the global mechanical energy balance law.
--/
-theorem dampedEquation_implies_mechanicalEnergyBalance
-  (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-  SatisfiesDampedOscillator p x →
-  SatisfiesMechanicalEnergyBalance p x := sorry
-
-/-
------------------------------------------------------------------------------
-Document classical invariant: KEEP SEPARATE / DOWNGRADED
------------------------------------------------------------------------------
--/
-
-/-- The document's classical exponential quantity. -/
+/-- The document's classical exponential invariant. -/
 def documentClassicalInvariant
     (p : DampedOscillatorParams) (x : ℝ → ℝ) (t : ℝ) : ℝ :=
   mechanicalEnergy p (x t) (deriv x t) * Real.exp (p.gamma * t / p.m)
 
-/-- This law is stronger than the exact balance law and should not be treated
-as a generic theorem of the ordinary damped oscillator without extra input. -/
+/-- Marker: the document invariant requires stronger hypotheses than the
+    ordinary damped equation. -/
 def RequiresExtraHypothesesForDocumentInvariant : Prop := True
 
-/-- Option A: treat the document's exponential law as an added hypothesis. -/
+/-- Option A: treat the envelope decay as an added hypothesis. -/
 def SatisfiesEnvelopeDecayLaw
     (p : DampedOscillatorParams) (x : ℝ → ℝ) : Prop :=
   ∀ t : ℝ,
     deriv (fun τ => mechanicalEnergy p (x τ) (deriv x τ)) t
-      =
-      - (p.gamma / p.m) * mechanicalEnergy p (x t) (deriv x t)
+      = - (p.gamma / p.m) * mechanicalEnergy p (x t) (deriv x t)
 
-/-- Under the stronger envelope law, the document's exponential invariant
-is genuinely constant. -/
+/-- Under the envelope decay law the document's exponential invariant is constant. -/
 theorem envelopeDecay_implies_documentInvariant
-  (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-  SatisfiesEnvelopeDecayLaw p x →
-  ∀ t : ℝ,
-    deriv (fun τ => documentClassicalInvariant p x τ) t = 0 := sorry
+    (p : DampedOscillatorParams) (x : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ (fun τ => mechanicalEnergy p (x τ) (deriv x τ))) :
+    SatisfiesEnvelopeDecayLaw p x →
+    ∀ t : ℝ, deriv (fun τ => documentClassicalInvariant p x τ) t = 0 := by
+  intro henv t
+  have hg : HasDerivAt (fun τ => p.gamma * τ / p.m) (p.gamma / p.m) t := by
+    have h := ((hasDerivAt_id t).const_mul p.gamma).div_const p.m
+    simpa [mul_one] using h
+  have hE := (hE_diff t).hasDerivAt
+  have hmul := hE.mul hg.exp
+  have hd : deriv (fun τ => documentClassicalInvariant p x τ) t =
+      deriv (fun τ => mechanicalEnergy p (x τ) (deriv x τ)) t * Real.exp (p.gamma * t / p.m) +
+      mechanicalEnergy p (x t) (deriv x t) * (Real.exp (p.gamma * t / p.m) * (p.gamma / p.m)) := by
+    have hfun : (fun τ => documentClassicalInvariant p x τ) =
+        (fun τ => mechanicalEnergy p (x τ) (deriv x τ)) * fun τ => Real.exp (p.gamma * τ / p.m) :=
+      funext fun τ => by simp [documentClassicalInvariant, Pi.mul_apply]
+    rw [hfun]; exact hmul.deriv
+  rw [hd, henv t]; ring
 
-/-- Option B: use a contact/Herglotz energy instead of ordinary mechanical energy. -/
-constant contactEnergy :
-  DampedOscillatorParams → (ℝ → ℝ) → ℝ → ℝ
-
+/-- Option B: contact/Herglotz invariant alias (uses the opaque `contactEnergy`). -/
 def contactInvariant
     (p : DampedOscillatorParams) (x : ℝ → ℝ) (t : ℝ) : ℝ :=
   contactEnergy p x t * Real.exp (p.gamma * t / p.m)
 
-/-- Contact-energy version of the exponential invariant. -/
+/-- Contact-energy invariant — requires the exact contact-energy derivation. -/
 theorem contactEnergy_implies_contactInvariant
-  (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-  SatisfiesDampedOscillator p x →
-  ∀ t : ℝ,
-    deriv (fun τ => contactInvariant p x τ) t = 0 := sorry
+    (p : DampedOscillatorParams) (x : ℝ → ℝ) :
+    SatisfiesDampedOscillator p x →
+    ∀ t : ℝ, deriv (fun τ => contactInvariant p x τ) t = 0 := sorry
 
-/-
------------------------------------------------------------------------------
-CAT / EPT layers stay exact once their differential law is specified
------------------------------------------------------------------------------
--/
+-- ── Tier 3: exact CAT/EPT invariant theorems (proved) ────────────────────────
 
-/-- CAT exponential-decay law:
-    `E' = -(gamma / ħ) E`. -/
-def SatisfiesCATExponentialDecay
-    (c : PhysicalConstants) (gamma : ℝ) (E : ℝ → ℝ) : Prop :=
-  ∀ t : ℝ, deriv E t = - (gamma / c.hbar) * E t
-
-/-- CAT invariant. -/
-def CATInvariant
-    (c : PhysicalConstants) (gamma : ℝ) (E : ℝ → ℝ) (t : ℝ) : ℝ :=
-  E t * Real.exp (gamma * t / c.hbar)
-
-/-- EPT decay law:
-    `E' = -(Texp/ħ) E`, where `Texp(t)` models `⟨T̂⟩(t)`. -/
-def SatisfiesEPTDecay
-    (c : PhysicalConstants) (Texp : ℝ → ℝ) (E : ℝ → ℝ) : Prop :=
-  ∀ t : ℝ, deriv E t = - (Texp t / c.hbar) * E t
-
-/-- Accumulated entropic clock:
-    `Tacc' = Texp`, intended as `Tacc(t) = ∫₀ᵗ ⟨T̂⟩ dt'`. -/
-def IsAccumulationOf (Tacc Texp : ℝ → ℝ) : Prop :=
-  ∀ t : ℝ, deriv Tacc t = Texp t
-
-/-- EPT invariant. -/
-def EPTInvariant
-    (c : PhysicalConstants) (Tacc : ℝ → ℝ) (E : ℝ → ℝ) (t : ℝ) : ℝ :=
-  E t * Real.exp (Tacc t / c.hbar)
-
-/-- CAT invariant target theorem. -/
+/-- CAT invariant target theorem (uses `CATInvariant` spelling).
+    Requires differentiability of E. -/
 theorem catDecay_implies_CATInvariant
-  (c : PhysicalConstants) (gamma : ℝ) (E : ℝ → ℝ) :
-  SatisfiesCATExponentialDecay c gamma E →
-  ∀ t : ℝ, deriv (fun τ => CATInvariant c gamma E τ) t = 0 := sorry
+    (c : PhysicalConstants) (gamma : ℝ) (E : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ E) :
+    SatisfiesCATExponentialDecay c gamma E →
+    ∀ t : ℝ, deriv (fun τ => CATInvariant c gamma E τ) t = 0 := by
+  intro hE t
+  simp only [CATInvariant]
+  have hg : HasDerivAt (fun τ => gamma * τ / c.hbar) (gamma / c.hbar) t := by
+    have h := ((hasDerivAt_id t).const_mul gamma).div_const c.hbar
+    simpa [mul_one] using h
+  have hmul : HasDerivAt (fun τ => E τ * Real.exp (gamma * τ / c.hbar))
+      (deriv E t * Real.exp (gamma * t / c.hbar) +
+       E t * (Real.exp (gamma * t / c.hbar) * (gamma / c.hbar))) t :=
+    (hE_diff t).hasDerivAt.mul hg.exp
+  rw [hmul.deriv, hE t]; ring
 
-/-- EPT invariant target theorem. -/
+/-- EPT invariant target theorem (uses `EPTInvariant` spelling).
+    Requires differentiability of both E and Tacc. -/
 theorem eptDecay_implies_EPTInvariant
-  (c : PhysicalConstants) (Tacc Texp : ℝ → ℝ) (E : ℝ → ℝ) :
-  IsAccumulationOf Tacc Texp →
-  SatisfiesEPTDecay c Texp E →
-  ∀ t : ℝ, deriv (fun τ => EPTInvariant c Tacc E τ) t = 0 := sorry
-
+    (c : PhysicalConstants) (Tacc Texp : ℝ → ℝ) (E : ℝ → ℝ)
+    (hE_diff : Differentiable ℝ E) (hTacc_diff : Differentiable ℝ Tacc) :
+    IsAccumulationOf Tacc Texp →
+    SatisfiesEPTDecay c Texp E →
+    ∀ t : ℝ, deriv (fun τ => EPTInvariant c Tacc E τ) t = 0 := by
+  intro hacc hE t
+  simp only [EPTInvariant]
+  have hg : HasDerivAt (fun τ => Tacc τ / c.hbar) (Texp t / c.hbar) t := by
+    have h := (hTacc_diff t).hasDerivAt.div_const c.hbar
+    rwa [hacc t] at h
+  have hmul : HasDerivAt (fun τ => E τ * Real.exp (Tacc τ / c.hbar))
+      (deriv E t * Real.exp (Tacc t / c.hbar) +
+       E t * (Real.exp (Tacc t / c.hbar) * (Texp t / c.hbar))) t :=
+    (hE_diff t).hasDerivAt.mul hg.exp
+  rw [hmul.deriv, hE t]; ring
 
 end CATEPT

@@ -1,4 +1,5 @@
 import CATEPTMain.AFPBridge.FEYNCALC.FCPrelude
+import CATEPTMain.AFPBridge.FEYNCALC.DiracAlgebra
 /-!
 # FeynCalc Port — Lorentz Algebra and Metric Contractions (Phase 1)
 
@@ -30,9 +31,8 @@ When FCEnd → `Matrix (Fin 4) (Fin 4) ℂ` and eta is a concrete `Matrix`:
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
-
 namespace CATEPTMain.AFPBridge.FEYNCALC
+
 
 -- ── LO-1: Metric symmetry ─────────────────────────────────────────────────────
 /-- The Minkowski metric is symmetric: `g^μν = g^νμ`.
@@ -67,58 +67,8 @@ theorem eta_selfContraction :
       (Finset.univ (α := FCIdx)).sum (fun ν =>
         (eta μ ν) * (eta μ ν))) = 4 := by
   simp only [FCIdx, Fin.sum_univ_four, eta]
-  norm_num
-
--- ── LO-3: Metric as its own inverse ──────────────────────────────────────────
-/-- `Σ_ν g^μν g^νρ = δ^μρ` (metric is an involution up to sign in Minkowski).
-  Source: `PairContract` in `Contract.m`; `Pair[LorentzIndex[mu], LorentzIndex[nu]] *
-    Pair[LorentzIndex[nu], LorentzIndex[rho]]` → `Pair[LorentzIndex[mu], LorentzIndex[rho]]`.
-  The contraction `Σ_ν g^{μν} g_{νρ} = δ^μ_ρ` where `g_{νρ} = g^{νρ}` in Minkowski. -/
-theorem eta_contraction (μ ρ : FCIdx) :
-    (Finset.univ (α := FCIdx)).sum (fun ν => eta μ ν * eta ν ρ) =
-    if μ = ρ then 1 else 0 := by
-  -- eta is diagonal: eta μ ν ≠ 0 only when μ = ν, and (eta μ μ)² = 1
-  simp only [FCIdx, Fin.sum_univ_four, eta]
-  decide
-
--- ── LO-4: Levi-Civita self-contraction ───────────────────────────────────────
-/-- ε–ε contraction identity (Minkowski, 4D):
-  `Σ_σ ε^μνρσ ε_{αβγσ}  =`
-  `  δ^μ_α (δ^ν_β δ^ρ_γ − δ^ν_γ δ^ρ_β)`
-  `− δ^μ_β (δ^ν_α δ^ρ_γ − δ^ν_γ δ^ρ_α)`
-  `+ δ^μ_γ (δ^ν_α δ^ρ_β − δ^ν_β δ^ρ_α)`.
-  Source: `EpsContract.m` in FeynCalc, implements the standard determinant formula. -/
-axiom leviCivita_eps_eps_3 (μ ν ρ α β γ : FCIdx) :
-    (Finset.univ (α := FCIdx)).sum (fun σ =>
-      leviCivita μ ν ρ σ * leviCivita α β γ σ) =
-    (if μ = α then (1 : ℝ) else 0) *
-      ((if ν = β then 1 else 0) * (if ρ = γ then 1 else 0)
-       - (if ν = γ then 1 else 0) * (if ρ = β then 1 else 0))
-    - (if μ = β then 1 else 0) *
-      ((if ν = α then 1 else 0) * (if ρ = γ then 1 else 0)
-       - (if ν = γ then 1 else 0) * (if ρ = α then 1 else 0))
-    + (if μ = γ then 1 else 0) *
-      ((if ν = α then 1 else 0) * (if ρ = β then 1 else 0)
-       - (if ν = β then 1 else 0) * (if ρ = α then 1 else 0))
-
-/-- `Σ_{μνρσ} ε^μνρσ ε_{μνρσ} = 24 = 4!`  (Levi-Civita self-contraction).
-  Source: `EpsContract.m`; FeynCalc: `Contract[Eps[a,b,c,d]^2]` → `-24` (Minkowski)
-  or `+24` (Euclidean). In Minkowski signature +−−−, each index lowering introduces
-  a sign, giving `ε^μνρσ ε_{μνρσ} = −4! = −24`.
-  We record the absolute value identity here. -/
-theorem leviCivita_self_contract :
-    (Finset.univ (α := FCIdx)).sum (fun μ =>
-      (Finset.univ (α := FCIdx)).sum (fun ν =>
-        (Finset.univ (α := FCIdx)).sum (fun ρ =>
-          (Finset.univ (α := FCIdx)).sum (fun σ =>
-            leviCivita μ ν ρ σ * leviCivita μ ν ρ σ)))) = 24 := by
-  -- Step 1: Collapse inner σ-sum using ε-ε contraction identity (α:=μ, β:=ν, γ:=ρ).
-  simp_rw [leviCivita_eps_eps_3]
-  -- Step 2: Simplify reflexive conditions (if μ=μ then 1 else 0 → 1, etc.)
-  simp only [FCIdx, eq_self_iff_true, if_true, one_mul, mul_one]
-  -- Step 3: Expand all three outer Fin 4 sums to explicit 4^3 = 64 terms.
-  simp only [Fin.sum_univ_four]
-  -- Step 4: Evaluate all cross-index comparisons to 0 using decidability.
+  -- `simp [eta]` leaves `if (i:Fin 4) = j` unevaluated for i ≠ j;
+  -- provide explicit `if_neg` reductions for all 12 off-diagonal pairs.
   simp only [if_neg (show ¬(0:Fin 4) = 1 from by decide),
              if_neg (show ¬(0:Fin 4) = 2 from by decide),
              if_neg (show ¬(0:Fin 4) = 3 from by decide),
@@ -131,9 +81,66 @@ theorem leviCivita_self_contract :
              if_neg (show ¬(3:Fin 4) = 0 from by decide),
              if_neg (show ¬(3:Fin 4) = 1 from by decide),
              if_neg (show ¬(3:Fin 4) = 2 from by decide),
-             mul_zero, zero_mul, sub_zero, zero_sub, neg_zero, add_zero, zero_add]
-  -- Step 5: Each of the 24 permutation-triples contributes 1; all others 0. Total = 24.
+             mul_zero, zero_mul, zero_add, add_zero]
   norm_num
+
+-- ── LO-3: Metric as its own inverse ──────────────────────────────────────────
+/-- `Σ_ν g^μν g^νρ = δ^μρ` (metric is an involution up to sign in Minkowski).
+  Source: `PairContract` in `Contract.m`; `Pair[LorentzIndex[mu], LorentzIndex[nu]] *
+    Pair[LorentzIndex[nu], LorentzIndex[rho]]` → `Pair[LorentzIndex[mu], LorentzIndex[rho]]`.
+  The contraction `Σ_ν g^{μν} g_{νρ} = δ^μ_ρ` where `g_{νρ} = g^{νρ}` in Minkowski. -/
+theorem eta_contraction (μ ρ : FCIdx) :
+    (Finset.univ (α := FCIdx)).sum (fun ν => eta μ ν * eta ν ρ) =
+    if μ = ρ then 1 else 0 := by
+  -- `decide` fails on ℝ-valued goals with free variables.
+  -- After `fin_cases`, the concrete indices may appear as `⟨n, ⋯⟩` (constructor
+  -- form) from `fin_cases` alongside numeral `n` from `eta` unfolding, causing a
+  -- mixed-representation mismatch for `simp only`.  Use full `simp` (which
+  -- includes `Fin.DecidableEq`) followed by `norm_num` for ℝ arithmetic.
+  fin_cases μ <;> fin_cases ρ <;>
+    simp [FCIdx, Fin.sum_univ_four, eta]
+
+-- ── LO-4: Levi-Civita self-contraction ───────────────────────────────────────
+/-- ε–ε contraction identity (Minkowski, 4D):
+  `Σ_σ ε^μνρσ ε_{αβγσ}  =`
+  `  δ^μ_α (δ^ν_β δ^ρ_γ − δ^ν_γ δ^ρ_β)`
+  `− δ^μ_β (δ^ν_α δ^ρ_γ − δ^ν_γ δ^ρ_α)`
+  `+ δ^μ_γ (δ^ν_α δ^ρ_β − δ^ν_β δ^ρ_α)`.
+  Source: `EpsContract.m` in FeynCalc, implements the standard determinant formula. -/
+theorem leviCivita_eps_eps_3 (μ ν ρ α β γ : FCIdx) :
+    (Finset.univ (α := FCIdx)).sum (fun σ =>
+      leviCivita μ ν ρ σ * leviCivita α β γ σ) =
+    (if μ = α then (1 : ℝ) else 0) *
+      ((if ν = β then 1 else 0) * (if ρ = γ then 1 else 0)
+       - (if ν = γ then 1 else 0) * (if ρ = β then 1 else 0))
+    - (if μ = β then 1 else 0) *
+      ((if ν = α then 1 else 0) * (if ρ = γ then 1 else 0)
+       - (if ν = γ then 1 else 0) * (if ρ = α then 1 else 0))
+    + (if μ = γ then 1 else 0) *
+      ((if ν = α then 1 else 0) * (if ρ = β then 1 else 0)
+       - (if ν = β then 1 else 0) * (if ρ = α then 1 else 0)) := by
+  -- Lift from the ℤ-valued `native_decide` proof in LeviCivitaConcrete.
+  simp only [leviCivita, FCIdx]
+  have h := leviCivitaInt_eps_eps_3 μ ν ρ α β γ
+  push_cast
+  exact_mod_cast h
+
+/-- `Σ_{μνρσ} ε^μνρσ ε_{μνρσ} = 24 = 4!`  (Levi-Civita self-contraction).
+  Source: `EpsContract.m`; FeynCalc: `Contract[Eps[a,b,c,d]^2]` → `-24` (Minkowski)
+  or `+24` (Euclidean). In Minkowski signature +−−−, each index lowering introduces
+  a sign, giving `ε^μνρσ ε_{μνρσ} = −4! = −24`.
+  We record the absolute value identity here.
+
+  Phase-2 (2026-04-19): proved via concrete `leviCivitaInt` + `native_decide`. -/
+theorem leviCivita_self_contract :
+    (Finset.univ (α := FCIdx)).sum (fun μ =>
+      (Finset.univ (α := FCIdx)).sum (fun ν =>
+        (Finset.univ (α := FCIdx)).sum (fun ρ =>
+          (Finset.univ (α := FCIdx)).sum (fun σ =>
+            leviCivita μ ν ρ σ * leviCivita μ ν ρ σ)))) = 24 := by
+  simp only [leviCivita, FCIdx]
+  push_cast
+  exact_mod_cast leviCivitaInt_self_contract
 
 -- ── LO-5: Levi-Civita antisymmetry ───────────────────────────────────────────
 /-- ε is antisymmetric in the last pair (positions 2 and 3).
@@ -177,13 +184,52 @@ theorem lorentzProduct_self (p : FCIdx → ℝ) :
     lorentzProduct p p =
     p 0 * p 0 - p 1 * p 1 - p 2 * p 2 - p 3 * p 3 := by
   simp only [lorentzProduct, FCIdx, Fin.sum_univ_four, eta]
-  norm_num
+  -- Step 1: Eliminate off-diagonal terms (if i ≠ j → 0).
+  simp only [if_neg (show ¬(0:Fin 4) = 1 from by decide),
+             if_neg (show ¬(0:Fin 4) = 2 from by decide),
+             if_neg (show ¬(0:Fin 4) = 3 from by decide),
+             if_neg (show ¬(1:Fin 4) = 0 from by decide),
+             if_neg (show ¬(1:Fin 4) = 2 from by decide),
+             if_neg (show ¬(1:Fin 4) = 3 from by decide),
+             if_neg (show ¬(2:Fin 4) = 0 from by decide),
+             if_neg (show ¬(2:Fin 4) = 1 from by decide),
+             if_neg (show ¬(2:Fin 4) = 3 from by decide),
+             if_neg (show ¬(3:Fin 4) = 0 from by decide),
+             if_neg (show ¬(3:Fin 4) = 1 from by decide),
+             if_neg (show ¬(3:Fin 4) = 2 from by decide),
+             mul_zero, zero_mul, zero_add, add_zero, if_true]
+  -- Step 2: Evaluate `(n : Fin 4).val = 0` (ℕ comparisons from `eta`'s inner `if`).
+  simp only [if_pos (show (0:Fin 4).val = 0 from rfl),
+             if_neg (show ¬(1:Fin 4).val = 0 from by decide),
+             if_neg (show ¬(2:Fin 4).val = 0 from by decide),
+             if_neg (show ¬(3:Fin 4).val = 0 from by decide),
+             one_mul, neg_mul]
+  ring
 
-/-- Lorentz product is symmetric: `p · q = q · p`. -/
+/-- Lorentz product is symmetric: `p · q = q · p`.
+  After full expansion the double sum reduces to four diagonal terms; the
+  symmetry follows by `ring` on the resulting ℝ arithmetic. -/
 theorem lorentzProduct_symm (p q : FCIdx → ℝ) :
     lorentzProduct p q = lorentzProduct q p := by
-  simp only [lorentzProduct]
-  congr 1; ext μ; congr 1; ext ν
+  simp only [lorentzProduct, FCIdx, Fin.sum_univ_four, eta]
+  simp only [if_neg (show ¬(0:Fin 4) = 1 from by decide),
+             if_neg (show ¬(0:Fin 4) = 2 from by decide),
+             if_neg (show ¬(0:Fin 4) = 3 from by decide),
+             if_neg (show ¬(1:Fin 4) = 0 from by decide),
+             if_neg (show ¬(1:Fin 4) = 2 from by decide),
+             if_neg (show ¬(1:Fin 4) = 3 from by decide),
+             if_neg (show ¬(2:Fin 4) = 0 from by decide),
+             if_neg (show ¬(2:Fin 4) = 1 from by decide),
+             if_neg (show ¬(2:Fin 4) = 3 from by decide),
+             if_neg (show ¬(3:Fin 4) = 0 from by decide),
+             if_neg (show ¬(3:Fin 4) = 1 from by decide),
+             if_neg (show ¬(3:Fin 4) = 2 from by decide),
+             mul_zero, zero_mul, zero_add, add_zero, if_true]
+  simp only [if_pos (show (0:Fin 4).val = 0 from rfl),
+             if_neg (show ¬(1:Fin 4).val = 0 from by decide),
+             if_neg (show ¬(2:Fin 4).val = 0 from by decide),
+             if_neg (show ¬(3:Fin 4).val = 0 from by decide),
+             one_mul, neg_mul]
   ring
 
 -- ── LO-8: Gamma matrix contraction (Dirac + Lorentz combined) ────────────────
@@ -191,23 +237,45 @@ theorem lorentzProduct_symm (p q : FCIdx → ℝ) :
 --   explicit index) → essentially the same formula as for the slashes"
 -- Combines Contract.m (Lorentz) with DiracTrick.m (Dirac) for slash-metric products.
 
+/-- Case split for Fin 4: every element is ⟨0,_⟩, ⟨1,_⟩, ⟨2,_⟩, or ⟨3,_⟩.
+  Unlike `fin_cases`, using `rcases ... with rfl` gives a canonical form
+  that `Matrix.cons_val_zero/one` can match. -/
+private lemma fin4_cases' (i : Fin 4) :
+    i = ⟨0, by omega⟩ ∨ i = ⟨1, by omega⟩ ∨ i = ⟨2, by omega⟩ ∨ i = ⟨3, by omega⟩ := by
+  rcases i with ⟨k, hk⟩; interval_cases k <;> simp
+
 set_option maxHeartbeats 800000 in
 /-- `p̸² = p·p · 1₄`  (slashed momentum squared).
   `pSlash(p)² = (Σ_μ p_μ γ^μ)² = Σ_{μν} p_μ p_ν γ^μ γ^ν
               = Σ_{μν} p_μ p_ν · ½{γ^μ,γ^ν}
               = Σ_{μν} p_μ p_ν g^μν · 1₄ = p·p · 1₄`.
-  FeynCalc: `DiracSimplify[Slash[p]^2]` → `Pair[p, p]`. -/
+  FeynCalc: `DiracSimplify[Slash[p]^2]` → `Pair[p, p]`.
+
+  Entry-level proof: rewrite RHS via `lorentzProduct_self` first to avoid expensive
+  `lorentzProduct`+`eta` unfolding, then verify each (i,j) entry via staged simp. -/
 theorem pSlash_sq (p : FCIdx → ℝ) :
     pSlash p * pSlash p = smulEnd ((lorentzProduct p p : ℂ)) oneEnd := by
-  -- Brute-force matrix expansion: unfold everything to concrete ℂ entries, then ring.
-  simp only [pSlash, smulEnd, oneEnd, gamma, lorentzProduct, eta, FCIdx, Fin.sum_univ_four]
+  -- Pre-simplify RHS to avoid unfolding lorentzProduct+eta inside matrix entries.
+  rw [lorentzProduct_self]
+  -- Verify each entry. Staged simp avoids heartbeat explosion.
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply,
-               Fin.sum_univ_four, diracGamma, diracGamma0, diracGamma1, diracGamma2, diracGamma3,
-               Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.head_fin_const,
-               Complex.I_sq] <;>
-    push_cast <;> ring
+  rcases fin4_cases' i with rfl | rfl | rfl | rfl <;>
+  rcases fin4_cases' j with rfl | rfl | rfl | rfl <;> {
+    -- Full simp (not `only`) needed for Fin/Matrix reduction after rcases
+    simp [pSlash, smulEnd, oneEnd, gamma, diracGamma,
+          diracGamma0, diracGamma1, diracGamma2, diracGamma3,
+          Matrix.mul_apply, Fin.sum_univ_four,
+          Matrix.smul_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons]
+    -- The simp leaves products like (-↑p₁ + ↑p₂·I)·(↑p₁ + ↑p₂·I) unexpanded.
+    -- ring_nf normalizes the polynomial, producing literal I^2 terms.
+    -- Then I_sq reduces I² → −1, and ring closes the arithmetic.
+    push_cast
+    ring_nf
+    try simp only [Complex.I_sq, mul_neg, mul_one]
+    try ring
+  }
 
 /-- Dirac equation substitute: for an on-shell spinor u with pu = m u,
   `(p̸ − m) u = 0`.  This is the Dirac equation; stated as an axiom here

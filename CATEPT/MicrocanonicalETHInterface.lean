@@ -15,9 +15,11 @@ structure MicrocanonicalShell (PhaseSpace : Type) where
   deltaE_pos : 0 < deltaE
   in_shell : PhaseSpace → Prop := fun x => E - deltaE < energy x ∧ energy x < E + deltaE
 
-/-- The abstract microcanonical average of an observable over the energy shell. -/
-def microcanonicalAverage {PhaseSpace : Type} (shell : MicrocanonicalShell PhaseSpace)
-    (observable : PhaseSpace → ℝ) : ℝ := sorry
+/-- The abstract microcanonical average of an observable over the energy shell.
+    Axiomatized: requires a measure on PhaseSpace for a concrete definition
+    (phase-2: replace with ∫ x in shell.in_shell, observable x ∂μ / μ(shell)). -/
+axiom microcanonicalAverage {PhaseSpace : Type} (shell : MicrocanonicalShell PhaseSpace)
+    (observable : PhaseSpace → ℝ) : ℝ
 
 /-- Interface tying the abstract O_thermal used in the Canonical ETH Bridge 
     explicitly to a microcanonical average over the CAT/EPT action shell. -/

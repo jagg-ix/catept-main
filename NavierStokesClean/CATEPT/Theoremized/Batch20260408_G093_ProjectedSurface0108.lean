@@ -38,7 +38,7 @@ structure ReferenceFrame where
   position : Vector3
   orientation : Quaternion
 
-def ReferenceFrame.transform (rf : ReferenceFrame) (point : Vector3) : Vector3 :=
+noncomputable def ReferenceFrame.transform (rf : ReferenceFrame) (point : Vector3) : Vector3 :=
   let translated := subtractVectors point rf.position
   rotateVector rf.orientation.inverse translated
 

@@ -1,17 +1,30 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.Sublemma4
+import CATEPTMain.AFPBridge.NoFTL.Affine
+import CATEPTMain.AFPBridge.NoFTL.AxTriangleInequality
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: Sublemma4
-Theorem id: No_FTL_observers_Gen_Rel.Sublemma4.sublemma4#1
-Theorem name: sublemma4
-Lean tactic class: arithmetic_norm_num
+# Sublemma4 — Affine Approximation Implies Continuity
+
+Shows that functions with affine approximations are continuous where
+approximated: if `A` is an affine approximation to `f` at `x`, then `f`
+is defined in a neighborhood of `x` and is continuous at `x`.
+
+Isabelle: `class Sublemma4 = Affine + AxTriangleInequality`.
 -/
 
-theorem sublemma4 (x : NoFTLObj) (f : NoFTLObj) (h1 : affineApprox A f x) : (∃ δ, δ > 0 ∧  ∀ p, (p within δ of x) → (definedAt f p)) ∧ (cts f x) := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
-end AFPIsabellePilot.Sublemma4
+namespace NoFTL.Sublemma4
+
+open NoFTL.Points NoFTL.Sorts NoFTL.Functions NoFTL.Affine
+
+variable {Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [NoFTL.AxEField Q]
+
+/-- Sublemma 4: if `A` is an affine approximation to `f` at `x`, then
+    `f` is defined near `x` and is continuous at `x`. -/
+theorem sublemma4 (A : Point Q → Point Q) (f : Point Q → Point Q → Prop) (x : Point Q)
+    (happrox : affineApprox A f x) :
+    (∃ δ > 0, ∀ p, inBall p δ x → definedAt f p) ∧ cts f x := by
+  sorry -- phase2: long delta-epsilon proof (140 lines in Isabelle)
+
+end NoFTL.Sublemma4

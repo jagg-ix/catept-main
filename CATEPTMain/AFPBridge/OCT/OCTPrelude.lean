@@ -35,8 +35,6 @@ See: CATEPTMain/AFPBridge/OCT/OCT_WORKLOG.lean
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
-
 namespace CATEPTMain.AFPBridge.OCT
 
 -- ── Octonion type (opaque) ────────────────────────────────────────────────────

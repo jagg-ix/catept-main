@@ -22,8 +22,6 @@ See: CATEPTMain/AFPBridge/QFT/QFT_WORKLOG.lean
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
-
 namespace CATEPTMain.AFPBridge.QFT
 
 -- Re-export IMD types for use in theory files

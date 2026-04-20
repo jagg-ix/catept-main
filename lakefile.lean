@@ -44,6 +44,10 @@ require LGT from
 require DimensionalAnalysis from
   "/Users/macbookpro/lab/tau/tau-information-dynamics/LeanDimensionalAnalysis"
 
+-- AQEI-Bridge: causal poset H₁ stability under AQEI stress-energy perturbations.
+require aqeiBridge from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/aqei-bridge/lean"
+
 -- lean-inf: Levi-Civita numbers, SafeFloat, Array utilities (updated to v4.29.0).
 require «lean-inf» from
   "/Users/macbookpro/lab/tau/tau-information-dynamics/lean-inf"
@@ -51,6 +55,20 @@ require «lean-inf» from
 -- VML: Formal verification of the Vlasov-Maxwell-Landau steady-state theorem.
 require aristotle from
   "/Users/macbookpro/lab/tau/tau-information-dynamics/Formal-Verification-of-the-Vlasov-Maxwell-Landau-Steady-State-Theorem"
+
+-- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
+-- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
+require UnifiedTheory from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/unifiedtheory"
+
+-- DeGiorgi: 0-sorry De Giorgi–Nash–Moser regularity theory.
+-- Proves: GNS inequality, Poincaré, Sobolev-Poincaré, Caccioppoli, Harnack, Hölder, Lax-Milgram.
+require «DeGiorgi» from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/DeGiorgi"
+
+-- Spectral-Physics-Lean: spectral gap, Rayleigh quotient, heat semigroup, Bakry-Émery.
+require spectralPhysics from
+  "/Users/macbookpro/lab/tau/tau-information-dynamics/Spectral-Physics-Lean"
 
 -- Keep mathlib last so its transitive versions win during resolution.
 require mathlib from git
@@ -71,4 +89,9 @@ lean_lib NavierStokes where
 -- NavierStokesClean module hierarchy (NavierStokesClean/*.lean).
 -- Imported by CATEPTSelfConsistency and related integration modules.
 lean_lib NavierStokesClean where
+  srcDir := "."
+
+-- PhysLean module hierarchy (PhysLean/*.lean).
+-- Imported by Core/SpatialTypes and NavierStokesClean compatibility bridges.
+lean_lib PhysLean where
   srcDir := "."

@@ -46,6 +46,7 @@ See RS-MASTER-001 before making any file moves.
 | CATEPT      | Complex Action / Entropic Time framework     | Phase 1 (CATEPTPrelude + FeynmanKacBridge + ModularFlowBridge)       |
 | EPT         | Entropic Proper Time — NS/BKM bounds         | Phase 1 (EPTPrelude: decay rate, CI, τ_bound, BKM axioms)            |
 | CALCULUS    | lean4-mlir Tensor/VJP framework              | Phase 1 (Differentiation + Normalization + Attention)                  |
+| NHQM        | Non-Hermitian Fermi-Dirac (Shen et al. 2024) | Phase 1 (NHQMPrelude + NHQMCATEPTBridge)                               |
 
 See `CATEPTMain/AFPBridge/*/WORKLOG.lean` for per-subsystem status and
 `CATEPTMain/Integration/CATEPTSelfConsistency.lean` for cross-subsystem
@@ -155,32 +156,47 @@ import CATEPTMain.AFPBridge.MTN.Kronecker_Product
 import CATEPTMain.AFPBridge.MTN.Mixed_Product
 
 -- ── NoFTL: No Faster-Than-Light Observers ────────────────────────────────────
-import CATEPTMain.AFPBridge.NoFTL.Affine
-import CATEPTMain.AFPBridge.NoFTL.AffineConeLemma
-import CATEPTMain.AFPBridge.NoFTL.Cardinalities
-import CATEPTMain.AFPBridge.NoFTL.CauchySchwarz
-import CATEPTMain.AFPBridge.NoFTL.Classification
-import CATEPTMain.AFPBridge.NoFTL.Functions
-import CATEPTMain.AFPBridge.NoFTL.KeyLemma
-import CATEPTMain.AFPBridge.NoFTL.LinearMaps
-import CATEPTMain.AFPBridge.NoFTL.MainLemma
-import CATEPTMain.AFPBridge.NoFTL.NoFTLGR
-import CATEPTMain.AFPBridge.NoFTL.Norms
-import CATEPTMain.AFPBridge.NoFTL.ObserverConeLemma
+-- Idiomatic port from AFP `No_FTL_observers_Gen_Rel` (Sulzbacher–Martins 2023).
+-- Foundation: Sorts (arithmetic) → Points (spacetime geometry).
+-- Remaining Isabelle theories (Norms, Vectors, Functions, …, NoFTLGR) will be
+-- ported incrementally as real proofs; the previous auto-translated stubs
+-- (all-sorry, wrong types) were removed 2026-04-19.
+import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
+import CATEPTMain.AFPBridge.NoFTL.Sorts
 import CATEPTMain.AFPBridge.NoFTL.Points
+import CATEPTMain.AFPBridge.NoFTL.AxEField
+import CATEPTMain.AFPBridge.NoFTL.WorldView
+import CATEPTMain.AFPBridge.NoFTL.AxSelfMinus
+import CATEPTMain.AFPBridge.NoFTL.AxEventMinus
+import CATEPTMain.AFPBridge.NoFTL.Functions
+import CATEPTMain.AFPBridge.NoFTL.Norms
+import CATEPTMain.AFPBridge.NoFTL.WorldLine
+import CATEPTMain.AFPBridge.NoFTL.Translations
+import CATEPTMain.AFPBridge.NoFTL.Vectors
+import CATEPTMain.AFPBridge.NoFTL.Matrices
+import CATEPTMain.AFPBridge.NoFTL.AxTriangleInequality
+import CATEPTMain.AFPBridge.NoFTL.TangentLines
+import CATEPTMain.AFPBridge.NoFTL.CauchySchwarz
+import CATEPTMain.AFPBridge.NoFTL.Quadratics
+import CATEPTMain.AFPBridge.NoFTL.LinearMaps
+import CATEPTMain.AFPBridge.NoFTL.ReverseCauchySchwarz
+import CATEPTMain.AFPBridge.NoFTL.Cardinalities
+import CATEPTMain.AFPBridge.NoFTL.AxLightMinus
+import CATEPTMain.AFPBridge.NoFTL.Cones
+import CATEPTMain.AFPBridge.NoFTL.Affine
+import CATEPTMain.AFPBridge.NoFTL.AxDiff
+import CATEPTMain.AFPBridge.NoFTL.Classification
+import CATEPTMain.AFPBridge.NoFTL.Sublemma3
+import CATEPTMain.AFPBridge.NoFTL.Sublemma4
+import CATEPTMain.AFPBridge.NoFTL.MainLemma
+import CATEPTMain.AFPBridge.NoFTL.TangentLineLemma
+import CATEPTMain.AFPBridge.NoFTL.KeyLemma
+import CATEPTMain.AFPBridge.NoFTL.AffineConeLemma
 import CATEPTMain.AFPBridge.NoFTL.Proposition1
 import CATEPTMain.AFPBridge.NoFTL.Proposition2
 import CATEPTMain.AFPBridge.NoFTL.Proposition3
-import CATEPTMain.AFPBridge.NoFTL.Quadratics
-import CATEPTMain.AFPBridge.NoFTL.ReverseCauchySchwarz
-import CATEPTMain.AFPBridge.NoFTL.Sorts
-import CATEPTMain.AFPBridge.NoFTL.Sublemma3
-import CATEPTMain.AFPBridge.NoFTL.Sublemma4
-import CATEPTMain.AFPBridge.NoFTL.TangentLineLemma
-import CATEPTMain.AFPBridge.NoFTL.TangentLines
-import CATEPTMain.AFPBridge.NoFTL.Translations
-import CATEPTMain.AFPBridge.NoFTL.Vectors
-import CATEPTMain.AFPBridge.NoFTL.WorldLine
+import CATEPTMain.AFPBridge.NoFTL.ObserverConeLemma
+import CATEPTMain.AFPBridge.NoFTL.NoFTLGR
 
 -- ── OCT: Octonions ────────────────────────────────────────────────────────────
 import CATEPTMain.AFPBridge.OCT.Norm_Octonions
@@ -234,6 +250,12 @@ import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
 
 -- ── EPT: Entropic Proper Time — NS BKM bounds (Phase 1) ──────────────────────
 import CATEPTMain.AFPBridge.EPT.EPTPort
+
+-- ── NHQM: Non-Hermitian QM / Fermi-Dirac Persistent Current (Phase 1) ────────
+import CATEPTMain.AFPBridge.NHQM.NHQMPort
+
+-- ── CATEPT Planck mode bridge (ex-TTT, merged into CATEPT) ───────────────────
+import CATEPTMain.AFPBridge.CATEPT.PlanckModeBridge
 
 -- ── SM: Smooth Manifolds ──────────────────────────────────────────────────────
 import CATEPTMain.AFPBridge.SM.Analysis_More

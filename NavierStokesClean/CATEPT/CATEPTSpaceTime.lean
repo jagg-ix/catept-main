@@ -127,6 +127,184 @@ def CATEPTST.ofTimeSpace (t : ℝ) (x : CATEPTSpace) : CATEPTST := Fin.cons t x
 
 end Decomposition
 
+/-! ## §3b. Minkowski Causal Structure on CATEPTST
+
+Causal classification of spacetime displacement vectors using the Minkowski
+metric η = diag(−1,+1,+1,+1).  These definitions make the NoFTL AFP module's
+core features (lightcone geometry, causal classification, velocity bounds)
+available directly on the repo's native `CATEPTST = Fin 4 → ℝ` type.
+
+- `minkowskiNorm2 Δx = −Δx₀² + Δx₁² + Δx₂² + Δx₃²` (signature −+++)
+- `spatialNorm2 Δx = Δx₁² + Δx₂² + Δx₃²`
+- Causal classification: `CausalTimelike`, `CausalLightlike`, `CausalSpacelike`
+- `InsideLightcone`, `OnLightcone`, `OutsideLightcone` — cone membership
+- `SubluminalVelocity` — the no-FTL predicate on spatial velocities
+-/
+
+section CausalStructure
+
+/-- Squared spatial norm of a displacement: Δx₁² + Δx₂² + Δx₃². -/
+def spatialNorm2 (Δx : CATEPTST) : ℝ :=
+  ∑ i : Fin 3, (Δx i.succ) ^ 2
+
+/-- Minkowski norm squared (signature −+++) of a displacement:
+    −Δx₀² + Δx₁² + Δx₂² + Δx₃².
+
+    Sign convention: timelike vectors have `minkowskiNorm2 Δx < 0`,
+    matching the (−+++) signature where `η₀₀ = −1`.
+
+    Relation to NoFTL's `mNorm2`: `mNorm2 p = p.tval² − sNorm2(sComponent p)`
+    uses (+−−−) convention, so `minkowskiNorm2 Δx = −mNorm2(Δx)` under the
+    coordinate identification `p.tval ↔ Δx 0`, `p.xval ↔ Δx 1`, etc. -/
+def minkowskiNorm2 (Δx : CATEPTST) : ℝ :=
+  -(Δx 0) ^ 2 + spatialNorm2 Δx
+
+/-- A displacement is **timelike**: lies inside the lightcone. -/
+def CausalTimelike (Δx : CATEPTST) : Prop := minkowskiNorm2 Δx < 0
+
+/-- A displacement is **lightlike** (null): lies on the lightcone boundary. -/
+def CausalLightlike (Δx : CATEPTST) : Prop := Δx ≠ 0 ∧ minkowskiNorm2 Δx = 0
+
+/-- A displacement is **spacelike**: lies outside the lightcone. -/
+def CausalSpacelike (Δx : CATEPTST) : Prop := minkowskiNorm2 Δx > 0
+
+/-- The **lightcone** at event `x`: set of events connected by null separation. -/
+def Lightcone (x : CATEPTST) : Set CATEPTST :=
+  { y | minkowskiNorm2 (y - x) = 0 }
+
+/-- Event `y` is **inside the lightcone** of `x` (timelike separated). -/
+def InsideLightcone (x y : CATEPTST) : Prop := CausalTimelike (y - x)
+
+/-- Event `y` is **on the lightcone** of `x` (null separated). -/
+def OnLightcone (x y : CATEPTST) : Prop := CausalLightlike (y - x)
+
+/-- Event `y` is **outside the lightcone** of `x` (spacelike separated). -/
+def OutsideLightcone (x y : CATEPTST) : Prop := CausalSpacelike (y - x)
+
+/-- A spatial velocity `v : Fin 3 → ℝ` is **subluminal** (speed < c = 1). -/
+def SubluminalVelocity (v : CATEPTSpace) : Prop :=
+  ∑ i : Fin 3, (v i) ^ 2 < 1
+
+/-- The **no-FTL predicate** on a spacetime model: all physical velocities
+    are subluminal.  This is the typed replacement for `noFTL : True`. -/
+def NoFTLBound (velocityField : CATEPTSpace → Prop) : Prop :=
+  ∀ v : CATEPTSpace, velocityField v → SubluminalVelocity v
+
+/-- Every displacement is either timelike, lightlike, or spacelike. -/
+theorem causal_trichotomy (Δx : CATEPTST) :
+    CausalTimelike Δx ∨ CausalLightlike Δx ∨ CausalSpacelike Δx ∨ Δx = 0 := by
+  by_cases h0 : Δx = 0
+  · right; right; right; exact h0
+  · rcases lt_trichotomy (minkowskiNorm2 Δx) 0 with hlt | heq | hgt
+    · left; exact hlt
+    · right; left; exact ⟨h0, heq⟩
+    · right; right; left; exact hgt
+
+/-- Timelike displacement implies strict time dominance: |Δt|² > spatial norm². -/
+theorem timelike_time_dominates {Δx : CATEPTST} (h : CausalTimelike Δx) :
+    (Δx 0) ^ 2 > spatialNorm2 Δx := by
+  unfold CausalTimelike minkowskiNorm2 at h; linarith
+
+-- ── §3c. Entropic Lapse Distance on CATEPTST ────────────────────────────────
+
+/-!
+### Entropic proper-time distance
+
+The ADM lapse function `N(x)` converts coordinate time intervals to proper
+time: `dτ = N dt`.  In the CAT/EPT framework, the entropic lapse
+`N_ent = Ω/(2ν)` (enstrophy / twice viscosity) provides the analogous
+conversion for entropic proper time.
+
+Given an entropic lapse field `N : CATEPTST → ℝ`, the **entropic distance**
+between two spacetime points is the lapse-weighted norm of their separation.
+For Minkowski spacetime with unit lapse (`N = 1`), this reduces to the
+standard `minkowskiNorm2`.
+
+This connects the ADM decomposition (Gravitas / ADMExtrinsicCurvatureBridge)
+to the causal classification (§3b) via entropic proper time.
+-/
+
+/-- Entropic lapse field: a positive function on CATEPTST representing the
+    rate at which entropic proper time accumulates per coordinate time.
+
+    For the Minkowski model: `N(x) = 1` (flat, no entropic gradient).
+    For the NS/CATEPT model: `N(x) = Ω(x)/(2ν)` (enstrophy-driven). -/
+structure EntropicLapse where
+  /-- Lapse field value at each spacetime point. -/
+  lapse : CATEPTST → ℝ
+  /-- Lapse is strictly positive everywhere. -/
+  lapse_pos : ∀ x, 0 < lapse x
+
+/-- **Entropic spacetime interval** (lapse-weighted Minkowski norm²).
+
+    `η_ent(Δx) = −N(x)² · (Δx₀)² + (Δx₁)² + (Δx₂)² + (Δx₃)²`
+
+    The lapse scales the time component: faster entropic evolution
+    (higher `N`) makes the time separation more dominant, pushing the
+    interval toward timelike. -/
+def entropicNorm2 (N : EntropicLapse) (x : CATEPTST) (Δx : CATEPTST) : ℝ :=
+  -(N.lapse x) ^ 2 * (Δx 0) ^ 2 + spatialNorm2 Δx
+
+/-- Entropic timelike: the lapse-weighted interval is negative (time-dominated). -/
+def EntropicTimelike (N : EntropicLapse) (x Δx : CATEPTST) : Prop :=
+  entropicNorm2 N x Δx < 0
+
+/-- Entropic spacelike: the lapse-weighted interval is positive (space-dominated). -/
+def EntropicSpacelike (N : EntropicLapse) (x Δx : CATEPTST) : Prop :=
+  entropicNorm2 N x Δx > 0
+
+/-- The **unit lapse** (Minkowski): `N(x) = 1` everywhere. -/
+def unitLapse : EntropicLapse where
+  lapse := fun _ => 1
+  lapse_pos := fun _ => one_pos
+
+/-- With unit lapse, the entropic norm² equals the Minkowski norm². -/
+theorem entropicNorm2_unitLapse (x Δx : CATEPTST) :
+    entropicNorm2 unitLapse x Δx = minkowskiNorm2 Δx := by
+  unfold entropicNorm2 unitLapse minkowskiNorm2
+  ring
+
+/-- Unit-lapse entropic timelike = standard Minkowski timelike. -/
+theorem entropicTimelike_unitLapse_iff (x Δx : CATEPTST) :
+    EntropicTimelike unitLapse x Δx ↔ CausalTimelike Δx := by
+  unfold EntropicTimelike CausalTimelike
+  rw [entropicNorm2_unitLapse]
+
+/-- Unit-lapse entropic spacelike = standard Minkowski spacelike. -/
+theorem entropicSpacelike_unitLapse_iff (x Δx : CATEPTST) :
+    EntropicSpacelike unitLapse x Δx ↔ CausalSpacelike Δx := by
+  unfold EntropicSpacelike CausalSpacelike
+  rw [entropicNorm2_unitLapse]
+
+/-- Higher lapse → wider timelike cone.
+
+    If `N₁(x) ≤ N₂(x)` and `Δx` is timelike under `N₁`,
+    then `Δx` is also timelike under `N₂`. More entropic evolution
+    makes the causal cone wider (more displacements are timelike). -/
+theorem entropicTimelike_mono {N₁ N₂ : EntropicLapse} {x Δx : CATEPTST}
+    (hle : N₁.lapse x ≤ N₂.lapse x)
+    (h₁ : EntropicTimelike N₁ x Δx) :
+    EntropicTimelike N₂ x Δx := by
+  unfold EntropicTimelike entropicNorm2 at *
+  have hN₁ := N₁.lapse_pos x
+  have hN₂ := N₂.lapse_pos x
+  have hsq : N₁.lapse x ^ 2 ≤ N₂.lapse x ^ 2 :=
+    sq_le_sq' (by linarith) hle
+  nlinarith [sq_nonneg (Δx 0)]
+
+/-- **Entropic velocity bound**: for timelike displacements under lapse `N`,
+    the coordinate velocity satisfies `|v|² < N(x)²` (not just < 1).
+
+    The entropic lapse sets the local speed of light: signals propagate
+    at most at speed `N(x)` in coordinate velocity. -/
+theorem entropicTimelike_velocity_bound {N : EntropicLapse} {x Δx : CATEPTST}
+    (htl : EntropicTimelike N x Δx) :
+    spatialNorm2 Δx < (N.lapse x) ^ 2 * (Δx 0) ^ 2 := by
+  unfold EntropicTimelike entropicNorm2 at htl
+  linarith
+
+end CausalStructure
+
 /-! ## §4. Safe MemLp on CATEPTSpace
 
 The key theorem: MemLp proofs on `Fin 3 → ℝ` do NOT trigger the whnf loop.

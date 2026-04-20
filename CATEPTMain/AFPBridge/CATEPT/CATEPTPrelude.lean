@@ -45,7 +45,6 @@ Ported from:
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
 open MeasureTheory Complex Real
 
 namespace CATEPTMain.AFPBridge.CATEPT

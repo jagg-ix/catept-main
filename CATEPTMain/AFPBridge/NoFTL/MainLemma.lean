@@ -1,45 +1,66 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.MainLemma
+import CATEPTMain.AFPBridge.NoFTL.Sublemma3
+import CATEPTMain.AFPBridge.NoFTL.Sublemma4
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: MainLemma
-Theorem id: No_FTL_observers_Gen_Rel.MainLemma.lemMainLemmaBasic#1
-Theorem name: lemMainLemmaBasic
-Lean tactic class: arithmetic_norm_num
+# MainLemma — Tangent Line Preservation
+
+Establishes conditions under which a function maps tangent lines to
+tangent lines. The key result (`lemMainLemma`) shows that if `f` has
+an affine approximation `A` at `x`, then `A` maps tangent lines at `x`
+to tangent lines at `f(x)`.
+
+Isabelle: `class MainLemma = Sublemma3 + Sublemma4`.
 -/
 
-theorem lemMainLemmaBasic (tangentLine : NoFTLSet → NoFTLSet → NoFTLObj → Prop) (l' : NoFTLSet) (f : NoFTLObj) (wl : NoFTLSet) (origin : NoFTLObj) (tgt : tangentLine l wl origin) (injf : injective f) (affapp : affineApprox A f origin) (f00 : f origin = origin) (ctsf'0 : cts (invFunc f) origin) (affline : applyAffineToLine A l l') : tangentLine l' (applyToSet f wl) origin := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
+namespace NoFTL.MainLemma
 
+open NoFTL.Points NoFTL.Sorts NoFTL.Functions NoFTL.Norms
+open NoFTL.Affine NoFTL.TangentLines
 
+variable {Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [NoFTL.AxEField Q]
 
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: MainLemma
-Theorem id: No_FTL_observers_Gen_Rel.MainLemma.lemMainLemmaOrigin#1
-Theorem name: lemMainLemmaOrigin
-Lean tactic class: arithmetic_norm_num
--/
+/-- Main lemma (origin version): if `f` has affine approximation `A` at
+    the origin and maps the origin to itself, then `A` maps tangent
+    lines of `wl` at origin to tangent lines of `f(wl)` at origin. -/
+theorem lemMainLemmaBasic
+    (l l' wl : Set (Point Q)) (f A : Point Q → Point Q)
+    (htgt : tangentLine l wl origin)
+    (hinj : injective (asFunc f))
+    (haff : affineApprox A (asFunc f) origin)
+    (hf0 : (asFunc f) origin origin)
+    (hcts : cts (invFunc (asFunc f)) origin)
+    (hline : applyAffineToLine A l l') :
+    tangentLine l' (applyToSet (asFunc f) wl) origin := by
+  sorry -- phase2: long proof (~250 lines in Isabelle)
 
-theorem lemMainLemmaOrigin (tangentLine : NoFTLSet → NoFTLSet → NoFTLObj → Prop) (l' : NoFTLSet) (f : NoFTLObj) (wl : NoFTLSet) (origin : NoFTLObj) (tgtx : tangentLine l wl x) (injf : injective f) (affappx : affineApprox A f x) (fx0 : f x = origin) (ctsf'0 : cts (invFunc f) origin) (affline : applyAffineToLine A l l') : tangentLine l' (applyToSet f wl) origin := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+/-- Main lemma (origin version, relational): version using relational
+    function `f` instead of total function. -/
+theorem lemMainLemmaOrigin
+    (l l' wl : Set (Point Q)) (f : Point Q → Point Q → Prop) (A : Point Q → Point Q)
+    (htgt : tangentLine l wl origin)
+    (hinj : injective f)
+    (haff : affineApprox A f origin)
+    (hf0 : f origin origin)
+    (hcts : cts (invFunc f) origin)
+    (hline : applyAffineToLine A l l') :
+    tangentLine l' (applyToSet f wl) origin := by
+  sorry -- phase2: similar to lemMainLemmaBasic
 
+/-- Main lemma (general version): translated to arbitrary base point `x`.
+    If `f` has affine approximation `A` at `x`, then `A` maps tangent
+    lines at `x` to tangent lines at `A(x)`. -/
+theorem lemMainLemma
+    (l l' wl : Set (Point Q)) (f : Point Q → Point Q → Prop) (A : Point Q → Point Q)
+    (x : Point Q)
+    (htgt : tangentLine l wl x)
+    (hinj : injective f)
+    (haff : affineApprox A f x)
+    (hcts : cts (invFunc f) (A x))
+    (hline : applyAffineToLine A l l') :
+    tangentLine l' (applyToSet f wl) (A x) := by
+  sorry -- phase2: reduces to lemMainLemmaOrigin via translation (~200 lines)
 
-
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: MainLemma
-Theorem id: No_FTL_observers_Gen_Rel.MainLemma.lemMainLemma#1
-Theorem name: lemMainLemma
-Lean tactic class: arithmetic_norm_num
--/
-
-theorem lemMainLemma (tangentLine : NoFTLSet → NoFTLSet → NoFTLObj → Prop) (l' : NoFTLSet) (f : NoFTLObj) (wl : NoFTLSet) (y : NoFTLObj) (tgtx : tangentLine l wl x) (injf : injective f) (affappx : affineApprox A f x) (fxy : f x = y) (ctsf'y : cts (invFunc f) y) (affline : applyAffineToLine A l l') : tangentLine l' (applyToSet f wl) y := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
-
-end AFPIsabellePilot.MainLemma
+end NoFTL.MainLemma

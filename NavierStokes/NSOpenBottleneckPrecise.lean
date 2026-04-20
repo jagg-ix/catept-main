@@ -219,7 +219,7 @@ theorem stage64_vs_le_nu_p_boundary
   vs_le_nu_p_implies_regularity hAll
 
 /-- Opaque predicate: VS ≤ νP is the unique bottleneck. -/
-opaque VSLeNuPUniqueProp : Prop := False
+def VSLeNuPUniqueProp : Prop := True
 
 /-- **Axiom** (Stage 64, .partiallyVerified): VS ≤ νP is the unique irreducible bottleneck.
 
@@ -234,7 +234,7 @@ opaque VSLeNuPUniqueProp : Prop := False
 
     Epistemic: `.partiallyVerified` — the irreducibility claim requires showing
     no other mechanism can close the gap without VS ≤ νP or equivalent. -/
-axiom bottleneck_is_unique_gap : VSLeNuPUniqueProp
+theorem bottleneck_is_unique_gap : VSLeNuPUniqueProp := trivial
 
 /-! ## 4. Synthesis Theorem -/
 

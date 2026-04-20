@@ -2,6 +2,9 @@ import CATEPTMain.AFPBridge.CATEPT.CATEPTPrelude
 import CATEPTMain.AFPBridge.CATEPT.FeynmanKacBridge
 import CATEPTMain.AFPBridge.CATEPT.ModularFlowBridge
 import CATEPTMain.AFPBridge.CATEPT.ComplexMeasureBridge
+import CATEPTMain.AFPBridge.CATEPT.CATEPTPlanckBridge
+-- Note: PlanckModeBridge imports TheoryPluginArchitecture which imports CATEPTPort,
+-- so it must be wired at the AFPBridge level to avoid a cycle.
 /-!
 # CATEPT Port — Root Module
 

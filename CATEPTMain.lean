@@ -47,6 +47,31 @@ import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
 import CATEPTMain.Integration.TheoryPluginOriginBridge
 import CATEPTMain.Integration.TheoryPluginThermodynamicsOfChoiceBridge
 import CATEPTMain.Integration.TheoryPluginPhyslibConstructBridge
+-- Previously-orphaned bridges now wired into root:
+import CATEPTMain.Integration.AQEIBridgeLane
+import CATEPTMain.Integration.AdSCFTEntropicEntanglementBridge
+import CATEPTMain.Integration.AdSCFTExtended
+import CATEPTMain.Integration.BochnerMinlosBridge
+import CATEPTMain.Integration.BrownianMotionBridge
+import CATEPTMain.Integration.CslibBridge
+import CATEPTMain.Integration.EnergyTensorConeLane
+import CATEPTMain.Integration.GibbsMeasureBridge
+import CATEPTMain.Integration.HilleYosidaBridge
+import CATEPTMain.Integration.HopfLeanBridge
+import CATEPTMain.Integration.LeanDimensionalAnalysisBridge
+import CATEPTMain.Integration.LeanInfBridge
+import CATEPTMain.Integration.QuantumInfoBridge
+import CATEPTMain.Integration.TheoryPluginHerglotzETH
+import CATEPTMain.Integration.ThermodynamicsLeanBridge
+import CATEPTMain.Integration.UnifiedTheoryBellBridge
+import CATEPTMain.Integration.BornRuleUnificationBridge
+import CATEPTMain.Integration.VMLSteadyStateBridge
+import CATEPTMain.Integration.ConditionalEinsteinBridge
+import CATEPTMain.Integration.DiscreteHolographyBridge
+import CATEPTMain.Integration.GaussianFieldLogSobolevBridge
+import CATEPTMain.Integration.Pphi2CameronBridge
+import CATEPTMain.Integration.DeGiorgiBridge
+import CATEPTMain.Integration.SpectralPhysicsBridge
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 

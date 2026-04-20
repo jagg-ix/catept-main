@@ -1,17 +1,31 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.Proposition2
+import CATEPTMain.AFPBridge.NoFTL.TangentLineLemma
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: Proposition2
-Theorem id: No_FTL_observers_Gen_Rel.Proposition2.lemProposition2#1
-Theorem name: lemProposition2
-Lean tactic class: arithmetic_norm_num
+# Proposition 2 — Cone Image Under Worldview Transformation
+
+If `A` is an affine approximation to `wvt m k` at `x`, then the image
+of the cone of `m` at `x` under `A` is contained in the cone of `k`
+at `A(x)`.
+
+Isabelle: `class Proposition2 = TangentLineLemma`.
 -/
 
-theorem lemProposition2 (A : NoFTLObj) (coneSet : NoFTLObj → NoFTLObj → NoFTLSet) (m : NoFTLObj) (x : NoFTLObj) (k : NoFTLObj) (h1 : affineApprox A (toFunc (wvt m k)) x) : applyToSet (asFunc A) (coneSet m x) ⊆ coneSet k (A x) := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
-end AFPIsabellePilot.Proposition2
+namespace NoFTL.Proposition2
+
+open NoFTL.Points NoFTL.Functions NoFTL.Affine
+open NoFTL.WorldView NoFTL.Cones
+
+variable {B Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [NoFTL.AxEField Q] [WorldViewRel B Q] [BodySorts B]
+variable [NoFTL.AxDiff.AxDiff B Q] [NoFTL.AxSelfMinus.AxSelfMinus B Q]
+
+/-- Proposition 2: if `A` approximates `wvt m k` at `x`, then the image
+    of `coneSet m x` under `A` is contained in `coneSet k (A x)`. -/
+theorem lemProposition2 (m k : B) (x : Point Q) (A : Point Q → Point Q)
+    (haff : affineApprox A (wvtFunc (Q := Q) m k) x) :
+    applyToSet (asFunc A) (coneSet m x) ⊆ coneSet k (A x) := by
+  sorry -- phase2: uses lemTangentLines (90 lines in Isabelle)
+
+end NoFTL.Proposition2

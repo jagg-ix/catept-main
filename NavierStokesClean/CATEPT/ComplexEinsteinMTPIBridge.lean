@@ -172,7 +172,7 @@ def mkMTPIComplexEFECompatibility
 theorem physlean_bianchi_seed
     (f : Space → EuclideanSpace ℝ (Fin 3))
     (hf : ContDiff ℝ 2 f) :
-    ∇ ⬝ (∇ × f) = 0 :=
+  ∇ ⬝ (∇ ⨯ f) = 0 :=
   NavierStokesClean.PhysLeanBridge.ns_div_curl_zero f hf
 
 /-- Gauss-Bonnet and corrected Einstein-equation unresolved rows from the

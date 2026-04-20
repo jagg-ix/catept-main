@@ -1,4 +1,5 @@
 import CATEPTMain.Integration.TheoryPluginDimFundamental
+import CATEPTMain.Integration.CATEPTSpaceTime
 
 set_option autoImplicit false
 
@@ -689,5 +690,139 @@ def SpacetimeRegionQTMFull.sequentialCompose
   algebra := P₁.algebra  -- composite uses same algebra witness (Phase-1 simplification)
   machine := leanMachineQTMBridge (P₁.qtm.sequentialCompose P₂.qtm)
   dimOk   := landauer_shannon_dimensional_duality
+
+-- ── Part G: Causal QTM — NoFTL lightcone constraint ─────────────────────────
+
+/-!
+### G.1  Causal spacetime region QTM
+
+A `CausalSpacetimeRegionQTM` extends a `SpacetimeRegionQTM` with a
+**lightcone causality constraint**: the total evolution channel respects
+the no-FTL velocity bound from the Minkowski causal structure.
+
+The key physical requirement: if two spacetime points are spacelike-separated
+(outside each other's lightcone), the channel cannot transmit information
+between them — the total evolution preserves locality.
+
+This connects the QTM computation/communication decomposition to the
+`MinkowskiNoFTLCertificate` from `CATEPTSpaceTime §7`, linking:
+- QTM channels (quantum information processing)
+- Causal structure (lightcone geometry)
+- No-FTL velocity bound (subluminal constraint)
+
+### Design: existential factorization (inspired by `isCausalMatrix_mul`)
+
+The `causal_locality` field uses an **existential** factorization: for
+spacelike-separated points, the total evolution factorizes as *some* pair
+of independent channels on the tensor product, rather than being pinned
+to `computationChannel` / `communicationChannel`.
+
+This mirrors the `isCausalMatrix_mul` theorem from the causal algebraic
+geometry framework (CausalAlgebraicGeometry/CausalAlgebra.lean):
+> If M, N are causal matrices, then (MN)(α,β) = Σ_γ M(α,γ)N(γ,β) = 0
+> whenever α ≰ β, because for any γ, either α ≰ γ (so M(α,γ) = 0) or
+> γ ≰ β (so N(γ,β) = 0) — by transitivity of the causal order.
+
+The QTM analogue: if R₁ and R₂ each factorize on spacelike-separated
+tensor products, then R₂ ∘ R₁ also factorizes — the witnesses compose.
+-/
+
+open CATEPTMain.Integration.CATEPTSpaceTime
+open NavierStokesClean.CATEPT
+
+/-- A spacetime region QTM equipped with a causal locality constraint.
+
+    The `causal_locality` field encodes: for any pair of spacetime points
+    that are spacelike-separated (`OutsideLightcone`), the total evolution
+    factorises as independent channels on each subsystem — no information
+    leaks across the lightcone.
+
+    The existential form `∃ (Λ_A Λ_B : Channel), ...` mirrors
+    `isCausalMatrix_mul` from causal algebraic geometry: the product of
+    two causal maps is causal, with the factorization witnesses composing.
+
+    The `noftl_certificate` field provides the concrete velocity bound
+    proving that the causal structure is well-defined (subluminal signals
+    only). -/
+structure CausalSpacetimeRegionQTM (backend : QTMQuantumBackend) where
+  /-- The underlying QTM region. -/
+  region : SpacetimeRegionQTM backend
+  /-- No-FTL certificate: timelike displacements have subluminal velocity. -/
+  noftl_certificate : MinkowskiNoFTLCertificate
+  /-- Causal locality: spacelike-separated regions cannot exchange information
+      through the total evolution channel.  For any two points
+      `x y : CATEPTST` with `OutsideLightcone x y`, there exist independent
+      channels `Λ_A`, `Λ_B` such that the total evolution on any product state
+      factorizes as `Λ_total(ρ₁ ⊗ ρ₂) = Λ_A(ρ₁) ⊗ Λ_B(ρ₂)`. -/
+  causal_locality : ∀ (x y : CATEPTST), OutsideLightcone x y →
+      ∃ (Λ_A Λ_B : backend.Channel),
+      ∀ (ρ₁ ρ₂ : backend.State),
+        backend.applyChannel region.totalEvolution (backend.tensorState ρ₁ ρ₂) =
+          backend.tensorState
+            (backend.applyChannel Λ_A ρ₁)
+            (backend.applyChannel Λ_B ρ₂)
+
+/-- Sequential composition of causal QTM regions preserves causality.
+
+    Proof strategy (analogue of `isCausalMatrix_mul`):
+    - R₁ factorizes: `Λ₁_total(ρ₁ ⊗ ρ₂) = Λ₁_A(ρ₁) ⊗ Λ₁_B(ρ₂)`
+    - R₂ factorizes: `Λ₂_total(σ₁ ⊗ σ₂) = Λ₂_A(σ₁) ⊗ Λ₂_B(σ₂)`
+    - Composed: `(Λ₂ ∘ Λ₁)(ρ₁ ⊗ ρ₂) = Λ₂(Λ₁_A(ρ₁) ⊗ Λ₁_B(ρ₂))`
+                                       `= Λ₂_A(Λ₁_A(ρ₁)) ⊗ Λ₂_B(Λ₁_B(ρ₂))`
+    - Witnesses: `Λ₂_A ∘ Λ₁_A` and `Λ₂_B ∘ Λ₁_B`. -/
+def CausalSpacetimeRegionQTM.sequentialCompose
+    {backend : QTMQuantumBackend}
+    (R₁ R₂ : CausalSpacetimeRegionQTM backend) :
+    CausalSpacetimeRegionQTM backend where
+  region := R₁.region.sequentialCompose R₂.region
+  noftl_certificate := R₁.noftl_certificate
+  causal_locality := fun x y hsp => by
+    obtain ⟨Λ₁_A, Λ₁_B, h₁⟩ := R₁.causal_locality x y hsp
+    obtain ⟨Λ₂_A, Λ₂_B, h₂⟩ := R₂.causal_locality x y hsp
+    exact ⟨backend.channelCompose Λ₂_A Λ₁_A, backend.channelCompose Λ₂_B Λ₁_B,
+      fun ρ₁ ρ₂ => by
+        -- Goal: (Λ₂_total ∘ Λ₁_total)(ρ₁ ⊗ ρ₂) = (Λ₂_A ∘ Λ₁_A)(ρ₁) ⊗ (Λ₂_B ∘ Λ₁_B)(ρ₂)
+        simp only [SpacetimeRegionQTM.sequentialCompose, backend.channelCompose_apply]
+        -- LHS: Λ₂_total(Λ₁_total(ρ₁ ⊗ ρ₂))
+        -- Step 1: apply R₁ factorization
+        rw [h₁ ρ₁ ρ₂]
+        -- Now: Λ₂_total(Λ₁_A(ρ₁) ⊗ Λ₁_B(ρ₂))
+        -- Step 2: apply R₂ factorization
+        rw [h₂ (backend.applyChannel Λ₁_A ρ₁) (backend.applyChannel Λ₁_B ρ₂)]⟩
+
+/-- A `CausalSpacetimeRegionQTM` can be lifted to a full QTM profile,
+    carrying its no-FTL certificate alongside the algebraic and
+    dimensional data. -/
+structure CausalSpacetimeRegionQTMFull (backend : QTMQuantumBackend) where
+  /-- Causal QTM (with lightcone constraint). -/
+  causalQtm : CausalSpacetimeRegionQTM backend
+  /-- Von Neumann algebra of observables. -/
+  algebra   : VNAlgebraRegionWitness backend
+  /-- Lean-machines bridge. -/
+  machine   : LeanMachineQTMBridge backend
+  /-- Dimensional self-consistency. -/
+  dimOk     : dim_computation_rate = dim_energy_ext ∧
+              dim_communication_rate = dim_energy_ext
+
+/-- Canonical constructor for a full causal QTM profile. -/
+def mkCausalSpacetimeRegionQTMFull
+    {backend : QTMQuantumBackend}
+    (cqtm    : CausalSpacetimeRegionQTM backend)
+    (algebra : VNAlgebraRegionWitness backend) :
+    CausalSpacetimeRegionQTMFull backend where
+  causalQtm := cqtm
+  algebra   := algebra
+  machine   := leanMachineQTMBridge cqtm.region
+  dimOk     := landauer_shannon_dimensional_duality
+
+/-- Every causal full QTM profile can be projected to a non-causal full profile. -/
+def CausalSpacetimeRegionQTMFull.toFull
+    {backend : QTMQuantumBackend}
+    (P : CausalSpacetimeRegionQTMFull backend) :
+    SpacetimeRegionQTMFull backend where
+  qtm     := P.causalQtm.region
+  algebra := P.algebra
+  machine := P.machine
+  dimOk   := P.dimOk
 
 end CATEPTMain.Integration

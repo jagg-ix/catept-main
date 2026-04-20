@@ -228,6 +228,42 @@ theorem exponential_damping
   NavierStokesClean.CATEPT.Theoremized.Batch20260408.B33.row33_exponential_damping
     S_R S_I hbar h_hbar coer h_bound
 
+-- ── §5b  MaxEnt ↔ Born weight identification ─────────────────────────────────
+
+/-- **MaxEnt = path damping**: the Jaynes density `e^{−βx}` equals the CATEPT
+    path integral damping `exp(−S_I/ħ)` under the identification `β = 1/ħ`,
+    `x = S_I`.
+
+    This connects `QuantumInfoFisherBridge` to `BohmianQMBridge.catept_amplitude_eq_path_damping`:
+    the maximum-entropy probability weight IS the Born weight from the path integral. -/
+theorem maxEnt_density_eq_path_damping
+    (S_I hbar_val : ℝ) (hh : 0 < hbar_val) :
+    NavierStokesClean.CATEPT.Theoremized.Batch20260408.B04.jaynesDensity
+        (1 / hbar_val) S_I
+      = path_integral_damping hbar_val S_I := by
+  simp only [NavierStokesClean.CATEPT.Theoremized.Batch20260408.B04.jaynesDensity,
+             path_integral_damping]
+  congr 1; ring
+
+/-- **MaxEnt = Born weight**: the Jaynes density at `β = 1/ħ` equals the
+    square root of the Born probability weight `|A[q]|²` from `BohmianQMBridge`.
+
+    Information geometry (Fisher metric on the Jaynes family) is therefore
+    the second-order expansion of the Born weight suppression `|A[q]|² = e^{−2S_I/ħ}`. -/
+theorem maxEnt_density_eq_catept_born_weight
+    (S_R S_I hbar_val : ℝ) (hh : 0 < hbar_val) :
+    NavierStokesClean.CATEPT.Theoremized.Batch20260408.B04.jaynesDensity
+        (1 / hbar_val) S_I
+      = Real.sqrt (‖Complex.exp (Complex.I * (S_R / hbar_val)) *
+            (Real.exp (-S_I / hbar_val) : ℂ)‖ ^ 2) := by
+  have hbd :=
+    CATEPTMain.Integration.BohmianQM.catept_probability_density S_R S_I hbar_val hh
+  rw [hbd, show Real.exp (-2 * S_I / hbar_val) = Real.exp (-S_I / hbar_val) ^ 2 from by
+        rw [sq, ← Real.exp_add]; congr 1; ring,
+      Real.sqrt_sq (Real.exp_nonneg _)]
+  simp only [NavierStokesClean.CATEPT.Theoremized.Batch20260408.B04.jaynesDensity]
+  congr 1; ring
+
 -- ── §6  CPTP contractivity and data-processing inequality ────────────────────
 
 /-- CPTP channel composition is associative. -/

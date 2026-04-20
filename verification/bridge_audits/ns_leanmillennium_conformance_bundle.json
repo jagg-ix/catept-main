@@ -16,7 +16,7 @@
       "cwd": "/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main",
       "exit_code": 0,
       "status": "pass",
-      "duration_sec": 0.09,
+      "duration_sec": 0.074,
       "stdout": "status=pass_with_warnings\nhard_pass=True\noutput=/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/verification/bridge_audits/ns_leanmillennium_conformance.json\n",
       "stderr": ""
     }

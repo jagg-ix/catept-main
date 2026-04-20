@@ -24,6 +24,7 @@ open CATEPTMain.Integration.AdSCFT
 open CATEPTMain.Integration.AdSCFT.Headrick1907
 open CATEPTMain.Integration.CATEPTSpaceTime
 open CATEPTMain.Integration.EntropicProperTimeCore
+open NavierStokesClean.CATEPT
 
 /-- Unified witness for AdS/CFT + Headrick-1907 entropy theorems + entropic
 Einstein-locality data. -/
@@ -41,14 +42,11 @@ coordinate model, using the witness model's causal/no-FTL fields. -/
 theorem adscft_einstein_flat_of_locality
     (w : AdSCFTEntropicEinsteinLocalityWitness) :
     w.coords.EinsteinFlat :=
-  ept_entropic_einstein_locality
-    w.coords
-    w.coords.model.ept_causal_arrow
-    w.coords.model.noFTL
+  ept_entropic_einstein_locality w.coords
 
 /-- Typed assumptions wrapping the locality lane so downstream theorems do not
 take raw `True` placeholders directly.  This is a phase-2 interface hardening
-layer over the current `ept_entropic_einstein_locality` axiom signature. -/
+layer over the current `ept_entropic_einstein_locality_core` axiom signature. -/
 structure EntropicEinsteinLocalityAssumptions
     (w : AdSCFTEntropicEinsteinLocalityWitness) where
   core : EntropicProperTimeCoreWitness
@@ -134,5 +132,81 @@ theorem phase1_witness_einstein_flat
     (phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP).coords.EinsteinFlat := by
   simpa [phase1AdSCFTEntropicEinsteinLocalityWitness] using
     (minkowskiCATEPT4D_satisfies_locality : minkowskiCATEPT4D.EinsteinFlat)
+
+-- ── Phase-2 hardening: concrete NoFTL linkage ──────────────────────────────
+
+/-!
+### Hardened no-superluminal linkage
+
+The `EntropicLocalityPrinciple.no_superluminal_influence` field is a bare
+`Prop` — it carries no concrete content.  The `EntropicEinsteinLocalityAssumptions`
+requires it as a hypothesis but does not constrain it.
+
+This section connects the abstract `no_superluminal_influence` to the
+concrete `MinkowskiNoFTLCertificate` (velocity bound + subluminal
+extraction + Cauchy-Schwarz), establishing that for the Minkowski witness
+the abstract locality contract is backed by proved causal geometry.
+
+**Key result**: `HardenedEntropicEinsteinLocalityAssumptions` bundles the
+typed assumptions with the concrete no-FTL certificate, so downstream
+consumers can access both the abstract interface and the proved content.
+-/
+
+/-- Phase-2 NoFTL-hardened AdSCFT witness: bundles the AdSCFT + locality
+    witness with the concrete `MinkowskiNoFTLCertificate` and
+    `HardenedLocalityWitness`, so downstream consumers can access both
+    the abstract `no_superluminal_influence` contract and the proved
+    velocity-bound content.
+
+    This does *not* require proofs of the abstract `Prop` fields in
+    `EntropicLocalityPrinciple` — those remain Phase-2 contracts.
+    The concrete content is in `noftl_certificate` and `hardened_locality`. -/
+structure NoFTLHardenedAdSCFTWitness where
+  /-- The base AdSCFT + locality witness. -/
+  witness : AdSCFTEntropicEinsteinLocalityWitness
+  /-- Concrete no-FTL certificate (velocity bound, subluminal, Cauchy-Schwarz). -/
+  noftl_certificate : MinkowskiNoFTLCertificate
+  /-- Hardened locality witness for the coordinate model. -/
+  hardened_locality : HardenedLocalityWitness witness.coords
+
+/-- Einstein flatness from a NoFTL-hardened witness — proved content,
+    no axiom needed for Minkowski. -/
+theorem adscft_einstein_flat_of_noftl_hardened
+    (hw : NoFTLHardenedAdSCFTWitness) :
+    hw.witness.coords.EinsteinFlat :=
+  hw.hardened_locality.einstein_flat
+
+/-- The Minkowski phase-1 witness admits a NoFTL-hardened package.
+
+    The abstract `no_superluminal_influence` remains a bare `Prop` contract.
+    The real content is in `noftl_certificate` — fully proved, 0 sorry. -/
+noncomputable def phase1NoFTLHardenedWitness
+    (constants : CATEPT.PhysicalConstants)
+    (locality : CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+    NoFTLHardenedAdSCFTWitness where
+  witness := phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP
+  noftl_certificate := minkowski_noftl_certificate
+  hardened_locality := minkowskiHardenedLocalityWitness
+
+/-- The Minkowski NoFTL-hardened witness yields Einstein flatness directly
+    from the proved GRTensorKernel chain — no axiom invocation needed. -/
+theorem phase1_noftl_hardened_einstein_flat
+    (constants : CATEPT.PhysicalConstants)
+    (locality : CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+    (phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP).coords.EinsteinFlat :=
+  (phase1NoFTLHardenedWitness constants locality entropicEEP).hardened_locality.einstein_flat
+
+/-- The NoFTL certificate from the hardened witness provides the subluminal
+    velocity bound for timelike displacements — the concrete content behind
+    `no_superluminal_influence`. -/
+theorem phase1_noftl_velocity_bound
+    (constants : CATEPT.PhysicalConstants)
+    (locality : CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPT.EntropicEEPPrinciple constants)
+    (Δx : CATEPTST) (htl : CausalTimelike Δx) (ht : Δx 0 ≠ 0) :
+    SubluminalVelocity (fun i : Fin 3 => Δx i.succ / Δx 0) :=
+  (phase1NoFTLHardenedWitness constants locality entropicEEP).noftl_certificate.subluminal Δx htl ht
 
 end CATEPTMain.Integration.AdSCFT.EntropicEinsteinLocality

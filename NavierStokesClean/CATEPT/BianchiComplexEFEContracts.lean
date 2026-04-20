@@ -82,7 +82,7 @@ end ComplexFieldDivergence
 theorem physlean_first_bianchi_seed
     (f : Space → EuclideanSpace ℝ (Fin 3))
     (hf : ContDiff ℝ 2 f) :
-    ∇ ⬝ (∇ × f) = 0 :=
+  ∇ ⬝ (∇ ⨯ f) = 0 :=
   NavierStokesClean.PhysLeanBridge.ns_div_curl_zero f hf
 
 /-- PhysLean second-Bianchi seed analogue used in this program:
@@ -90,7 +90,7 @@ theorem physlean_first_bianchi_seed
 theorem physlean_second_bianchi_seed
     (f : Space → EuclideanSpace ℝ (Fin 3))
     (hf : ContDiff ℝ 2 f) :
-    ∇ × (∇ × f) = ∇ (∇ ⬝ f) - Δ f :=
+  ∇ ⨯ (∇ ⨯ f) = ∇ (∇ ⬝ f) - Δ f :=
   NavierStokesClean.PhysLeanBridge.ns_curl_of_curl f hf
 
 end

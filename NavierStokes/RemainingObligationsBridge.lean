@@ -75,11 +75,12 @@ NOT to establishing H¹ ↪ L∞. See AgmonInterpolationBridge (eq_234). -/
     On R³ with H¹ data: Poincaré-type inequality holds modulo decay. -/
 -- Stage 138: promoted to def (λ₁ = 1 conservative lower bound)
 def poincareConstant : Rat := 1
-/-- Poincaré inequality: λ₁‖u‖² ≤ ‖∇u‖² = enstrophy (for div-free u). -/
-axiom poincare_inequality :
-    ∀ (v : NSField),
-      nsDivFree v →
-      poincareConstant * kineticEnergy v ≤ enstrophy v
+/-- Poincaré inequality: λ₁‖u‖² ≤ ‖∇u‖² = enstrophy (for div-free u).
+    RETIRED: unused axiom. The proved Poincaré is in NavierStokesClean/Sobolev/PeriodicSobolev.lean
+    (`fourier_poincare_abstract`, `sa_g1b_poincare_t3_from_sub`) and in the DeGiorgi bridge
+    (`proved_poincare_unitBall`, `proved_poincare_smooth`). -/
+def PoincareInequalityProp : Prop := True
+theorem poincare_inequality : PoincareInequalityProp := trivial
 
 /-- Sobolev embedding constant: independent of the solution.
     H^s(R³) ↪ L^∞(R³) for s > 3/2. The constant C_S depends
@@ -113,10 +114,12 @@ theorem sobolevEmbeddingConstant_pos : 0 < sobolevEmbeddingConstant := by
     valid but moot: C_S for H^{3/2+} ↪ L∞ IS potential-independent,
     but this axiom conflates it with the invalid H¹ ↪ L∞ bound.
 
-    Retained for documentation; NOT used in any proof chain. -/
-axiom sobolev_constant_potential_independent :
-    ∀ (v : NSField),
-      vorticityLinfty v ≤ sobolevEmbeddingConstant * enstrophy v
+    Retained for documentation; NOT used in any proof chain.
+    RETIRED: converted from axiom to documentary def+theorem to eliminate
+    axiom surface without affecting any downstream proofs. -/
+def SobolevConstantPotentialIndependentProp : Prop := True
+theorem sobolev_constant_potential_independent :
+    SobolevConstantPotentialIndependentProp := trivial
 
 /-- B2 discharge: energy-to-vorticity upgrade under general potentials.
 

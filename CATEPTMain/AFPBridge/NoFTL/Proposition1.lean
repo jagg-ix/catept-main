@@ -1,17 +1,29 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.Proposition1
+import CATEPTMain.AFPBridge.NoFTL.Cones
+import CATEPTMain.AFPBridge.NoFTL.AxLightMinus
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: Proposition1
-Theorem id: No_FTL_observers_Gen_Rel.Proposition1.lemProposition1#1
-Theorem name: lemProposition1
-Lean tactic class: arithmetic_norm_num
+# Proposition 1 — Observer's Cone Equals Regular Cone
+
+If observer `m` sees itself at `x`, then the cone of `m` at `x` equals
+the regular cone at `x`.
+
+Isabelle: `class Proposition1 = Cones + AxLightMinus`.
 -/
 
-theorem lemProposition1 (cone : NoFTLObj → NoFTLObj → NoFTLObj → NoFTLObj) (m : NoFTLObj) (x : NoFTLObj) (p : NoFTLObj) (regularCone : NoFTLObj → NoFTLObj → NoFTLObj) (h1 : x ∈ wline m m) : cone m x p = regularCone x p := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
-end AFPIsabellePilot.Proposition1
+namespace NoFTL.Proposition1
+
+open NoFTL.Points NoFTL.WorldView NoFTL.WorldLine NoFTL.Cones
+
+variable {B Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [WorldViewRel B Q] [BodySorts B]
+variable [NoFTL.AxLightMinus B Q]
+
+/-- Proposition 1: if `m` sees itself at `x`, then `cone m x p ↔ regularCone x p`. -/
+theorem lemProposition1 (m : B) (x p : Point Q)
+    (hx : x ∈ wline (Q := Q) m m) :
+    cone m x p ↔ regularCone x p := by
+  sorry -- phase2: uses AxLightMinus (120 lines in Isabelle)
+
+end NoFTL.Proposition1

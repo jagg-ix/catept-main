@@ -75,3 +75,121 @@ theorem hilleYosida_integration_contract
   ⟨hR, hG⟩
 
 end CATEPTMain.Integration.HilleYosida
+
+/-! -----------------------------------------------------------------------
+## Phase-2: Proved semigroup content for NS heat semigroup connection
+----------------------------------------------------------------------- -/
+
+namespace CATEPTMain.Integration.HilleYosidaNS
+
+open _root_.StronglyContinuousSemigroup _root_.ContractingSemigroup
+
+-- ── Part A: Re-export Growth Bound ────────────────────────────────────────────
+
+/-- **Exponential growth bound** (proved, re-exported from HilleYosida):
+
+    Every C₀-semigroup on a Banach space has an exponential growth bound:
+    ∃ ω M, 1 ≤ M ∧ ∀ t ≥ 0, ‖S(t)‖ ≤ M · exp(ω·t).
+
+    For the NS Stokes semigroup e^{tΔ}, the growth bound is ω = 0, M = 1
+    (contraction semigroup). This theorem guarantees existence of such
+    bounds for ALL C₀-semigroups — the contraction case is special.
+
+    Connection to NS: the growth bound controls the BKM vorticity integral
+    via ‖e^{tΔ}ω₀‖ ≤ M·e^{ωt}·‖ω₀‖. When ω ≤ 0 (dissipative generators),
+    the semigroup decays and the BKM integral converges. -/
+theorem proved_semigroup_growth_bound
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    (S : _root_.StronglyContinuousSemigroup X) :
+    ∃ (ω : ℝ) (M : ℝ), S.HasGrowthBound ω M :=
+  S.existsGrowthBound
+
+-- ── Part B: Re-export Resolvent Bound ─────────────────────────────────────────
+
+/-- **Hille-Yosida resolvent bound** (proved, re-exported):
+
+    For a contraction semigroup, ‖R(λ)‖ ≤ 1/λ for all λ > 0.
+
+    R(λ) = ∫₀^∞ e^{-λt} S(t) dt (Laplace transform of the semigroup).
+
+    Connection to NS: the Stokes resolvent (λI + Δ)⁻¹ satisfies this
+    bound, which ensures the Helmholtz-Leray projection is bounded. -/
+theorem proved_resolvent_bound
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    (S : _root_.ContractingSemigroup X)
+    (lam : ℝ) (hlam : 0 < lam) :
+    ‖S.resolvent lam hlam‖ ≤ 1 / lam :=
+  hilleYosidaResolventBound S lam hlam
+
+-- ── Part C: Contraction semigroup witness ─────────────────────────────────────
+
+/-- **Contraction semigroup growth bound**: contracting semigroups have
+    growth bound ω = 0, M = 1 (the strongest possible).
+
+    ‖S(t)‖ ≤ 1 for all t ≥ 0 implies HasGrowthBound 0 1. -/
+theorem contracting_has_optimal_growth_bound
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    (S : _root_.ContractingSemigroup X) :
+    S.toStronglyContinuousSemigroup.HasGrowthBound 0 1 := by
+  refine ⟨le_refl 1, fun t ht => ?_⟩
+  have h1 : ‖S.operator t‖ ≤ 1 := S.contracting t ht
+  have h2 : (1 : ℝ) * Real.exp (0 * t) = 1 := by
+    simp [Real.exp_zero]
+  rw [h2]
+  exact h1
+
+-- ── Part D: Proved Witness Bundle ─────────────────────────────────────────────
+
+/-- Bundle of proved semigroup theory from HilleYosida.
+    Phase-2 upgrade: all fields carry genuine mathematical content
+    (not `True` stubs). -/
+structure ProvedHilleYosidaWitness (X : Type*) [NormedAddCommGroup X]
+    [NormedSpace ℝ X] [CompleteSpace X] where
+  /-- A contraction semigroup on X. -/
+  semigroup : _root_.ContractingSemigroup X
+  /-- Resolvent bound: ‖R(λ)‖ ≤ 1/λ for λ > 0. -/
+  resolventBound : ∀ (lam : ℝ) (hlam : 0 < lam),
+    ‖semigroup.resolvent lam hlam‖ ≤ 1 / lam
+  /-- Growth bound: ‖S(t)‖ ≤ 1 for t ≥ 0 (contraction). -/
+  contractionBound : ∀ (t : ℝ), 0 ≤ t → ‖semigroup.operator t‖ ≤ 1
+
+/-- Construct a proved witness from any contraction semigroup.
+    All fields are populated from proved theorems. -/
+def mkProvedHilleYosidaWitness
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    (S : _root_.ContractingSemigroup X) :
+    ProvedHilleYosidaWitness X where
+  semigroup := S
+  resolventBound := fun lam hlam => hilleYosidaResolventBound S lam hlam
+  contractionBound := S.contracting
+
+-- ── Part E: NS Heat Semigroup Connection ──────────────────────────────────────
+
+/-- **NS heat semigroup roadmap**: the Stokes operator A = PΔ generates a
+    contraction semigroup e^{tA} on divergence-free L² vector fields.
+
+    The HilleYosida package provides:
+    1. `existsGrowthBound` → ‖e^{tA}‖ ≤ M·e^{ωt} (abstract)
+    2. `contracting` → ‖e^{tA}‖ ≤ 1 (for the Stokes contraction semigroup)
+    3. `hilleYosidaResolventBound` → ‖(λI - A)⁻¹‖ ≤ 1/λ
+
+    What remains for full NS application:
+    - Identify NSField velocity space with a Banach space X
+    - Construct the Stokes operator A as a generator on X
+    - Verify the contraction property ‖e^{tΔ}‖_{L²→L²} ≤ 1
+
+    The contraction property follows from energy dissipation:
+    d/dt ‖e^{tΔ}u₀‖² = -2ν‖∇e^{tΔ}u₀‖² ≤ 0 (proved in BKMMinimalBridge).
+
+    This theorem records that the abstract semigroup theory is fully proved. -/
+theorem ns_heat_semigroup_abstract_theory_proved :
+    (∀ {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+      (S : _root_.StronglyContinuousSemigroup X),
+      ∃ (ω : ℝ) (M : ℝ), S.HasGrowthBound ω M)
+    ∧ (∀ {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+      (S : _root_.ContractingSemigroup X) (lam : ℝ) (hlam : 0 < lam),
+      ‖S.resolvent lam hlam‖ ≤ 1 / lam) :=
+  ⟨fun S => S.existsGrowthBound,
+   fun S lam hlam => hilleYosidaResolventBound S lam hlam⟩
+
+end CATEPTMain.Integration.HilleYosidaNS

@@ -1,4 +1,4 @@
-import PhysLean.SpaceAndTime.Space.Derivatives.Curl
+import Physlib.SpaceAndTime.Space.Derivatives.Curl
 import NavierStokesClean.Core.Types
 
 /-!
@@ -50,7 +50,7 @@ open Space
 
     **Epistemic**: `.verified` — direct PhysLean theorem, no new axioms. -/
 theorem ns_div_curl_zero (f : Space → EuclideanSpace ℝ (Fin 3)) (hf : ContDiff ℝ 2 f) :
-    ∇ ⬝ (∇ × f) = 0 :=
+  ∇ ⬝ (∇ ⨯ f) = 0 :=
   div_of_curl_eq_zero f hf
 
 /-- **Vorticity is divergence-free** — corollary for velocity fields.
@@ -61,7 +61,7 @@ theorem ns_div_curl_zero (f : Space → EuclideanSpace ℝ (Fin 3)) (hf : ContDi
     This is the key incompressibility constraint on the vorticity field
     in the Navier-Stokes equations. -/
 theorem ns_vorticity_div_free (u : Space → EuclideanSpace ℝ (Fin 3)) (hu : ContDiff ℝ 2 u) :
-    ∇ ⬝ (∇ × u) = 0 :=
+  ∇ ⬝ (∇ ⨯ u) = 0 :=
   ns_div_curl_zero u hu
 
 /-- **Curl of a curl identity** (∇ × (∇ × f) = ∇(∇⊙f) − Δf) — proved by PhysLean.
@@ -73,7 +73,7 @@ theorem ns_vorticity_div_free (u : Space → EuclideanSpace ℝ (Fin 3)) (hu : C
     Source: `PhysLean.SpaceAndTime.Space.Derivatives.Curl.curl_of_curl`.
     Here `Δ` is `laplacianVec` (vector Laplacian). -/
 theorem ns_curl_of_curl (f : Space → EuclideanSpace ℝ (Fin 3)) (hf : ContDiff ℝ 2 f) :
-    ∇ × (∇ × f) = ∇ (∇ ⬝ f) - Δ f :=
+  ∇ ⨯ (∇ ⨯ f) = ∇ (∇ ⬝ f) - Δ f :=
   curl_of_curl f hf
 
 end NavierStokesClean.PhysLeanBridge

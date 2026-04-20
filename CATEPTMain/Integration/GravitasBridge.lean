@@ -2,6 +2,7 @@ import CATEPTMain.Gravitas
 import CATEPTMain.Integration.VMLCATEPTBridge
 import CATEPTMain.Integration.BohmianQMBridge
 import CATEPTMain.Integration.AdSCFTBridge
+import CATEPTMain.CATEPT.GeometryGauge
 
 /-!
 # Gravitas CATEPT Bridge
@@ -98,6 +99,33 @@ theorem gravitasMinkowskiSlot_consistent :
     cateptConsistencyConstraint gravitasMinkowskiSlot := by
   intro _
   simp [gravitasMinkowskiSlot]
+
+/-- **Tolman flat-limit**: on the Gravitas Minkowski background (√(−g₀₀) = 1)
+    the Tolman redshift factor is trivial and the local temperature equals
+    the far-field temperature:
+      `T_loc(x) = T_∞ / 1 = T_∞`.
+
+    This grounds the flat `gravitasMinkowskiSlot` (S_I = 0) in
+    `GeometryGauge.tolmanLocalTemperature`: zero imaginary action ↔
+    no gravitational redshift ↔ Tolman factor = 1. -/
+theorem gravitasMinkowski_tolman_trivial
+    (c : CATEPT.PhysicalConstants) (betaInf : ℝ) :
+    CATEPT.tolmanLocalTemperature c betaInf 1 = CATEPT.flatTemperature c betaInf := by
+  simp [CATEPT.tolmanLocalTemperature, CATEPT.flatTemperature, CATEPT.entropicRedshiftedBeta]
+
+/-- **Born weight on flat background**: on Minkowski spacetime the CATEPT path
+    amplitude norm equals the path integral damping factor, with no gravitational
+    redshift modifying it.  Combines `gravitasMinkowski_tolman_trivial` and
+    `BohmianQMBridge.catept_amplitude_eq_path_damping` into one statement. -/
+theorem gravitasMinkowski_born_weight_no_redshift
+    (c : CATEPT.PhysicalConstants) (betaInf S_R S_I hbar_val : ℝ)
+    (hh : 0 < hbar_val) :
+    CATEPT.tolmanLocalTemperature c betaInf 1 = CATEPT.flatTemperature c betaInf ∧
+    ‖Complex.exp (Complex.I * (S_R / hbar_val)) *
+      (Real.exp (-S_I / hbar_val) : ℂ)‖
+      = NavierStokesClean.CATEPT.path_integral_damping hbar_val S_I :=
+  ⟨gravitasMinkowski_tolman_trivial c betaInf,
+   CATEPTMain.Integration.BohmianQM.catept_amplitude_eq_path_damping S_R S_I hbar_val hh⟩
 
 -- ── §2  EM 4-potential Gaussian CATEPT slot ───────────────────────────────────
 

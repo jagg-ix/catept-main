@@ -33,7 +33,6 @@ null-direction projector along the 0–3 light-cone combination.
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
 open CATEPTMain.AFPBridge.FEYNCALC
 
 namespace CATEPTMain.AFPBridge.FBD

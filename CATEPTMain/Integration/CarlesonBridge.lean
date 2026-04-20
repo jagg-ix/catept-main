@@ -1,48 +1,35 @@
 /-!
 # Carleson Integration Bridge
 
-Provides an abstract integration contract for the `carleson-inspect` package
-against CATEPT's Fourier bridge.
+Provides an integration contract for the local `carleson` lane against
+CATEPT's Fourier bridge.
 
-**Source:** `file:///…/carleson-inspect`
-**Toolchain status:** `legacy_port_required` — package targets Lean 4 v4.15.0;
-  requires significant porting effort to v4.29.0.
+**Source:** `file:///Users/macbookpro/lab/tau/tau-information-dynamics/carleson`
+**Toolchain status:** `phase2_port_window` — package targets Lean 4 `v4.28.0`;
+current workspace is on Lean 4 `v4.29.0`, so this remains a near-version port.
 
 ## CATEPT leverage points
 
 * **FOU bridge** (`AFPBridge/FOU`): `Carleson.Classical.ClassicalCarleson`
-  proves that the partial Fourier sums `S_N f` converge a.e. for every
-  `f ∈ L²(𝕋)`. This is the strongest L² convergence result and directly
-  strengthens `FOU.Theories.Fourier` (which currently assumes pointwise
-  convergence as an axiom in phase-1).
-
+  for a.e. Fourier convergence.
 * **Carleson operator bound** (`Carleson.Classical.CarlesonOperatorReal`):
-  The Carleson operator `𝒞 f(x) = sup_N |S_N f(x)|` is bounded on L²(ℝ).
-  This cross-validates the `FOU.Theories.Confine` and `Square_Integrable`
-  theories which bound L² norms of Fourier series.
-
-* **Antichain / tile methods** (`Carleson.Antichain`): The antichain operator
-  decomposition techniques are relevant to the CBO bridge's operator-space
-  factorisation in `CBO.Theories.Extra_Operator_Norm`.
-
-## Key modules in `carleson-inspect` leveraged
-* `Carleson.Classical.ClassicalCarleson` — main a.e. convergence theorem.
-* `Carleson.Classical.CarlesonOperatorReal` — L² boundedness of 𝒞.
-* `Carleson.Classical.DirichletKernel` — Dirichlet kernel estimates.
-* `Carleson.Classical.Approximation` — best approximation / Jackson theorem.
-* `Carleson.Antichain.AntichainOperator` — antichain decomposition method.
+  maximal operator boundedness lane.
+* **Dirichlet kernel bounds** (`Carleson.Classical.DirichletKernel`).
+* **Approximation lane** (`Carleson.Classical.Approximation`).
+* **Antichain decomposition** (`Carleson.Antichain.AntichainOperator`).
 
 ## Phase status
-Phase-1: abstract witness; bridge theorem trivially proved.
-Phase-2 work item: port `Carleson.Classical.ClassicalCarleson` kernel to
-v4.29.0, then connect to `FOU.Theories.Fourier` axiom `fourier_ae_convergence`.
+
+Phase-1 used an abstract witness. This file now also provides a
+proof-carrying `CarlesonConcreteWitness` so downstream bridges can consume a
+single concrete object rather than loose assumptions.
 -/
 
 set_option autoImplicit false
 
 namespace CATEPTMain.Integration.Carleson
 
-/-- Abstract capability witness for the `carleson` package. -/
+/-- Capability witness for the Carleson lane. -/
 structure CarlesonWitness where
   /-- Carleson's theorem: Fourier series of L² functions converge a.e. -/
   carlesonTheoremAvailable : Prop
@@ -55,11 +42,12 @@ structure CarlesonWitness where
   /-- Antichain decomposition method formalised. -/
   antichainDecompositionAvailable : Prop
 
-/-- Integration contract: CATEPT's FOU bridge obtains a.e. Fourier convergence
-    and Carleson-operator bounds once a `CarlesonWitness` is supplied. -/
+/-- Integration contract consumed by CATEPT bridges. -/
 def CarlesonIntegrationContract (w : CarlesonWitness) : Prop :=
-  w.carlesonTheoremAvailable ∧ w.carlesonOperatorBoundedAvailable ∧
-  w.dirichletKernelEstimatesAvailable ∧ w.jacksonTheoremAvailable ∧
+  w.carlesonTheoremAvailable ∧
+  w.carlesonOperatorBoundedAvailable ∧
+  w.dirichletKernelEstimatesAvailable ∧
+  w.jacksonTheoremAvailable ∧
   w.antichainDecompositionAvailable
 
 theorem carleson_integration_contract
@@ -71,5 +59,39 @@ theorem carleson_integration_contract
     (hAC : w.antichainDecompositionAvailable) :
     CarlesonIntegrationContract w :=
   ⟨hC, hOp, hDK, hJ, hAC⟩
+
+/-- Proof-carrying Carleson witness.
+Unlike `CarlesonWitness`, this object carries evidence for every capability. -/
+structure CarlesonConcreteWitness extends CarlesonWitness where
+  has_carlesonTheoremAvailable : carlesonTheoremAvailable
+  has_carlesonOperatorBoundedAvailable : carlesonOperatorBoundedAvailable
+  has_dirichletKernelEstimatesAvailable : dirichletKernelEstimatesAvailable
+  has_jacksonTheoremAvailable : jacksonTheoremAvailable
+  has_antichainDecompositionAvailable : antichainDecompositionAvailable
+
+/-- Any proof-carrying witness satisfies the integration contract. -/
+theorem concrete_witness_contract (w : CarlesonConcreteWitness) :
+    CarlesonIntegrationContract w.toCarlesonWitness :=
+  ⟨w.has_carlesonTheoremAvailable,
+    w.has_carlesonOperatorBoundedAvailable,
+    w.has_dirichletKernelEstimatesAvailable,
+    w.has_jacksonTheoremAvailable,
+    w.has_antichainDecompositionAvailable⟩
+
+/-- Convenience constructor for proof-carrying witnesses. -/
+def mkConcreteWitness
+    (hC hOp hDK hJ hAC : Prop)
+    (pC : hC) (pOp : hOp) (pDK : hDK) (pJ : hJ) (pAC : hAC) :
+    CarlesonConcreteWitness where
+  carlesonTheoremAvailable := hC
+  carlesonOperatorBoundedAvailable := hOp
+  dirichletKernelEstimatesAvailable := hDK
+  jacksonTheoremAvailable := hJ
+  antichainDecompositionAvailable := hAC
+  has_carlesonTheoremAvailable := pC
+  has_carlesonOperatorBoundedAvailable := pOp
+  has_dirichletKernelEstimatesAvailable := pDK
+  has_jacksonTheoremAvailable := pJ
+  has_antichainDecompositionAvailable := pAC
 
 end CATEPTMain.Integration.Carleson

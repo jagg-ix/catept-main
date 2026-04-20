@@ -1,31 +1,48 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.Sublemma3
-
-/-!
-Auto-generated theorem-indexed pilot file.
-Theory: Sublemma3
-Theorem id: No_FTL_observers_Gen_Rel.Sublemma3.sublemma3#1
-Theorem name: sublemma3
-Lean tactic class: arithmetic_norm_num
--/
-
-theorem sublemma3 (origin : NoFTLObj) (wl : NoFTLSet) (p : NoFTLObj) (h1 : onLine p l) (h2 : norm2 p = 1) (h3 : tangentLine l wl origin) : ∀ ε, ε > 0 →  ∃ δ, δ > 0 ∧  ∀ y ny, ( ((y within δ of origin) ∧ (y ≠ origin) ∧ (y ∈ wl) ∧ (norm y = ny)) → ( (((1/ny) * y) within ε of p) ∨ (((-1/ny) * y) within ε of p)) ) := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
-
-
-
+import CATEPTMain.AFPBridge.NoFTL.WorldLine
+import CATEPTMain.AFPBridge.NoFTL.AxTriangleInequality
+import CATEPTMain.AFPBridge.NoFTL.TangentLines
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: Sublemma3
-Theorem id: No_FTL_observers_Gen_Rel.Sublemma3.sublemma3Translation#1
-Theorem name: sublemma3Translation
-Lean tactic class: arithmetic_norm_num
+# Sublemma3 — Tangent Line Approximation
+
+Establishes how closely tangent lines approximate worldlines: if `p` is a
+unit-norm point on a tangent line `l` to a worldline `wl` at the origin,
+then for any `ε > 0` there exists `δ > 0` such that every `y ∈ wl` within
+`δ` of the origin has `(1/‖y‖)·y` or `(-1/‖y‖)·y` within `ε` of `p`.
+
+Isabelle: `class Sublemma3 = WorldLine + AxTriangleInequality + TangentLines`.
 -/
 
-theorem sublemma3Translation (x : NoFTLObj) (wl : NoFTLSet) (p : NoFTLObj) (h1 : onLine p l) (h2 : norm2 (p - x) = 1) (h3 : tangentLine l wl x) : ∀ ε, ε > 0 →  ∃ δ, δ > 0 ∧  ∀ y nyx, ((y within δ of x) ∧ (y ≠ x) ∧ (y ∈ wl) ∧ (norm (y-x) = nyx)) → (((1/nyx)*(y-x)) within ε of (p-x)) ∨ (((-1/nyx)*(y-x)) within ε of (p-x)) := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
-end AFPIsabellePilot.Sublemma3
+namespace NoFTL.Sublemma3
+
+open NoFTL.Points NoFTL.Sorts NoFTL.Norms NoFTL.Functions
+open NoFTL.WorldView NoFTL.WorldLine NoFTL.TangentLines
+
+variable {B Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [NoFTL.AxEField Q] [WorldViewRel B Q]
+
+/-- Sublemma 3 (origin version): if `p` is on a tangent line `l` to `wl` at
+    the origin and `norm2 p = 1`, then nearby points on `wl` (normalized)
+    cluster near `±p`. -/
+theorem sublemma3 (p : Point Q) (l wl : Set (Point Q))
+    (hp : onLine p l) (hnorm : norm2 p = 1)
+    (htl : tangentLine l wl origin) :
+    ∀ ε > 0, ∃ δ > 0, ∀ y : Point Q, ∀ ny : Q,
+      (inBall y δ origin ∧ y ≠ origin ∧ y ∈ wl ∧ norm y = ny) →
+        (inBall ((1/ny) ⊗ y) ε p ∨ inBall ((-1/ny) ⊗ y) ε p) := by
+  sorry -- phase2: long proof (300 lines in Isabelle)
+
+/-- Sublemma 3 (translated version): generalization based at `x`
+    instead of origin. -/
+theorem sublemma3Translation (p x : Point Q) (l wl : Set (Point Q))
+    (hp : onLine p l) (hnorm : norm2 (p ⊖ x) = 1)
+    (htl : tangentLine l wl x) :
+    ∀ ε > 0, ∃ δ > 0, ∀ y : Point Q, ∀ nyx : Q,
+      (inBall y δ x ∧ y ≠ x ∧ y ∈ wl ∧ norm (y ⊖ x) = nyx) →
+        (inBall ((1/nyx) ⊗ (y ⊖ x)) ε (p ⊖ x) ∨
+         inBall ((-1/nyx) ⊗ (y ⊖ x)) ε (p ⊖ x)) := by
+  sorry -- phase2: uses sublemma3 + translation argument
+
+end NoFTL.Sublemma3

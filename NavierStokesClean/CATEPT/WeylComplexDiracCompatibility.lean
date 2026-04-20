@@ -904,7 +904,7 @@ both core vector-calculus identities are available as theorems. -/
 theorem weyl_physlean_bianchi_seed_pair
     (f : Space → EuclideanSpace ℝ (Fin 3))
     (hf : ContDiff ℝ 2 f) :
-    (∇ ⬝ (∇ × f) = 0) ∧ (∇ × (∇ × f) = ∇ (∇ ⬝ f) - Δ f) := by
+  (∇ ⬝ (∇ ⨯ f) = 0) ∧ (∇ ⨯ (∇ ⨯ f) = ∇ (∇ ⬝ f) - Δ f) := by
   exact ⟨physlean_first_bianchi_seed f hf, physlean_second_bianchi_seed f hf⟩
 
 end NavierStokesClean.CATEPT

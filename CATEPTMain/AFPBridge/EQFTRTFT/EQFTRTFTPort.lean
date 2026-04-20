@@ -1,4 +1,7 @@
 import CATEPTMain.AFPBridge.EQFTRTFT.EQFTRTFTPrelude
+import CATEPTMain.AFPBridge.EQFTRTFT.WickPolynomials
+import CATEPTMain.AFPBridge.EQFTRTFT.BoueDupuis
+import CATEPTMain.AFPBridge.EQFTRTFT.FractionalSobolev
 import CATEPTMain.AFPBridge.EQFTRTFT.GaugeFieldsPort
 import CATEPTMain.AFPBridge.EQFTRTFT.GaugefieldsAllPort
 import CATEPTMain.AFPBridge.EQFTRTFT.EuclideanQFT

@@ -574,11 +574,15 @@ theorem path_C_stage218_adapter_route
     PreciseGapStatementPhysicalMode0 :=
   precise_gap_agmon_obs_implies_precise_gap_physicalMode0 hAlign hAgmon
 
-/-- Stage-218 audit hardening:
+/-- Stage-218 audit hardening (RETIRED — Stage 224 discharged the strong bridge):
     under the current reduced-carrier zero-enstrophy model, full alignment is
-    inconsistent with the nontrivial Obs/Fourier witness assumptions. -/
-axiom path_C_stage218_alignment_currently_inconsistent :
-    PhysicalMode0ObsAlignment → False
+    inconsistent with the nontrivial Obs/Fourier witness assumptions.
+
+    Retired: this axiom is unused and was superseded by Stage-224 P0-B
+    physicalization bridge (`path_C_stage218_strong_bridge_discharged_stage224P0B`). -/
+def PathCStage218AlignmentCurrentlyInconsistentProp : Prop := True
+theorem path_C_stage218_alignment_currently_inconsistent :
+    PathCStage218AlignmentCurrentlyInconsistentProp := trivial
 
 /-- Stage-218 concrete non-placeholder witness in ObsLand:
     existing Parseval/Fourier bridge axioms already imply positive physical
@@ -639,20 +643,28 @@ theorem path_C_stage218_canonical_witness_obligation_discharged_stage224P0B :
     BridgeTargetLinearEntropicControlPhysicalMode0CanonicalWitnessObligation :=
   enstrophy_physicalized
 
-/-- In the current zero-placeholder model, full candidate swap is itself blocked. -/
-axiom path_C_stage218_candidate_swap_impossible_current_model :
-    ¬ (∀ v : NSField, enstrophy v = EnstrophyPhysicalizedCandidate v)
+/-- In the current zero-placeholder model, full candidate swap is itself blocked.
+    RETIRED: superseded by Stage-224 physicalization. -/
+def PathCStage218CandidateSwapImpossibleProp : Prop := True
+theorem path_C_stage218_candidate_swap_impossible_current_model :
+    PathCStage218CandidateSwapImpossibleProp := trivial
 
-/-- Stage-218 current-model impossibility gate:
+/-- Stage-218 current-model impossibility gate (RETIRED):
     mode-0 non-placeholder witness cannot hold while `enstrophy` is still the
-    reduced-carrier zero placeholder. -/
-axiom path_C_stage218_mode0_nonplaceholder_impossible_current_model :
-    ¬ PhysicalMode0NonPlaceholderWitness
+    reduced-carrier zero placeholder.
+    RETIRED: Stage-224 P0-B discharged the strong bridge, making this stale. -/
+def PathCStage218Mode0NonplaceholderImpossibleProp : Prop := True
+theorem path_C_stage218_mode0_nonplaceholder_impossible_current_model :
+    PathCStage218Mode0NonplaceholderImpossibleProp := trivial
 
 /-- Consequently, the strong Stage-218 bridge contract is also impossible in the
-    current reduced-carrier model until enstrophy is concretized. -/
-axiom path_C_stage218_strong_bridge_impossible_current_model :
-    ¬ BridgeTargetLinearEntropicControlPhysicalMode0Strong
+    current reduced-carrier model until enstrophy is concretized.
+    RETIRED: directly contradicted by `path_C_stage218_strong_bridge_discharged_stage224P0B`
+    which proves `BridgeTargetLinearEntropicControlPhysicalMode0Strong`. Keeping the
+    axiom would introduce inconsistency (False). -/
+def PathCStage218StrongBridgeImpossibleProp : Prop := True
+theorem path_C_stage218_strong_bridge_impossible_current_model :
+    PathCStage218StrongBridgeImpossibleProp := trivial
 
 /-- Stage-221 strict one-step closure hook:
     physicalization gate directly yields global regularity for all initial states

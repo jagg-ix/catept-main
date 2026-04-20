@@ -85,7 +85,7 @@ noncomputable def liftTrajToFourier (_traj : Trajectory NSField) :
 /-- Pointwise compatibility for the concrete Stage-218 lift shim. -/
 theorem liftTrajToFourier_fieldAt
     (traj : Trajectory NSField) (t : Rat) :
-    interpretAsFourier (traj.stateAt t).velocity =
+    ObservableInterface.interpretAsFourier (traj.stateAt t).velocity =
       trajFieldAt (liftTrajToFourier traj) t := by
   rfl
 

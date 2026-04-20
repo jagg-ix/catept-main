@@ -4,6 +4,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic
 import CATEPTMain.AFPBridge.FEYNCALC.CliffordMinkowski
+import CATEPTMain.AFPBridge.FEYNCALC.LeviCivitaConcrete
 /-!
 # FeynCalc Port — Prelude (Phase 2)
 
@@ -53,24 +54,37 @@ abbrev FCIdx := Fin 4
 noncomputable def eta : FCIdx → FCIdx → ℝ := fun μ ν =>
   if μ = ν then (if μ.val = 0 then 1 else -1) else 0
 
--- ── Levi-Civita tensor ────────────────────────────────────────────────────────
--- Totally antisymmetric; ε^{0123} = +1 (West convention, default in FeynCalc).
-axiom leviCivita : FCIdx → FCIdx → FCIdx → FCIdx → ℝ
+-- ── Levi-Civita tensor (concrete, from LeviCivitaConcrete) ────────────────────
+-- Phase-2 upgrade (2026-04-19): replaced 5 axioms with concrete definition
+-- based on `leviCivitaInt` (computable ℤ-valued permutation-sign sum).
+-- All properties now proved by `native_decide` on the integer version.
+
+/-- Levi-Civita symbol ε^{μνρσ}, totally antisymmetric, ε^{0123} = +1.
+    Concrete: cast of the computable `leviCivitaInt` to ℝ. -/
+noncomputable def leviCivita (μ ν ρ σ : FCIdx) : ℝ :=
+  (leviCivitaInt μ ν ρ σ : ℝ)
 
 /-- ε^{0123} = +1 (FeynCalc default: West convention with leviCivitaSign = +1). -/
-axiom leviCivita_0123 : leviCivita 0 1 2 3 = 1
+theorem leviCivita_0123 : leviCivita 0 1 2 3 = 1 := by
+  simp [leviCivita, leviCivitaInt_0123]
 
 /-- Levi-Civita is antisymmetric under exchange of positions 0 and 1. -/
-axiom leviCivita_antisymm_01 (μ ν ρ σ : FCIdx) :
-    leviCivita μ ν ρ σ = - leviCivita ν μ ρ σ
+theorem leviCivita_antisymm_01 (μ ν ρ σ : FCIdx) :
+    leviCivita μ ν ρ σ = - leviCivita ν μ ρ σ := by
+  simp only [leviCivita, ← Int.cast_neg]
+  exact_mod_cast leviCivitaInt_antisymm_01 μ ν ρ σ
 
 /-- Levi-Civita is antisymmetric under exchange of positions 1 and 2. -/
-axiom leviCivita_antisymm_12 (μ ν ρ σ : FCIdx) :
-    leviCivita μ ν ρ σ = - leviCivita μ ρ ν σ
+theorem leviCivita_antisymm_12 (μ ν ρ σ : FCIdx) :
+    leviCivita μ ν ρ σ = - leviCivita μ ρ ν σ := by
+  simp only [leviCivita, ← Int.cast_neg]
+  exact_mod_cast leviCivitaInt_antisymm_12 μ ν ρ σ
 
 /-- Levi-Civita is antisymmetric under exchange of positions 2 and 3 (last pair). -/
-axiom leviCivita_antisymm_last (μ ν ρ σ : FCIdx) :
-    leviCivita μ ν ρ σ = - leviCivita μ ν σ ρ
+theorem leviCivita_antisymm_last (μ ν ρ σ : FCIdx) :
+    leviCivita μ ν ρ σ = - leviCivita μ ν σ ρ := by
+  simp only [leviCivita, ← Int.cast_neg]
+  exact_mod_cast leviCivitaInt_antisymm_last μ ν ρ σ
 
 -- ── FCEnd algebra (named aliases for Matrix operations) ───────────────────────
 -- Endomorphism composition (matrix multiplication).

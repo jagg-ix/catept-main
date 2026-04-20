@@ -219,6 +219,75 @@ theorem einsteinTensor_eq_zero_minkowski :
     ∀ (x : CoordVec (Fin 4)) (i j : Fin 4), einsteinTensor minkowskiMetric x i j = 0 :=
   einsteinTensor_eq_zero_of_metricComponentConst (hconst := metricComponentConst_minkowski)
 
+-- ── Contracted Bianchi identity: ∇^μ G_{μν} = 0 ─────────────────────────────
+
+/-- Mixed Einstein tensor with one raised index: G^i_j = g^{iα} G_{αj}. -/
+def einsteinMixed (g : MetricField n) (x : CoordVec n) (i j : n) : ℝ :=
+  ∑ α : n, inverseMetric g x i α * einsteinTensor g x α j
+
+/-- Covariant divergence of a (1,1)-tensor field T^μ_ν:
+      (∇_μ T)^μ_ν = ∂_μ T^μ_ν + Γ^μ_{μα} T^α_ν − Γ^α_{μν} T^μ_α
+
+    Contracted over the upper and derivative indices, this is the
+    covariant 4-divergence used in the Bianchi identity ∇^μ G_{μν} = 0. -/
+def covariantDivTensor11 (g : MetricField n)
+    (T : CoordVec n → n → n → ℝ)
+    (ν : n) (x : CoordVec n) : ℝ :=
+  ∑ μ : n,
+    (partialDeriv (fun y => T y μ ν) μ x +
+     ∑ α : n, christoffel g x μ μ α * T x α ν -
+     ∑ α : n, christoffel g x α μ ν * T x μ α)
+
+/-- The contracted Bianchi identity predicate: ∇_μ G^μ_ν = 0 for all x, ν.
+
+    This is the differential identity that follows from the symmetries
+    of the Riemann curvature tensor and ensures local conservation of
+    the Einstein tensor (and hence of stress-energy via the EFE). -/
+def ContractedBianchiIdentity (g : MetricField n) : Prop :=
+  ∀ (x : CoordVec n) (ν : n),
+    covariantDivTensor11 g (fun y => einsteinMixed g y) ν x = 0
+
+/-- The mixed Einstein tensor vanishes when the Einstein tensor vanishes. -/
+theorem einsteinMixed_eq_zero_of_einstein_zero
+    {g : MetricField n}
+    (hG : ∀ (x : CoordVec n) (i j : n), einsteinTensor g x i j = 0) :
+    ∀ (x : CoordVec n) (i j : n), einsteinMixed g x i j = 0 := by
+  intro x i j
+  simp [einsteinMixed, hG x]
+
+/-- **Contracted Bianchi identity for constant metrics** (0 axioms, 0 sorry).
+
+    For any metric with constant coordinate components:
+      constant metric → Γ = 0 → G_{μν} = 0 → G^μ_ν = 0 → ∇_μ G^μ_ν = 0.
+
+    Each term in the covariant divergence vanishes independently:
+    - ∂_μ G^μ_ν = 0 (partial derivative of identically-zero function)
+    - Γ^μ_{μα} G^α_ν = 0 (Christoffels vanish)
+    - Γ^α_{μν} G^μ_α = 0 (Christoffels vanish) -/
+theorem bianchi_of_metricComponentConst
+    {g : MetricField n}
+    (hconst : MetricComponentConst g) :
+    ContractedBianchiIdentity g := by
+  intro x ν
+  have hG := einsteinTensor_eq_zero_of_metricComponentConst hconst
+  have hGmixed : ∀ y i j, einsteinMixed g y i j = 0 :=
+    einsteinMixed_eq_zero_of_einstein_zero hG
+  have hGamma := christoffel_eq_zero_of_metricComponentConst hconst
+  simp only [covariantDivTensor11]
+  apply Finset.sum_eq_zero
+  intro μ _
+  have hpd : partialDeriv (fun y => einsteinMixed g y μ ν) μ x = 0 :=
+    partialDeriv_eq_zero_of_const μ x ⟨0, fun y => hGmixed y μ ν⟩
+  simp [hpd, hGmixed x, hGamma x]
+
+/-- **Contracted Bianchi identity for Minkowski spacetime**: ∇_μ G^μ_ν = 0.
+
+    Specialization of `bianchi_of_metricComponentConst` to Minkowski.
+    Since Minkowski is a constant metric, all curvature tensors vanish
+    and the identity holds trivially. -/
+theorem bianchi_minkowski : ContractedBianchiIdentity minkowskiMetric :=
+  bianchi_of_metricComponentConst metricComponentConst_minkowski
+
 end
 
 end NavierStokesClean.CATEPT

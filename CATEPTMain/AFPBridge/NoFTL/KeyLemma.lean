@@ -1,17 +1,36 @@
-import CATEPTMain.AFPBridge.NoFTL.NoFTLPrelude
-set_option autoImplicit true
-
-namespace AFPIsabellePilot.KeyLemma
+import CATEPTMain.AFPBridge.NoFTL.Classification
+import CATEPTMain.AFPBridge.NoFTL.ReverseCauchySchwarz
 
 /-!
-Auto-generated theorem-indexed pilot file.
-Theory: KeyLemma
-Theorem id: No_FTL_observers_Gen_Rel.KeyLemma.lemInsideRegularConeImplies#1
-Theorem name: lemInsideRegularConeImplies
-Lean tactic class: arithmetic_norm_num
+# KeyLemma — Inside Regular Cone Implies Bounded Intersection
+
+If `p` is inside the regular cone at `x`, then any line through `p`
+(not through `x`) meets the cone in at most 2 points. This is the
+key geometric lemma used in the affine cone lemma.
+
+Isabelle: `class KeyLemma = Classification + ReverseCauchySchwarz`.
 -/
 
-theorem lemInsideRegularConeImplies (l : NoFTLSet) (x : NoFTLObj) (h1 : insideRegularCone x p) (h2 : D ≠ origin) (h3 : l = line p D) : (0 < card (l ∩ regularConeSet x)) ∧ (card (l ∩ regularConeSet x) ≤ 2) := by
-  first | ring | norm_num | omega | linarith | simp | exact rfl | sorry
+set_option autoImplicit false
 
-end AFPIsabellePilot.KeyLemma
+namespace NoFTL.KeyLemma
+
+open NoFTL.Points NoFTL.Sorts NoFTL.Functions NoFTL.Vectors
+open NoFTL.Classification NoFTL.Cones NoFTL.TangentLines NoFTL.WorldView
+
+variable {B Q : Type*} [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q]
+variable [NoFTL.AxEField Q] [WorldViewRel B Q] [BodySorts B]
+
+/-- If `p` is inside the regular cone at `x`, and `l` is a line through
+    `p` with direction `D ≠ origin`, then `l ∩ regularConeSet x` has
+    cardinality between 1 and 2 (inclusive). -/
+theorem lemInsideRegularConeImplies (x p D : Point Q)
+    (l : Set (Point Q))
+    (hin : insideRegularCone x p)
+    (hD : D ≠ origin)
+    (hl : l = line p D) :
+    0 < Set.ncard (l ∩ regularConeSet x) ∧
+    Set.ncard (l ∩ regularConeSet x) ≤ 2 := by
+  sorry -- phase2: long proof (300 lines in Isabelle)
+
+end NoFTL.KeyLemma

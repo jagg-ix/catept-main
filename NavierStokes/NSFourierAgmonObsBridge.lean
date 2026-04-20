@@ -48,7 +48,7 @@ namespace NavierStokes.FourierAgmonObsBridge
 set_option autoImplicit false
 set_option maxHeartbeats 400000
 
-open NavierStokes.Millennium
+open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel
 open NavierStokes.DiscreteKernel
 open NavierStokes.ObservableInterface

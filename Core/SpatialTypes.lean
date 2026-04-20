@@ -1,4 +1,4 @@
-import PhysLean.SpaceAndTime.Space.Derivatives.Curl
+import Physlib.SpaceAndTime.Space.Derivatives.Curl
 import NavierStokesClean.Core.Types
 import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

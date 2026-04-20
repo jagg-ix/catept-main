@@ -3,6 +3,7 @@ import CATEPTMain.Integration.CATEPTSpaceTime
 import CATEPTMain.Integration.NSCATEPTCoreBridge
 import CATEPTMain.Integration.CarlesonBridge
 import CATEPTMain.Integration.NSEPTNoetherInvariantBridge
+import CATEPTMain.Integration.WDWVolumeComplexityArtifactBridge
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G016_RelationalTimeProtocol0068
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G189_WheelerDeWittProtocol0107
 import NavierStokes.NSFourierFreqBoundBridge
@@ -463,5 +464,52 @@ theorem phase2_run19_wdw_clock_alignment
     hBundle.1,
     hBundle.2
   ⟩
+
+/-- **Phase-2 upgrade (Run-19)**: Full-stack bundle including the WDW volume
+complexity artifact, contracted Bianchi identity, and Phase-2 EPT vacuum
+certificate.
+
+This extends the existing `phase2_full_stack_with_nsept_regularity` theorem
+with three new proved results from the Run-19 artifact bridge:
+
+- WDW complexity `C = P·V_WDW/(π·ℏ)` non-negativity under constraint
+- Contracted Bianchi identity `∇^μ G_μν = 0` for Minkowski
+- Phase-2 EPT vacuum certificate (Einstein-flat + Bianchi + A2 + A3)
+
+No new axiom, no sorry. -/
+theorem phase2_run19_full_stack_with_wdw_bianchi
+    (K : Rat)
+    (wdw : NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.WheelerDeWittProtocol)
+    (s : NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016ClockState)
+    (ht : 0 ≤ s.tRel)
+    (hc : 0 ≤ s.coupling)
+    (hf : 0 ≤ s.entropyFlux)
+    (V_wdw ℏ_val : ℝ) (hV : 0 ≤ V_wdw) (hℏ : 0 < ℏ_val) :
+    -- AdS/CFT + EPT axioms + Einstein locality
+    AdSCFTIntegrationContract phase1AdSCFTWitness ∧
+    EPTAxiomPackage phase1AdSCFTRecord.bulkSpacetime ∧
+    minkowskiCATEPT4D.EinsteinFlat ∧
+    -- Fourier certificate chain
+    PreciseGapStatementFourierBounded K ∧
+    PreciseGapStatementFourierAgmon ∧
+    PreciseGapStatementFourier ∧
+    -- Run-19 WDW + clock alignment
+    (NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.constraintSatisfied wdw ↔
+      NavierStokesClean.CATEPT.Theoremized.Batch20260408.G189.antiBalanceSatisfied wdw) ∧
+    NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016MonotoneStep s ∧
+    0 ≤ (NavierStokesClean.CATEPT.Theoremized.Batch20260408.G016.rowG016Step s).tRel ∧
+    -- Run-19 WDW volume complexity non-negativity
+    0 ≤ WDWVolumeComplexityArtifact.wdwComplexityFromProtocol wdw V_wdw ℏ_val ∧
+    -- Phase-2 EPT vacuum certificate (Bianchi + A2 + A3)
+    MinkowskiEPTVacuumCertificate := by
+  rcases adscft_fourier_cateptspace_bundle K with
+    ⟨hAdSCFT, hEPT, hLocality, hBounded, hAgmon, hBase⟩
+  rcases phase2_run19_wdw_clock_alignment wdw s ht hc hf with
+    ⟨hConstraint, hMono, hNonneg⟩
+  exact ⟨hAdSCFT, hEPT, hLocality,
+    hBounded, hAgmon, hBase,
+    hConstraint, hMono, hNonneg,
+    WDWVolumeComplexityArtifact.wdwComplexityFromProtocol_nonneg wdw V_wdw ℏ_val hV hℏ,
+    minkowski_ept_vacuum_certificate⟩
 
 end CATEPTMain.Integration.AdSCFT.FourierCATEPT

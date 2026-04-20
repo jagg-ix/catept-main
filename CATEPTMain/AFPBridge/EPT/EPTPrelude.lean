@@ -56,8 +56,6 @@ Under the physical identification ħ = 2ν:
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
-
 namespace CATEPTMain.AFPBridge.EPT
 
 noncomputable section

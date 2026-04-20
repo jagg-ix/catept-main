@@ -40,8 +40,6 @@ See: CATEPTMain/AFPBridge/PDC/PDC_WORKLOG.lean
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridgeFramework.TacticStubs
-
 namespace CATEPTMain.AFPBridge.PDC
 
 -- ── The Poincaré disc ─────────────────────────────────────────────────────────
