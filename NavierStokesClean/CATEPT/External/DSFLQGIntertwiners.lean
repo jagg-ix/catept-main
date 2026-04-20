@@ -14,11 +14,14 @@ structure IntertwinerSpace (incoming outgoing : List CATEPT.External.Hyperunits.
   invariant_dimension : ℕ
 
 /-- Nontrivial intertwiner sector: strictly positive invariant dimension. -/
-def IntertwinerSpace.nontrivial (I : IntertwinerSpace incoming outgoing) : Prop :=
+def IntertwinerSpace.nontrivial
+    {incoming outgoing : List CATEPT.External.Hyperunits.SU2SpinRepresentation}
+    (I : IntertwinerSpace incoming outgoing) : Prop :=
   0 < I.invariant_dimension
 
 /-- Unfolding lemma for the nontrivial intertwiner predicate. -/
 theorem IntertwinerSpace.nontrivial_iff
+    {incoming outgoing : List CATEPT.External.Hyperunits.SU2SpinRepresentation}
     (I : IntertwinerSpace incoming outgoing) :
     I.nontrivial ↔ 0 < I.invariant_dimension :=
   Iff.rfl
@@ -58,7 +61,11 @@ theorem SpinNetworkGeometry.edgeCount_pos_of_edges_ne_nil
     (G : SpinNetworkGeometry) (h : G.edges ≠ []) :
     0 < G.edgeCount := by
   unfold SpinNetworkGeometry.edgeCount
-  exact List.length_pos.mpr h
+  cases hEdges : G.edges with
+  | nil =>
+      exact (False.elim (h hEdges))
+  | cons _ _ =>
+      simp [hEdges]
 
 /-- Node count is always nonnegative. -/
 theorem SpinNetworkGeometry.nodeCount_nonneg (G : SpinNetworkGeometry) :
@@ -77,6 +84,10 @@ theorem SpinNetworkGeometry.nodeCount_pos_of_nodes_ne_nil
     (G : SpinNetworkGeometry) (h : G.nodes ≠ []) :
     0 < G.nodeCount := by
   unfold SpinNetworkGeometry.nodeCount
-  exact List.length_pos.mpr h
+  cases hNodes : G.nodes with
+  | nil =>
+      exact (False.elim (h hNodes))
+  | cons _ _ =>
+      simp [hNodes]
 
 end CATEPT.External.LQG

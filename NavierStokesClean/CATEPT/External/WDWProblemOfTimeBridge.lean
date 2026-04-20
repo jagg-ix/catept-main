@@ -24,6 +24,7 @@ namespace NavierStokesClean.CATEPT.External.WDWProblemOfTimeBridge
 
 open CATEPT.External.LQG
 open CategoryTheory
+open CategoryTheory.Limits
 
 universe v u
 
@@ -81,8 +82,8 @@ theorem recommended_robust_addition_relation
     (c : NavierStokesClean.CATEPT.CurvedMeasurePathIntegralModel α)
     (R : RelationalWDWResolutionWitness c) :
     R.pw.relationalTime = R.cr.thermalTime :=
-  NavierStokesClean.CATEPT.External.IntegratedEquationContracts.CurvedMeasurePathIntegralModel
-    .relationalTime_eq_thermalTimeBridge (c := c) R.clk R.pw R.cr
+  NavierStokesClean.CATEPT.External.IntegratedEquationContracts.CurvedMeasurePathIntegralModel.relationalTime_eq_thermalTimeBridge
+    (c := c) R.clk R.pw R.cr
 
 /-- The WDW constraint keeps the timeless form `H_C = -H_S`. -/
 theorem wdw_constraint_timeless_form
@@ -90,8 +91,8 @@ theorem wdw_constraint_timeless_form
     (_c : NavierStokesClean.CATEPT.CurvedMeasurePathIntegralModel α)
     (R : RelationalWDWResolutionWitness _c) :
     R.wdw.HC = -R.wdw.HS :=
-  NavierStokesClean.CATEPT.External.IntegratedEquationContracts.CurvedMeasurePathIntegralModel
-    .wheelerDeWitt_constraint_rewrite R.wdw
+  NavierStokesClean.CATEPT.External.IntegratedEquationContracts.CurvedMeasurePathIntegralModel.wheelerDeWitt_constraint_rewrite
+    R.wdw
 
 /-- Scalar Wheeler-DeWitt equation equivalence used by the external bridge layer. -/
 theorem wdw_constraint_equiv_timeless_form (H_C H_S : ℝ) :
@@ -151,14 +152,14 @@ theorem entropic_clock_chain_in_resolved_regime
       R.pw.relationalTime = R.cr.thermalTime := by
   refine ⟨?_, ?_⟩
   · exact
-      NavierStokesClean.CATEPT.External.IntegratedEquationContracts.CurvedMeasurePathIntegralModel
-        .entropicTime_eq_modularFlowIntegral (c := c) R.clk
+    NavierStokesClean.CATEPT.External.IntegratedEquationContracts.CurvedMeasurePathIntegralModel.entropicTime_eq_modularFlowIntegral
+      (c := c) R.clk
   · exact recommended_robust_addition_relation c R
 
 /-- If the WDW problem-of-time contract is resolved, any declared spinfoam witness is exact. -/
 theorem wdw_resolution_implies_spinfoam_exact
     {α : Type*} [MeasurableSpace α]
-    {C : Type u} [Category.{v} C]
+  {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
     (c : NavierStokesClean.CATEPT.CurvedMeasurePathIntegralModel α)
     (R : RelationalWDWResolutionWitness c)
     (S : CATEPT.External.Category.SpinfoamDynamics (C := C)) :
@@ -169,7 +170,7 @@ theorem wdw_resolution_implies_spinfoam_exact
 /-- Equivalent composed-amplitude formulation of spinfoam exactness under WDW resolution. -/
 theorem wdw_resolution_implies_spinfoam_composedAmplitude_zero
     {α : Type*} [MeasurableSpace α]
-    {C : Type u} [Category.{v} C]
+  {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
     (c : NavierStokesClean.CATEPT.CurvedMeasurePathIntegralModel α)
     (R : RelationalWDWResolutionWitness c)
     (S : CATEPT.External.Category.SpinfoamDynamics (C := C)) :
@@ -185,7 +186,8 @@ and LQG observable positivity in one contract.
 -/
 theorem resolved_regime_summary
     {α : Type*} [MeasurableSpace α]
-    {C : Type u} [Category.{v} C]
+  {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
+    {in_reps out_reps : List CATEPT.External.Hyperunits.SU2SpinRepresentation}
     (c : NavierStokesClean.CATEPT.CurvedMeasurePathIntegralModel α)
     (R : RelationalWDWResolutionWitness c)
     (S : CATEPT.External.Category.SpinfoamDynamics (C := C))
@@ -202,8 +204,8 @@ theorem resolved_regime_summary
   intro hResolved
   refine ⟨?_, ?_, ?_⟩
   · exact wdw_resolution_implies_spinfoam_composedAmplitude_zero c R S hResolved
-  · exact area_observable_nonneg_in_resolved_regime (c := c) R j gamma ell_P hgamma
-  · exact volume_observable_pos_in_resolved_regime (c := c) R node ell_P hell_P hnode
+  · exact areaEigenvalue_nonneg_of_gamma_nonneg j gamma ell_P hgamma
+  · exact volumeEigenvalue_pos_of_nontrivial node ell_P hell_P hnode
 
 /-- In the resolved regime, area spectrum remains nonnegative for `gamma >= 0`. -/
 theorem area_observable_nonneg_in_resolved_regime
@@ -220,6 +222,7 @@ theorem area_observable_nonneg_in_resolved_regime
 theorem volume_observable_pos_in_resolved_regime
     {α : Type*} [MeasurableSpace α]
     {c : NavierStokesClean.CATEPT.CurvedMeasurePathIntegralModel α}
+  {in_reps out_reps : List CATEPT.External.Hyperunits.SU2SpinRepresentation}
     (_R : RelationalWDWResolutionWitness c)
     (node : IntertwinerSpace in_reps out_reps)
     (ell_P : ℝ)

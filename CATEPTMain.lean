@@ -72,6 +72,7 @@ import CATEPTMain.Integration.GaussianFieldLogSobolevBridge
 import CATEPTMain.Integration.Pphi2CameronBridge
 import CATEPTMain.Integration.DeGiorgiBridge
 import CATEPTMain.Integration.SpectralPhysicsBridge
+import CATEPTMain.Integration.NSStressEnergyEinsteinBridge
 import CATEPTMain.AFPBridge
 import CATEPTMain.Gravitas
 

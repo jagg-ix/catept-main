@@ -17,9 +17,7 @@ theorem lambda_N_nonneg (N : ℕ) : 0 ≤ lambda_N N := by
 
 /-- Squaring the hyperunit recovers the underlying dimension index. -/
 theorem lambda_N_sq (N : ℕ) : (lambda_N N) ^ 2 = (N : ℝ) := by
-  unfold lambda_N
-  rw [sq]
-  exact Real.sq_sqrt (Nat.cast_nonneg N)
+  simpa [lambda_N, pow_two] using Real.sq_sqrt (Nat.cast_nonneg N)
 
 /-- The fractional scaling map embedding an M-dimensional measure space into an N-dimensional measure space.
     This provides the non-standard weight acting on L^p norms across dimensions. -/

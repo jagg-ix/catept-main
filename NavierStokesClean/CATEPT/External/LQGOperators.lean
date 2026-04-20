@@ -76,7 +76,9 @@ theorem casimirEigenvalue_eq_zero_iff_two_j_eq_zero
     have htwoj_pos : 0 < j.two_j := Nat.pos_of_ne_zero hne
     have hcas_pos : 0 < casimirEigenvalue j :=
       casimirEigenvalue_pos_of_two_j_pos j htwoj_pos
-    linarith
+    have h0 : 0 < 0 := by
+      simpa [hcas] using hcas_pos
+    exact (lt_irrefl 0 h0)
   · intro hz
     exact casimirEigenvalue_eq_zero_of_two_j_eq_zero j hz
 
@@ -97,7 +99,13 @@ theorem casimirEigenvalue_mono
   have hxy : x ≤ y := by
     dsimp [x, y]
     exact div_le_div_of_nonneg_right (Nat.cast_le.mpr h) (by norm_num)
-  nlinarith
+  have hxy_plus : x + 1 ≤ y + 1 := add_le_add hxy le_rfl
+  have hy_plus_nonneg : 0 ≤ y + 1 := add_nonneg hy_nonneg (by norm_num)
+  have h1 : x * (x + 1) ≤ x * (y + 1) :=
+    mul_le_mul_of_nonneg_left hxy_plus hx_nonneg
+  have h2 : x * (y + 1) ≤ y * (y + 1) :=
+    mul_le_mul_of_nonneg_right hxy hy_plus_nonneg
+  exact le_trans h1 h2
 
 /-- Compatibility: area nonnegativity follows from the embedding-side theorem. -/
 theorem areaEigenvalue_nonneg_of_gamma_nonneg
@@ -113,6 +121,8 @@ theorem areaEigenvalue_eq_zero_of_gamma_eq_zero_or_ellP_eq_zero
   rcases h with hgamma | hellP
   · simpa [hgamma] using CATEPT.External.Hyperunits.areaEigenvalue_eq_zero_of_gamma_eq_zero j ell_P
   · simpa [hellP] using CATEPT.External.Hyperunits.areaEigenvalue_eq_zero_of_ellP_eq_zero j gamma
+
+variable {in_reps out_reps : List SU2SpinRepresentation}
 
 /--
   The Volume Operator \hat{V} in Loop Quantum Gravity.

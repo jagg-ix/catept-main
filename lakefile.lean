@@ -90,8 +90,3 @@ lean_lib NavierStokes where
 -- Imported by CATEPTSelfConsistency and related integration modules.
 lean_lib NavierStokesClean where
   srcDir := "."
-
--- PhysLean module hierarchy (PhysLean/*.lean).
--- Imported by Core/SpatialTypes and NavierStokesClean compatibility bridges.
-lean_lib PhysLean where
-  srcDir := "."
