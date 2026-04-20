@@ -100,3 +100,15 @@ Current status:
    2. **Euclidean Variational Instantiation:** Bridge the shell-restricted variational infimum directly from the pressure / expected value formulas associated with macroscopic large-deviation limits.
    3. **ETH Formal Mapping:** Validate `tauEqBoueDupuis_is_euclidean` and map it logically so that $O_{ij} = e^{-\tau_{\text{ent}}(E_i,E_j)/2} f(E_i, E_j)R_{ij}$ resolves properly under $e^{-\mathcal{I}(E)}$, securing the full ETH equivalence.
    4. **Target Destination:** `NavierStokesClean/CATEPT/External/ETHBoueDupuisRateBridge.lean`
+
+## Target 9: Extract Gravitas Standalone Surface
+* **Goal:** Provide a narrow standalone entry for Gravitas + CATEPT Gravitas integration without importing full `CATEPTMain.lean`.
+* **Target Destinations:**
+   1. `CATEPTMain/GravitasStandalone.lean`
+* **Status:** Completed
+
+## Target 10: Extract QuantumInfo Standalone Surface
+* **Goal:** Provide a narrow standalone entry for QuantumInfo + CATEPT QuantumInfo bridges without importing full `CATEPTMain.lean`.
+* **Target Destinations:**
+   1. `CATEPTMain/QuantumInfoStandalone.lean`
+* **Status:** Completed
