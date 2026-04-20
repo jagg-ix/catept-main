@@ -43,6 +43,8 @@ structure BipartiteRiemannComplex (CP1 : Type) where
       (analogous to the dodecahedral gluing producing the PHS). -/
   twist_map : CP1 → CP1
 
+variable {CP1 : Type}
+
 /-- Swaps the two domain factors in the bipartite complex. -/
 def BipartiteRiemannComplex.swapDomains (X : BipartiteRiemannComplex CP1) :
         BipartiteRiemannComplex CP1 where

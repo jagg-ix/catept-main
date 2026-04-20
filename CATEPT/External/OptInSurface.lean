@@ -7,6 +7,7 @@ import NavierStokesClean.CATEPT.External.Pphi2OSInterface
 import NavierStokesClean.CATEPT.External.NoFasterThanLightInterface
 import NavierStokesClean.CATEPT.External.NoFasterThanLightTranslatorSnapshot
 import NavierStokesClean.CATEPT.External.ETHQuantumThermalizationBridge
+import NavierStokesClean.CATEPT.External.ETHQGOptInSurface
 import NavierStokesClean.CATEPT.External.IntegratedEquationContracts
 import NavierStokesClean.CATEPT.External.BrownianMotionInterface
 import NavierStokesClean.CATEPT.External.BochnerMinlosInterface
@@ -35,6 +36,7 @@ It provides an optional import layer for external theorem-bridge contracts:
 - External leverage catalog (non-duplicated priority queue)
 - Carleson spectral/dephasing control interfaces
 - ETH quantum thermalization bridge layer
+- ETH/QG bridge entry-point layer (spinor, alpha-divergence, Boue-Dupuis)
 - Gibbs-measure specification interfaces
 - Brownian-motion and stochastic-integration interfaces
 - ETH-Gibbs-Brownian integration layer

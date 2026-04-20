@@ -34,6 +34,9 @@ These implementations target closing the remaining mathematical gaps (such as th
 * **Target 3:** Completed in `NavierStokesClean/CATEPT/External/DSFWeylTime.lean`
 * **Target 4:** Completed in `NavierStokesClean/CATEPT/External/DSFOrbitRGFlow.lean`
 
+## Documentation Task
+* Add `README.md`
+
 ## Integration Wiring
 * Added DSF imports to `NavierStokesClean/CATEPT/External/OptInSurface.lean`:
 	* `NavierStokesClean.CATEPT.External.DSFThermoMetric`
