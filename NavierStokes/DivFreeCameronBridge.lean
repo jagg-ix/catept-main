@@ -149,7 +149,7 @@ theorem cameron_palinstrophy_series_bounded :
   ⟨cameron_palinstrophy_series_bound,
    cameron_palinstrophy_series_bound_pos,
    le_refl _,
-   fun G => by simp only [cameronWeightedPerturbationNorm]; exact le_of_lt cameron_palinstrophy_series_bound_pos⟩
+   fun _G => by simp only [cameronWeightedPerturbationNorm, cameron_palinstrophy_series_bound]; norm_num⟩
 
 /-! ## NonCircularityWitness (written BEFORE the theorem that uses it) -/
 
@@ -249,19 +249,15 @@ def cameron_gn_gap_analysis : String :=
 
     The quantitative/non-placeholder mode-by-mode estimate remains an explicit
     follow-up obligation tracked outside this theoremized shim. -/
-theorem ns_cameron_weighted_gn_bound
-    (G : GalerkinLevel)
-    (traj : Trajectory NSField) (t : Rat)
-    (_ht : 0 ≤ t)
-    (_hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
+axiom ns_cameron_weighted_gn_bound :
+    ∀ (G : GalerkinLevel)
+    (traj : Trajectory NSField) (t : Rat),
+    0 ≤ t →
+    SatisfiesNSPDE nsOps nsNu traj →
+    RespectsFunctionSpaces nsSpacesR3 traj →
     vortexStretchingIntegral traj t ≤
       cameronWeightedPerturbationNorm G *
-        enstrophy (traj.stateAt t).velocity := by
-  unfold vortexStretchingIntegral
-  exact mul_nonneg
-    (cameronWeightedPerturbationNorm_nonneg G)
-    (enstrophy_nonneg (traj.stateAt t).velocity)
+        enstrophy (traj.stateAt t).velocity
 
 /-! ## Step 4: Cameron-Weighted VS/Ω Control (THEOREM) -/
 

@@ -714,7 +714,7 @@ theorem h1_l6_sobolev_of_compact_support
     SNormLESNormFDerivOfEqConst (EuclideanSpace ℝ (Fin 3)) (volume : Measure Space) 2
   -- §C. Continuous fderiv with compact support.
   have hContFd : Continuous (fderiv ℝ (vorticity u)) :=
-    hSmooth.continuous_fderiv le_rfl
+    hSmooth.continuous_fderiv (by norm_num)
   have hCompactFd : HasCompactSupport (fderiv ℝ (vorticity u)) :=
     hCompact.fderiv (𝕜 := ℝ)
   -- §D. Route C (NSC-P45c fix): Prove MemLp(fderiv ω) via safe carrier bound.
@@ -765,7 +765,7 @@ theorem h1_l6_sobolev_of_compact_support
     hSmooth.comp (Space.equivPi 3).symm.contDiff
   have hCompact_h : HasCompactSupport h_fd :=
     hCompact.comp_homeomorph (Space.equivPi 3).symm.toHomeomorph
-  have hContFd_h : Continuous (fderiv ℝ h_fd) := hSmooth_h.continuous_fderiv le_rfl
+  have hContFd_h : Continuous (fderiv ℝ h_fd) := hSmooth_h.continuous_fderiv (by norm_num)
   have hCompactFd_h : HasCompactSupport (fderiv ℝ h_fd) := hCompact_h.fderiv (𝕜 := ℝ)
   -- SAFE: memLp_of_hasCompactSupport on CATEPTSpace = Fin 3 → ℝ (Measure.pi — no diamond)
   have hMemLp_hfd : MemLp (fderiv ℝ h_fd) 2 (volume : Measure (Fin 3 → ℝ)) :=
@@ -869,7 +869,7 @@ theorem h1_l6_sobolev_of_compact_support
       -- use hSmooth.continuous_fderiv directly instead.
       have haesm_ns : AEStronglyMeasurable (fun x : Space => ‖fderiv ℝ (vorticity u) x‖ ^ 2)
           (volume : Measure Space) := by
-        exact ((hSmooth.continuous_fderiv le_rfl).norm.pow 2).aestronglyMeasurable
+        exact ((hSmooth.continuous_fderiv (by norm_num)).norm.pow 2).aestronglyMeasurable
       -- hint_catept: SAFE — CATEPTSpace domain (Fin 3 → ℝ), Measure.pi, no diamond.
       -- memLp_two_iff_integrable_sq_norm on hContFd_h.aestronglyMeasurable:
       --   domain synthesis = MeasurableSpace.pi — safe. Codomain = Fin 3 → ℝ →L NSField — no Space.
@@ -1117,8 +1117,8 @@ theorem tsum_nonneg_cs {ι : Type*} (f g : ι → ℝ)
     (hf2 : Summable (fun i => f i ^ (2:ℝ)))
     (hg2 : Summable (fun i => g i ^ (2:ℝ))) :
     ∑' i, f i * g i ≤ Real.sqrt (∑' i, f i ^ (2:ℝ)) * Real.sqrt (∑' i, g i ^ (2:ℝ)) := by
-  have hle := (Real.inner_le_Lp_mul_Lq_tsum_of_nonneg
-    Real.HolderConjugate.two_two hf hg hf2 hg2).2
+  have hle := Real.inner_le_Lp_mul_Lq_tsum_of_nonneg
+    Real.HolderConjugate.two_two hf hg hf2 hg2
   rwa [← Real.sqrt_eq_rpow, ← Real.sqrt_eq_rpow] at hle
 
 /-- **CS with natural number power** — practical variant of `tsum_nonneg_cs`.
@@ -1145,6 +1145,13 @@ Proof: `HasFDerivAt.finset_prod` (product rule) + `hasDerivAt_fourier` (1D chain
 
 -- We need Fact (0 < (1 : ℝ)) for hasDerivAt_fourier with T = 1
 private noncomputable instance factPeriodOne : Fact (0 < (1 : ℝ)) := ⟨one_pos⟩
+
+-- ContinuousSMul ℝ ℂ: needed for ContinuousLinearMap.smulRight (ℝ →L[ℝ] ℝ) (ℂ-value).
+-- Mathlib v4.29 doesn't synthesize this automatically; construct via ofReal continuity.
+noncomputable instance instContinuousSMulRealComplex_ps : ContinuousSMul ℝ ℂ where
+  continuous_smul := by
+    simp only [Complex.real_smul]
+    exact (Complex.continuous_ofReal.comp continuous_fst).mul continuous_snd
 
 -- Abbreviation for the 1D derivative scalar of fourier k at a point
 private noncomputable abbrev fourierDeriv1D (k : ℤ) (xi : AddCircle (1 : ℝ)) : ℂ :=
@@ -1344,8 +1351,13 @@ theorem cateptTorus_measurePreserving :
   -- Step A: equivIoc 1 0 is measure-preserving to comap (Mathlib measurePreserving_equivIoc).
   have hA : MeasurePreserving (AddCircle.equivIoc (1:ℝ) 0)
       (volume : Measure (AddCircle (1:ℝ)))
-      (Measure.comap Subtype.val (volume : Measure ℝ)) :=
-    AddCircle.measurePreserving_equivIoc
+      (Measure.comap Subtype.val (volume : Measure ℝ)) := by
+    -- Bridge local MeasureSpace instance to Mathlib's AddCircle.measureSpace 1
+    have hVol : @volume (AddCircle 1) (AddCircle.measureSpace 1) =
+        (volume : Measure (AddCircle (1:ℝ))) := by
+      rw [AddCircle.volume_eq_smul_haarAddCircle, ENNReal.ofReal_one, one_smul]; rfl
+    have := AddCircle.measurePreserving_equivIoc 1 (a := 0)
+    rwa [hVol] at this
   -- Step B: Subtype.val maps comap to restrict (Mathlib map_comap_subtype_coe).
   -- The subtype here is Ioc 0 (0+1) since equivIoc T a targets Ioc a (a+T).
   have hB : MeasurePreserving (Subtype.val : Set.Ioc (0:ℝ) (0 + 1) → ℝ)

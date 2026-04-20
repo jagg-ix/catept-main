@@ -15,3 +15,4 @@ This module provides a narrow import surface for the DSF integration lanes:
 
 Use this surface when only DSF bridge modules are needed.
 -/
+import NavierStokesClean.CATEPT.External.DSFCHSHBound

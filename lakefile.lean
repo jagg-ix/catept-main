@@ -81,6 +81,15 @@ lean_lib CATEPTMain where
 lean_lib CATEPT where
   srcDir := "."
 
+lean_lib QuantumInfo where
+  srcDir := "."
+
+lean_lib ClassicalInfo where
+  srcDir := "."
+
+lean_lib StatMech where
+  srcDir := "."
+
 -- NavierStokes module hierarchy (NavierStokes/*.lean).
 -- These are imported directly by BianchiKucharEPTBridge and ComplexFunctionalsBridge.
 lean_lib NavierStokes where
