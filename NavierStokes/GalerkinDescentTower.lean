@@ -146,15 +146,30 @@ theorem galerkin_uniform_vorticity_bound
       _ ≤ galerkinNormEquivConstant G * enstrophy (traj.stateAt 0).velocity + 1 := by
           linarith
 
-/-- Sub-axiom: uniformly bounded vorticity on [0,T] implies BKM integral ≤ M·T.
-    This is the definite integral estimate for a bounded function on a
-    bounded interval: ∫₀ᵀ f(t) dt ≤ sup(f) · T. -/
-axiom bounded_vorticity_gives_bkm_value_bound
+/-- Uniformly bounded vorticity on [0,T] implies BKM integral ≤ M·T.
+    Proved: each Riemann-sum term ≤ M·diH, sum ≤ diSteps T · M·diH ≤ M·T. -/
+theorem bounded_vorticity_gives_bkm_value_bound
     (traj : Trajectory NSField) (T : Rat)
+    (hT : 0 ≤ T)
     (M : Rat) (hM : 0 < M)
     (hBound : ∀ (t : Rat), 0 ≤ t → t ≤ T →
       vorticityLinfty (traj.stateAt t).velocity ≤ M) :
-    bkmVorticityIntegral traj T ≤ M * T
+    bkmVorticityIntegral traj T ≤ M * T := by
+  open NavierStokes.DiscreteKernel in
+  simp only [bkmVorticityIntegral, discreteIntegral]
+  calc (Finset.range (diSteps T)).sum
+        (fun i => vorticityLinfty (traj.stateAt (↑i * diH)).velocity * diH)
+      ≤ (Finset.range (diSteps T)).sum (fun _ => M * diH) := by
+        apply Finset.sum_le_sum; intro i hi
+        exact mul_le_mul_of_nonneg_right
+          (hBound _ (mul_nonneg (Nat.cast_nonneg _) diH_nonneg)
+            (le_of_lt (diSample_lt_T T hT i (Finset.mem_range.mp hi))))
+          diH_nonneg
+    _ = ↑(diSteps T) * (M * diH) := by
+        rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+    _ = M * (↑(diSteps T) * diH) := by ring
+    _ ≤ M * T :=
+        mul_le_mul_of_nonneg_left (diSteps_mul_diH_le_T T hT) (le_of_lt hM)
 
 /-- Bounded vorticity on a finite interval implies BKM integral finite.
     Proved by composition:
@@ -162,11 +177,12 @@ axiom bounded_vorticity_gives_bkm_value_bound
     2. bkm_bounded_implies_converges: concrete bound → convergence (existing bridge) -/
 theorem galerkin_bounded_vorticity_to_bkm
     (traj : Trajectory NSField) (T : Rat)
+    (hT : 0 ≤ T)
     (M : Rat) (hM : 0 < M)
     (hBound : ∀ (t : Rat), 0 ≤ t → t ≤ T →
       vorticityLinfty (traj.stateAt t).velocity ≤ M) :
     BKMIntegralFiniteAt traj T := by
-  have hVal := bounded_vorticity_gives_bkm_value_bound traj T M hM hBound
+  have hVal := bounded_vorticity_gives_bkm_value_bound traj T hT M hM hBound
   exact bkm_bounded_implies_converges traj T (M * T) hVal
 
 /-- At each finite Galerkin level, the BKM integral is bounded.
@@ -189,7 +205,7 @@ theorem galerkin_bkm_finite
   obtain ⟨M, hMpos, hMbound⟩ :=
     galerkin_uniform_vorticity_bound G traj T hT hNS hFS
   -- Step 2: Bounded vorticity → BKM finite
-  exact galerkin_bounded_vorticity_to_bkm traj T M hMpos hMbound
+  exact galerkin_bounded_vorticity_to_bkm traj T (le_of_lt hT) M hMpos hMbound
 
 /-- Explicit BKM integral bound at Galerkin level N:
     `bkmVorticityIntegral traj T ≤ (C_N · Ω₀ + 1) · T`.
@@ -236,7 +252,7 @@ theorem galerkin_explicit_bkm_bound
       mul_nonneg (le_of_lt (galerkinNormEquivConstant_pos G)) (enstrophy_nonneg _)
     linarith
   -- Apply the sub-axiom
-  exact bounded_vorticity_gives_bkm_value_bound traj T _ hMpos hBound
+  exact bounded_vorticity_gives_bkm_value_bound traj T (le_of_lt _hT) _ hMpos hBound
 
 /-! ## Three-Sector Decomposition at Each Galerkin Level -/
 

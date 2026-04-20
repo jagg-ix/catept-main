@@ -199,6 +199,46 @@ theorem nsEPT_frozen_enstrophy_of_zero_defect
 def IsTauEnt (c : NSEPTConstants) (Omega TauEnt : ℝ → ℝ) : Prop :=
   ∀ t, deriv TauEnt t = (c.nu / c.hbar) * Omega t
 
+/-- **Enstrophy Second Law: dτ_ent/dt ≥ 0.**
+
+    The entropic proper time is non-decreasing:
+
+      dτ_ent/dt = (ν/ℏ) · Ω(t) ≥ 0
+
+    since ν > 0, ℏ > 0, and Ω(t) ≥ 0 (enstrophy is nonneg by definition).
+
+    This is the W-functional monotonicity statement in the entropic-time
+    identification: τ_ent always moves forward (or freezes when Ω = 0).
+
+    Note: this does NOT solve the Millennium Problem.  Full W_NS monotonicity
+    (dW_NS/dτ_ent ≥ 0) additionally requires controlling the vortex stretching
+    contribution to dΩ/dτ_ent.  What this theorem establishes is that τ_ent
+    itself is a valid non-decreasing time parameter — the "entropic arrow of
+    time" is well-defined for all smooth NS solutions. -/
+theorem tauEnt_deriv_nonneg
+    (c : NSEPTConstants) (Omega TauEnt : ℝ → ℝ)
+    (hTauEnt : IsTauEnt c Omega TauEnt)
+    (hΩ_nonneg : ∀ t, 0 ≤ Omega t) :
+    ∀ t, 0 ≤ deriv TauEnt t := by
+  intro t
+  rw [hTauEnt t]
+  exact mul_nonneg (div_nonneg (le_of_lt c.nu_pos) (le_of_lt c.hbar_pos)) (hΩ_nonneg t)
+
+/-- **Strict monotonicity when enstrophy is positive.**
+
+    When Ω(t) > 0, the entropic proper time is strictly increasing:
+    dτ_ent/dt = (ν/ℏ) · Ω(t) > 0.  This means τ_ent is an invertible
+    time reparametrization on any interval where the solution has nonzero
+    enstrophy (which is the physically relevant case for non-trivial flows). -/
+theorem tauEnt_deriv_pos
+    (c : NSEPTConstants) (Omega TauEnt : ℝ → ℝ)
+    (hTauEnt : IsTauEnt c Omega TauEnt)
+    (hΩ_pos : ∀ t, 0 < Omega t) :
+    ∀ t, 0 < deriv TauEnt t := by
+  intro t
+  rw [hTauEnt t]
+  exact mul_pos (div_pos c.nu_pos c.hbar_pos) (hΩ_pos t)
+
 /-- The Noether accumulator Tacc is NOT the entropic proper time τ_ent in general.
     They are equal iff D_I = ν · Ω² / ħ² (special regime). -/
 def IsEPTAccumulatorEqualsTauEnt

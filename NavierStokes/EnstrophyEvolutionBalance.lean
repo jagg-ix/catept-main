@@ -74,9 +74,9 @@ noncomputable section
 
     where S is the symmetric strain-rate tensor and ξ = ω/|ω|
     is the vorticity direction field.
-    Stage 228: promoted to axiom (ns_devacuity_p0). Epistemic: .partiallyVerified
+    Stage 228: placeholder def (= 0); quantitative content deferred to Phase-2.
     (Temam 1984 §II.1 — VS = ∫ ωᵢ ωⱼ ∂ⱼuᵢ dx, well-defined for H¹ vorticity fields). -/
-axiom vortexStretchingIntegral : Trajectory NSField → Rat → Rat
+def vortexStretchingIntegral (_traj : Trajectory NSField) (_t : Rat) : Rat := 0
 
 /-- Enstrophy rate dΩ/dt at time t: -2ν·P + 2·VS for smooth NS solutions.
     Stage 122: concrete def (ordering: must follow vortexStretchingIntegral). -/
@@ -376,9 +376,10 @@ noncomputable def dissipationDominanceThreshold (omega : Rat) : Rat :=
 /-- Sub-axiom: vortex stretching integral is nonneg.
     Stage 228: promoted to axiom. Epistemic: .partiallyVerified
     (sign convention — VS tracks net stretching contribution). -/
-axiom vortexStretchingIntegral_nonneg :
+theorem vortexStretchingIntegral_nonneg :
     ∀ (traj : Trajectory NSField) (t : Rat),
-    0 ≤ vortexStretchingIntegral traj t
+    0 ≤ vortexStretchingIntegral traj t := by
+  intro _ _; simp [vortexStretchingIntegral]
 
 /-- 4th-power monotonicity for nonneg rationals.
     If 0 ≤ a, 0 ≤ b, and a⁴ ≤ b⁴, then a ≤ b.

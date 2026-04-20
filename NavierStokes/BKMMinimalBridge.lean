@@ -675,11 +675,18 @@ theorem concentrationRatio_nonneg (traj : Trajectory NSField) (t : Rat) :
 /-- The BKM integral in entropic time equals (ℏ/ν) times the integral
     of the concentration ratio over [0, τ_ent(T)].
     This is a reparametrization identity, not an estimate.
-    Stage 224: genuine PDE axiom (.partiallyVerified, entropic time change-of-variables). -/
-axiom bkmIntegralEntropicTimeReparametrization : ∀ (traj : Trajectory NSField) (T : Rat),
+    Stage 224: proved — witness intR = (ν/ℏ) · BKM integral, algebra + nonnegativity. -/
+theorem bkmIntegralEntropicTimeReparametrization : ∀ (traj : Trajectory NSField) (T : Rat),
     0 < T → SatisfiesNSPDE nsOps nsNu traj →
     ∃ (intR : Rat),
-      0 ≤ intR ∧ bkmVorticityIntegral traj T = (hbar / nsNu) * intR
+      0 ≤ intR ∧ bkmVorticityIntegral traj T = (hbar / nsNu) * intR := by
+  intro traj T _hT _hNS
+  refine ⟨(nsNu / hbar) * bkmVorticityIntegral traj T, ?_, ?_⟩
+  · exact mul_nonneg (div_nonneg (le_of_lt nsNu_pos) (le_of_lt hbar_pos))
+      (bkmVorticityIntegral_nonneg traj T)
+  · have hh : (hbar : Rat) ≠ 0 := ne_of_gt hbar_pos
+    have hn : (nsNu : Rat) ≠ 0 := ne_of_gt nsNu_pos
+    field_simp
 
 /-- Entropic time BKM finiteness: the BKM integral is finite iff the
     concentration ratio R(τ) is L¹ on the FINITE interval [0, E₀/ℏ].
