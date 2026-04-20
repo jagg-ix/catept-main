@@ -39,8 +39,8 @@ require DimensionalAnalysis from
   git "https://github.com/ATOMSLab/LeanDimensionalAnalysis.git" @ "de263eed945693058ef2b8a1fa56c2ec5642ea7a"
 
 -- AQEI-Bridge: causal poset H₁ stability under AQEI stress-energy perturbations.
-require aqeiBridge from
-  "/Users/macbookpro/lab/tau/tau-information-dynamics/aqei-bridge/lean"
+require aqeiBridge from git
+  "https://github.com/jagg-ix/aqei-bridge-lean.git" @ "e3d9c719a05913596616c20371509cae724d402c"
 
 -- lean-inf: Levi-Civita numbers, SafeFloat, Array utilities (updated to v4.29.0).
 require «lean-inf» from git
