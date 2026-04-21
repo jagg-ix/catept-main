@@ -1,3 +1,4 @@
+import CATEPT.PhysicalConstants
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -10,10 +11,6 @@ namespace CATEPT
 
 open Complex
 open Real
-
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
 
 structure DampedOscillatorParams where
   m : ℝ

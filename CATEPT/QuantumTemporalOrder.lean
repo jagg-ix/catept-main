@@ -1,3 +1,4 @@
+import CATEPT.PhysicalConstants
 import Mathlib
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
@@ -5,15 +6,6 @@ import Mathlib.Data.Complex.Basic
 set_option autoImplicit false
 
 namespace CATEPT
-
-/-- Basic constants. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  kB   : ℝ
-  c    : ℝ
-  hbar_pos : 0 < hbar
-  kB_pos   : 0 < kB
-  c_pos    : 0 < c
 
 /-- Abstract sector split from Section X:
 `HR` = computational sector, `HI` = temporal-order sector. -/

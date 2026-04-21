@@ -1,3 +1,4 @@
+import CATEPT.PhysicalConstants
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
@@ -8,11 +9,6 @@ set_option autoImplicit false
 namespace CATEPT
 
 open Real
-
-/-- Physical constants. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
 
 /-- Abstract quantum carrier. -/
 structure QuantumSystem where

@@ -7,7 +7,7 @@ import NavierStokesClean.CATEPT.Foundations
 noncomputable section
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Basic constants. -/
 structure PhysicalConstants where
@@ -31,28 +31,24 @@ structure ModularData (A : LocalRegion) where
   K : Type
 
 /-- Entropic-locality relation:
-SI(A) = (ħ/kB) Sent(A), and δSent(A) = δ⟨K_A⟩. -/
+SI(A) = (hbar/kB) Sent(A), and deltaSent(A) = delta⟨K_A⟩. -/
 def entropicActionOfEntropy
     (c : PhysicalConstants) (Sent : ℝ) : ℝ :=
   (c.hbar / c.kB) * Sent
 
-/-- Entropic time field Θ(x) = ⟨K_Ax⟩ for nested local regions. -/
+/-- Entropic time field Theta(x) = ⟨K_Ax⟩ for nested local regions. -/
 def entropicTimeField (Kexp : Type → ℝ) (Ax : Type) : ℝ :=
   Kexp Ax
 
 /-- Entropic Locality: irreversible effects are local, modular, and causal. -/
 structure EntropicLocalityPrinciple (c : PhysicalConstants) where
-  microcausality :
-    Prop
-  local_modular_origin :
-    Prop
-  no_superluminal_influence :
-    Prop
-  data_processing_monotone :
-    Prop
+  microcausality : Prop
+  local_modular_origin : Prop
+  no_superluminal_influence : Prop
+  data_processing_monotone : Prop
 
 /-- Section XI entropic force density:
-    F_T^μ = λ Δ^{μν} ∇_ν Θ.
+    F_T^mu = lambda Delta^{mu nu} nabla_nu Theta.
 
 Represented here as a scalar-valued interface map until tensor
 infrastructure is added.
@@ -62,13 +58,13 @@ def entropicForceDensity
   lam * projector_gradTheta
 
 /-- Section XI local Unruh/Rindler temperature:
-    T_loc = ħ a_loc / (2π k_B c). -/
+    T_loc = hbar a_loc / (2 pi k_B c). -/
 def localUnruhTemperature
     (c : PhysicalConstants) (aLoc : ℝ) : ℝ :=
   c.hbar * aLoc / (2 * Real.pi * c.kB * c.c)
 
 /-- Tolman/redshift law for the entropic inverse-temperature scale:
-    β_I(x) = β_∞ √(-g_00).
+    beta_I(x) = beta_inf sqrt(-g_00).
 -/
 def entropicRedshiftedBeta
     (betaInf minus_g00_sqrt : ℝ) : ℝ :=
@@ -76,7 +72,7 @@ def entropicRedshiftedBeta
 
 /-- Section XI entropic stress tensor, compressed to the scalar-valued
 combination appearing in the formula:
-(ħ/kB)(σ·σ + ζ θ) + λ |∇Θ|².
+(hbar/kB)(sigma·sigma + zeta theta) + lambda |nabla Theta|^2.
 This is a placeholder until tensor infrastructure is added.
 -/
 def entropicStressScalar
@@ -85,7 +81,7 @@ def entropicStressScalar
   (c.hbar / c.kB) * (sigmaTerm + zeta * theta) + lam * gradThetaSq
 
 /-- Complex Einstein coupling interface from Section XI:
-    G_{μν} + i Ξ_{μν} = (8πG/c^4)(T_{μν} + i T^{(I)}_{μν}).
+    G_{mu nu} + i Xi_{mu nu} = (8 pi G/c^4)(T_{mu nu} + i T^{(I)}_{mu nu}).
 -/
 def SatisfiesComplexEinsteinSectionXI : Prop := True
 
@@ -101,22 +97,22 @@ structure EntropicEEPPrinciple (c : PhysicalConstants) where
 def modularSlopeCriterion (uGradThetaA uGradThetaB : ℝ) : Prop :=
   uGradThetaA > uGradThetaB
 
--- ── Gravitational clock-rate theorems (from gravity/clock-rates chat, score 7) ──
+-- Gravitational clock-rate theorems (from gravity/clock-rates chat, score 7)
 
 /-- Local temperature from the Tolman law:
-    T_loc(x) = 1 / (k_B · β(x)) = T_∞ / √(-g_00(x)).
+    T_loc(x) = 1 / (k_B · beta(x)) = T_inf / sqrt(-g_00(x)).
 
-    Source: chat equation `dS/dt ∝ T/√g₀₀`, score 7.
+    Source: chat equation `dS/dt ∝ T/sqrt(g00)`, score 7.
     This is the direct inversion of `entropicRedshiftedBeta`. -/
 def tolmanLocalTemperature
     (c : PhysicalConstants) (betaInf minus_g00_sqrt : ℝ) : ℝ :=
   1 / (c.kB * entropicRedshiftedBeta betaInf minus_g00_sqrt)
 
-/-- Far-field (flat) temperature: T_∞ = 1 / (k_B · β_∞). -/
+/-- Far-field (flat) temperature: T_inf = 1 / (k_B · beta_inf). -/
 def flatTemperature (c : PhysicalConstants) (betaInf : ℝ) : ℝ :=
   1 / (c.kB * betaInf)
 
-/-- Tolman redshift law: T_loc = T_∞ / √(-g_00).
+/-- Tolman redshift law: T_loc = T_inf / sqrt(-g_00).
 
     The local temperature is suppressed by the gravitational redshift factor.
     This connects `entropicRedshiftedBeta` to the observable clock-rate scaling. -/
@@ -133,7 +129,7 @@ theorem tolmanTemperature_eq_flat_over_redshift
   have hg' : minus_g00_sqrt ≠ 0 := ne_of_gt hg
   field_simp [hkβ, hg']
 
-/-- Gravitational clock-rate law: T_loc is positive when β_∞ > 0 and g₀₀ > 0. -/
+/-- Gravitational clock-rate law: T_loc is positive when beta_inf > 0 and g00 > 0. -/
 theorem tolmanTemperature_pos
     (c : PhysicalConstants) (betaInf minus_g00_sqrt : ℝ)
     (hβ  : 0 < betaInf)
@@ -144,8 +140,8 @@ theorem tolmanTemperature_pos
   exact mul_pos c.kB_pos (mul_pos hβ hg)
 
 /-- Clock rates scale inversely with redshift:
-    a deeper gravitational well (smaller √(-g_00)) gives a faster local clock.
-    T_loc(x₁) / T_loc(x₂) = √(-g_00(x₂)) / √(-g_00(x₁)). -/
+    a deeper gravitational well (smaller sqrt(-g_00)) gives a faster local clock.
+    T_loc(x1) / T_loc(x2) = sqrt(-g_00(x2)) / sqrt(-g_00(x1)). -/
 theorem tolmanTemperature_ratio
     (c : PhysicalConstants) (betaInf g1 g2 : ℝ)
     (hβ  : 0 < betaInf)
@@ -161,10 +157,10 @@ theorem tolmanTemperature_ratio
   field_simp [hkB', hβ', hg1', hg2']
 
 /-- Arrow-of-time rate is proportional to local temperature:
-    if entropy rate = k_B · dTexp/dt and Texp(t) = T_loc(x(t)) / k_B, then
+    if entropy rate = k_B * dTexp/dt and Texp(t) = T_loc(x(t)) / k_B, then
     dS/dt = T_loc(x(t)).
 
-    This is the abstract form of `dS/dt ∝ T/√g₀₀` from the gravity/clock-rates
+    This is the abstract form of `dS/dt ∝ T/sqrt(g00)` from the gravity/clock-rates
     chat (score-7 equation). It connects `SatisfiesArrowFromTemporalOrder` to
     the Tolman law via the identification Texp = T_loc / k_B. -/
 theorem arrowOfTime_scales_as_localTemperature
@@ -173,7 +169,6 @@ theorem arrowOfTime_scales_as_localTemperature
     (entropy : ℝ → ℝ)
     (Texp : ℝ → ℝ)
     (hArrow : ∀ t, deriv entropy t = c.kB * deriv Texp t)
-    -- identification: Texp(t) = T_loc(x(t)) / k_B
     (hTexp  : ∀ t, Texp t =
       tolmanLocalTemperature c betaInf (g00_sqrt t) / c.kB) :
     ∀ t, deriv entropy t =
@@ -184,15 +179,15 @@ theorem arrowOfTime_scales_as_localTemperature
   rw [hArrow t, hfun]
 
 
--- ── Dependency chain: GeometryGauge ← Foundations ───────────────────────────
+-- Dependency chain: GeometryGauge <- Foundations
 
 /-- The local Unruh temperature equals the Hawking temperature with surface
-    gravity κ = a (the acceleration, in natural units c = 1 is the standard
+    gravity kappa = a (the acceleration, in natural units c = 1 is the standard
     Rindler correspondence).
 
     This grounds GeometryGauge in `NavierStokesClean.CATEPT.Foundations`:
     `localUnruhTemperature` is not an independent definition but the Hawking
-    formula evaluated at κ = a_loc. -/
+    formula evaluated at kappa = a_loc. -/
 theorem localUnruhTemperature_eq_hawkingTemperature
     (c : PhysicalConstants) (a : ℝ) :
     localUnruhTemperature c a =
@@ -200,15 +195,15 @@ theorem localUnruhTemperature_eq_hawkingTemperature
   simp only [localUnruhTemperature, NavierStokesClean.CATEPT.hawking_temperature]
   ring
 
-/-- **Matsubara identification** (Tolman ↔ entropic time):
-    The `entropic_time` of the thermal imaginary action `S_I = ħ kB β(x)`
-    equals the dimensionless local inverse temperature `kB β(x) = kB / T_loc(x)`.
+/-- Matsubara identification (Tolman <-> entropic time):
+    The `entropic_time` of the thermal imaginary action `S_I = hbar * kB * beta(x)`
+    equals the dimensionless local inverse temperature `kB * beta(x) = kB / T_loc(x)`.
 
-    Explicitly: `τ_ent(ħ, ħ kB β(x)) = kB β(x)`.
+    Explicitly: `tau_ent(hbar, hbar * kB * beta(x)) = kB * beta(x)`.
 
-    This is the Euclidean-rotation identity τ → −iβ in the path-integral
-    formalism: imaginary time = inverse temperature.  It bridges the
-    Tolman redshift formula β(x) = β_∞ √(−g₀₀) to the entropic-time
+    This is the Euclidean-rotation identity tau -> -i*beta in the path-integral
+    formalism: imaginary time = inverse temperature. It bridges the
+    Tolman redshift formula `beta(x) = beta_inf * sqrt(-g00)` to the entropic-time
     accumulator in `NSEPTNoetherInvariantBridge`. -/
 theorem entropicTime_eq_localInverseTemperature
     (c : PhysicalConstants) (betaInf g00sqrt : ℝ) :
@@ -219,4 +214,4 @@ theorem entropicTime_eq_localInverseTemperature
   have hħ : c.hbar ≠ 0 := ne_of_gt c.hbar_pos
   field_simp [hħ]
 
-end CATEPT
+end CATEPTMain.CATEPT

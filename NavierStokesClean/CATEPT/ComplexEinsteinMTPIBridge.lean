@@ -1,5 +1,4 @@
 import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
-import NavierStokesClean.PhysLean.DivCurlIdentity
 
 /-!
 # CAT/EPT Complex Einstein MTPI Bridge (WP1)
@@ -166,14 +165,6 @@ def mkMTPIComplexEFECompatibility
     MTPIComplexEFECompatibility α c C :=
   { source_measurable := C.measurable_sourceFromStress
     efe_holds := hE }
-
-/-- PhysLean compatibility seed used by the complex-EFE/Bianchi program:
-`div(curl)=0` is already available as a theorem in the codebase. -/
-theorem physlean_bianchi_seed
-    (f : Space → EuclideanSpace ℝ (Fin 3))
-    (hf : ContDiff ℝ 2 f) :
-  ∇ ⬝ (∇ ⨯ f) = 0 :=
-  NavierStokesClean.PhysLeanBridge.ns_div_curl_zero f hf
 
 /-- Gauss-Bonnet and corrected Einstein-equation unresolved rows from the
 extraction index (legacy target name `ComplexEFE.lean`). -/

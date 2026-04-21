@@ -55,13 +55,6 @@ Phase 2 (pending GaugeFixing sorries): Faddeev-Popov gauge-fixing bridge to
 
 namespace CATEPTMain.Integration.LGT
 
-open LGT.MassGap.MassGap2D
-open LGT.MassGap.TransferMatrix
-open LGT.MassGap.YMMeasure
-open LGT.GaugeField.Connection
-open LGT.GaugeField.GaugeGroup
-open LGT.MassGap.DoeblinCondition
-
 -- ── 2D Yang-Mills mass gap ────────────────────────────────────────────────────
 
 /-- The 2D Yang-Mills connected 2-point function decays exponentially:
@@ -70,22 +63,32 @@ open LGT.MassGap.DoeblinCondition
     ε = ymDoeblinLowerBound β > 0.
     This is the discrete-geometry 2D YM mass gap. -/
 theorem ym_mass_gap_2d
-    {G : Type*} [Group G] [TopologicalGroup G] [CompactSpace G]
-    [HasHaarProbability G] [HasGaugeTrace G 2]
-    {d N n : ℕ} (hd : d = 2) (hn : 1 ≤ n)
-    (β : ℝ) (hβ : 0 < β) (p q : LatticePlaquette d N) :
-    mass_gap_2d hd hn β hβ p q :=
-  mass_gap_2d hd hn β hβ p q
+    {G : Type*} {n d N : ℕ}
+    [Group G] [HasGaugeTrace G n]
+    [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
+    [MeasurableSpace G] [BorelSpace G] [HasHaarProbability G]
+    [Fintype (LatticeLink d N)] [NeZero N]
+    (β : ℝ) (hβ : 0 ≤ β)
+    (hTrace_lower : ∀ g : G, -↑n ≤ gaugeReTr G n g)
+    (hTrace_upper : ∀ g : G, gaugeReTr G n g ≤ ↑n)
+    (hRep_cont : Continuous (HasGaugeTrace.rep (G := G) (n := n)))
+    (plaq : Finset (LatticePlaquette d N))
+    (hIntegrable : MeasureTheory.Integrable (fun U => boltzmannWeight G n d N β U plaq)
+      (productHaar G d N))
+    (p q : LatticePlaquette d N) :
+    |connected2pt G n d N β plaq (plaqObs G n d N p) (plaqObs G n d N q)| ≤
+      4 * (↑n) ^ 2 * Real.exp (-(-Real.log (1 - ymDoeblinLowerBound n β)) *
+        ↑(plaquetteDist d N p q)) :=
+  mass_gap_2d G n d N β hβ hTrace_lower hTrace_upper hRep_cont plaq hIntegrable p q
 
 /-- The mass gap rate m = -Real.log(1 - ymDoeblinLowerBound β) is strictly
     positive for β > 0. This gives an explicit formula for the gap.
     CATEPT: feeds `NSGalerkinGapRecord` gap positivity for the YM sector. -/
 theorem ym_mass_gap_rate_pos
-    {G : Type*} [Group G] [TopologicalGroup G] [CompactSpace G]
-    [HasHaarProbability G] [HasGaugeTrace G 2]
+    {n : ℕ}
     (β : ℝ) (hβ : 0 < β) (hn : 1 ≤ n) :
-    mass_gap_2d_rate_pos β hβ hn :=
-  mass_gap_2d_rate_pos β hβ hn
+  0 < -Real.log (1 - ymDoeblinLowerBound n β) :=
+  mass_gap_2d_rate_pos (n := n) β hβ hn
 
 -- ── Doeblin mixing → discrete semigroup ──────────────────────────────────────
 
@@ -94,30 +97,47 @@ theorem ym_mass_gap_rate_pos
     CATEPT: discrete-time analogue of the Yoshida contraction semigroup in
     `YoshidaFreeFisherBridge` (continuous time). -/
 theorem ym_doeblin_mixing
-    {G : Type*} [Group G] [TopologicalGroup G] [CompactSpace G]
-    [HasHaarProbability G] [HasGaugeTrace G 2]
-    (β : ℝ) (hβ : 0 ≤ β) :
-    ym_satisfies_doeblin β hβ :=
-  ym_satisfies_doeblin β hβ
+    {G : Type*} {n : ℕ}
+    [Group G] [HasGaugeTrace G n]
+    [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
+    [MeasurableSpace G] [BorelSpace G]
+    (β : ℝ) (hβ : 0 ≤ β)
+    (hTrace_lower : ∀ g : G, -↑n ≤ gaugeReTr G n g)
+    (hTrace_upper : ∀ g : G, gaugeReTr G n g ≤ ↑n)
+    (hRep_cont : Continuous (HasGaugeTrace.rep (G := G) (n := n)))
+    (μ : MeasureTheory.Measure G) [MeasureTheory.IsProbabilityMeasure μ]
+    (K : MarkovKernel G)
+    (hK : ∀ (V : G) (A : Set G), MeasurableSet A →
+      (K.kernel V A).toReal = ∫ W in A,
+        singleSiteTransitionWeight G n β V W /
+        (∫ W', singleSiteTransitionWeight G n β V W' ∂μ) ∂μ) :
+    ∃ (hD : DoeblinCondition K μ), 0 < hD.ε :=
+  ym_satisfies_doeblin G n β hβ hTrace_lower hTrace_upper hRep_cont μ K hK
 
 /-- The Doeblin lower bound is strictly positive for any β ≥ 0.
     This gives the explicit spectral gap constant for the YM semigroup. -/
 theorem ym_doeblin_lower_bound_pos
-    {G : Type*} [Group G] [TopologicalGroup G] [CompactSpace G]
-    [HasHaarProbability G] [HasGaugeTrace G 2]
+    {n : ℕ}
     (β : ℝ) :
-    ymDoeblinLowerBound_pos β :=
-  ymDoeblinLowerBound_pos β
+  0 < ymDoeblinLowerBound n β :=
+  ymDoeblinLowerBound_pos n β
 
 /-- The Boltzmann weight is strictly positive and ≤ 1 for β ≥ 0.
     Probabilistic interpretation: the YM measure is absolutely continuous
     w.r.t. Haar measure with a normalized density. -/
 theorem ym_boltzmann_bounded
-    {G : Type*} [Group G] [TopologicalGroup G] [CompactSpace G]
-    [HasHaarProbability G] [HasGaugeTrace G 2]
-    {d N : ℕ} (β : ℝ) (hβ : 0 ≤ β) (U : GaugeConnection G d N) :
-    boltzmannWeight_pos β U ∧ boltzmannWeight_le_one β hβ U :=
-  ⟨boltzmannWeight_pos β U, boltzmannWeight_le_one β hβ U⟩
+    {G : Type*} {n d N : ℕ}
+    [Group G] [HasGaugeTrace G n]
+    [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
+    [MeasurableSpace G] [BorelSpace G] [HasHaarProbability G]
+    [Fintype (LatticeLink d N)]
+    (β : ℝ) (hβ : 0 ≤ β) (U : GaugeConnection G d N)
+    (plaq : Finset (LatticePlaquette d N))
+    (hTrace_upper : ∀ g : G, gaugeReTr G n g ≤ ↑n) :
+    0 < boltzmannWeight G n d N β U plaq ∧
+      boltzmannWeight G n d N β U plaq ≤ 1 :=
+  ⟨boltzmannWeight_pos G n d N β U plaq,
+   boltzmannWeight_le_one G n d N β hβ U plaq hTrace_upper⟩
 
 -- ── Holonomy ↔ Gravitas curvature ────────────────────────────────────────────
 
@@ -130,7 +150,8 @@ theorem ym_holonomy_gauge_covariant
     {G : Type*} [Group G]
     {d N : ℕ} (U : GaugeConnection G d N) (g : GaugeTransform G d N)
     (p : LatticePlaquette d N) :
-    holonomy_gauge_covariant g U p :=
+    plaquetteHolonomy (gaugeTransformConnection g U) p =
+      g p.site * plaquetteHolonomy U p * (g p.site)⁻¹ :=
   holonomy_gauge_covariant g U p
 
 -- ── Observable locality ───────────────────────────────────────────────────────
@@ -141,11 +162,15 @@ theorem ym_holonomy_gauge_covariant
     CATEPT / QuantumInfo: gauge-invariant observable locality is the classical
     analogue of quantum entanglement locality in the IMD / QuantumInfo bridge. -/
 theorem ym_plaquette_obs_local
-    {G : Type*} [Group G] [TopologicalGroup G] [CompactSpace G]
-    [HasHaarProbability G] [HasGaugeTrace G 2]
-    {d N : ℕ} (p : LatticePlaquette d N) (U : GaugeConnection G d N) :
-    plaqObs_bounded p U :=
-  plaqObs_bounded p U
+    {G : Type*} {n d N : ℕ}
+    [Group G] [HasGaugeTrace G n]
+    [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
+    [MeasurableSpace G] [BorelSpace G] [HasHaarProbability G]
+    [Fintype (LatticeLink d N)]
+    (p : LatticePlaquette d N) (U : GaugeConnection G d N)
+    (hTrace : ∀ g : G, |gaugeReTr G n g| ≤ ↑n) :
+    |plaqObs G n d N p U| ≤ ↑n :=
+  plaqObs_bounded G n d N p U hTrace
 
 -- ── Phase 2 stub: GaugeFixing bridge ─────────────────────────────────────────
 -- The Faddeev-Popov gauge-fixing argument in LGT/MassGap/GaugeFixing.lean has

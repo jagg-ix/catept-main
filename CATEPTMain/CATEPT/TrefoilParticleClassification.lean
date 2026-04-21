@@ -52,6 +52,8 @@ open CATEPTMain.AFPBridge.CATEPT
 
 namespace CATEPT
 
+open CATEPTMain.CATEPT
+
 -- ── Extended physical constants ───────────────────────────────────────────────
 
 /-- SI lepton masses and auxiliary constants for the trefoil model. -/

@@ -1,3 +1,4 @@
+import CATEPT.PhysicalConstants
 import Mathlib
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -18,15 +19,6 @@ CAT/EPT identifies the imaginary Hamiltonian sector HI/ħ with kB T_loc.
 -/
 
 namespace CATEPT
-
-/-- Physical constants (positive). -/
-structure PhysicalConstants where
-  hbar : ℝ
-  kB   : ℝ
-  c    : ℝ
-  hbar_pos : 0 < hbar
-  kB_pos   : 0 < kB
-  c_pos    : 0 < c
 
 /-- Section XI local Unruh/Rindler temperature: T_loc = ħ a_loc / (2π kB c). -/
 def localUnruhTemperature (pc : PhysicalConstants) (aLoc : ℝ) : ℝ :=

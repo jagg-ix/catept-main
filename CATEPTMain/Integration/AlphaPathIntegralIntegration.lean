@@ -1,6 +1,4 @@
-import CATEPTMain.Integration.CATEPTSelfConsistency
 import CATEPTMain.Integration.TheoryPluginArchitecture
-import CATEPTMain.Integration.ComplexFunctionalsBridge
 
 namespace CATEPTMain.Integration.PathIntegral
 

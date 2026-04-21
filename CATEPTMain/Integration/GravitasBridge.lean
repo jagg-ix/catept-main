@@ -109,18 +109,19 @@ theorem gravitasMinkowskiSlot_consistent :
     `GeometryGauge.tolmanLocalTemperature`: zero imaginary action ↔
     no gravitational redshift ↔ Tolman factor = 1. -/
 theorem gravitasMinkowski_tolman_trivial
-    (c : CATEPT.PhysicalConstants) (betaInf : ℝ) :
-    CATEPT.tolmanLocalTemperature c betaInf 1 = CATEPT.flatTemperature c betaInf := by
-  simp [CATEPT.tolmanLocalTemperature, CATEPT.flatTemperature, CATEPT.entropicRedshiftedBeta]
+    (c : CATEPTMain.CATEPT.PhysicalConstants) (betaInf : ℝ) :
+    CATEPTMain.CATEPT.tolmanLocalTemperature c betaInf 1 = CATEPTMain.CATEPT.flatTemperature c betaInf := by
+  simp [CATEPTMain.CATEPT.tolmanLocalTemperature, CATEPTMain.CATEPT.flatTemperature,
+    CATEPTMain.CATEPT.entropicRedshiftedBeta]
 
 /-- **Born weight on flat background**: on Minkowski spacetime the CATEPT path
     amplitude norm equals the path integral damping factor, with no gravitational
     redshift modifying it.  Combines `gravitasMinkowski_tolman_trivial` and
     `BohmianQMBridge.catept_amplitude_eq_path_damping` into one statement. -/
 theorem gravitasMinkowski_born_weight_no_redshift
-    (c : CATEPT.PhysicalConstants) (betaInf S_R S_I hbar_val : ℝ)
+  (c : CATEPTMain.CATEPT.PhysicalConstants) (betaInf S_R S_I hbar_val : ℝ)
     (hh : 0 < hbar_val) :
-    CATEPT.tolmanLocalTemperature c betaInf 1 = CATEPT.flatTemperature c betaInf ∧
+  CATEPTMain.CATEPT.tolmanLocalTemperature c betaInf 1 = CATEPTMain.CATEPT.flatTemperature c betaInf ∧
     ‖Complex.exp (Complex.I * (S_R / hbar_val)) *
       (Real.exp (-S_I / hbar_val) : ℂ)‖
       = NavierStokesClean.CATEPT.path_integral_damping hbar_val S_I :=

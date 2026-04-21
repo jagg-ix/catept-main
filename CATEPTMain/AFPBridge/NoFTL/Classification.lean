@@ -86,10 +86,11 @@ theorem lemVelocityJoiningUsingPoints (x p : Point Q) (hne : x ≠ p)
     simp only [slopeFinite, ne_eq, origin, movebackBy]; intro h; exact hfin (by linarith)
   rw [if_pos hsf]
   have htne : p.tval - x.tval ≠ 0 := sub_ne_zero.mpr hfin.symm
+  have htne' : x.tval - p.tval ≠ 0 := sub_ne_zero.mpr hfin
   -- Show the two sComponent args are equal as Points
   suffices h : (1 / (Point.tval origin - Point.tval (p ⊖ x))) ⊗ (origin ⊖ (p ⊖ x)) =
                (1 / (p.tval - x.tval)) ⊗ (p ⊖ x) by rw [h]
-  ext <;> simp [origin, movebackBy, scaleBy, one_div] <;> field_simp <;> ring
+  ext <;> simp [origin, movebackBy, scaleBy, one_div] <;> field_simp [htne, htne'] <;> ring_nf
 
 theorem lemLineVelocityNonZeroImpliesFinite (l : Set (Point Q)) (v : Space Q)
     (hv : v ∈ lineVelocity l) (hnz : sNorm2 v ≠ 0) :
@@ -149,7 +150,7 @@ theorem lemLineVelocityUsingPoints (l : Set (Point Q)) (x p : Point Q)
     exact fun h => mul_ne_zero hα_nz hd_tval h.symm
   rw [if_pos hsf_d, if_pos hsf_ad]
   simp only [sComponent, origin, movebackBy, scaleBy, Space.mk.injEq]
-  refine ⟨?_, ?_, ?_⟩ <;> field_simp <;> ring
+  refine ⟨?_, ?_, ?_⟩ <;> field_simp [hα_nz, hd_tval] <;> ring_nf
 
 theorem lemSNorm2VelocityJoining (x p : Point Q) (hfin : slopeFinite x p) :
     sNorm2 (velocityJoining origin (p ⊖ x)) =
@@ -160,8 +161,8 @@ theorem lemSNorm2VelocityJoining (x p : Point Q) (hfin : slopeFinite x p) :
   rw [if_pos hsf]
   simp only [sComponent, origin, movebackBy, scaleBy, sNorm2, sSep2, sqr]
   have htne : x.tval - p.tval ≠ 0 := sub_ne_zero.mpr hfin
-  field_simp
-  ring
+  field_simp [htne]
+  ring_nf
 
 theorem lemOrthogalSpaceVectorExists (v : Space Q) (hnz : v ≠ sOrigin) :
     ∃ u : Space Q, u ≠ sOrigin ∧ sdot u v = 0 := by
@@ -169,11 +170,11 @@ theorem lemOrthogalSpaceVectorExists (v : Space Q) (hnz : v ≠ sOrigin) :
   by_cases hx : x = 0
   · -- x = 0, so v = (0,y,z) with y ≠ 0 or z ≠ 0. Take w = (1,0,0)
     refine ⟨⟨1, 0, 0⟩, ?_, ?_⟩
-    · simp [sOrigin, Space.mk.injEq]; norm_num
+    · simp [sOrigin, Space.mk.injEq]
     · simp [sdot, hx]
   · -- x ≠ 0, take w = (y/x, -1, 0)
     refine ⟨⟨y / x, -1, 0⟩, ?_, ?_⟩
-    · simp [sOrigin, Space.mk.injEq]; norm_num
+    · simp [sOrigin, Space.mk.injEq]
     · simp [sdot]; field_simp; ring
 
 theorem lemNonParallelVectorsExist (v : Space Q) (hnz : v ≠ sOrigin) :
@@ -182,19 +183,26 @@ theorem lemNonParallelVectorsExist (v : Space Q) (hnz : v ≠ sOrigin) :
   by_cases hx : x = 0
   · -- x = 0, take u = (1,y,z)
     refine ⟨⟨1, y, z⟩, ?_, ?_⟩
-    · simp [sOrigin, Space.mk.injEq]; norm_num
+    · simp [sOrigin, Space.mk.injEq]
     · rintro ⟨a, ha⟩
-      simp [sScaleBy, Space.mk.injEq, hx] at ha
-      linarith [ha.1]
+      have h1 : (1 : Q) = a * x := by
+        simpa [sScaleBy, Space.mk.injEq] using congrArg Space.svalx ha
+      have h10 : (1 : Q) = 0 := by simpa [hx] using h1
+      exact one_ne_zero h10
   · -- x ≠ 0, take u = (x, y+1, z)
     refine ⟨⟨x, y + 1, z⟩, ?_, ?_⟩
-    · simp [sOrigin, Space.mk.injEq]
-      intro h; exact hx h
+    · simp [sOrigin, Space.mk.injEq, hx]
     · rintro ⟨a, ha⟩
-      simp [sScaleBy, Space.mk.injEq] at ha
+      have hx1 : x = a * x := by
+        simpa [sScaleBy, Space.mk.injEq] using congrArg Space.svalx ha
       have ha1 : a = 1 := by
-        have := ha.1; field_simp at this; linarith
-      rw [ha1] at ha; linarith [ha.2.1]
+        have hxmul : x * (1 - a) = 0 := by nlinarith [hx1]
+        have h1a : 1 - a = 0 := (mul_eq_zero.mp hxmul).resolve_left hx
+        linarith
+      have hy1 : y + 1 = a * y := by
+        simpa [sScaleBy, Space.mk.injEq] using congrArg Space.svaly ha
+      rw [ha1] at hy1
+      linarith
 
 theorem lemConeContainsVertex (x : Point Q) :
     x ∈ regularConeSet x := by
@@ -271,7 +279,7 @@ theorem lemQuadCoordinates (x p d : Point Q) (a : Q) :
 
 theorem lemConeCoordinates (x p : Point Q) (hne : x ≠ p) (hfin : slopeFinite x p)
     (d : Point Q) :
-    sSep2 x p / sqr (x.tval - p.tval) - 1 = mNorm2 (p ⊖ x) / sqr (p.tval - x.tval) := by
+  1 - sSep2 x p / sqr (x.tval - p.tval) = mNorm2 (p ⊖ x) / sqr (p.tval - x.tval) := by
   have htne : x.tval - p.tval ≠ 0 := sub_ne_zero.mpr hfin
   have htne2 : sqr (x.tval - p.tval) ≠ 0 := by
     intro h; exact htne (by
@@ -279,8 +287,8 @@ theorem lemConeCoordinates (x p : Point Q) (hne : x ≠ p) (hfin : slopeFinite x
       unfold sqr at h; nlinarith)
   simp only [sSep2, sNorm2, sComponent, mNorm2, movebackBy, sqr]
   have htne' : p.tval - x.tval ≠ 0 := sub_ne_zero.mpr hfin.symm
-  field_simp
-  ring
+  field_simp [htne, htne']
+  ring_nf
 
 theorem lemConeCoordinates1 (x p : Point Q) (hne : x ≠ p) (hfin : slopeFinite x p) :
     insideRegularCone x p ↔ mNorm2 (p ⊖ x) > 0 := by
@@ -420,9 +428,12 @@ theorem lemOnRegularConeIff (x p : Point Q) :
         by_cases hfin : slopeFinite x p
         · have hv_norm := lemLineVelocityUsingPoints _ x p rfl hne hfin v hv
           rw [hv1, lemSNorm2VelocityJoining x p hfin] at hv_norm
-          -- 1 = sSep2 x p / sqr(x.tval - p.tval), so sSep2 = sqr(...)
-          simp only [mNorm2, sNorm2, sComponent, movebackBy, sqr, sSep2] at *
-          nlinarith [lemSquaresPositive (x.tval - p.tval) (sub_ne_zero.mpr hfin)]
+          have hcoord := lemConeCoordinates (x := x) (p := p) (d := p ⊖ x) hne hfin
+          have hleft : 1 - sSep2 x p / sqr (x.tval - p.tval) = 0 := by linarith
+          rw [hleft] at hcoord
+          have hsqr_ne : sqr (p.tval - x.tval) ≠ 0 :=
+            ne_of_gt (lemSquaresPositive _ (sub_ne_zero.mpr hfin.symm))
+          exact (div_eq_zero_iff.mp hcoord.symm).resolve_right hsqr_ne
         · -- slopeInfinite: impossible since v has sNorm2 = 1
           exfalso
           simp only [slopeFinite, ne_eq, not_not] at hfin
@@ -432,17 +443,24 @@ theorem lemOnRegularConeIff (x p : Point Q) :
           obtain ⟨a, b, hab, ha, hb, rfl⟩ := hd
           have htval_eq : (b ⊖ a).tval = 0 := by
             obtain ⟨_, ⟨α, rfl⟩⟩ := ha; obtain ⟨_, ⟨β, rfl⟩⟩ := hb
-            simp only [moveBy, scaleBy, movebackBy]; linarith [hfin]
+            simp [moveBy, scaleBy, movebackBy, hfin]
           have hsf_neg : ¬ slopeFinite (Q := Q) origin (b ⊖ a) := by
             simp only [slopeFinite, ne_eq, not_not, origin]; exact htval_eq.symm
-          simp [velocityJoining, sloper, if_neg hsf_neg, sComponent, origin, sNorm2, sqr] at hv1
+          have hsf_neg0 : ¬ slopeFinite (Q := Q) ({ tval := 0, xval := 0, yval := 0, zval := 0 }) (b ⊖ a) := by
+            simpa [origin] using hsf_neg
+          have hv0 : sNorm2 (velocityJoining origin (b ⊖ a)) = 0 := by
+            have hvel0 : velocityJoining (Q := Q) origin (b ⊖ a) = sOrigin := by
+              simp [velocityJoining, sloper, hsf_neg0, sComponent, origin, sOrigin]
+            rw [hvel0]
+            simp [sNorm2, sOrigin, sqr]
+          linarith [hv1, hv0]
   · -- x = p ∨ lightlike → onRegularCone
     rintro (rfl | ⟨hne_origin, hmn⟩)
     · left; rfl
     · right
       have hne : x ≠ p := by
         intro h; rw [h] at hne_origin
-        exact hne_origin (by ext <;> simp [movebackBy])
+        exact hne_origin (by ext <;> simp [movebackBy, origin])
       have hfin : slopeFinite x p := by
         intro h
         -- slopeInfinite: (p ⊖ x).tval = 0, so mNorm2 = -sNorm2 ≤ 0
@@ -483,20 +501,26 @@ theorem lemOutsideRegularConeImplies (x p : Point Q)
       simp only [drtn, Set.mem_setOf_eq] at hd
       obtain ⟨a, b, _, ha, hb, rfl⟩ := hd
       have htval0 : (b ⊖ a).tval = 0 := by
-        obtain ⟨_, ⟨α, rfl⟩⟩ := ha; obtain ⟨_, ⟨β, rfl⟩⟩ := hb
-        simp only [moveBy, scaleBy, movebackBy]; linarith [h]
+        obtain ⟨_, ⟨α, rfl⟩⟩ := ha
+        obtain ⟨_, ⟨β, rfl⟩⟩ := hb
+        simp [moveBy, scaleBy, movebackBy, h]
       have hsf_neg : ¬ slopeFinite (Q := Q) origin (b ⊖ a) := by
         simp only [slopeFinite, ne_eq, not_not, origin]; exact htval0.symm
-      simp only [velocityJoining, sloper, if_neg hsf_neg, sComponent, origin,
-                 sNorm2, sqr] at hvgt
-      linarith
+      have hsf_neg0 : ¬ slopeFinite (Q := Q) ({ tval := 0, xval := 0, yval := 0, zval := 0 }) (b ⊖ a) := by
+        simpa [origin] using hsf_neg
+      have hv0 : sNorm2 (velocityJoining origin (b ⊖ a)) = 0 := by
+        have hvel0 : velocityJoining (Q := Q) origin (b ⊖ a) = sOrigin := by
+          simp [velocityJoining, sloper, hsf_neg0, sComponent, origin, sOrigin]
+        rw [hvel0]
+        simp [sNorm2, sOrigin, sqr]
+      linarith [hvgt, hv0]
     have ht2_pos := lemSquaresPositive (x.tval - p.tval) (sub_ne_zero.mpr hfin)
     have hv_norm := lemLineVelocityUsingPoints _ x p rfl hne hfin v hv
     rw [lemSNorm2VelocityJoining x p hfin] at hv_norm
     rw [hv_norm] at hvgt
     -- sSep2 x p / sqr(x.tval - p.tval) > 1, so sSep2 > sqr(...)
     have hsep_gt : sqr (x.tval - p.tval) < sSep2 x p := by
-      rwa [gt_iff_lt, lt_div_iff ht2_pos, one_mul] at hvgt
+      rwa [gt_iff_lt, lt_div_iff₀ ht2_pos, one_mul] at hvgt
     unfold spacelike
     simp only [mNorm2, sNorm2, sComponent, movebackBy, sqr, sSep2] at hsep_gt ⊢
     nlinarith
@@ -511,8 +535,13 @@ theorem lemTimelikeInsideCone (x p : Point Q)
     simp only [slopeFinite]; intro h
     unfold timelike mNorm2 sNorm2 sComponent at htl
     simp only [movebackBy, sqr, h, sub_self, mul_zero, zero_sub] at htl
-    linarith [sqr_nonneg' (p.xval - x.xval), sqr_nonneg' (p.yval - x.yval),
-              sqr_nonneg' (p.zval - x.zval)]
+    have hsum_nonneg :
+        0 ≤ (p.xval - x.xval) * (p.xval - x.xval) +
+              ((p.yval - x.yval) * (p.yval - x.yval) +
+               (p.zval - x.zval) * (p.zval - x.zval)) := by
+      nlinarith [sqr_nonneg' (p.xval - x.xval), sqr_nonneg' (p.yval - x.yval),
+                 sqr_nonneg' (p.zval - x.zval)]
+    linarith
   exact (lemConeCoordinates1 x p hne hfin).mpr htl
 
 end NoFTL.Classification

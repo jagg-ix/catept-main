@@ -1,3 +1,4 @@
+import CATEPT.PhysicalConstants
 import Mathlib
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -21,15 +22,6 @@ The ELP states:
 -/
 
 namespace CATEPT
-
-/-- Physical constants (positive). -/
-structure PhysicalConstants where
-  hbar : ℝ
-  kB   : ℝ
-  c    : ℝ
-  hbar_pos : 0 < hbar
-  kB_pos   : 0 < kB
-  c_pos    : 0 < c
 
 /-- Entropic action: SI(A) = (ħ/kB) Sent(A),  δSent = δ⟨K_A⟩. -/
 def entropicActionOfEntropy (pc : PhysicalConstants) (Sent : ℝ) : ℝ :=

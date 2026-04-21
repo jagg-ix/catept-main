@@ -31,9 +31,9 @@ Einstein-locality data. -/
 structure AdSCFTEntropicEinsteinLocalityWitness where
   adscftRecord : AdSCFTCATEPTRecord
   headrickPort : Headrick1907PortWitness
-  constants : CATEPT.PhysicalConstants
-  locality : CATEPT.EntropicLocalityPrinciple constants
-  entropicEEP : CATEPT.EntropicEEPPrinciple constants
+  constants : CATEPTMain.CATEPT.PhysicalConstants
+  locality : CATEPTMain.CATEPT.EntropicLocalityPrinciple constants
+  entropicEEP : CATEPTMain.CATEPT.EntropicEEPPrinciple constants
   coords : CATEPTSpacetime4DCoords
   bulk_model_matches : coords.model = adscftRecord.bulkSpacetime
 
@@ -111,9 +111,9 @@ theorem adscft_locality_and_rt_ssa_bundle_typed
 /-- Concrete phase-1 unification witness anchored on existing phase-1 AdS/CFT
 record and Minkowski Einstein-locality instance. -/
 noncomputable def phase1AdSCFTEntropicEinsteinLocalityWitness
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+  (constants : CATEPTMain.CATEPT.PhysicalConstants)
+  (locality : CATEPTMain.CATEPT.EntropicLocalityPrinciple constants)
+  (entropicEEP : CATEPTMain.CATEPT.EntropicEEPPrinciple constants) :
     AdSCFTEntropicEinsteinLocalityWitness where
   adscftRecord := phase1AdSCFTRecord
   headrickPort := phase1PortWitness_pureToy
@@ -126,9 +126,9 @@ noncomputable def phase1AdSCFTEntropicEinsteinLocalityWitness
 /-- In the concrete phase-1 witness, locality is already discharged by the
 proved Minkowski Einstein-flat theorem (no extra axiom invocation needed). -/
 theorem phase1_witness_einstein_flat
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+  (constants : CATEPTMain.CATEPT.PhysicalConstants)
+  (locality : CATEPTMain.CATEPT.EntropicLocalityPrinciple constants)
+  (entropicEEP : CATEPTMain.CATEPT.EntropicEEPPrinciple constants) :
     (phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP).coords.EinsteinFlat := by
   simpa [phase1AdSCFTEntropicEinsteinLocalityWitness] using
     (minkowskiCATEPT4D_satisfies_locality : minkowskiCATEPT4D.EinsteinFlat)
@@ -181,9 +181,9 @@ theorem adscft_einstein_flat_of_noftl_hardened
     The abstract `no_superluminal_influence` remains a bare `Prop` contract.
     The real content is in `noftl_certificate` — fully proved, 0 sorry. -/
 noncomputable def phase1NoFTLHardenedWitness
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+  (constants : CATEPTMain.CATEPT.PhysicalConstants)
+  (locality : CATEPTMain.CATEPT.EntropicLocalityPrinciple constants)
+  (entropicEEP : CATEPTMain.CATEPT.EntropicEEPPrinciple constants) :
     NoFTLHardenedAdSCFTWitness where
   witness := phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP
   noftl_certificate := minkowski_noftl_certificate
@@ -192,9 +192,9 @@ noncomputable def phase1NoFTLHardenedWitness
 /-- The Minkowski NoFTL-hardened witness yields Einstein flatness directly
     from the proved GRTensorKernel chain — no axiom invocation needed. -/
 theorem phase1_noftl_hardened_einstein_flat
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+  (constants : CATEPTMain.CATEPT.PhysicalConstants)
+  (locality : CATEPTMain.CATEPT.EntropicLocalityPrinciple constants)
+  (entropicEEP : CATEPTMain.CATEPT.EntropicEEPPrinciple constants) :
     (phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP).coords.EinsteinFlat :=
   (phase1NoFTLHardenedWitness constants locality entropicEEP).hardened_locality.einstein_flat
 
@@ -202,9 +202,9 @@ theorem phase1_noftl_hardened_einstein_flat
     velocity bound for timelike displacements — the concrete content behind
     `no_superluminal_influence`. -/
 theorem phase1_noftl_velocity_bound
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants)
+  (constants : CATEPTMain.CATEPT.PhysicalConstants)
+  (locality : CATEPTMain.CATEPT.EntropicLocalityPrinciple constants)
+  (entropicEEP : CATEPTMain.CATEPT.EntropicEEPPrinciple constants)
     (Δx : CATEPTST) (htl : CausalTimelike Δx) (ht : Δx 0 ≠ 0) :
     SubluminalVelocity (fun i : Fin 3 => Δx i.succ / Δx 0) :=
   (phase1NoFTLHardenedWitness constants locality entropicEEP).noftl_certificate.subluminal Δx htl ht

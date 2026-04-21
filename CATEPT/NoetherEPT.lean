@@ -1,3 +1,4 @@
+import CATEPT.PhysicalConstants
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
@@ -8,11 +9,6 @@ set_option autoImplicit false
 namespace CATEPT
 
 open Real
-
-/-- Physical constants used for CAT/EPT scaling. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
 
 /-- Parameters for the 1D damped oscillator. -/
 structure DampedOscillatorParams where
@@ -180,11 +176,6 @@ theorem contact_invariant_target
   IsConstant (fun t => ContactInvariant p x t) := sorry
 
 open Real
-
-/-- Physical constants for CAT/EPT scaling. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
 
 /-- Parameters for the 1D damped oscillator. -/
 structure DampedOscillatorParams where

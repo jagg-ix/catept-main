@@ -3,6 +3,7 @@ import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
 import CATEPTMain.Integration.QuantumFisherBridge
 import CATEPTMain.Integration.YoshidaFreeFisherBridge
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 set_option autoImplicit false
 

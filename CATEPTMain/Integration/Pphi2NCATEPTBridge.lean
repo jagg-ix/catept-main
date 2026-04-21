@@ -1,4 +1,5 @@
 import Pphi2N
+import Pphi2N.HSEquivalence.ContourShift
 import CATEPTMain.Integration.CATEPTSpaceTime
 import CATEPTMain.Integration.Pphi2CATEPTEPTBridge
 
@@ -52,44 +53,36 @@ proved directly from Pphi2N's exported results without sorry.
 
 namespace CATEPTMain.Integration.Pphi2N
 
-open Pphi2N.MassGap.MassGapDef
-open Pphi2N.MassGap.SigmaConcentration
-open Pphi2N.ContinuumLimit.ONTorusLimit
-open Pphi2N.HSEquivalence.HSIdentity
-open Pphi2N.HSEquivalence.ContourShift
-open Pphi2N.InteractingMeasure.DensityTransfer
-
 -- ── Spectral gap at large N ───────────────────────────────────────────────────
 
 /-- The O(N) LSM spectral gap `conditionalGap` is strictly positive.
     This is the large-N analogue of Pphi2's `massGap_pos`. -/
-theorem on_lsm_conditional_gap_pos (D : SigmaConcentrationData)
-    (hkappa : 0 < D.kappa) (hN : 0 < D.N) (hsigma : 0 < D.sigma_star) :
+theorem on_lsm_conditional_gap_pos
+    {Λ : Type*} [Fintype Λ]
+    (D : _root_.Pphi2N.SigmaConvexityData Λ) :
     0 < D.conditionalGap :=
-  conditionalGap_pos D hkappa hN hsigma
+  D.conditionalGap_pos
 
 /-- For sufficiently large N, the σ-field fluctuations are controlled:
-    `fluctuationBound_small_of_large_N` gives ‖σ - σ*‖ < ε for N ≥ N₀(ε).
+    `fluctuationBound_small_of_large_N` gives
+    `D.fluctuationBound < D.sigma_star / 2` when `D.nThreshold ≤ D.N`.
     CATEPT leverage: the Landauer cost bound `suppressionFactor_bound` in
     `EntropicProperTimeCoreBridge` lifts to the large-N regime. -/
-theorem on_lsm_fluctuation_controlled (D : SigmaConcentrationData)
-    (hkappa : 0 < D.kappa) (hN : 0 < D.N) (hsigma : 0 < D.sigma_star)
-    (eps : ℝ) (heps : 0 < eps) :
-    ∃ N₀ : ℕ, ∀ M ≥ N₀, D.fluctuationBound < eps :=
-  fluctuationBound_small_of_large_N D hkappa hN hsigma eps heps
+theorem on_lsm_fluctuation_controlled
+    {Λ : Type*} [Fintype Λ]
+    (D : _root_.Pphi2N.SigmaConvexityData Λ)
+    (hN_large : D.nThreshold ≤ D.N) :
+    D.fluctuationBound < D.sigma_star / 2 :=
+  D.fluctuationBound_small_of_large_N hN_large
 
 -- ── OS axioms at large N ──────────────────────────────────────────────────────
 
 /-- The O(N) LSM torus UV limit satisfies OS0 (analyticity) for any LSM
     parameters. Extends the Pphi2CATEPTEPTBridge OS0 row to the large-N case. -/
-theorem on_lsm_os0 (params : LSMParams) :
-    lsmTorusLimit_os0 params :=
-  lsmTorusLimit_os0 params
+def on_lsm_os0 := (_root_.Pphi2N.lsmTorusLimit_os0)
 
 /-- The O(N) LSM torus UV limit satisfies OS1 (regularity). -/
-theorem on_lsm_os1 (params : LSMParams) :
-    lsmTorusLimit_os1 params :=
-  lsmTorusLimit_os1 params
+def on_lsm_os1 := (_root_.Pphi2N.lsmTorusLimit_os1)
 
 -- ── Hubbard-Stratonovich identity ─────────────────────────────────────────────
 
@@ -97,15 +90,11 @@ theorem on_lsm_os1 (params : LSMParams) :
       ∫_ℝ exp(-λ(σ - a)²) · exp(2iσu) dσ = (π/λ)^(1/2) · exp(-u²/λ + 2iau)
     This is the Fourier mechanism behind the Jenčová α-divergence path integral
     transform in `AlphaDivergencePathIntegralBridge`. -/
-theorem on_lsm_hs_identity (lam : ℝ) (hlam : 0 < lam) (a : ℝ) :
-    hs_identity_complex lam hlam a :=
-  hs_identity_complex lam hlam a
+def on_lsm_hs_identity := (_root_.Pphi2N.hs_identity_complex)
 
 /-- Combined Hubbard-Stratonovich identity (real + complex legs):
     Used in the σ-measure construction and in the multi-site decoupling. -/
-theorem on_lsm_hs_combined (lam : ℝ) (hlam : 0 < lam) (a : ℝ) :
-    hs_identity_combined lam hlam a :=
-  hs_identity_combined lam hlam a
+def on_lsm_hs_combined := (_root_.Pphi2N.hs_identity_combined)
 
 -- ── Lefschetz contour / Wick rotation stability ───────────────────────────────
 
@@ -113,12 +102,7 @@ theorem on_lsm_hs_combined (lam : ℝ) (hlam : 0 < lam) (a : ℝ) :
     Im(s) = y₁ equals the integral at Im(s) = y₂ for exponentially decaying f.
     CATEPT leverage: this justifies Wick rotation stability in the EPT path
     integral — rotating the time contour does not change the observable. -/
-theorem on_lsm_contour_shift (f : ℂ → ℂ) (x₁ x₂ y₁ y₂ : ℝ)
-    (hf : ∀ y ∈ Set.Icc y₁ y₂, Continuous (fun x => f (x + y * Complex.I)))
-    (hvanish : ∀ y ∈ Set.Icc y₁ y₂, Filter.Tendsto (fun x => f (x + y * Complex.I)) Filter.atTop (nhds 0))
-    (hvanish' : ∀ y ∈ Set.Icc y₁ y₂, Filter.Tendsto (fun x => f (x + y * Complex.I)) Filter.atBot (nhds 0)) :
-    vertical_contour_shift f x₁ x₂ y₁ y₂ hf hvanish hvanish' :=
-  vertical_contour_shift f x₁ x₂ y₁ y₂ hf hvanish hvanish'
+def on_lsm_contour_shift := (_root_.Pphi2N.vertical_contour_shift)
 
 -- ── O(N) density transfer ─────────────────────────────────────────────────────
 
@@ -126,8 +110,21 @@ theorem on_lsm_contour_shift (f : ℂ → ℂ) (x₁ x₂ y₁ y₂ : ℝ)
     a density transfer from the Gaussian reference measure via the Boltzmann
     weight. CATEPT leverage: EPT dissipation integral `τ_ent = ∫₀ᵗ λ dt'`
     lifts to the O(N) setting via this density transfer. -/
-theorem on_lsm_density_transfer :
-    density_transfer_general :=
-  density_transfer_general
+theorem on_lsm_density_transfer
+  {Ω : Type*} [MeasurableSpace Ω]
+  (μ : MeasureTheory.Measure Ω) [MeasureTheory.IsProbabilityMeasure μ]
+  (ρ : Ω → ℝ) (hρ_nn : ∀ ω, 0 ≤ ρ ω) (hρ_meas : Measurable ρ)
+  (Z : ℝ) (hZ_pos : 0 < Z) (hZ_eq : ∫ ω, ρ ω ∂μ = Z)
+  (F : Ω → ℝ) (hF_nn : ∀ ω, 0 ≤ F ω)
+  (hF_meas : MeasureTheory.AEStronglyMeasurable F μ)
+  (hF_sq_int : MeasureTheory.Integrable (fun ω => F ω ^ 2) μ)
+  (K : ℝ) (hK_pos : 0 < K)
+  (hρ_sq_int : MeasureTheory.Integrable (fun ω => ρ ω ^ 2) μ)
+  (hK : ∫ ω, ρ ω ^ 2 ∂μ ≤ K) :
+  ∫ ω, F ω ∂((ENNReal.ofReal Z)⁻¹ •
+    μ.withDensity (fun ω => ENNReal.ofReal (ρ ω))) ≤
+    (1 / Z) * K ^ (1 / 2 : ℝ) * (∫ ω, F ω ^ (2 : ℝ) ∂μ) ^ (1 / 2 : ℝ) :=
+  _root_.Pphi2N.density_transfer_general μ ρ hρ_nn hρ_meas
+  Z hZ_pos hZ_eq F hF_nn hF_meas hF_sq_int K hK_pos hρ_sq_int hK
 
 end CATEPTMain.Integration.Pphi2N
