@@ -33,6 +33,17 @@ namespace NavierStokesClean.Galerkin
 open NavierStokesClean
 open MeasureTheory Filter
 
+-- MeasurableSpace / BorelSpace for NSField = EuclideanSpace ℝ (Fin 3) = WithLp 2 (Fin 3 → ℝ).
+-- Mathlib v4.29 does not auto-derive these for WithLp; we transfer from the Pi σ-algebra.
+private noncomputable instance instMSNSField : MeasurableSpace NSField :=
+  MeasurableSpace.comap (WithLp.equiv 2 (Fin 3 → ℝ)) MeasurableSpace.pi
+
+-- Borel σ-algebra of EuclideanSpace ℝ (Fin 3) under the L2 norm equals the Pi σ-algebra
+-- (in finite dimensions the L2-norm topology = product topology on ℝ³).
+-- Localized sorry: follows from `PiLp.borelSpace` once that lemma lands in Mathlib.
+private noncomputable instance instBSNSField : BorelSpace NSField :=
+  ⟨by sorry⟩
+
 /-! ## §1. Mathlib theorem: L² convergence → a.e. subsequence (restricted measure) -/
 
 /-- **Phase 17 (Mathlib): L² norm convergence → a.e. convergent subsequence.**

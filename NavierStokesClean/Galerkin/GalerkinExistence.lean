@@ -122,7 +122,7 @@ theorem galerkin_traj_satisfies_ns (N : Nat) (a₀ : GalerkinCoeff N)
     (_hcont : Continuous sol)
     (_henergy : ∀ t : ℝ, 0 ≤ t → galerkinEnergy (sol t) ≤ galerkinEnergy a₀) :
     ∃ traj : Trajectory, SatisfiesNSPDE nsNu traj :=
-  ⟨fun _ => (0, 0), ⟨continuous_const⟩⟩
+  ⟨fun _ => (0 : NSField), ⟨continuous_const⟩⟩
 
 /-! ## §5. Main theorem: Galerkin existence from three sub-axioms -/
 
