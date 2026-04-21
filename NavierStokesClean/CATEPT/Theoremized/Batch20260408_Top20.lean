@@ -1,6 +1,6 @@
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_Theoremized
-import NavierStokesClean.AFPBridge.QuantumOps.Theoremized.Batch20260408_Theoremized
-import NavierStokesClean.AFPBridge.Spacetime.Theoremized.Batch20260408_Theoremized
+import CATEPTMain.AFPBridge.QuantumOps.Theoremized.Batch20260408_Theoremized
+import CATEPTMain.AFPBridge.Spacetime.Theoremized.Batch20260408_Theoremized
 
 /-!
 # Batch 20260408 - Unified Theoremized Top-20 Surface
@@ -19,10 +19,10 @@ def cateptCount : Nat :=
   NavierStokesClean.CATEPT.Theoremized.Batch20260408.moduleCount
 
 def quantumOpsCount : Nat :=
-  NavierStokesClean.AFPBridge.QuantumOps.Theoremized.Batch20260408.moduleCount
+  CATEPTMain.AFPBridge.QuantumOps.Theoremized.Batch20260408.moduleCount
 
 def spacetimeCount : Nat :=
-  NavierStokesClean.AFPBridge.Spacetime.Theoremized.Batch20260408.moduleCount
+  CATEPTMain.AFPBridge.Spacetime.Theoremized.Batch20260408.moduleCount
 
 def totalModuleCount : Nat := cateptCount + quantumOpsCount + spacetimeCount
 

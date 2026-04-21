@@ -2,7 +2,7 @@ import CATEPTMain.Integration.CATEPTSpaceTime
 import DimensionalAnalysis.Basic
 import DimensionalAnalysis.Dimensions
 import DimensionalAnalysis.ISQ
-import NavierStokesClean.AFPBridge.Spacetime.Theoremized.Batch20260408_19_EmergentDimensions
+import CATEPTMain.AFPBridge.Spacetime.Theoremized.Batch20260408_19_EmergentDimensions
 /-!
 # Information-Extended Dimensional Framework Bridge
 
@@ -356,7 +356,7 @@ end CATEPTMain.Integration.InformationDimensionalFramework.Concrete
 namespace CATEPTMain.Integration.InformationDimensionalFramework.QuantumAction
 
 open CATEPTMain.Integration.InformationDimensionalFramework.Concrete
-open NavierStokesClean.AFPBridge.Spacetime.Theoremized.Batch20260408.B19
+open CATEPTMain.AFPBridge.Spacetime.Theoremized.Batch20260408.B19
 
 -- §3.1  Quantum of action: ħ = E·T in ConstDim algebra
 
