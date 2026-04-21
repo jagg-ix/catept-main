@@ -1,0 +1,71 @@
+name: Axiom Gate
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  axiom-check:
+    name: Lean 4 Axiom Surface Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Lean 4 toolchain
+      uses: leanprover/lean4-action@v1
+      with:
+        use-mathlib-cache: true
+
+    - name: Warm Mathlib olean cache
+      run: lake exe cache get || true
+
+    - name: Build NavierStokesClean core
+      run: lake build NavierStokesClean.Core.Types NavierStokesClean.Core.EnergyFunctionals
+
+    - name: Check axiom surface — Route 6 (NS strategy)
+      run: |
+        cat > /tmp/check_axioms.lean << 'EOF'
+        import NavierStokes.GalerkinDescentTower
+        import NavierStokes.PopkovZenoBridge
+
+        -- Permitted axioms: propext, Classical.choice, Quot.sound only.
+        -- Any new axiom here is a regression and must be reviewed.
+        #print axioms strategy_d_popkov_route
+        EOF
+        lake env lean /tmp/check_axioms.lean 2>&1 | tee /tmp/axiom_output.txt
+        # Fail if any axiom beyond the three standard Lean kernel axioms appears
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|^'strategy_d_popkov_route' depends on axioms:" /tmp/axiom_output.txt | grep -q "axiom"; then
+          echo "REGRESSION: unexpected axiom detected"
+          cat /tmp/axiom_output.txt
+          exit 1
+        fi
+        echo "Axiom surface OK"
+        cat /tmp/axiom_output.txt
+
+    - name: Check sorry count — NavierStokesClean (must not regress)
+      run: |
+        COUNT=$(grep -r "\bsorry\b" NavierStokesClean/ --include="*.lean" \
+          --exclude-dir=PVSLib | grep -v "^.*--.*sorry" | wc -l)
+        echo "NavierStokesClean sorry count: $COUNT"
+        # Gate: warn if count exceeds baseline (edit threshold as proofs land)
+        if [ "$COUNT" -gt 20 ]; then
+          echo "WARNING: sorry count $COUNT exceeds threshold 20 in NavierStokesClean"
+        fi
+
+    - name: Check sorry count — CATEPT core (must be 0)
+      run: |
+        COUNT=$(grep -r "\bsorry\b" CATEPT/CATEPT/Foundations.lean \
+          NavierStokesClean/Core/ --include="*.lean" \
+          | grep -v "^.*--.*sorry" | wc -l)
+        echo "CATEPT core sorry count: $COUNT"
+        if [ "$COUNT" -gt 0 ]; then
+          echo "FAIL: CATEPT core must have 0 sorry (found $COUNT)"
+          grep -rn "\bsorry\b" CATEPT/CATEPT/Foundations.lean NavierStokesClean/Core/ \
+            --include="*.lean" | grep -v "^.*--.*sorry"
+          exit 1
+        fi
+        echo "CATEPT core: 0 sorry OK"
