@@ -10,8 +10,8 @@ import NavierStokesClean.CATEPT.QuantumGravity
 import NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
 import NavierStokesClean.CATEPT.ComplexEinsteinMTPIBridge
 import NavierStokesClean.CATEPT.CurvedMaxwellUnified
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum
 
 /-!
 # Quantum Gravity Path Integral — Core Bridge
@@ -261,23 +261,23 @@ def hadamardFluctuationGate (n : ℕ) : Matrix (Fin (2^n)) (Fin (2^n)) ℂ :=
 /-- H^⊗n is a valid n-qubit gate (unitary). -/
 theorem hadamardFluctuationGate_is_gate (n : ℕ) :
     IMD.QGate n (hadamardFluctuationGate n) :=
-  CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03.iter_tensor_H_n_is_gate n
+  CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum.iter_tensor_H_n_is_gate n
 
 /-- The quantum gravity ground state is obtained by applying H^⊗n to |0⟩^⊗n.
     This generates the path-integral superposition over all n-bit geometries. -/
 def quantumGeometryState (n : ℕ) : NQubitSpace n :=
   hadamardFluctuationGate n *
-    CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03.ket_zero_n n
+    CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum.ket_zero_n n
 
 /-- The quantum geometry state is a valid quantum state (normalized). -/
 theorem quantumGeometryState_is_state (n : ℕ) :
     IMD.QState n (quantumGeometryState n) := by
   simp only [IMD.QState, quantumGeometryState, hadamardFluctuationGate]
   set U := IMD.iter_tensor IMD.H_gate n
-  set v := CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03.ket_zero_n n
+  set v := CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum.ket_zero_n n
   have hU : U ∈ Matrix.unitaryGroup (Fin (2 ^ n)) ℂ := hadamardFluctuationGate_is_gate n
   have hv : ∑ i : Fin (2 ^ n), Complex.normSq (v i 0) = 1 :=
-    CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03.all_zero_state n
+    CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum.all_zero_state n
   -- Key: ∑ i, normSq (w i 0) = Re(trace(w * wᴴ))
   have trace_normSq_eq : ∀ (w : Matrix (Fin (2 ^ n)) (Fin 1) ℂ),
       ∑ i : Fin (2 ^ n), Complex.normSq (w i 0) =

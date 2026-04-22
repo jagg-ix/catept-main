@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 import Mathlib.Data.List.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
@@ -16,7 +16,7 @@ Proof status legend:
 open CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac
 open IMD
 
-namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset01
+namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Basics
 
 -- ===== Basics =====
 
@@ -241,4 +241,4 @@ theorem is_swap_sum_mod_2 (f : Fin 2 → ℕ) (h : IMD.is_swap f) :
   obtain ⟨h0, h1⟩ := IMD.is_swap_values f h
   omega
 
-end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset01
+end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Basics

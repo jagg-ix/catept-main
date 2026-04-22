@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 
 /-!
 # AFP Isabelle_Marries_Dirac → Lean4 Faithful Port — Subset 5
@@ -20,8 +20,8 @@ These require full quantum circuit infrastructure including:
 open CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac
 open IMD
 
-namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset05
+namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Teleportation
 
 -- Scaffolding: theorem stubs will be added as quantum circuit infrastructure is developed.
 
-end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset05
+end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Teleportation

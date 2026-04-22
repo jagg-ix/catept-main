@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 
 /-!
 # AFP Isabelle_Marries_Dirac → Lean4 Faithful Port — Subset 3
@@ -14,7 +14,7 @@ Key: `kron` and `iter_tensor` defined in SubsetDefs unblock this subset.
 open CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac
 open IMD
 
-namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03
+namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum
 
 -- ===== Quantum: H is a gate =====
 
@@ -85,4 +85,4 @@ theorem all_zero_state (n : ℕ) : IMD.QState n (ket_zero_n n) := by
 -- needs_human: full circuit simulation with oracle + Born rule measurement
 -- theorem deutsch_jozsa_correct ...
 
-end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset03
+end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Quantum

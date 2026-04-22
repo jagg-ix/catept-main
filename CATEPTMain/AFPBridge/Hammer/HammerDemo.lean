@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 import CATEPTMain.AFPBridge.QuantumOps.ProjectiveMeasurements.ProjMeasSubset01
 
 /-!

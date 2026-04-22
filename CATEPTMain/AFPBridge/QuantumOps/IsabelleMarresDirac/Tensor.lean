@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 
 /-!
 # AFP Isabelle_Marries_Dirac → Lean4 Faithful Port — Subset 6
@@ -24,8 +24,8 @@ Total AFP IMD coverage:
 open CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac
 open IMD
 
-namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset06
+namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Tensor
 
 -- Scaffolding: theorem stubs will be added as quantum circuit infrastructure is developed.
 
-end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset06
+end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Tensor

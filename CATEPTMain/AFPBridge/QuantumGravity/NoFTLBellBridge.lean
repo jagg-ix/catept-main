@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 import CATEPTMain.AFPBridge.QuantumGravity.QPICoreBridge
 
 /-!

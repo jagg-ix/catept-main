@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.SubsetDefs
+import CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Definitions
 import Mathlib.Data.List.Basic
 
 /-!
@@ -15,7 +15,7 @@ Proof status legend:
 open CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac
 open IMD
 
-namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset02
+namespace CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Deutsch
 
 -- ===== Deutsch (continued) =====
 
@@ -161,4 +161,4 @@ theorem is_balanced_union (n : ℕ) (A B : Finset ℕ)
 -- AFP: iter_tensor_* — all need iterated Kronecker product infrastructure
 -- Remaining 20 Deutsch_Jozsa theorems: deferred (needs_human)
 
-end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Subset02
+end CATEPTMain.AFPBridge.QuantumOps.IsabelleMarresDirac.Deutsch
