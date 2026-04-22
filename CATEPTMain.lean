@@ -82,3 +82,4 @@ CATEPTMain root module for clean Lean 4.29 migration work.
 -/
 
 def integratedRepoCount : Nat := CATEPTMain.External.repos.length
+import CATEPTMain.ActionIntegrationBridge

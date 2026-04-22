@@ -1,4 +1,4 @@
-import NavierStokes.NSGalerkinConvectionInterface
+import NavierStokes.NSFieldFourierComplex
 
 /-!
 # Stage 163 — NSGalerkinConvectionBridge: Trilinear B + Energy Cancellation
@@ -7,17 +7,18 @@ Introduces the Galerkin convection operator and its key energy identity.
 
 ## Three new items
 
-1. **`galerkinConvection`** — abstract Galerkin-truncated bilinear operator
-   `(basis : GalerkinBasis N) → CoeffC N → CoeffC N → CoeffC N`.
-   Left abstract at the interface layer to avoid dependence on a concrete
-   wavevector index map.
+1. **`GalerkinBasis N`** — packages wavevectors + cutoff for an N-mode system,
+   decoupled from the coefficient data.  This separation is the architectural
+   fix recommended post-Stage 162: convection acts on *coefficient vectors*
+   `CoeffC N` with an explicit basis, not on an `NSFieldGalerkinK` directly.
 
-2. **`B_energy_cancel`** — the trilinear antisymmetry axiom:
+2. **`galerkinConvection`** — abstract Galerkin-truncated bilinear operator
+   `(basis : GalerkinBasis N) → CoeffC N → CoeffC N → CoeffC N`.
+   Left abstract to avoid dependence on a concrete wavevector index map.
+
+3. **`B_energy_cancel`** — the trilinear antisymmetry axiom:
    `∑ᵢ Re(ūᵢ · (B(u,u))ᵢ) = 0`.
    No hidden `rfl` hypothesis; `basis` is explicit.
-
-3. **`GalerkinBasis N`** — now imported from `NSGalerkinConvectionCore`
-   (shared across bridge and definitional modules).
 
 ## Derived energy balance
 
@@ -41,7 +42,7 @@ The first term vanishes by `B_energy_cancel`; the second is computed by
 
 ## Net counts
 
-  - New axioms:   1  (B_energy_cancel; `galerkinConvection` lives in interface)
+  - New axioms:   2  (galerkinConvection, B_energy_cancel)
   - New theorems: 4
   - sorry:        0
   - warnings:     0
@@ -51,8 +52,24 @@ namespace NavierStokes.GalerkinConvection
 
 set_option autoImplicit false
 
+open NavierStokes.PalinstrophyTauBridge  -- galerkinN
 open NavierStokes.GalerkinComplexModel   -- CRat, WaveVec, CoeffC, normSqC, realInnerC,
                                          -- waveVecMag2, NSFieldGalerkinK, enstrophyK
+
+/-! ## Galerkin basis -/
+
+/-- A Galerkin basis for an N-mode system: wavevectors with the Galerkin frequency cutoff.
+
+    Separating the basis (wavevectors + cutoff) from the coefficient data (`CoeffC N`)
+    allows `galerkinConvection` to act on coefficient vectors with an explicit geometry
+    parameter, without tying the operator signature to a particular `NSFieldGalerkinK`. -/
+structure GalerkinBasis (N : Nat) where
+  wvec    : Fin N → WaveVec
+  freq_le : ∀ i : Fin N, waveVecMag2 (wvec i) ≤ (galerkinN : Rat) ^ 2
+
+/-- Extract the `GalerkinBasis` from an `NSFieldGalerkinK`. -/
+def NSFieldGalerkinK.toBasis (v : NSFieldGalerkinK) : GalerkinBasis v.N :=
+  { wvec := v.wvec, freq_le := v.freq_le }
 
 /-! ## Algebraic lemma: realInnerC is linear in its second argument -/
 
@@ -66,7 +83,21 @@ theorem realInnerC_add_right (z w w' : CRat) :
 
 /-! ## Galerkin convection operator -/
 
--- `galerkinConvection` is provided by `NSGalerkinConvectionInterface`.
+/-- Abstract Galerkin-truncated bilinear convection operator:
+    `galerkinConvection basis u v ≈ Pₙ((u·∇)v)` in Fourier space.
+
+    The concrete definition is the triadic sum
+      `(B(u,v))_k = i Σ_{p+q=k, |k|≤galerkinN} (k·û_p) v̂_q`
+    (schematic; see Temam 1984, Ch. II §1 for the precise divergence-free projection).
+
+    Left abstract here to avoid dependence on:
+    * a concrete bijection `WaveVec → Fin N` (mode indexing)
+    * choice of orthogonal projection Pₙ onto divergence-free modes
+    * aliasing conventions at the frequency cutoff
+
+    Epistemic status: `.openBridge` (concrete triadic sum not yet formalized). -/
+axiom galerkinConvection {N : Nat} (basis : GalerkinBasis N)
+    (u v : CoeffC N) : CoeffC N
 
 /-- **B_energy_cancel** — Trilinear energy antisymmetry (Temam 1984).
 

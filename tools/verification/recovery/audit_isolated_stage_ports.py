@@ -72,7 +72,12 @@ def main() -> None:
     ap.add_argument("--current-repo", default=".")
     ap.add_argument(
         "--isolated-repo",
-        default="/Users/macbookpro/lab/tau/tau-information-dynamics/navier-stokes-project-clean-isolated-20260409",
+        required=True,
+        help=(
+            "Path to the isolated NS snapshot to audit against. "
+            "The original 'navier-stokes-project-clean-isolated-20260409' sibling "
+            "is no longer maintained here — pass an explicit path."
+        ),
     )
     ap.add_argument("--json-out", default="")
     args = ap.parse_args()

@@ -165,7 +165,7 @@ theorem radauIIA1_consistent : isConsistent radauIIA1 := by
 
 /-- RadauIIA(1) does NOT have order 2 (b·c = 1 ≠ 1/2). -/
 theorem radauIIA1_not_order2 : ¬ hasOrder2 radauIIA1 := by
-  simp [hasOrder2, radauIIA1]; norm_num
+  simp [hasOrder2, radauIIA1]
 
 /-- RadauIIA(1) is stiffly accurate (standard backward Euler property). -/
 theorem radauIIA1_stiffly_accurate : isStifflyAccurate radauIIA1 := by

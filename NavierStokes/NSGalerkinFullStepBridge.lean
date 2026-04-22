@@ -19,14 +19,13 @@ This supersedes the SA1 axiom `galerkinSplitting_step_lipschitz` in
 * The algebraic identity `(2/diH + 1 + 9·C_K·E₀)/2 · diH = 1 + diH/2·(1+9·C_K·E₀)`
   is proved by `ring` after substituting `diH = 1/1000` (norm_num).
 
-## Stage 194: SA1 formally retired
+## Note on circular imports
 
-The SA1 axiom `galerkinSplitting_step_lipschitz` has been **deleted** from
-`NSGalerkinConvergence.lean` (Stage 194).  `NSGalerkinConvergence` now imports
-`NSGalerkinConvStepHBridge` directly and calls `galerkinFullStepH_near_identity`
-(Stage 188 theorem) in `galerkinSplitting_one_step_recurrence`.  The import cycle
-is resolved because `NSGalerkinConvergence` imports `NSGalerkinNSODETrajectory` which
-transitively provides `convStepH` and all stability theorems.
+`NSGalerkinConvergence` (Stage 173) cannot import this file without a cycle:
+  `NSGalerkinConvergence → NSGalerkinSplittingLemmata → NSGalerkinCayleyStabilityBridge
+   → NSGalerkinCayleyNearIdentityBridge → NSGalerkinSplittingLemmata`.
+Therefore, the SA1 axiom is LEFT IN PLACE in NSGalerkinConvergence.lean but is now
+documented as `.verified` (redundant). A future restructuring can formally retire it.
 
 ## Net counts
 

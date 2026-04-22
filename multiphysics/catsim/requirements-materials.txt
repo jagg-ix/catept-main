@@ -1,3 +1,0 @@
-# Optional dependencies for material backends (post v10.0-RC)
-# Install with: pip install -r requirements-materials.txt
-pymatgen>=2024.0.0

@@ -181,8 +181,8 @@ axiom transient_VS_budget :
     this FTC is the only new mathematical content here. -/
 axiom enstrophy_ftc :
     ∀ (traj : Trajectory NSField) (T : Rat)
-      (_ : SatisfiesNSPDE nsOps nsNu traj)
-      (_ : RespectsFunctionSpaces nsSpacesR3 traj),
+      (hNS : SatisfiesNSPDE nsOps nsNu traj)
+      (hFS  : RespectsFunctionSpaces nsSpacesR3 traj),
       enstrophy (traj.stateAt T).velocity =
         enstrophy (traj.stateAt 0).velocity +
           discreteIntegral (enstrophyRate traj) T
@@ -267,7 +267,7 @@ theorem enstrophy_no_finite_time_blowup
     (traj : Trajectory NSField)
     (hNS  : SatisfiesNSPDE nsOps nsNu traj)
     (hFS  : RespectsFunctionSpaces nsSpacesR3 traj)
-    (T    : Rat) (_hT : 0 ≤ T) :
+    (T    : Rat) (hT : 0 ≤ T) :
     enstrophy (traj.stateAt T).velocity ≤
       enstrophy (traj.stateAt 0).velocity +
         2 * cCollapse * entropicProperTime traj T :=

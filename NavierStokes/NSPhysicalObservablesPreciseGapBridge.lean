@@ -10,9 +10,6 @@ import NavierStokes.BKMPhysicalObservableBridge
 | # | Item | Status |
 |---|------|--------|
 | 1 | `pgs_from_physical_mode0` — `PreciseGapStatement` | THEOREM (1-line assembly) |
-| 2 | `pgs_from_physical_mode0_strong` — strict mode-0 contract to `PreciseGapStatement` | THEOREM |
-| 3 | `pgs_from_physical_mode0_strong_of_enstrophyPhysicalizationGate` | THEOREM |
-| 4 | `pgs_from_physical_mode0_strong_of_candidate_swap` | THEOREM |
 
 ## Proof chain
 
@@ -68,27 +65,24 @@ theorem pgs_from_physical_mode0 : PreciseGapStatement :=
   bridge_target_linear_entropic_control_physicalMode0_implies_precise_gap
     bridge_target_linear_entropic_control_physicalMode0_witness
 
-/-- Strict Stage-218 contract to `PreciseGapStatement`.
-    This keeps the same downstream API while requiring an explicit
-    non-placeholder witness on the mode-0 bridge contract. -/
+/-! ## Strict Stage-218 Variants -/
+
+/-- Strict physical-mode route: a strong Stage-218 witness implies
+    `PreciseGapStatement` through the same bridge. -/
 theorem pgs_from_physical_mode0_strong
     (hStrong : BridgeTargetLinearEntropicControlPhysicalMode0Strong) :
     PreciseGapStatement :=
   bridge_target_linear_entropic_control_physicalMode0_implies_precise_gap
     (bridge_target_linear_entropic_control_physicalMode0Strong_linear hStrong)
 
-/-- One-step strict closure from the minimal physicalization gate.
-    Once `EnstrophyPhysicalizationGate` is discharged, the strict route
-    reaches `PreciseGapStatement` immediately. -/
+/-- One-step strict route specialized to the minimal enstrophy gate. -/
 theorem pgs_from_physical_mode0_strong_of_enstrophyPhysicalizationGate
     (hGate : EnstrophyPhysicalizationGate) :
     PreciseGapStatement :=
   pgs_from_physical_mode0_strong
     (bridge_target_linear_entropic_control_physicalMode0Strong_of_enstrophyPhysicalizationGate hGate)
 
-/-- One-step strict closure from candidate enstrophy swap/alignment.
-    This theorem is the implementation-facing handoff point for replacing
-    placeholder `enstrophy` with the physicalized candidate. -/
+/-- One-step strict route specialized to candidate-swap alignment. -/
 theorem pgs_from_physical_mode0_strong_of_candidate_swap
     (hSwap : ∀ v : NSField, enstrophy v = EnstrophyPhysicalizedCandidate v) :
     PreciseGapStatement :=
@@ -100,12 +94,9 @@ theorem pgs_from_physical_mode0_strong_of_candidate_swap
 def stage220Summary : String :=
   "Stage 220: NSPhysicalObservablesPreciseGapBridge — " ++
   "pgs_from_physical_mode0: PreciseGapStatement (THEOREM, 0 new axioms). " ++
-  "pgs_from_physical_mode0_strong: strict Stage-218 contract to PreciseGapStatement (THEOREM). " ++
-  "pgs_from_physical_mode0_strong_of_enstrophyPhysicalizationGate / _of_candidate_swap: " ++
-  "implementation-facing strict closure hooks (THEOREM). " ++
   "Witness F(τ,E₀,ν)=(ħ/ν)·τ via physical mode-0 clock-coupled path. " ++
   "Chain: bridge_target_linear_entropic_control_physicalMode0_witness (A=0,B=ħ/ν) " ++
   "→ bridge_target_linear_entropic_control_physicalMode0_implies_precise_gap " ++
-  "→ PreciseGapStatement. +0 axioms, +4 theorems, 0 sorry."
+  "→ PreciseGapStatement. +0 axioms, +1 theorem, 0 sorry."
 
 end NavierStokes.Millennium

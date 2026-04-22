@@ -41,23 +41,26 @@ open NavierStokes.ObservableInterface
 open NavierStokes.FourierLiftBridge
 open NavierStokes.FourierAgmonObsBridge
 
-/-! ## Parseval identification theorems -/
+/-! ## Parseval identification axioms -/
 
-/-- Parseval identification in the compatibility model:
-    physical enstrophy is definitionally the Fourier enstrophy pullback. -/
-theorem physicalObs_enstrophy_fourier_id :
-    ∀ v : NSField,
-      physicalNSObservables.enstrophy v = enstrophyF (interpretAsFourier v) := by
-  intro v
-  rfl
+/-- Parseval identification: physical enstrophy = Fourier enstrophy via `interpretAsFourier`.
 
-/-- Parseval identification in the compatibility model:
-    physical palinstrophy is definitionally the Fourier palinstrophy pullback. -/
-theorem physicalObs_palinstrophy_fourier_id :
+    On T³: ‖∇×v‖²_{L²} = ∑_k |k|² |v̂(k)|² = enstrophyF (interpretAsFourier v).
+
+    Epistemic status: `.partiallyVerified` — Parseval's theorem for T³ Fourier series,
+    combined with `interpretAsFourier v` = the Galerkin projection of v. -/
+axiom physicalObs_enstrophy_fourier_id :
     ∀ v : NSField,
-      physicalNSObservables.palinstrophy v = palinstrophyF (interpretAsFourier v) := by
-  intro v
-  rfl
+      physicalNSObservables.enstrophy v = enstrophyF (interpretAsFourier v)
+
+/-- Parseval identification: physical palinstrophy = Fourier palinstrophy via `interpretAsFourier`.
+
+    On T³: ‖∇(∇×v)‖²_{L²} = ∑_k |k|⁴ |v̂(k)|² = palinstrophyF (interpretAsFourier v).
+
+    Epistemic status: `.partiallyVerified` — Parseval's theorem for T³ Fourier series. -/
+axiom physicalObs_palinstrophy_fourier_id :
+    ∀ v : NSField,
+      physicalNSObservables.palinstrophy v = palinstrophyF (interpretAsFourier v)
 
 /-! ## PGS monotonicity -/
 
@@ -108,13 +111,13 @@ theorem physicalObs_vort_le_fourier_agmon (v : NSField) :
 theorem entropicProperTimeObs_physical_eq_agmon
     (traj : Trajectory NSField) (T : Rat) :
     entropicProperTimeObs physicalNSObservables traj T =
-    entropicProperTimeObs fourierNSObsInstance_agmon traj T := rfl
+  entropicProperTimeObs fourierNSObsInstance_agmon traj T := rfl
 
 /-- Physical palinstrophy integral = Fourier-Agmon palinstrophy integral. -/
 theorem palinstrophyIntegralObs_physical_eq_agmon
     (traj : Trajectory NSField) (T : Rat) :
     palinstrophyIntegralObs physicalNSObservables traj T =
-    palinstrophyIntegralObs fourierNSObsInstance_agmon traj T := rfl
+  palinstrophyIntegralObs fourierNSObsInstance_agmon traj T := rfl
 
 /-! ## Main theorems -/
 

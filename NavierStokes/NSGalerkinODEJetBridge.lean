@@ -269,7 +269,7 @@ theorem galerkinODE_jet_remainder
     **Net: 0 new axioms** (retired Stage 200B axiom). -/
 theorem splitting_method_jet_remainder
     {N : Nat} (basis : GalerkinBasis N)
-    (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (_hh1 : h ≤ 1) (hE₀ : 0 ≤ E₀)
+    (ν h E₀ : Rat) (hν : 0 < ν) (hh : 0 < h) (hh1 : h ≤ 1) (hE₀ : 0 ≤ E₀)
     (u : CoeffC N) (hu : coeffNormSq u ≤ E₀) :
     coeffNormSq (coeffSub
       (viscStep basis ν h (convStepH basis h u))

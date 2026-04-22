@@ -1,7 +1,0 @@
-{
-  "ogrepy_check_skipped": true,
-  "tol": 1e-06,
-  "max_diff_Ricci": null,
-  "max_diff_Einstein": null,
-  "pass": true
-}

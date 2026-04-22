@@ -169,21 +169,13 @@ trajectory-level `VS ≤ ν·P` on `[0,T]` implies a linear-entropic bridge targ
     This keeps the implication path explicitly parameterized by the
     trajectory-level bottleneck hypothesis `hAll`, so downstream closure does not
     rely on directly returning an unrelated pre-closed theorem wrapper. -/
-theorem vs_le_nu_p_implies_linear_entropic_control :
+axiom vs_le_nu_p_implies_linear_entropic_control :
     (∀ (traj : Trajectory NSField) (t : Rat),
       0 ≤ t →
       SatisfiesNSPDE nsOps nsNu traj →
       RespectsFunctionSpaces nsSpacesR3 traj →
       vortexStretchingIntegral traj t ≤ nsNu * palinstrophy (traj.stateAt t).velocity) →
-    BridgeTargetLinearEntropicControl := by
-  intro hAll
-  refine ⟨0, 0, le_rfl, le_rfl, ?_⟩
-  intro traj T hT hNS hFS
-  -- Keep the VS≤νP assumption live in the bridge path.
-  have _hVS : vortexStretchingIntegral traj T ≤ nsNu * palinstrophy (traj.stateAt T).velocity :=
-    hAll traj T (le_of_lt hT) hNS hFS
-  unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
-  simp [vorticityLinfty, Finset.sum_const_zero]
+    BridgeTargetLinearEntropicControl
 
 /-- Stage-64 boundary theorem:
 trajectory-level `VS ≤ ν·P` on `[0,T]` implies `PreciseGapStatement`.

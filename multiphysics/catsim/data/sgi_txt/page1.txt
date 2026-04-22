@@ -1,9 +1,0 @@
-Reference_Number,Description
-1,Original Stern-Gerlach experiment (1922)
-2,Related historical work
-3,Early full-loop SGI proposal
-4-9,Theoretical challenges (Heisenberg/Bohm/Wigner, Englert/Schwinger/Scully "Humpty-Dumpty")
-10,Light-based atom interferometers
-11,Dissipation effects requiring low-temperature sources
-12,Claims of fundamental impossibility
-13-27,Applications (gravity probes, equivalence principle, technological uses)

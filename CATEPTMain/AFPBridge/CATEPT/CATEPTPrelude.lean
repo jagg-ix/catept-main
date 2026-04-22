@@ -23,10 +23,12 @@ where:
 
 ## Source
 
-Ported from:
-  - `navier-stokes-project-clean-translator/NavierStokesClean/CATEPT/Foundations.lean`
-  - `navier-stokes-project-clean-translator/NavierStokesClean/CATEPT/MeasurePathIntegral.lean`
-  - `entropic-time/lean4_formal_verification/NavierStokes/NSCATEPTModularFlowQFTKucharBridge.lean`
+Ported (originally from an external `navier-stokes-project-clean-translator`
+sibling directory — no longer maintained here). The corresponding content
+now lives in-repo at:
+  - `NavierStokesClean/CATEPT/Foundations.lean`
+  - `NavierStokesClean/CATEPT/MeasurePathIntegral.lean`
+  - (historical external) `entropic-time/lean4_formal_verification/NavierStokes/NSCATEPTModularFlowQFTKucharBridge.lean`
 
 ## Theorem status
 

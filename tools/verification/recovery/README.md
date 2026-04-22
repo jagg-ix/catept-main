@@ -33,7 +33,7 @@ python3 tools/verification/recovery/run_recovery_replay.py \
 
 # 3) Audit isolated-stage coverage
 python3 tools/verification/recovery/audit_isolated_stage_ports.py \
-  --isolated-repo /Users/macbookpro/lab/tau/tau-information-dynamics/navier-stokes-project-clean-isolated-20260409 \
+  --isolated-repo /path/to/isolated-ns-snapshot \
   --json-out .recovery/isolated_stage_port_audit.json
 ```
 

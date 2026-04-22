@@ -1,8 +1,0 @@
-{
-  "equilibrium_gate": {
-    "passed": true,
-    "max_abs_Ricci_diff": 0.0,
-    "tol": 1e-12
-  },
-  "non_equilibrium_max_abs_Ricci_tilde": 2.0
-}

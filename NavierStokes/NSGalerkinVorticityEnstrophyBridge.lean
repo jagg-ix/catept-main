@@ -161,13 +161,12 @@ theorem galerkinVSNuPDefect_nonneg_iff (v : NSFieldGalerkinK) :
   · intro h; linarith
   · intro h; linarith
 
-/-! ## 8. The Galerkin VS–νP Bound (Stage 225: honest, non-vacuous) -/
+/-! ## 8. The Irreducible Galerkin VS–νP Axiom -/
 
-/-- **physicalTriadKCoeff_vs_le_nuP** — the physical VS ≤ νP axiom.
+/-- **galerkin_enstrophy_production_le_nuP** — the Galerkin-level VS ≤ νP bound.
 
-    For any Galerkin field `v` with modes `|k|² ≤ galerkinN²` and the physical
-    triadic kernel `physicalTriadKCoeff`, the enstrophy production
-    `VS_N = Σ_k |k|² Re(û_k · (B_phys(û,û))_k)` is bounded above by
+    For any Galerkin field `v` with modes `|k|² ≤ galerkinN²`, the enstrophy
+    production `VS_N = Σ_k |k|² Re(û_k · (B(û,û))_k)` is bounded above by
     `ν · P_N = ν · Σ_k |k|⁴ |û_k|²`.
 
     **Why not derivable from `triadK_self_cancel`:**
@@ -180,23 +179,10 @@ theorem galerkinVSNuPDefect_nonneg_iff (v : NSFieldGalerkinK) :
     (b) Divergence-free constraint `û_k · k = 0` for all modes
     (c) Cauchy-Schwarz + Sobolev interpolation in the trilinear sum
 
-    Epistemic: `.partiallyVerified` (Agmon-Sobolev trilinear estimate on T³,
-    Temam 1984 §II.3). The bound is non-vacuous because `NSFieldGalerkinK.toBasis`
-    now uses the physical kernel `physicalTriadKCoeff v.wvec` (Stage 225). -/
-axiom physicalTriadKCoeff_vs_le_nuP (v : NSFieldGalerkinK) :
+    Epistemic: `.openBridge`. -/
+axiom galerkin_enstrophy_production_le_nuP (v : NSFieldGalerkinK) :
     galerkinEnstrophyProduction (NSFieldGalerkinK.toBasis v) v.coeff ≤
     nsNu * palinstrophyK v
-
-/-- **galerkin_enstrophy_production_le_nuP** — VS_N ≤ νP_N (honest, non-vacuous).
-
-    Stage 225: formerly a vacuous theorem (Stage 218 exploited `triadK = 0` to get
-    `production = 0`, then `0 ≤ νP` trivially). Now proved from the physical axiom
-    `physicalTriadKCoeff_vs_le_nuP`, which is only non-trivial because `toBasis`
-    uses the physical kernel. -/
-theorem galerkin_enstrophy_production_le_nuP (v : NSFieldGalerkinK) :
-    galerkinEnstrophyProduction (NSFieldGalerkinK.toBasis v) v.coeff ≤
-    nsNu * palinstrophyK v :=
-  physicalTriadKCoeff_vs_le_nuP v
 
 /-! ## 9–10. Consequences (0 additional axioms) -/
 
@@ -231,7 +217,7 @@ def stage219Summary : String :=
   "galerkinEnstrophyProduction_eq_vorticityInner: VS_N = ΣRe(ω̂·B) (ring). " ++
   "galerkinVSNuPDefect: ν·P_N − VS_N (noncomputable def). " ++
   "galerkinVSNuPDefect_nonneg_iff: 0≤δ ↔ VS_N≤νP_N (linarith). " ++
-  "galerkin_enstrophy_production_le_nuP: VS_N≤νP_N (THEOREM from physicalTriadKCoeff_vs_le_nuP, Stage 225). " ++
+  "galerkin_enstrophy_production_le_nuP: VS_N≤νP_N (AXIOM, .openBridge). " ++
   "galerkinVSNuPDefect_nonneg + galerkinEnstrophyProduction_le_nu_kmax_enstrophy. " ++
   "+1 axiom, +8 theorems, 0 sorry."
 

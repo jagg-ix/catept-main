@@ -161,37 +161,6 @@ axiom galerkinTower_energy_tsum
           atTop (𝓝 (uInfty k m))) :
     ∀ k : Nat, coeffNormSqR (uInfty k) ≤ (tower.E0 : Real)
 
-/-! ## Step-difference range bound (Stage 210B) -/
-
-/-- **Step-difference range bound for the pointwise limit** — the discrete-time
-    Galerkin limit sequence has consecutive step differences bounded in finite-range
-    energy by `C · h` for some uniform `C > 0`.
-
-    Mirrors `galerkinTower_energy_range` for step differences rather than individual
-    energy levels.  The bound `C · h` captures the O(h) accuracy of the Galerkin
-    approximation: the limit sequence satisfies the projected NS ODE with O(h) per-step
-    residuals in the distributional sense.
-
-    Mathematical content: Temam (1984) Ch. III §3 — the Galerkin limit satisfies the
-    weak NS equation, implying that the step-difference `‖u(k+1)−u(k)‖²_M` is O(h)
-    (the discrete ODE residual vanishes with step size).  The finite-range version follows
-    from the same Taylor + Fatou argument as `galerkinTower_energy_range`.
-
-    Epistemic: `.partiallyVerified` (Temam 1984 Ch. III §3; Taylor expansion of the
-    Galerkin step map shows O(h) per-step residuals; Fatou transfers the bound to the
-    limit via lower-semicontinuity of the finite-range energy functional). -/
-axiom galerkinTower_step_diff_range
-    (tower : GalerkinTower)
-    (φ : Nat → Nat) (hφ : StrictMono φ)
-    (uInfty : Nat → CoeffInftyR)
-    (hconv : ∀ (k m : Nat),
-        Tendsto (fun n => embedCoeffR ((tower.trajAt (φ n)).traj.u k) m)
-          atTop (𝓝 (uInfty k m))) :
-    ∃ C : Real, 0 < C ∧
-      ∀ (k M : Nat),
-        coeffNormSqRRange M (fun m => uInfty (k + 1) m - uInfty k m) ≤
-        C * (tower.h : Real)
-
 /-! ## Compactness certificate (0 new axioms) -/
 
 /-- **Galerkin tower compactness certificate** — packages the three axioms into
@@ -228,10 +197,7 @@ def stage174BSummary : String :=
     "(.partiallyVerified, Temam 1984 III.2.3). " ++
   "galerkinTower_energy_range: AXIOM — finite-range energy ≤ E₀ (Fatou, .partiallyVerified). " ++
   "galerkinTower_energy_tsum: AXIOM — tsum energy ≤ E₀ (monotone convergence, .partiallyVerified). " ++
-  "galerkinTower_step_diff_range: AXIOM (Stage 210B) — ∃ C>0, ∀ k M, " ++
-    "coeffNormSqRRange M (uInfty(k+1)−uInfty(k)) ≤ C·h (.partiallyVerified, Temam 1984 III§3; " ++
-    "O(h) step residuals + Fatou lower-semicontinuity). " ++
   "galerkinTower_compactness_certificate: THEOREM (0 new axioms, assembles all three). " ++
-  "+4 axioms, +1 theorem, 0 sorry."
+  "+3 axioms, +1 theorem, 0 sorry."
 
 end NavierStokes.GalerkinCompactness

@@ -82,90 +82,44 @@ structure TransitivityCocycleData where
 
 /-- QIF transitivity defect on the fluid slice:
     Ξ_tr(traj, τ) = (1/Ω)∫ |ω|²·(|Λ^⊥|² + |∇^A ξ|² + |C|²) dx -/
--- Stage 146: promoted to def (Ξ_tr = 0 lower bound; perfect transitivity)
-noncomputable def qifTransitivityDefect (_traj : Trajectory NSField) (_tau : Rat) : Rat := 0
+axiom qifTransitivityDefect : Trajectory NSField → Rat → Rat
 
-theorem qif_transitivity_defect_nonneg :
+axiom qif_transitivity_defect_nonneg :
     ∀ (traj : Trajectory NSField) (tau : Rat),
-      0 ≤ qifTransitivityDefect traj tau :=
-  fun _ _ => le_refl _
+      0 ≤ qifTransitivityDefect traj tau
 
-/-- Integrated transitivity defect ∫_0^T Ξ_tr(τ) dτ_ent.
+/-- Integrated transitivity defect ∫_0^T Ξ_tr(τ) dτ_ent. -/
+axiom integratedXiTr : Trajectory NSField → Rat → Rat
 
-    Defined as the discrete left Riemann sum of the physical-time integrand
-    `(ν/ħ) · Ξ_tr(t) · Ω(t)` — because `dτ_ent = (ν/ħ) · Ω(t) dt`.
+/-- Upper bound on integrated Ξ_tr depending only on initial energy and T. -/
+axiom qifXiIntegralBound : Rat → Rat → Rat
 
-    Concrete `def` (not axiom) so that `integratedXiTr_monotone` is provable
-    as a theorem from `discreteIntegral_mono` + nonnegativity of the integrand
-    (`qif_transitivity_defect_nonneg` + `enstrophy_nonneg`). -/
-noncomputable def integratedXiTr (traj : Trajectory NSField) (T : Rat) : Rat :=
-  NavierStokes.DiscreteKernel.discreteIntegral
-    (fun t => (nsNu / hbar) * qifTransitivityDefect traj t *
-              enstrophy (traj.stateAt t).velocity) T
-
-/-- Upper bound on integrated Ξ_tr depending only on initial energy (T-independent).
-
-    Stage 135: concrete def. Stage 142: dropped `max 0 T` term — the Araki
-    relative entropy bound `∫Ξ_tr dτ_ent ≤ H_mod(0) ≤ G(E₀)` is T-independent
-    once we integrate in entropic time (no physical-time drift term). -/
-noncomputable def qifXiIntegralBound (E₀ _T : Rat) : Rat :=
-  max 0 E₀ + 1
-
-/-- Stage 135: promoted to theorem from concrete def. -/
-theorem qifXiIntegralBound_nonneg :
-    ∀ E₀ T, 0 ≤ qifXiIntegralBound E₀ T := by
-  intro E₀ T
-  unfold qifXiIntegralBound
-  linarith [le_max_left (0:Rat) E₀]
+axiom qifXiIntegralBound_nonneg :
+    ∀ E₀ T, 0 ≤ qifXiIntegralBound E₀ T
 
 /-! ## 3. Palinstrophy and BKM Bound Functions (declared before use) -/
 
-/-- Palinstrophy budget bound function.
-    Stage 135: concrete def — depends on Ω₀ and K; delta ignored for envelope. -/
-noncomputable def qifPalinstrophyBound (Ω₀ _delta K : Rat) : Rat :=
-  max 0 Ω₀ + max 0 K + 1
+/-- Opaque palinstrophy budget bound function. -/
+axiom qifPalinstrophyBound : Rat → Rat → Rat → Rat
 
-/-- Stage 135: promoted to theorem from concrete def. -/
-theorem qifPalinstrophyBound_nonneg :
-    ∀ Ω₀ delta K, 0 ≤ qifPalinstrophyBound Ω₀ delta K := by
-  intro Ω₀ delta K
-  unfold qifPalinstrophyBound
-  linarith [le_max_left (0:Rat) Ω₀, le_max_left (0:Rat) K]
+axiom qifPalinstrophyBound_nonneg :
+    ∀ Ω₀ delta K, 0 ≤ qifPalinstrophyBound Ω₀ delta K
 
-/-- Trajectory-independent palinstrophy bound from initial kinetic energy.
-    Stage 135: concrete def — depends only on E₀ and T (eps/Ceps ignored);
-    this matches the independence axioms in NSQIFUniformPalBoundProof. -/
-noncomputable def qifUniformPalBound (_eps _Ceps E₀ T : Rat) : Rat :=
-  max 0 E₀ + max 0 T + 1
+/-- Trajectory-independent palinstrophy bound from initial kinetic energy. -/
+axiom qifUniformPalBound : Rat → Rat → Rat → Rat → Rat
 
-/-- Stage 135: promoted to theorem from concrete def. -/
-theorem qifUniformPalBound_nonneg :
-    ∀ eps Ceps E₀ T, 0 ≤ qifUniformPalBound eps Ceps E₀ T := by
-  intro eps Ceps E₀ T
-  unfold qifUniformPalBound
-  linarith [le_max_left (0:Rat) E₀, le_max_left (0:Rat) T]
+axiom qifUniformPalBound_nonneg :
+    ∀ eps Ceps E₀ T, 0 ≤ qifUniformPalBound eps Ceps E₀ T
 
-/-- Agmon BKM bound function: ∫P/Ω ≤ M → BKM ≤ agmonBKMBound(τ, E₀, ν, M).
-    Stage 135: concrete def — monotone nonneg envelope in M. -/
-noncomputable def agmonBKMBound (_τ _E₀ _ν M : Rat) : Rat :=
-  max 0 M + 1
+/-- Agmon BKM bound function: ∫P/Ω ≤ M → BKM ≤ agmonBKMBound(τ, E₀, ν, M). -/
+axiom agmonBKMBound : Rat → Rat → Rat → Rat → Rat
 
-/-- Stage 135: promoted to theorem from concrete def. -/
-theorem agmonBKMBound_nonneg :
-    ∀ τ E₀ ν M, 0 ≤ agmonBKMBound τ E₀ ν M := by
-  intro τ E₀ ν M
-  unfold agmonBKMBound
-  linarith [le_max_left (0:Rat) M]
+axiom agmonBKMBound_nonneg :
+    ∀ τ E₀ ν M, 0 ≤ agmonBKMBound τ E₀ ν M
 
-/-- Stage 135: promoted to theorem from concrete def. -/
-theorem agmonBKMBound_mono :
+axiom agmonBKMBound_mono :
     ∀ τ E₀ ν M₁ M₂, M₁ ≤ M₂ →
-      agmonBKMBound τ E₀ ν M₁ ≤ agmonBKMBound τ E₀ ν M₂ := by
-  intro τ E₀ ν M₁ M₂ h
-  unfold agmonBKMBound
-  have hmm : max 0 M₁ ≤ max 0 M₂ :=
-    max_le (le_max_left 0 M₂) (le_trans h (le_max_right 0 M₂))
-  linarith
+      agmonBKMBound τ E₀ ν M₁ ≤ agmonBKMBound τ E₀ ν M₂
 
 /-! ## 4. The VS Decomposition Conjecture -/
 
@@ -181,10 +135,8 @@ theorem agmonBKMBound_mono :
     the frame-independent residue of vortex stretching. No PDE proof exists.
 
     Note: this is stronger than Cameron-Young (VS ≤ ε·νP + C(ε)·Ω³ from Stage 83)
-    because it replaces Ω³ growth with Ω·Ξ_tr which has a controlled integral.
-
-    Stage 140: promoted to THEOREM — zero-physics: VS=P=Ω=Ξ_tr=0, witnesses nsNu/4 and 1. -/
-theorem qif_vs_split_uniform
+    because it replaces Ω³ growth with Ω·Ξ_tr which has a controlled integral. -/
+axiom qif_vs_split_uniform
     (traj : Trajectory NSField)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
@@ -193,9 +145,7 @@ theorem qif_vs_split_uniform
         vortexStretchingIntegral traj tau ≤
           eps * palinstrophy (traj.stateAt tau).velocity +
           Ceps * enstrophy (traj.stateAt tau).velocity *
-            (1 + qifTransitivityDefect traj tau) :=
-  ⟨nsNu / 4, 1, div_pos nsNu_pos (by norm_num), by nlinarith [nsNu_pos], by norm_num,
-    fun tau => by simp [vortexStretchingIntegral, palinstrophy, enstrophy]⟩
+            (1 + qifTransitivityDefect traj tau)
 
 /-- **Integrability**: Ξ_tr is integrable in entropic time.
 
@@ -204,28 +154,24 @@ theorem qif_vs_split_uniform
 
     `.openBridge`: requires Araki relative entropy monotonicity for NS vorticity
     and H_mod(0) ≤ G(E₀) (initial modular entropy from kinetic energy). -/
-theorem qif_Xi_tr_integrable
+axiom qif_Xi_tr_integrable
     (traj : Trajectory NSField) (T : Rat)
     (hT : 0 < T)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∀ (T' : Rat), 0 < T' → T' ≤ T →
       integratedXiTr traj T' ≤
-        qifXiIntegralBound (kineticEnergy (traj.stateAt 0).velocity) T := by
-  intro T' _ _
-  have hLHS : integratedXiTr traj T' = 0 := by
-    unfold integratedXiTr NavierStokes.DiscreteKernel.discreteIntegral
-    simp [qifTransitivityDefect, mul_zero, zero_mul, Finset.sum_const_zero]
-  rw [hLHS]
-  exact qifXiIntegralBound_nonneg _ _
+        qifXiIntegralBound (kineticEnergy (traj.stateAt 0).velocity) T
 
 /-! ## 5. Budget Closure Axioms -/
 
-/-- **THEOREM** (Stage 230): Fubini/Tonelli integrated VS bound.
+/-- Fubini/Tonelli: pointwise VS split → integrated stretching bound.
 
-    Since `integratedNormalizedStretching=0` (vortexStretchingIntegral=0) and
-    `integratedPalinstrophyRatioEntropic=0` (palinstrophy=0), reduces to `0 ≤ Ceps*(T+M_Xi)`. -/
-theorem qif_integrated_vs_bound
+    Given ∀ τ: VS(τ) ≤ ε·P(τ) + Cε·Ω(τ)·(1+Ξ(τ)) and ∫Ξ ≤ M_Xi, gives:
+        intStretch ≤ (ε/ν)·intPal + Cε·(T + M_Xi)
+
+    `.partiallyVerified`: standard Tonelli + opaque function connection (~30 LOC). -/
+axiom qif_integrated_vs_bound
     (traj : Trajectory NSField) (T eps Ceps M_Xi : Rat)
     (heps : 0 < eps) (hepsLt : eps < nsNu)
     (hCeps : 0 < Ceps) (hMXi : 0 ≤ M_Xi) (hT : 0 < T)
@@ -240,16 +186,7 @@ theorem qif_integrated_vs_bound
         integratedXiTr traj T' ≤ M_Xi) :
     integratedNormalizedStretching traj T ≤
       eps / nsNu * integratedPalinstrophyRatioEntropic traj T +
-      Ceps * (T + M_Xi) := by
-  have h1 : integratedPalinstrophyRatioEntropic traj T = 0 := by
-    unfold integratedPalinstrophyRatioEntropic NavierStokes.DiscreteKernel.discreteIntegral
-    simp [palinstrophy, mul_zero, zero_mul, Finset.sum_const_zero]
-  have h2 : integratedNormalizedStretching traj T = 0 := by
-    unfold integratedNormalizedStretching NavierStokes.DiscreteKernel.discreteIntegral
-    simp [vortexStretchingIntegral, mul_zero, zero_mul, Finset.sum_const_zero]
-  rw [h1, h2]
-  simp only [mul_zero, zero_add]
-  exact mul_nonneg (le_of_lt hCeps) (add_nonneg (le_of_lt hT) hMXi)
+      Ceps * (T + M_Xi)
 
 /-- Budget algebra: when intStretch ≤ (δ/ν)·intPal + K with δ < ν,
     the enstrophy budget closes and intPal ≤ qifPalinstrophyBound(Ω₀, δ, K).
@@ -259,7 +196,7 @@ theorem qif_integrated_vs_bound
     Since δ < ν, the coefficient 2ℏ(1 - δ/ν²) > 0.
 
     `.openBridge`: requires explicit arithmetic with opaque ℏ,ν (no Mathlib value). -/
-theorem qif_palinstrophy_budget_closed
+axiom qif_palinstrophy_budget_closed
     (traj : Trajectory NSField) (T delta K : Rat)
     (hDelta_pos : 0 < delta) (hDelta_lt : delta < nsNu)
     (hK_nonneg : 0 ≤ K) (hT : 0 < T)
@@ -271,12 +208,7 @@ theorem qif_palinstrophy_budget_closed
     (hStretch : integratedNormalizedStretching traj T ≤
                   delta / nsNu * integratedPalinstrophyRatioEntropic traj T + K) :
     integratedPalinstrophyRatioEntropic traj T ≤
-      qifPalinstrophyBound (enstrophy (traj.stateAt 0).velocity) delta K := by
-  have h0 : integratedPalinstrophyRatioEntropic traj T = 0 := by
-    unfold integratedPalinstrophyRatioEntropic NavierStokes.DiscreteKernel.discreteIntegral
-    simp [palinstrophy, mul_zero, Finset.sum_const_zero]
-  rw [h0]
-  exact qifPalinstrophyBound_nonneg (enstrophy (traj.stateAt 0).velocity) delta K
+      qifPalinstrophyBound (enstrophy (traj.stateAt 0).velocity) delta K
 
 /-- Uniformity: the palinstrophy budget bound is controlled by initial kinetic energy.
 
@@ -318,10 +250,8 @@ axiom qif_uniform_pal_bound_worst_case
     From ‖ω‖_{L∞} ≤ C·Ω^{1/2}·P^{1/2} (Agmon-Sobolev) and clock change:
         BKM(T) ≤ C·G(∫P/Ω dτ_ent, E₀, ν)
 
-    `.partiallyVerified`: Agmon 1965 standard; clock change is Stage 22.
-
-    Stage 140: promoted to THEOREM — zero-physics: BKM=0 ≤ max 0 M_pal + 1 = agmonBKMBound. -/
-theorem agmon_bkm_from_pal_budget
+    `.partiallyVerified`: Agmon 1965 standard; clock change is Stage 22. -/
+axiom agmon_bkm_from_pal_budget
     (traj : Trajectory NSField) (T M_pal : Rat)
     (hT : 0 < T)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
@@ -331,11 +261,7 @@ theorem agmon_bkm_from_pal_budget
       agmonBKMBound
         (entropicProperTime traj T)
         (kineticEnergy (traj.stateAt 0).velocity)
-        nsNu M_pal := by
-  unfold bkmVorticityIntegral NavierStokes.DiscreteKernel.discreteIntegral
-  simp [vorticityLinfty, mul_zero, Finset.sum_const_zero]
-  unfold agmonBKMBound
-  linarith [le_max_left (0 : Rat) M_pal]
+        nsNu M_pal
 
 /-! ## 7. Route to PreciseGapStatement -/
 

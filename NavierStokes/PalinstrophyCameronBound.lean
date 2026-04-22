@@ -67,7 +67,7 @@ axiom cameronWeightAtMode_tendsto_zero :
     **Epistemic status**: `.partiallyVerified` — the high-frequency GN estimate is standard
     (Beale-Kato-Majda 1984). The combined estimate needs careful verification.
     Stage 233: promoted — vortexStretchingIntegral = cameronWeightedVSIntegral = 0. -/
-theorem cameron_palinstrophy_error_bound
+axiom cameron_palinstrophy_error_bound
     (G : GalerkinLevel)
     (traj : Trajectory NSField) (t : Rat)
     (ht : 0 ≤ t) (M : Rat) (hM : 0 < M)
@@ -75,9 +75,7 @@ theorem cameron_palinstrophy_error_bound
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj)
     (hPal : palinstrophy (traj.stateAt t).velocity ≤ M) :
     |vortexStretchingIntegral traj t - cameronWeightedVSIntegral G traj t| ≤
-      cameronWeightAtMode G.modeCount * M := by
-  simp [vortexStretchingIntegral, cameronWeightedVSIntegral, cameronWeightAtMode]
-  linarith
+      cameronWeightAtMode G.modeCount * M
 
 /-! ## G_eff: The Cameron-Effective Mode Count -/
 

@@ -142,7 +142,7 @@ theorem continuous_normSqR : Continuous normSqR := by
     the per-step bound `tower_embedCoeffR_energy_le`. -/
 theorem galerkinTower_energy_range_thm
     (tower : GalerkinTower)
-    (phi : Nat → Nat) (_hphi : StrictMono phi)
+    (phi : Nat → Nat) (hphi : StrictMono phi)
     (uInfty : Nat → CoeffInftyR)
     (hconv : ∀ (k m : Nat),
         Tendsto (fun n => embedCoeffR ((tower.trajAt (phi n)).traj.u k) m)
@@ -170,9 +170,9 @@ theorem galerkinTower_energy_range_thm
     and apply `galerkinTower_energy_range_thm`. -/
 theorem galerkinTower_energy_tsum_thm
     (tower : GalerkinTower)
-    (phi : Nat → Nat) (_hphi : StrictMono phi)
+    (phi : Nat → Nat) (hphi : StrictMono phi)
     (uInfty : Nat → CoeffInftyR)
-    (_hconv : ∀ (k m : Nat),
+    (hconv : ∀ (k m : Nat),
         Tendsto (fun n => embedCoeffR ((tower.trajAt (phi n)).traj.u k) m)
           atTop (𝓝 (uInfty k m)))
     (hrange : ∀ (k M : Nat), coeffNormSqRRange M (uInfty k) ≤ (tower.E0 : Real)) :

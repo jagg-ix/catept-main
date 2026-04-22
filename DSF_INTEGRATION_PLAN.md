@@ -112,3 +112,124 @@ Current status:
 * **Target Destinations:**
    1. `CATEPTMain/QuantumInfoStandalone.lean`
 * **Status:** Completed
+
+## Supplemental Milestone: Core Plugin Architecture Extraction (catept-core)
+* **Date:** 2026-04-21
+* **Goal:** Port the stable plugin-slot architecture pattern into the standalone core repo so plugin validation is available without `CATEPTMain` integration dependencies.
+* **Implemented in:**
+   1. `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPT/CATEPT/TheoryPluginArchitecture.lean`
+   2. `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPT/TheoryPluginArchitecture.lean`
+* **Core Wiring Updated:**
+   1. `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPT/CATEPT/Core.lean`
+   2. `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPT/Core.lean`
+* **Delivered Contracts:**
+   1. Core plugin payload (`PluginSpec`) and CATEPT spine consistency contract.
+   2. Core validator layers: `validatePlugin`, `validatePluginFull`, `validatePluginWithTimeFramework`.
+   3. Dimensional certificate pathway via canonical dimensional report.
+   4. Complex-measure contract pathway via finite-measure integrability certificates.
+   5. Compile-safe concrete example plugin (`unitPlugin`) with validated full contract and complex-measure witness.
+* **Validation:**
+   1. `cd /Users/macbookpro/lab/tau/tau-information-dynamics/catept-core && lake build CATEPT.CATEPT.TheoryPluginArchitecture CATEPT.TheoryPluginArchitecture CATEPT.CATEPT.Core CATEPT.Core` : **pass** (warnings only in pre-existing modules).
+* **Operational Note:** Running those same targets from `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main` fails by design because the new module exists in `catept-core` only.
+
+## Supplemental Milestone: Core Plugin Example Lane + Theoremization Closure (catept-core)
+* **Date:** 2026-04-21
+* **Goal:** Finalize nontrivial plugin example proofs and close remaining axiom placeholders in the standalone core lane.
+* **Implemented in:**
+   1. `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPT/CATEPT/TheoryPluginExamples.lean`
+   2. `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPT/TheoryPluginExamples.lean`
+* **Theoremization Updates:**
+   1. Replaced `axiom entropicTime_nonneg` with a direct proof in `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPTCore/Clock.lean`.
+   2. Replaced `axiom noBlowup_iff_defect_nonneg` with a direct proof in `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-core/CATEPTCore/Core.lean`.
+* **Plugin Example Outcome:**
+   1. Added nontrivial quadratic-state plugin (`quadraticClockPlugin`) with validated `validatePlugin`, `validatePluginFull`, finite-measure certificate, and complex-measure contract witness.
+   2. Resolved final arithmetic theorem blocker: `quadraticClockPlugin_eptClock_one`.
+* **Validation:**
+   1. `cd /Users/macbookpro/lab/tau/tau-information-dynamics/catept-core && lake build CATEPT.CATEPT.TheoryPluginExamples CATEPT.TheoryPluginExamples CATEPT.CATEPT.Core CATEPT.Core` : **pass** (warnings only in pre-existing modules).
+   2. `cd /Users/macbookpro/lab/tau/tau-information-dynamics/catept-core && lake build CATEPTCore.Clock CATEPTCore.Core` : **pass**.
+* **Audit Snapshot:**
+   1. `rg -n "^\s*axiom\b" -g "*.lean"` in `catept-core`: **no matches**.
+   2. `rg -n "\b(sorry|admit)\b" -g "*.lean"` in `catept-core`: **no matches**.
+# Porting QuantumAlgebra.jl to Lean 4 - Integration Plan
+
+## 1. Overview
+The goal is to port the features of `QuantumAlgebra.jl` into the Lean 4 `CATEPT` framework. The Julia package provides symbolic algebra and simplification for quantum operators (bosonic, fermionic, two-level systems / spins), tracking equations of motion, vacuum expectation values, and generating symbolic systems of equations.
+
+In Lean 4, this translates into two distinct but synergistic paradigms:
+- **Formal Verification ($∀$)**: Structuring operators as elements of algebraic structures (e.g., $C^*$-algebras, Non-commutative Rings) with explicit proofs of commutation relations and normal ordering.
+- **Meta-Programming / Symbolic Computation (`#eval`)**: Using Lean's macro and `MetaM` facilities to provide an interface matching Julia's `QuExpr` for programmatic generation, simplification, and inspection of symbolic quantum terms.
+
+## 2. File-by-File Migration Strategy
+
+### A. Core Algebraic Definitions
+**Julia Files:**
+- `src/QuantumAlgebra.jl` (Entry point)
+- `src/operator_defs.jl` (Data structures for operators)
+
+**Lean 4 Target (`CATEPT/QuantumAlgebra/OperatorDefs.lean`):**
+- Define the base types for quantum indices (site indices, modes).
+- Define inductive types representing the abstract syntax tree (AST) of quantum expressions (e.g., `QuExpr`).
+- Port specific operator constructors: `Boson`, `Fermion`, `TLS` (Two-Level System / Pauli spins).
+- Implement basic `Add`, `Mul`, `SMul` typeclasses for `QuExpr`.
+
+### B. Algebraic Operations & Normal Ordering
+**Julia Files:**
+- `src/operator_baseops.jl` (Multiplication, Addition, Commutators)
+- `src/tools.jl` (Sorting, Normal ordering rules)
+
+**Lean 4 Target (`CATEPT/QuantumAlgebra/BaseOps.lean` & `CATEPT/QuantumAlgebra/NormalOrder.lean`):**
+- Implement exact canonical commutation relations (CCR) for bosons ($[a_i, a^\dagger_j] = \delta_{ij}$) and canonical anti-commutation relations (CAR) for fermions ($\{f_i, f^\dagger_j\} = \delta_{ij}$).
+- Implement the Pauli algebra relations for TLS ($\sigma_x, \sigma_y, \sigma_z, \sigma_+, \sigma_-$).
+- Write a `normal_order` function that strictly applies CCR/CAR to bubble creation operators to the left.
+- *Proof Obligation:* Prove that `normal_order` preserves the equivalence classes of the abstract operator quotient ring.
+
+### C. Analytical Tools: Expectations & Correlations
+**Julia Files:**
+- `src/vacuum_expvals.jl` (Wick's theorem)
+- `src/correlations.jl` (Cumulant expansions)
+- `src/alias.jl`
+
+**Lean 4 Target (`CATEPT/QuantumAlgebra/Vacuum.lean` & `CATEPT/QuantumAlgebra/Correlations.lean`):**
+- Implement vacuum states $|0\rangle$ and define `vacuum_expval : QuExpr -> ℂ`.
+- Encode Wick's theorem for bosons and fermions inductively.
+- Implement mapping of products of expectation values into irreducible connected correlators (cumulants).
+
+### D. Dynamics & System Generation
+**Julia Files:**
+- `src/eqsofmotion.jl` (Heisenberg equations of motion $i \dot{A} = [A, H]$)
+- `src/eqsys.jl` (Truncation, hierarchy of equations)
+- `src/convert_to_expression.jl` (Translation to standard Symbolic numerical systems)
+
+**Lean 4 Target (`CATEPT/QuantumAlgebra/Dynamics.lean`):**
+- Port the Heisenberg generator: `def heisenberg_eom (H A : QuExpr) : QuExpr := commutator A H`.
+- Implement hierarchy generation up to a specific user-defined order `N`.
+- For `convert_to_expression`, build a Lean `ToString` or `Repr` that can emit valid code (e.g., Python/SymPy strings or Mathlib symbolic formats) for downstream numerical consumption.
+
+### E. Integrations & Extensions
+**Julia Files:**
+- `ext/QuantumAlgebraSymPyExt.jl`, etc. (Extensions for parsing out to SymPy / Symbolics.jl)
+- `src/output.jl` (LaTeX generation)
+
+**Lean 4 Target (`CATEPT/QuantumAlgebra/Output.lean`):**
+- Write meta-programs to export Lean `QuExpr` into LaTeX (similar to `output.jl`).
+- Expose an FFI/Bridge (similar to the existing `AFPBridge`) that outputs these operators to a Python environment (via an external script or pipe) if strict symbolic numeric solvers are needed.
+
+## 3. Recommended Implementation Phases
+
+**Phase 1: Abstract Syntax Tree & Macros**
+- Define `inductive QuExpr` capturing scalars, symbols (`param`), bosons (`a`, `a†`), fermions (`f`, `f†`), and spins (`σ`).
+- Write `instance` declarations for +, -, *, and scalar multiplication.
+
+**Phase 2: Simplification Engine (The Hard Part)**
+- Create rules to simplify $a_i a^\dagger_j \to a^\dagger_j a_i + \delta_{ij}$.
+- Port the `Index` summation logic (`∑`).
+- Write the `normal_form` algorithmic simplifier.
+
+**Phase 3: Physics Functionality**
+- Add `heisenberg_eom` evaluator.
+- Add `vacuum_expval` evaluator (applying Wick's theorem to normal-ordered terms).
+
+**Phase 4: Formal Proofs (Lean-Specific Advantage)**
+- Unlike Julia, Lean allows us to *prove* that `normal_form(e) = e` over the quotient algebra.
+- State and prove that `heisenberg_eom` forms a valid derivation (obeys Leibniz rule).
+

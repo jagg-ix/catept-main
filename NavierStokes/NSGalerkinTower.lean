@@ -38,7 +38,6 @@ separate `N` universe and `traj.N` (the field inside `GalerkinNSDiscreteTrajecto
 namespace NavierStokes.GalerkinTower
 
 set_option autoImplicit false
-set_option linter.dupNamespace false
 
 open NavierStokes.PalinstrophyTauBridge
 open NavierStokes.GalerkinComplexModel
@@ -59,37 +58,22 @@ structure GalerkinLevelTraj (N : Nat) where
 
 /-! ## Galerkin tower -/
 
-/-- An N-indexed family of Galerkin level trajectories with a uniform initial energy bound
-    and a **shared time step** `h` across all levels.
+/-- An N-indexed family of Galerkin level trajectories with a uniform initial energy bound.
 
     The uniform bound `∀ N, coeffNormSq (u_N(0)) ≤ E0` is the key compactness hypothesis:
     it ensures (via energy dissipation at each level) that the full family is uniformly
     bounded in ℓ² at every time step, providing the control needed to extract subsequences.
 
-    The uniform step `uniform_h : ∀ N, (trajAt N).traj.h = h` fixes the time discretization
-    across all cutoff levels.  This is the Faedo-Galerkin design: one mesh size `h`, many
-    cutoffs `N → ∞`.  The second limit `h → 0` is handled separately (Stage 207+).
-
-    **Discipline**: all Stage 174 lemmas take `tower : GalerkinTower` (or `lt : GalerkinLevelTraj N`) as the primary
-    argument. The implicit `{N : Nat}` from `GalerkinBasis N` is only introduced when it is
-    definitionally controlled by the primary argument. This avoids the mismatch between the
-    separate `N` universe and `traj.N` (the field inside `GalerkinNSDiscreteTrajectory`). -/
+    **Discipline**: all Stage 174 lemmas take `tower : GalerkinTower` first and derive
+    level-N data from `tower.trajAt N` — never from an independent `{N : Nat}`. -/
 structure GalerkinTower where
   /-- The level-N trajectory for each cutoff N. -/
   trajAt          : ∀ N : Nat, GalerkinLevelTraj N
   /-- Uniform initial energy bound E₀ ≥ 0. -/
   E0              : Rat
   hE0             : 0 ≤ E0
-  /-- Shared time step across all levels (Faedo-Galerkin: fixed h, N → ∞). -/
-  h               : Rat
-  /-- Positivity of the time step. -/
-  hh              : 0 < h
-  /-- Step size is at most 1 (needed for near-identity Cayley stability bounds). -/
-  hh1             : h ≤ 1
   /-- All initial states lie in the energy ball of radius E₀. -/
   uniform_energy0 : ∀ N : Nat, coeffNormSq ((trajAt N).traj.u 0) ≤ E0
-  /-- Every level trajectory uses the shared step size. -/
-  uniform_h       : ∀ N : Nat, (trajAt N).traj.h = h
 
 /-! ## Ambient coefficient space -/
 
@@ -130,13 +114,13 @@ noncomputable def coeffNormSqRange (N : Nat) (x : CoeffInfty) : Rat :=
   ∑ n ∈ Finset.range N, normSqC (x n)
 
 theorem coeffNormSqRange_nonneg (N : Nat) (x : CoeffInfty) : 0 ≤ coeffNormSqRange N x :=
-  Finset.sum_nonneg (fun _ _ => normSqC_nonneg _)
+  Finset.sum_nonneg (fun n _ => normSqC_nonneg _)
 
 /-- The restricted energy is monotone in the cutoff: more modes → larger (or equal) energy. -/
 theorem coeffNormSqRange_mono {N₁ N₂ : Nat} (h : N₁ ≤ N₂) (x : CoeffInfty) :
     coeffNormSqRange N₁ x ≤ coeffNormSqRange N₂ x :=
   Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono h)
-    (fun _ _ _ => normSqC_nonneg _)
+    (fun n _ _ => normSqC_nonneg _)
 
 /-! ## Energy compatibility: embed then restrict = original -/
 
@@ -189,8 +173,7 @@ theorem GalerkinTower.embedded_energy_bound (tower : GalerkinTower) :
 def stage174ArtSummary : String :=
   "Stage 174A: NSGalerkinTower — Galerkin tower and ambient coefficient space. " ++
   "GalerkinLevelTraj N: struct { traj, hN : traj.N = N } — type-safe level wrapper. " ++
-  "GalerkinTower: struct { trajAt, E0, h, hh, hh1, uniform_energy0, uniform_h } — " ++
-    "uniform energy bound + shared step size (Stage 206). " ++
+  "GalerkinTower: struct { trajAt, E0, uniform_energy0 } — uniform initial energy bound. " ++
   "CoeffInfty = Nat → CRat: ambient space for all finite levels. " ++
   "embedCoeff: zero-extension CoeffC N → CoeffInfty (if n < N then u ⟨n, h⟩ else (0,0)). " ++
   "embedCoeff_zero_outside: THEOREM (dif_neg). " ++

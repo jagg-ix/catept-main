@@ -2,6 +2,42 @@
 
 A Lean 4.29 integration repository for the **Causal-Algebraic Thermodynamic Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a unified formal verification surface.
 
+## Architecture & Implementation Overview
+
+Based on the `catept-core` design, this repository connects into a highly modular, rigorously verified, dual-layer architecture built in Lean 4. The primary design goal is to maintain a **"Zero-Axiom" mathematical spine** for the CAT/EPT framework, allowing distinct physical theories to plug in without compromising mathematical safety.
+
+### The Microkernel Architecture
+The system operates on a microkernel pattern tailored for formal verification:
+- **`CATEPTCore` (The Foundation):** The innermost kernel containing pure, decidable mathematical limits (e.g. `imaginaryNoetherDefect`, `entropicRate`). It serves as the immutable ground truth using concrete rational types (`Rat`) to ensure structural stability over floating-point approximations.
+- **Zero-Axiom Policy:** The architecture enforces that system invariants are mathematically proven. Core properties, such as `entropicTime_nonneg` or the mapping of vortex stretching to palinstrophy (`noBlowup_iff_defect_nonneg`), are strictly implemented as proven `theorem`s, rejecting unprovable assertions.
+  
+  *Example:*
+  ```lean
+  /-- Algebraic equivalence: VS ≤ nu*P iff the defect D_I is nonnegative. -/
+  theorem noBlowup_iff_defect_nonneg
+      (nu palinstrophy vortexStretching : Rat) :
+      noBlowupCondition nu palinstrophy vortexStretching ↔
+        0 ≤ imaginaryNoetherDefect nu palinstrophy vortexStretching := by
+    simp [noBlowupCondition, imaginaryNoetherDefect, sub_nonneg]
+  ```
+
+### The Abstraction & Bridge Layer (`CATEPT`)
+This layer maps physical concepts (measurable spaces, path integrals, modular flows) via strict structural contracts regarding measure theory, translating physical phase spaces into rigorous Lean constraints.
+
+### Dynamic Plugin Architecture
+To enable safe downstream extensions across disparate fields (fluid dynamics, quantum gravity, statistical mechanics), the system uses a formal Plugin Interface:
+- **`PluginSpec`**: Defines the minimal variables a physical theory must provide (e.g., `eptClock`, `pathModel`, `measurableState`).
+- **`cateptConsistencyConstraint`**: Ensures the imported theory's logic aligns with CAT/EPT constraints.
+- **`PluginMeasureCertificate`**: Requires plugins to actively supply mathematical proofs (e.g., integrability bounds). The Lean compiler will reject the plugin if bounds cannot be proven finite.
+
+  *Example:*
+  ```lean
+  /-- A valid plugin must mathematically prove it adheres to the core contract. -/
+  structure PluginMeasureCertificate (spec : PluginSpec) where
+    integrability_bound : MeasureTheory.Integrable spec.pathModel
+    consistency_proof : cateptConsistencyConstraint spec
+  ```
+
 ## Quick Start
 
 ```bash

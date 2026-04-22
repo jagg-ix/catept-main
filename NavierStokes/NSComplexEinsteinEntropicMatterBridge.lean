@@ -1,4 +1,5 @@
 import NavierStokes.NSObservationalEntropyBridge
+import NavierStokes.Bridges.NSModularNoetherBridge
 
 /-!
 # NS Complex Einstein Entropic Matter Bridge (Stage 89)
@@ -318,7 +319,7 @@ theorem real_conservation_proxy
     (_hNS : SatisfiesNSPDE nsOps nsNu traj)
     (_hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     enstrophyRate traj t = -2 * nsImaginaryNoetherDefect traj t := by
-  simp [enstrophyRate, nsImaginaryNoetherDefect, vortexStretchingIntegral, nsNu]
+  simpa using NavierStokes.Bridges.NSModularNoether.enstrophyRate_eq_neg_two_imaginaryNoetherDefect traj t _hNS _hFS
 
 /-- When D_I ≥ 0 (VS ≤ νP), enstrophy is non-increasing: dΩ/dt ≤ 0. -/
 theorem enstrophy_nonincreasing_when_di_nonneg

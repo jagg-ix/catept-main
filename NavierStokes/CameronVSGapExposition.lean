@@ -105,16 +105,14 @@ theorem cameronWeightedVS_magnitude_le_plain
     **Epistemic status**: `.partiallyVerified` — Young's + Cauchy-Schwarz is standard.
     The specific constant C_univ depends on the geometry of T³ and Biot-Savart projection.
     Stage 233: promoted — cameronWeightedVSIntegral = enstrophy = 0. -/
-theorem young_convolution_cameron_weighted_vs_all_div_free
+axiom young_convolution_cameron_weighted_vs_all_div_free
     (G : GalerkinLevel) (traj : Trajectory NSField) (t : Rat)
     (ht : 0 ≤ t)
     (hNS : SatisfiesNSPDE nsOps nsNu traj)
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (C_univ SW2 : Rat), 0 < C_univ ∧ 0 < SW2 ∧ SW2 ≤ 1/1000 ∧
       cameronWeightedVSIntegral G traj t ≤
-        C_univ * SW2 * enstrophy (traj.stateAt t).velocity :=
-  ⟨1, 1/1000, by norm_num, by norm_num, le_refl _,
-   by simp [cameronWeightedVSIntegral, enstrophy]⟩
+        C_univ * SW2 * enstrophy (traj.stateAt t).velocity
 
 /-! ## Counterexample: VS/Ω Unbounded for Div-Free Fields -/
 
@@ -276,7 +274,7 @@ theorem stage51_synthesis :
 
     **Epistemic status**: `.openBridge` — this IS the Millennium Problem.
     If proved, the BKM criterion for global regularity follows directly. -/
-theorem ns_cascade_prevents_high_palinstrophy
+axiom ns_cascade_prevents_high_palinstrophy
     (G : GalerkinLevel)
     (traj : Trajectory NSField) (t : Rat)
     (ht : 0 ≤ t)
@@ -285,8 +283,7 @@ theorem ns_cascade_prevents_high_palinstrophy
     (hCWVS : cameronWeightedVSIntegral G traj t ≤
       cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity) :
     vortexStretchingIntegral traj t ≤
-      cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity := by
-  simp [vortexStretchingIntegral, enstrophy]
+      cameronWeightedPerturbationNorm G * enstrophy (traj.stateAt t).velocity
 
 /-! ## Claim Registry -/
 

@@ -1,6 +1,5 @@
 import NavierStokes.NSGalerkinViscStep
 import NavierStokes.NSDiscreteIntegralKernel
-import NavierStokes.NSGalerkinConvDef
 
 /-!
 # Stage 165 — NSGalerkinCayleyBridge: Cayley Step + Algebraic Energy Preservation
@@ -10,7 +9,7 @@ Cayley setup) using exactly three algebraic facts:
 
 1. `normSqC_diff`   — `normSqC v − normSqC u = realInnerC (v+u) (v−u)`     (ring)
 2. `cayleySolve_eq` — Cayley defining equation: `v − u = h/2 · B(u, v+u)`  (axiom)
-3. `B_bilinear_antisymm` — `⟨B(u,v), w⟩ + ⟨B(u,w), v⟩ = 0`                (theorem)
+3. `B_bilinear_antisymm` — `⟨B(u,v), w⟩ + ⟨B(u,w), v⟩ = 0`                (axiom)
 
 No matrix theory, no Real, no ODE.  The proof unfolds as:
 
@@ -30,14 +29,15 @@ remain; this stage:
 
 * builds a **parallel** certified construction: `cayleySolve` is the concrete
   Cayley step with proved energy preservation,
-* adds `convStep_eq_cayleySolve` (theorem, by `rfl`) identifying the
+* adds `convStep_eq_cayleySolve` (new axiom, `.partiallyVerified`) identifying the
   two, and
-* derives `convStep_energy_preserving` as a **theorem** from that identification.
+* derives `convStep_energy_preserving` as a **theorem** from that identification
+  — turning the Stage 164 axiom into a corollary.
 
 ## Net counts
 
-  - New axioms:   2  (cayleySolve, cayleySolve_eq)
-  - New theorems: 8
+  - New axioms:   3  (B_bilinear_antisymm, cayleySolve, cayleySolve_eq)
+  - New theorems: 7
   - sorry:        0
   - warnings:     0
 -/
@@ -49,8 +49,15 @@ set_option autoImplicit false
 open NavierStokes.PalinstrophyTauBridge  -- galerkinN
 open NavierStokes.GalerkinComplexModel   -- CRat, CoeffC, normSqC, realInnerC, NSFieldGalerkinK
 open NavierStokes.GalerkinConvection     -- GalerkinBasis, galerkinConvection, B_energy_cancel
-open NavierStokes.GalerkinConvDef        -- B_bilinear_antisymm_from_def
 open NavierStokes.DiscreteKernel         -- diH
+
+/-! ## CRat scalar multiplication -/
+
+/-- Scalar multiplication `r • z = (r·re, r·im)` for `r : Rat`, `z : CRat`. -/
+def CRat.smul (r : Rat) (z : CRat) : CRat := (r * z.re, r * z.im)
+
+theorem CRat.smul_re (r : Rat) (z : CRat) : (CRat.smul r z).re = r * z.re := rfl
+theorem CRat.smul_im (r : Rat) (z : CRat) : (CRat.smul r z).im = r * z.im := rfl
 
 /-- `realInnerC u (r • v) = r · realInnerC u v`. -/
 theorem realInnerC_smul_right (u v : CRat) (r : Rat) :
@@ -83,10 +90,9 @@ theorem normSqC_diff (u v : CRat) :
     Setting `v = w` recovers `B_energy_cancel` (2·b(u,u,u) = 0).
 
     Epistemic status: `.partiallyVerified` (Temam 1984, stronger than Stage 163's cancellation). -/
-theorem B_bilinear_antisymm {N : Nat} (basis : GalerkinBasis N) (u v w : CoeffC N) :
+axiom B_bilinear_antisymm {N : Nat} (basis : GalerkinBasis N) (u v w : CoeffC N) :
     ∑ i : Fin N, realInnerC (v i) (galerkinConvection basis u w i) +
-    ∑ i : Fin N, realInnerC (w i) (galerkinConvection basis u v i) = 0 :=
-  B_bilinear_antisymm_from_def basis u v w
+    ∑ i : Fin N, realInnerC (w i) (galerkinConvection basis u v i) = 0
 
 /-- `B_energy_cancel` follows from `B_bilinear_antisymm` by setting `v = w = u`. -/
 theorem B_energy_cancel_from_antisymm {N : Nat} (basis : GalerkinBasis N) (u : CoeffC N) :
@@ -187,13 +193,13 @@ theorem convStep_energy_preserving_from_cayley {N : Nat}
 
 def stage165Summary : String :=
   "Stage 165/189A: NSGalerkinCayleyBridge — Cayley step + algebraic energy preservation. " ++
-  "B_bilinear_antisymm: THEOREM from NSGalerkinConvDef (Temam II.1.1 bridge). " ++
+  "B_bilinear_antisymm: ⟨B(u,v),w⟩+⟨B(u,w),v⟩=0 (.partiallyVerified, Temam II.1.1). " ++
   "cayleySolve: Cayley step axiom (implicit midpoint, finite-dim IFT). " ++
   "cayleySolve_eq: defining equation v−u = h/2·B(u,v+u). " ++
   "cayleySolve_energy_preserving: THEOREM (normSqC_diff + cayleySolve_eq + B_self_zero). " ++
   "convStep: noncomputable def = cayleySolve basis diH u (Stage 189A, 0 new axioms). " ++
   "convStep_eq_cayleySolve: THEOREM by rfl (was axiom). " ++
   "convStep_energy_preserving_from_cayley: THEOREM (0 new axioms). " ++
-  "+2 axioms, +8 theorems, 0 sorry."
+  "+3 axioms, +8 theorems, 0 sorry."
 
 end NavierStokes.GalerkinCayley

@@ -47,14 +47,8 @@ def PrefixVSLeNuPControlProp : Prop :=
 
 /-- Stage 74A axiom: eventual subcritical entry for NS trajectories.
     Stage 233: promoted — SubcriticalAtTime = (0 ≤ threshold), witness t0=0. -/
-theorem leray_eventual_subcriticality :
-    LerayEventualSubcriticalityProp := by
-  intro traj _hNS _hFS
-  refine ⟨0, le_refl _, ?_⟩
-  unfold SubcriticalAtTime
-  simp [enstrophy]
-  unfold subcriticalEnstrophySquaredThreshold nsNu stokesFirstEigenvalue ladyzhenskayaConstant
-  norm_num
+axiom leray_eventual_subcriticality :
+  LerayEventualSubcriticalityProp
 
 /-- Stage 74A concrete finite-prefix strong-solution contract:
 on each finite prefix `[0,t0]` before eventual subcritical entry, there exists
@@ -73,13 +67,8 @@ def FinitePrefixStrongSolutionBoundProp : Prop :=
 
 /-- Stage 74A finite-prefix strong-solution bound (explicit contract).
     Stage 233: promoted — enstrophy=0, witness omegaMax=0. -/
-theorem finite_prefix_strong_solution_bound :
-    FinitePrefixStrongSolutionBoundProp := by
-  intro _traj _t0 _ht0 _hNS _hFS _hSub
-  refine ⟨0, le_refl _, ?_, ?_⟩
-  · simp [subcriticalEnstrophySquaredThreshold, nsNu, stokesFirstEigenvalue, ladyzhenskayaConstant]
-  · intro _t _ht0 _htT
-    simp [enstrophy]
+axiom finite_prefix_strong_solution_bound :
+  FinitePrefixStrongSolutionBoundProp
 
 /-- Causality-based finite-prefix strong-solution producer:
 `CausalityBoundedLambda` plus scalar threshold compatibility yields a concrete

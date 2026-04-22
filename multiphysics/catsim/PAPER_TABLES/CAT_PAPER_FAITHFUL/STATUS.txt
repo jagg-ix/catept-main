@@ -1,4 +1,0 @@
-Phase 4B — CAT paper-faithful visibility fit + prediction
-fit_figure=Fig_2f  visibility_col=visibility_paper
-eta=0.0691831  lambda_ent=0  Vcl=0.137707
-baseline_rmse_all=0.0573575  cat_rmse_all=0.0573575

@@ -1,3 +1,0 @@
-# metric_check
-
-PASS

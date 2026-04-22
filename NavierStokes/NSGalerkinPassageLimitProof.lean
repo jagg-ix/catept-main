@@ -1,5 +1,4 @@
 import NavierStokes.AubinLionsMathlib
-import NavierStokes.NSGalerkinVorticityEnstrophyBridge
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 import Mathlib.Analysis.InnerProductSpace.Basic
 
@@ -51,18 +50,10 @@ This is the analytic engine behind SA-G2: the nonlinear term `b(u_N, u_N, φ)`
 is dominated by `C · h1Bound² · ‖φ‖_{H¹}` (from SA-G1) and converges pointwise
 by the L² convergence hypothesis.
 
-## Net counts (Stage 245/288)
+## Net counts (Stage 245)
 
-Stage 245: +4 axioms (SA-G1, SA-G2, SA-G3, SA-G4), +7 theorems, 0 sorry.
-Stage 288: SA-G4 → SA-G4a axiom + theorem; net 0 axioms, +2 theorems.
-Stage 289: SA-G4a → SA-G4b axiom + SA-G4a theorem; net 0 axioms, +1 theorem.
-  SA-G4b is the Galerkin convergence axiom; SA-G4a proved from SA-G4b +
-  `galerkinVSNuPDefect_nonneg` (existing theorem via `physicalTriadKCoeff_vs_le_nuP`).
-Stage 303: SA-G2 and SA-G3 promoted from axioms to theorems. -2 axioms net.
-  SA-G2: `hNS (φ 0)` (abstract carrier: hNS grants the conclusion directly).
-  SA-G3: `nsVelocityMem_default/nsPressureMem_default/nsDivFree_default` (vacuous carrier).
-
-  - Net axioms after Stage 303: 2 (SA-G1, SA-G4b; SA-G2+SA-G3 promoted)
+  - New axioms:   3 (.partiallyVerified: SA-G1, SA-G2, SA-G3)
+  - New theorems: 6
   - sorry:        0
   - warnings:     0
 -/
@@ -72,12 +63,6 @@ namespace NavierStokes.GalerkinPassageLimitProof
 set_option autoImplicit false
 
 open NavierStokes.Millennium hiding interpretAsFourier
-open NavierStokes.GalerkinComplexModel   -- NSFieldGalerkinK, palinstrophyK, enstrophyK
-open NavierStokes.GalerkinConvection     -- NSFieldGalerkinK.toBasis
-open NavierStokes.GalerkinVSNuPBound     -- galerkinVSNuPDefect, galerkinVSNuPDefect_nonneg
-open Filter
-
-open scoped Topology
 
 noncomputable section
 
@@ -132,12 +117,9 @@ axiom trilinear_ns_continuity_bound
     `traj_seq (φ 0)` satisfies `SatisfiesNSPDE` because in the abstract carrier
     this predicate is structurally satisfied for all trajectories derived from NS data.
 
-    **Stage 303 promotion**: `SatisfiesNSPDE nsOps nsNu (traj_seq (φ 0))` follows
-    immediately from `hNS (φ 0)` — the hypothesis asserts every `traj_seq N` satisfies
-    NS, and `φ 0` is a valid index. The concrete DCT argument (Mathlib DCT for the NS
-    bilinear form on T³) is the mathematical content, but in the abstract carrier where
-    `hNS` already grants the conclusion, no additional work is needed. -/
-theorem ns_nonlinear_term_dct_convergence
+    **Epistemic**: `.partiallyVerified` — DCT is `MeasureTheory.tendsto_integral_of_dominated_convergence` (available in Mathlib); the Lean4 gap is constructing the
+    H⁻¹-valued dominated convergence argument for the specific NS bilinear form on T³. -/
+axiom ns_nonlinear_term_dct_convergence
     (traj_seq : Nat → Trajectory NSField)
     (φ : Nat → Nat)
     (_hMono : StrictMono φ)
@@ -149,8 +131,7 @@ theorem ns_nonlinear_term_dct_convergence
           kineticEnergy
             (nsAdd ((traj_seq (φ n)).stateAt T).velocity
               (nsSmul (-1) u_lim)) < ε) :
-    SatisfiesNSPDE nsOps nsNu (traj_seq (φ 0)) :=
-  hNS (φ 0)
+    SatisfiesNSPDE nsOps nsNu (traj_seq (φ 0))
 
 /-! ## Sub-Axiom 3: Function-space regularity of the limit -/
 
@@ -168,96 +149,12 @@ theorem ns_nonlinear_term_dct_convergence
     that will become non-trivial when the carrier is concretized as
     `H¹(T³) × L²₀(T³)`.
 
-    **Stage 303 promotion**: In the current abstract carrier, `RespectsFunctionSpaces
-    nsSpacesR3 traj_lim` expands to three vacuous predicates — `nsVelocityMem_default`,
-    `nsPressureMem_default`, `nsDivFree_default` each prove the corresponding component
-    for any field. Non-trivial content (H¹ wlsc + compactness) is deferred to when
-    the carrier is concretized as H¹(T³) × L²₀(T³). -/
-theorem ns_limit_respects_function_spaces
+    **Epistemic**: `.partiallyVerified` — vacuous in the current abstract carrier;
+    non-trivial content is `Mathlib.Analysis.InnerProductSpace.Basic` (weak lower
+    semicontinuity of norms) + the H⁻¹-weak compactness theorem. -/
+axiom ns_limit_respects_function_spaces
     (traj_lim : Trajectory NSField) :
-    RespectsFunctionSpaces nsSpacesR3 traj_lim :=
-  ⟨fun _ => nsVelocityMem_default _, fun _ => nsPressureMem_default _, fun _ => nsDivFree_default _⟩
-
-/-! ## Tail-budget threading for SA-G1/SA-G2 (Stage 295) -/
-
-/-- Explicit tail-budget contract threaded through SA-G1/SA-G2 wrappers so the
-Galerkin passage lane records high-frequency control as a first-class hypothesis. -/
-abbrev SAG12TailBudgetContract : Prop := AubinLionsTailBudgetContract
-
-/-- SA-G1 wrapper with explicit Sobolev-tail budget contract. -/
-theorem trilinear_ns_continuity_bound_with_tail
-    (traj_seq : Nat → Trajectory NSField)
-    (u_lim : NSField)
-    (h1Bound : Rat)
-    (hH1 : ∀ N T, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ h1Bound)
-    (T : Rat) (hT : 0 < T)
-    (_hTail : SAG12TailBudgetContract) :
-    ∃ (C_bilin : Rat), 0 < C_bilin ∧
-      ∀ (N : Nat),
-        kineticEnergy
-          (nsAdd ((traj_seq N).stateAt T).velocity (nsSmul (-1) u_lim)) ≤
-          C_bilin * h1Bound * h1Bound :=
-  trilinear_ns_continuity_bound traj_seq u_lim h1Bound hH1 T hT
-
-/-- SA-G2 wrapper with explicit Sobolev-tail budget contract. -/
-theorem ns_nonlinear_term_dct_convergence_with_tail
-    (traj_seq : Nat → Trajectory NSField)
-    (φ : Nat → Nat)
-    (hMono : StrictMono φ)
-    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N))
-    (T : Rat) (hT : 0 < T)
-    (u_lim : NSField)
-    (hConv : ∀ ε : Rat, 0 < ε →
-        ∃ N₀ : Nat, ∀ n : Nat, N₀ ≤ n →
-          kineticEnergy
-            (nsAdd ((traj_seq (φ n)).stateAt T).velocity
-              (nsSmul (-1) u_lim)) < ε)
-    (_hTail : SAG12TailBudgetContract) :
-    SatisfiesNSPDE nsOps nsNu (traj_seq (φ 0)) :=
-  ns_nonlinear_term_dct_convergence traj_seq φ hMono hNS T hT u_lim hConv
-
-/-! ## Sub-Axiom 4: Galerkin→NS defect transport (weak LSC identification) -/
-
-/-- **SA-G4 defect transport contract** (Temam 1984, Ch. III §3):
-
-    Transport Galerkin nonnegativity of the dissipative defect to the NS limit.
-    This is the concrete supercritical-lane endpoint required by
-    `NSSupercriticalRegimeBridge.ns_defect_nonneg_from_galerkin_wlsc`.
-
-    Mathematical payload:
-    1. Galerkin defect nonnegativity (finite-dimensional energy identity),
-    2. weak lower semicontinuity of the H¹-seminorm,
-    3. identification of the NS defect with the weak limit of Galerkin defects.
-
-    This keeps the load-bearing root on the Galerkin compactness lane rather than
-    delegating through a thermodynamic root contract. -/
-def NSDefectTransportFromGalerkinLSCContract : Prop :=
-  ∀ (traj : Trajectory NSField) (t : Rat),
-    0 ≤ t →
-    SatisfiesNSPDE nsOps nsNu traj →
-    RespectsFunctionSpaces nsSpacesR3 traj →
-    0 ≤ nsNu * palinstrophy (traj.stateAt t).velocity - vortexStretchingIntegral traj t
-
-/-! ## SA-G4b and SA-G4a: moved to NSGalerkinDefectConvergenceClosure (Stage 304) -/
--- `galerkinDefect_componentwise_seq_convergence` (ex-axiom, now THEOREM in Closure)
--- `galerkinDefect_componentwise_seq_convergence_with_tail` (THEOREM in Closure)
--- `galerkinDefect_seq_approx_supercriticalDefect_with_tail` (THEOREM in Closure)
--- `galerkinDefect_seq_approx_supercriticalDefect` (THEOREM in Closure)
--- `supercriticalDefect_galerkin_approx` (THEOREM in Closure)
--- `ns_defect_transport_from_galerkin_lsc` (THEOREM in Closure)
--- `ns_defect_transport_from_galerkin_lsc_apply` (THEOREM in Closure)
--- All depend on `galerkinDefect_componentwise_from_split` in NSGalerkinDefectSplitBridge.
-
-/-- **THEOREM (Stage 288, 0 axioms)**: the limit of a nonneg `Real` sequence is nonneg.
-    Mathlib: `le_of_tendsto` with `OrderClosedTopology Real`. -/
-theorem nonneg_limit_of_real_tendsto
-    (d_seq : Nat → Real) (L : Real)
-    (hpos : ∀ N, (0 : Real) ≤ d_seq N)
-    (htend : Tendsto d_seq atTop (nhds L)) :
-    (0 : Real) ≤ L :=
-  ge_of_tendsto htend (Eventually.of_forall hpos)
-
--- ns_defect_transport_from_galerkin_lsc and _apply moved to NSGalerkinDefectConvergenceClosure
+    RespectsFunctionSpaces nsSpacesR3 traj_lim
 
 /-! ## Main theorem: grounded passage to limit -/
 
@@ -278,33 +175,6 @@ theorem nonneg_limit_of_real_tendsto
 theorem ns_galerkin_passage_to_limit_grounded
     (traj_seq : Nat → Trajectory NSField)
     (φ : Nat → Nat)
-    (_hMono : StrictMono φ)
-    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N))
-    (_hConv : ∀ (T : Rat), 0 < T →
-      ∃ (field_lim : NSField),
-        nsVelocityMem field_lim ∧
-        ∀ (ε : Rat), 0 < ε →
-          ∃ N₀ : Nat, ∀ n : Nat, N₀ ≤ n →
-            kineticEnergy
-              (nsAdd ((traj_seq (φ n)).stateAt T).velocity
-                (nsSmul (-1) field_lim)) < ε) :
-    ∃ (traj_lim : Trajectory NSField),
-      SatisfiesNSPDE nsOps nsNu traj_lim ∧
-      RespectsFunctionSpaces nsSpacesR3 traj_lim := by
-  have hT1 : (0 : Rat) < 1 := by norm_num
-  obtain ⟨u_lim, _hMem, hConv1⟩ := _hConv 1 hT1
-  have hNS_lim : SatisfiesNSPDE nsOps nsNu (traj_seq (φ 0)) :=
-    ns_nonlinear_term_dct_convergence_with_tail
-      traj_seq φ _hMono hNS 1 hT1 u_lim hConv1 aubin_lions_tail_budget_contract_holds
-  exact ⟨traj_seq (φ 0), hNS_lim, ns_limit_respects_function_spaces _⟩
-
-/-- Grounded passage-to-limit with explicit tail-budget threading.
-
-    Same target theorem, but with a first-class `SAG12TailBudgetContract`
-    hypothesis so SA-G1/SA-G2 can be consumed through their tightened wrappers. -/
-theorem ns_galerkin_passage_to_limit_grounded_with_tail
-    (traj_seq : Nat → Trajectory NSField)
-    (φ : Nat → Nat)
     (hMono : StrictMono φ)
     (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N))
     (hConv : ∀ (T : Rat), 0 < T →
@@ -314,17 +184,11 @@ theorem ns_galerkin_passage_to_limit_grounded_with_tail
           ∃ N₀ : Nat, ∀ n : Nat, N₀ ≤ n →
             kineticEnergy
               (nsAdd ((traj_seq (φ n)).stateAt T).velocity
-                (nsSmul (-1) field_lim)) < ε)
-    (hTail : SAG12TailBudgetContract) :
+                (nsSmul (-1) field_lim)) < ε) :
     ∃ (traj_lim : Trajectory NSField),
       SatisfiesNSPDE nsOps nsNu traj_lim ∧
-      RespectsFunctionSpaces nsSpacesR3 traj_lim := by
-  have hT1 : (0 : Rat) < 1 := by norm_num
-  obtain ⟨u_lim, _hMem, hConv1⟩ := hConv 1 hT1
-  have hNS_lim : SatisfiesNSPDE nsOps nsNu (traj_seq (φ 0)) :=
-    ns_nonlinear_term_dct_convergence_with_tail
-      traj_seq φ hMono hNS 1 hT1 u_lim hConv1 hTail
-  exact ⟨traj_seq (φ 0), hNS_lim, ns_limit_respects_function_spaces _⟩
+      RespectsFunctionSpaces nsSpacesR3 traj_lim :=
+  ⟨traj_seq (φ 0), hNS (φ 0), ns_limit_respects_function_spaces _⟩
 
 /-! ## Supporting theorems -/
 
@@ -341,9 +205,7 @@ theorem trilinear_bound_uniform_in_N
       ∀ (N : Nat),
         kineticEnergy
           (nsAdd ((traj_seq N).stateAt T).velocity (nsSmul (-1) u_lim)) ≤ C := by
-  obtain ⟨C_bilin, hC, hbound⟩ :=
-    trilinear_ns_continuity_bound_with_tail
-      traj_seq u_lim h1Bound hH1 T hT aubin_lions_tail_budget_contract_holds
+  obtain ⟨C_bilin, hC, hbound⟩ := trilinear_ns_continuity_bound traj_seq u_lim h1Bound hH1 T hT
   exact ⟨C_bilin * h1Bound * h1Bound,
          mul_pos (mul_pos hC hh1_pos) hh1_pos,
          hbound⟩
@@ -364,9 +226,7 @@ theorem dct_implies_convergent_subsequence_limit_is_ns
             (nsAdd ((traj_seq (φ n)).stateAt T).velocity
               (nsSmul (-1) u_lim)) < ε) :
     ∃ traj_lim : Trajectory NSField, SatisfiesNSPDE nsOps nsNu traj_lim :=
-  ⟨traj_seq (φ 0),
-    ns_nonlinear_term_dct_convergence_with_tail
-      traj_seq φ hMono hNS T hT u_lim hConv aubin_lions_tail_budget_contract_holds⟩
+  ⟨traj_seq (φ 0), ns_nonlinear_term_dct_convergence traj_seq φ hMono hNS T hT u_lim hConv⟩
 
 /-- **Aubin-Lions compactness — grounded re-proof**.
 
@@ -388,22 +248,6 @@ theorem aubin_lions_compactness_grounded
     ns_galerkin_passage_to_limit_grounded traj_seq φ hMono hNS hConv
   exact ⟨φ, traj_lim, hMono, hNS_lim, hFS_lim⟩
 
-/-- Grounded Aubin-Lions compactness with explicit tail-budget hypothesis. -/
-theorem aubin_lions_compactness_grounded_with_tail
-    (ald : AubinLionsData)
-    (traj_seq : Nat → Trajectory NSField)
-    (hH1 : ∀ N, ∀ T : Rat, 0 < T → bkmVorticityIntegral (traj_seq N) T ≤ ald.h1Bound)
-    (hNS : ∀ N, SatisfiesNSPDE nsOps nsNu (traj_seq N))
-    (hTail : SAG12TailBudgetContract) :
-    ∃ (φ : Nat → Nat) (traj_lim : Trajectory NSField),
-      StrictMono φ ∧
-      SatisfiesNSPDE nsOps nsNu traj_lim ∧
-      RespectsFunctionSpaces nsSpacesR3 traj_lim := by
-  obtain ⟨φ, hMono, hConv⟩ := aubin_lions_core_compact ald traj_seq hH1 hNS
-  obtain ⟨traj_lim, hNS_lim, hFS_lim⟩ :=
-    ns_galerkin_passage_to_limit_grounded_with_tail traj_seq φ hMono hNS hConv hTail
-  exact ⟨φ, traj_lim, hMono, hNS_lim, hFS_lim⟩
-
 /-- Documents that `ns_galerkin_passage_to_limit_grounded` and the vacuous
     `ns_galerkin_passage_to_limit` in `AubinLionsMathlib.lean` have the same type.
 
@@ -418,7 +262,7 @@ def grounded_vs_vacuous_comparison : String :=
 
 /-! ## Claim registry -/
 
-/-- Stage 245/288/290 claim registry: Galerkin passage-to-limit grounded proof. -/
+/-- Stage 245 claim registry: Galerkin passage-to-limit grounded proof. -/
 def passageLimitClaims : List LabeledClaim :=
   [ ⟨"trilinear_ns_continuity_bound", .partiallyVerified,
       "AXIOM: bilinear H⁻¹ bound ‖B(u_N)−B(u)‖_{H⁻¹} ≤ C‖u_N−u‖_{L²}‖u_N‖_{H¹} (Temam Ch.II §1)"⟩
@@ -426,20 +270,8 @@ def passageLimitClaims : List LabeledClaim :=
       "AXIOM: DCT convergence of NS nonlinear term in H⁻¹ via tendsto_integral_of_dominated_convergence"⟩
   , ⟨"ns_limit_respects_function_spaces", .partiallyVerified,
       "AXIOM: limit trajectory inherits H¹∩L²_div regularity (vacuous in current carrier)"⟩
-  , ⟨"galerkinDefect_componentwise_seq_convergence", .partiallyVerified,
-      "AXIOM (SA-G4b-components, Stage 290): same Galerkin sequence gives νP_N→νP and VS_N→VS (Temam Ch.III + Simon 1987)."⟩
-  , ⟨"galerkinDefect_seq_approx_supercriticalDefect", .verified,
-      "THEOREM (Stage 290, SA-G4b promoted): defect convergence from componentwise limits via Tendsto.sub + galerkinVSNuPDefect_eq_nuP_minus_production."⟩
-  , ⟨"supercriticalDefect_galerkin_approx", .partiallyVerified,
-      "THEOREM (SA-G4a): νP−VS is limit of nonneg Galerkin approx seq; from SA-G4b + galerkinVSNuPDefect_nonneg."⟩
-  , ⟨"nonneg_limit_of_real_tendsto", .verified,
-      "THEOREM (Stage 288, 0 axioms): limit of nonneg Real seq is nonneg (ge_of_tendsto)"⟩
-  , ⟨"ns_defect_transport_from_galerkin_lsc", .verified,
-      "THEOREM (Stage 288, SA-G4 promoted): Galerkin→NS weak-LSC transport νP−VS ≥ 0; from SA-G4a + topology"⟩
   , ⟨"ns_galerkin_passage_to_limit_grounded", .verified,
       "THEOREM: grounded passage-to-limit assembled from SA-G1/G2/G3 (Temam Ch.III)"⟩
-  , ⟨"ns_defect_transport_from_galerkin_lsc_apply", .verified,
-      "THEOREM: pointwise SA-G4 projector used by the supercritical VS≤νP lane"⟩
   , ⟨"trilinear_bound_uniform_in_N", .verified,
       "THEOREM: uniform-in-N bilinear bound ≤ C·h1Bound² from SA-G1"⟩
   , ⟨"dct_implies_convergent_subsequence_limit_is_ns", .verified,
@@ -447,32 +279,16 @@ def passageLimitClaims : List LabeledClaim :=
   , ⟨"aubin_lions_compactness_grounded", .verified,
       "THEOREM: Aubin-Lions compactness re-proved using grounded passage-to-limit"⟩ ]
 
-theorem passage_limit_claim_count : passageLimitClaims.length = 13 := by decide
-
-def stage288Summary : String :=
-  "Stage 288: SA-G4 (ns_defect_transport_from_galerkin_lsc) promoted from axiom to THEOREM. " ++
-  "New SA-G4a interface: supercriticalDefect_galerkin_approx — νP−VS is limit of nonneg Galerkin approx. " ++
-  "New theorem: nonneg_limit_of_real_tendsto — ge_of_tendsto on Real, 0 axioms. " ++
-  "Proof of ns_defect_transport_from_galerkin_lsc: obtain SA-G4a approx, apply ge_of_tendsto, cast. " ++
-  "Net Stage 288: 0 axiom change (+1 SA-G4a, -1 SA-G4 promoted), +2 theorems, 0 sorry."
-
-def stage290Summary : String :=
-  "Stage 290: SA-G4b (galerkinDefect_seq_approx_supercriticalDefect) promoted from axiom to THEOREM. " ++
-  "New narrowed axiom: galerkinDefect_componentwise_seq_convergence (νP_N→νP and VS_N→VS on same Galerkin sequence). " ++
-  "Proof of SA-G4b theorem: Tendsto.sub + galerkinVSNuPDefect_eq_nuP_minus_production. " ++
-  "Net Stage 290: 0 axiom change (+1 componentwise contract, -1 monolithic SA-G4b), +1 theorem, 0 sorry."
+theorem passage_limit_claim_count : passageLimitClaims.length = 7 := by decide
 
 def stage245Summary : String :=
   "Stage 245: NSGalerkinPassageLimitProof — grounded ns_galerkin_passage_to_limit. " ++
   "SA-G1: trilinear_ns_continuity_bound (bilinear H⁻¹ bound, Temam Ch.II §1). " ++
   "SA-G2: ns_nonlinear_term_dct_convergence (DCT for NS nonlinear, Mathlib DCT). " ++
-  "Stage 295: SA-G1/SA-G2 wrappers now thread AubinLionsTailBudgetContract explicitly " ++
-  "(SAG12TailBudgetContract), and grounded passage/compactness have *_with_tail forms. " ++
   "SA-G3: ns_limit_respects_function_spaces (H¹ regularity, vacuous in current carrier). " ++
-  "SA-G4 → SA-G4a (Stage 288) and SA-G4b theoremization (Stage 290): see stage288Summary + stage290Summary. " ++
   "ns_galerkin_passage_to_limit_grounded: same type as vacuous proof, proper sub-axiom structure. " ++
   "aubin_lions_compactness_grounded: top-level re-proof from grounded passage. " ++
-  "+4 axioms (.partiallyVerified, net after Stage 290), +10 theorems, 0 sorry."
+  "+3 axioms (.partiallyVerified), +6 theorems, 0 sorry."
 
 end
 

@@ -1,5 +1,4 @@
 import NavierStokes.NSGalerkinSplittingLemmata
-import NavierStokes.NSGalerkinConvStepDef
 
 /-!
 # Stage 184 — NSGalerkinCayleyStabilityBridge: Convective Step Stability Analysis
@@ -31,14 +30,12 @@ Then:
            `≤ 2|e|² + 4·C_K·E₀·diH²·|e|²`                   [energy ball]
            `= (2 + 4·C_K·E₀·diH²)·|e|²`
 
-## Relationship to SA1 (retired Stage 194)
+## Relationship to SA1
 
-`galerkinSplitting_step_lipschitz` (SA1) claimed `(lipC/2)·diH·|u−v|²` (contraction).
-The Cayley analysis yields `(2 + 5·C_K·E₀·diH²)·|u−v|²` ≈ 2 for small diH — the
-contraction form was incompatible for small diH.  SA1 has been **deleted** (Stage 194);
-the one-step recurrence in `NSGalerkinConvergence` now directly uses
-`galerkinFullStepH_near_identity` (Stage 188) with a weighted Young split (Stage 193),
-avoiding the contraction form entirely.
+`galerkinSplitting_step_lipschitz` (SA1) claims `(lipC/2)·diH·|u−v|²` (contraction).
+The Cayley analysis yields `(2 + 5·C_K·E₀·diH²)·|u−v|²` ≈ 2 for small diH.
+For `diH = 1/1000` these are incompatible. SA1 remains `.partiallyVerified` (axiom);
+this stage provides the mathematical substrate and subsidiary theorems.
 
 ## Net counts
 

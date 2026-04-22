@@ -261,7 +261,6 @@ theorem actual_critical_axiom_record :
   ⟨{ leanName         := "ml_stabilization_implies_precise_gap"
      sourceFile        := "GalerkinDescentTower.lean:455"
      epistemic         := .openBridge
-     semanticLayer     := .publishedAxiom
      blockerReason     :=
        "Galerkin convergence from ML-stabilized finite-dimensional bounds to the " ++
        "full 3D NS trajectory requires the 1/2-derivative Sobolev embedding " ++

@@ -1,6 +1,5 @@
 import NavierStokes.NSHelicalSmallDataCaseC
 import NavierStokes.BKMMinimalBridge
-import NavierStokes.NSHamiltonianComplexityBridge
 
 /-!
 # Stage 272 — NSK41EPTUniversalityBridge
@@ -36,8 +35,8 @@ the inertial range dominates and VS ≤ νP holds globally.
 
 ## Net counts
 
-  - New axioms:   0  (Stage 287: `k41_ept_universality` routed through complexity scaffold)
-  - New theorems: 10
+  - New axioms:   1  (`k41_ept_universality`, K41 scale-conditional isotropy)
+  - New theorems: 9
   - sorry:        0
   - warnings:     0
 -/
@@ -50,7 +49,7 @@ noncomputable section
 
 open NavierStokes.DiscreteKernel
 
-/-! ## 1. K41 EPT Universality (theoremized via scaffold) -/
+/-! ## 1. K41 EPT Universality Axiom -/
 
 /-- **K41 EPT Universality**: for large-data initial conditions, there exists an
     entropic proper time threshold τ_iso > 0 such that VS ≤ νP for all t with
@@ -60,13 +59,14 @@ open NavierStokes.DiscreteKernel
     inertial-range cascade has fully developed (EPT ≥ τ_iso), Kolmogorov SO(3)
     isotropy holds at inertial scales and vortex stretching cannot exceed νP.
 
-    **Stage 287 update**: this entry is now theoremized by routing through
-    `k41_via_complexity_front` (Stage 273 scaffold), rather than declared as a
-    standalone `.openBridge` axiom.
+    **Epistemic status**: `.openBridge` — K41 universality (Constantin-E-Titi 1994,
+    Eyink-Chen-Chen 2003) in the EPT formulation.  The precise τ_iso > 0 exists by
+    compactness of the attractor and finite cascade time, but the current
+    formalization treats it as an open bridge pending a Lyapunov-function proof.
 
     **Key condition**: `hLarge` asserts Ω(0)² > 40·ν⁴, i.e., the initial data is
     strictly outside the small-data regime of Stage 266. -/
-theorem k41_ept_universality
+axiom k41_ept_universality
     (traj : Trajectory NSField)
     (hNS  : SatisfiesNSPDE nsOps nsNu traj)
     (hFS  : RespectsFunctionSpaces nsSpacesR3 traj)
@@ -78,8 +78,7 @@ theorem k41_ept_universality
       ∀ t : Rat, 0 ≤ t →
         entropicProperTime traj t ≥ τ_iso →
         vortexStretchingIntegral traj t ≤
-          nsNu * palinstrophy (traj.stateAt t).velocity :=
-  k41_via_complexity_front traj hNS hFS hLarge
+          nsNu * palinstrophy (traj.stateAt t).velocity
 
 /-! ## 2. Classical.choose extraction -/
 

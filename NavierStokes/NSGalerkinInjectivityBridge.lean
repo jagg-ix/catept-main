@@ -1,5 +1,4 @@
 import NavierStokes.NSGalerkinCayleyBridge
-import NavierStokes.NSGalerkinConvDef
 
 /-!
 # Stage 166 — NSGalerkinInjectivityBridge: Algebraic Injectivity of the Cayley Map
@@ -42,7 +41,6 @@ open NavierStokes.PalinstrophyTauBridge  -- galerkinN
 open NavierStokes.GalerkinComplexModel   -- CRat, CoeffC, normSqC, realInnerC
 open NavierStokes.GalerkinConvection     -- GalerkinBasis, galerkinConvection
 open NavierStokes.GalerkinCayley         -- CRat.smul, B_bilinear_self_zero
-open NavierStokes.GalerkinConvDef        -- _from_def linearity transports
 
 /-! ## CRat algebraic lemmas -/
 
@@ -94,20 +92,18 @@ theorem CRat.smul_sub (r : Rat) (a b : CRat) :
     Captures linearity of the Galerkin bilinear operator in its second argument:
     `(u·∇)(v + w) = (u·∇)v + (u·∇)w`.
 
-    Promoted from axiom to theorem via `NSGalerkinConvDef`. -/
-theorem galerkinConvection_add_right {N : Nat} (basis : GalerkinBasis N) (u v w : CoeffC N) :
+    Epistemic status: `.partiallyVerified` (linearity of div-free projection + triadic sum). -/
+axiom galerkinConvection_add_right {N : Nat} (basis : GalerkinBasis N) (u v w : CoeffC N) :
     galerkinConvection basis u (v + w) =
-    galerkinConvection basis u v + galerkinConvection basis u w :=
-  galerkinConvection_add_right_from_def basis u v w
+    galerkinConvection basis u v + galerkinConvection basis u w
 
 /-- **galerkinConvection_smul_right** — `K_u(r·v) = r·K_u v` (componentwise CRat.smul).
 
-    Promoted from axiom to theorem via `NSGalerkinConvDef`. -/
-theorem galerkinConvection_smul_right {N : Nat} (basis : GalerkinBasis N)
+    Epistemic status: `.partiallyVerified` (scalar linearity of div-free projection). -/
+axiom galerkinConvection_smul_right {N : Nat} (basis : GalerkinBasis N)
     (u v : CoeffC N) (r : Rat) :
     galerkinConvection basis u (fun j => CRat.smul r (v j)) =
-    fun i => CRat.smul r (galerkinConvection basis u v i) :=
-  galerkinConvection_smul_right_from_def basis u v r
+    fun i => CRat.smul r (galerkinConvection basis u v i)
 
 /-- `K_u(v − w) = K_u v − K_u w` (derived from add + smul). -/
 theorem galerkinConvection_sub_right {N : Nat} (basis : GalerkinBasis N)

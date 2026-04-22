@@ -188,12 +188,12 @@ def exampleNontrivialTraj : EnergyDissipatingFourierTrajectory :=
     amp_nonneg  := fun _ _ => by norm_num
     energy_dissipation := fun _ _ _ => le_refl _ }
 
-theorem exampleTraj_amp_pos : (0 : Rat) < exampleNontrivialTraj.stateAt 0 ⟨0, Nat.lt_add_one 0⟩ := by
+theorem exampleTraj_amp_pos : (0 : Rat) < exampleNontrivialTraj.stateAt 0 ⟨0, Nat.lt.base 0⟩ := by
   simp [exampleNontrivialTraj]
 
 theorem exampleTraj_enstrophy_pos :
     (0 : Rat) < enstrophyF (trajFieldAt exampleNontrivialTraj 0) := by
-  apply enstrophyF_pos_of_nontriv _ ⟨0, Nat.lt_add_one 0⟩
+  apply enstrophyF_pos_of_nontriv _ ⟨0, Nat.lt.base 0⟩
   · simp [exampleNontrivialTraj, trajFieldAt]
   · simp [exampleNontrivialTraj, trajFieldAt]
 

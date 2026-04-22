@@ -17,117 +17,48 @@ set_option autoImplicit false
 open NavierStokes.ObservableInterface
 open NavierStokes.PhysicalT3Bridge
 
-/-! ## Legacy-to-mode0 monotonicity contract -/
-
-/-- Explicit migration contract from legacy BKM observable to the Stage-218
-    physical mode-0 observable candidate. -/
-def LegacyMode0VorticityMonotone : Prop :=
-  ∀ v : NSField, vorticityLinfty v ≤ vorticityLinftyPhysicalMode0 v
-
-/-- External-facing contract: legacy BKM observable is pointwise dominated by the
-    physical observable interface vorticity for all carrier states. -/
-def LegacyPhysicalVorticityDominance : Prop :=
-  ∀ v : NSField, vorticityLinfty v ≤ physicalNSObservables.vorticityLinfty v
-
-/-- Current-model instantiation of the migration contract.
-    This is currently discharged by the reduced-carrier legacy placeholder
-    (`vorticityLinfty := 0`) and should be replaced by a physical proof as the
-    carrier is hardened. -/
-theorem legacyMode0VorticityMonotone_current_model :
-    LegacyMode0VorticityMonotone :=
-  vorticityLinfty_legacy_le_physicalMode0
-
-/-- Physical dominance contract: abstract carrier vorticity is dominated by
-    the concrete physical observable vorticity (genuine physical claim, Stage 224). -/
-axiom legacyPhysicalVorticityDominance_current_model :
-    LegacyPhysicalVorticityDominance
-
 /-- Legacy BKM integral is pointwise bounded by the physical mode-0 candidate
     integral, so existing legacy consumers can be migrated monotonically. -/
-theorem bkmVorticityIntegral_legacy_le_physicalMode0_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
+theorem bkmVorticityIntegral_legacy_le_physicalMode0
     (traj : Trajectory NSField) (T : Rat) :
     bkmVorticityIntegral traj T ≤ bkmVorticityIntegralPhysicalMode0 traj T := by
   unfold bkmVorticityIntegral bkmVorticityIntegralPhysicalMode0
   apply NavierStokes.DiscreteKernel.discreteIntegral_le_of_pointwise
   intro t
-  exact hMono (traj.stateAt t).velocity
-
-/-- Current-model specialization of legacy ≤ mode-0 integral transport. -/
-theorem bkmVorticityIntegral_legacy_le_physicalMode0
-    (traj : Trajectory NSField) (T : Rat) :
-    bkmVorticityIntegral traj T ≤ bkmVorticityIntegralPhysicalMode0 traj T :=
-  bkmVorticityIntegral_legacy_le_physicalMode0_of_monotone
-    legacyMode0VorticityMonotone_current_model traj T
+  exact vorticityLinfty_legacy_le_physicalMode0 (traj.stateAt t).velocity
 
 /-- Any upper bound on the physical mode-0 integral is also an upper bound
     on the legacy BKM integral. -/
-theorem bkmVorticityIntegral_le_of_physicalMode0_bound_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
-    (traj : Trajectory NSField) (T M : Rat)
-    (hM : bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
-    bkmVorticityIntegral traj T ≤ M :=
-  le_trans (bkmVorticityIntegral_legacy_le_physicalMode0_of_monotone hMono traj T) hM
-
-/-- Current-model specialization of physical-mode upper-bound transport. -/
 theorem bkmVorticityIntegral_le_of_physicalMode0_bound
     (traj : Trajectory NSField) (T M : Rat)
     (hM : bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
     bkmVorticityIntegral traj T ≤ M :=
-  bkmVorticityIntegral_le_of_physicalMode0_bound_of_monotone
-    legacyMode0VorticityMonotone_current_model traj T M hM
+  le_trans (bkmVorticityIntegral_legacy_le_physicalMode0 traj T) hM
 
 /-- Transport a concrete bound on the physical mode-0 observable to the
     opaque convergence predicate used by the legacy BKM finiteness layer. -/
-theorem bkmIntegralConverges_of_physicalMode0_bound_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
-    (traj : Trajectory NSField) (T M : Rat)
-    (hM : bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
-    BKMIntegralConverges traj T :=
-  bkm_bounded_implies_converges traj T M
-    (bkmVorticityIntegral_le_of_physicalMode0_bound_of_monotone hMono traj T M hM)
-
-/-- Current-model specialization of BKM convergence transport. -/
 theorem bkmIntegralConverges_of_physicalMode0_bound
     (traj : Trajectory NSField) (T M : Rat)
     (hM : bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
     BKMIntegralConverges traj T :=
-  bkmIntegralConverges_of_physicalMode0_bound_of_monotone
-    legacyMode0VorticityMonotone_current_model traj T M hM
+  bkm_bounded_implies_converges traj T M
+    (bkmVorticityIntegral_le_of_physicalMode0_bound traj T M hM)
 
 /-- Physical mode-0 integral bounds imply legacy BKM finiteness. -/
-theorem bkmIntegralFiniteAt_of_physicalMode0_bound_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
-    (traj : Trajectory NSField) (T M : Rat)
-    (hM : bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
-    BKMIntegralFiniteAt traj T :=
-  bkmIntegralConverges_of_physicalMode0_bound_of_monotone hMono traj T M hM
-
-/-- Current-model specialization of finite-at transport. -/
 theorem bkmIntegralFiniteAt_of_physicalMode0_bound
     (traj : Trajectory NSField) (T M : Rat)
     (hM : bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
     BKMIntegralFiniteAt traj T :=
-  bkmIntegralFiniteAt_of_physicalMode0_bound_of_monotone
-    legacyMode0VorticityMonotone_current_model traj T M hM
+  bkmIntegralConverges_of_physicalMode0_bound traj T M hM
 
 /-- Existential packaging for common workflows that already produce a
     finite upper bound witness on the physical mode-0 integral. -/
-theorem bkmIntegralFiniteAt_of_exists_physicalMode0_bound_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
+theorem bkmIntegralFiniteAt_of_exists_physicalMode0_bound
     (traj : Trajectory NSField) (T : Rat)
     (hBound : ∃ M : Rat, bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
     BKMIntegralFiniteAt traj T := by
   rcases hBound with ⟨M, hM⟩
-  exact bkmIntegralFiniteAt_of_physicalMode0_bound_of_monotone hMono traj T M hM
-
-/-- Current-model specialization of existential finite-at transport. -/
-theorem bkmIntegralFiniteAt_of_exists_physicalMode0_bound
-    (traj : Trajectory NSField) (T : Rat)
-    (hBound : ∃ M : Rat, bkmVorticityIntegralPhysicalMode0 traj T ≤ M) :
-    BKMIntegralFiniteAt traj T :=
-  bkmIntegralFiniteAt_of_exists_physicalMode0_bound_of_monotone
-    legacyMode0VorticityMonotone_current_model traj T hBound
+  exact bkmIntegralFiniteAt_of_physicalMode0_bound traj T M hM
 
 /-! ## Physical precise-gap transport -/
 
@@ -147,27 +78,18 @@ def PreciseGapStatementPhysicalMode0 : Prop :=
 
 /-- A physical-mode precise gap bound implies the legacy precise gap statement.
     This is the monotone migration bridge used by downstream BKM consumers. -/
-theorem precise_gap_physicalMode0_implies_precise_gap_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
+theorem precise_gap_physicalMode0_implies_precise_gap
     (hGap0 : PreciseGapStatementPhysicalMode0) :
     PreciseGapStatement := by
   rcases hGap0 with ⟨F, hF⟩
   refine ⟨F, ?_⟩
   intro traj T hT hNS hFS
   exact le_trans
-    (bkmVorticityIntegral_legacy_le_physicalMode0_of_monotone hMono traj T)
+    (bkmVorticityIntegral_legacy_le_physicalMode0 traj T)
     (hF traj T hT hNS hFS)
 
-/-- Current-model specialization of physical-mode precise-gap transport. -/
-theorem precise_gap_physicalMode0_implies_precise_gap
-    (hGap0 : PreciseGapStatementPhysicalMode0) :
-    PreciseGapStatement :=
-  precise_gap_physicalMode0_implies_precise_gap_of_monotone
-    legacyMode0VorticityMonotone_current_model hGap0
-
 /-- Reusable BKM finiteness consequence from a physical-mode precise gap witness. -/
-theorem bkmIntegralFiniteAt_of_precise_gap_physicalMode0_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
+theorem bkmIntegralFiniteAt_of_precise_gap_physicalMode0
     (hGap0 : PreciseGapStatementPhysicalMode0)
     (traj : Trajectory NSField) (T : Rat)
     (hT : 0 < T)
@@ -175,38 +97,11 @@ theorem bkmIntegralFiniteAt_of_precise_gap_physicalMode0_of_monotone
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     BKMIntegralFiniteAt traj T := by
   exact precise_gap_implies_regularity
-    (precise_gap_physicalMode0_implies_precise_gap_of_monotone hMono hGap0)
+    (precise_gap_physicalMode0_implies_precise_gap hGap0)
     traj T hT hNS hFS
-
-/-- Current-model specialization of finite-at from physical-mode precise-gap. -/
-theorem bkmIntegralFiniteAt_of_precise_gap_physicalMode0
-    (hGap0 : PreciseGapStatementPhysicalMode0)
-    (traj : Trajectory NSField) (T : Rat)
-    (hT : 0 < T)
-    (hNS : SatisfiesNSPDE nsOps nsNu traj)
-    (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
-    BKMIntegralFiniteAt traj T :=
-  bkmIntegralFiniteAt_of_precise_gap_physicalMode0_of_monotone
-    legacyMode0VorticityMonotone_current_model hGap0 traj T hT hNS hFS
 
 /-- Interface-level transport: physical-mode precise gap can drive the same
     minimal-bridge consumer used by the legacy `PreciseGapStatement`. -/
-theorem precise_gap_physicalMode0_to_minimal_bridge_of_monotone
-    (hMono : LegacyMode0VorticityMonotone)
-    (pi : PathIntegralInterface NSField)
-    (hGap0 : PreciseGapStatementPhysicalMode0) :
-    ∀ (st0 : State NSField),
-      pi.PIWellPosed st0 →
-      AdmissibleInitialData nsSpacesR3 st0 →
-      ∀ (traj : Trajectory NSField) (T : Rat),
-        0 < T →
-        SatisfiesNSPDE nsOps nsNu traj →
-        RespectsFunctionSpaces nsSpacesR3 traj →
-        BKMIntegralFiniteAt traj T :=
-  precise_gap_to_minimal_bridge pi
-    (precise_gap_physicalMode0_implies_precise_gap_of_monotone hMono hGap0)
-
-/-- Current-model specialization of minimal-bridge transport. -/
 theorem precise_gap_physicalMode0_to_minimal_bridge
     (pi : PathIntegralInterface NSField)
     (hGap0 : PreciseGapStatementPhysicalMode0) :
@@ -218,8 +113,8 @@ theorem precise_gap_physicalMode0_to_minimal_bridge
         SatisfiesNSPDE nsOps nsNu traj →
         RespectsFunctionSpaces nsSpacesR3 traj →
         BKMIntegralFiniteAt traj T :=
-  precise_gap_physicalMode0_to_minimal_bridge_of_monotone
-    legacyMode0VorticityMonotone_current_model pi hGap0
+  precise_gap_to_minimal_bridge pi
+    (precise_gap_physicalMode0_implies_precise_gap hGap0)
 
 /-! ## Observable-interface adapter (physical instance) -/
 
@@ -231,43 +126,27 @@ def PhysicalMode0ObsAlignment : Prop :=
   (∀ v : NSField,
       enstrophy v = physicalNSObservables.enstrophy v)
 
-/-- Non-current-model source route for mode-0 monotonicity:
-    if legacy is dominated by physical vorticity and mode-0 aligns to physical
-    vorticity, then legacy is dominated by mode-0 directly. -/
-theorem legacyMode0VorticityMonotone_of_alignment_and_legacyPhysicalDominance
-    (hLegacyPhys : LegacyPhysicalVorticityDominance)
-    (hAlign : PhysicalMode0ObsAlignment) :
-    LegacyMode0VorticityMonotone := by
-  rcases hAlign with ⟨hVortAlign, _hEnsAlign⟩
-  intro v
-  calc
-    vorticityLinfty v ≤ physicalNSObservables.vorticityLinfty v := hLegacyPhys v
-    _ = vorticityLinftyPhysicalMode0 v := by
-          symm
-          exact hVortAlign v
-
-
 /-- Under vorticity alignment, the Stage-218 physical mode-0 BKM integral equals
     the observable-interface BKM integral for the physical instance. -/
 theorem bkmPhysicalMode0_eq_obs_physical
-    (_hVortAlign : ∀ v : NSField,
+    (hVortAlign : ∀ v : NSField,
       vorticityLinftyPhysicalMode0 v = physicalNSObservables.vorticityLinfty v)
     (traj : Trajectory NSField) (T : Rat) :
     bkmVorticityIntegralPhysicalMode0 traj T =
       bkmVorticityIntegralObs physicalNSObservables traj T := by
-  -- Stage 241: definitionally equal after enstrophy physicalization
-  rfl
+  unfold bkmVorticityIntegralPhysicalMode0 bkmVorticityIntegralObs
+  congr 1
 
 /-- Under enstrophy alignment, entropic proper time equals the observable-interface
     entropic clock for the physical instance. -/
 theorem entropicProperTime_eq_obs_physical
-    (_hEnsAlign : ∀ v : NSField,
+    (hEnsAlign : ∀ v : NSField,
       enstrophy v = physicalNSObservables.enstrophy v)
     (traj : Trajectory NSField) (T : Rat) :
     entropicProperTime traj T =
       entropicProperTimeObs physicalNSObservables traj T := by
-  -- Stage 241: definitionally equal after enstrophy physicalization
-  rfl
+  unfold entropicProperTime integratedEnstrophy entropicProperTimeObs
+  congr 1
 
 /-- Any observable-interface physical precise-gap witness transports to the
     Stage-218 physical mode-0 precise-gap statement under explicit alignment. -/
@@ -541,7 +420,7 @@ theorem enstrophyPhysicalizationGate_of_physicalizedWitnessObligation
           exact hAlign
 
 /-- Canonical witness state selected from the physicalized-candidate positivity
-    theorem.  This gives a fixed target for concrete carrier alignment work. -/
+    theorem. This gives a fixed target for concrete carrier alignment work. -/
 noncomputable def enstrophyPhysicalizedCanonicalWitnessState : NSField :=
   Classical.choose enstrophyPhysicalizedCandidate_positive_witness
 
@@ -573,7 +452,6 @@ theorem enstrophyPhysicalizationGate_of_candidate_swap
   refine ⟨v, ?_⟩
   rw [hSwap v]
   exact hvPos
-
 
 /-- If the enstrophy physicalization gate is discharged, the Stage-218 mode-0
     non-placeholder witness follows constructively. -/
@@ -714,6 +592,5 @@ theorem bridge_target_linear_entropic_control_physicalMode0CanonicalWitnessOblig
     (hOb : BridgeTargetLinearEntropicControlPhysicalMode0CandidateSwapObligation) :
     BridgeTargetLinearEntropicControlPhysicalMode0CanonicalWitnessObligation :=
   hOb enstrophyPhysicalizedCanonicalWitnessState
-
 
 end NavierStokes.Millennium

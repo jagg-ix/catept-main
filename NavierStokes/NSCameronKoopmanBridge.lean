@@ -240,18 +240,15 @@ end GeneratorFormulas
     exponential mode-suppression, so the GN bound is at most as large as for plain VS).
 
     This axiom is `.openBridge`: it requires the full GN inequality for the Cameron-
-    weighted VS on the NS Galerkin level, which is the precise analytic gap in Route 6.
-    Stage 233: promoted — cameronWeightedVSIntegral = palinstrophy = enstrophy = 0. -/
-theorem cameron_scale_correct_young_bound
-    (eps : Rat) (_heps : 0 < eps) :
+    weighted VS on the NS Galerkin level, which is the precise analytic gap in Route 6. -/
+axiom cameron_scale_correct_young_bound
+    (eps : Rat) (heps : 0 < eps) :
     ∃ C_eps : Rat, 0 < C_eps ∧
       ∀ (G : GalerkinLevel) (traj : Trajectory NSField) (t : Rat),
         SatisfiesNSPDE nsOps nsNu traj →
         cameronWeightedVSIntegral G traj t ≤
           eps * nsNu * palinstrophy (traj.stateAt t).velocity +
-          C_eps * enstrophy (traj.stateAt t).velocity ^ 3 :=
-  ⟨1, by norm_num, fun _G _traj _t _hNS => by
-    simp [cameronWeightedVSIntegral, palinstrophy, enstrophy]⟩
+          C_eps * enstrophy (traj.stateAt t).velocity ^ 3
 
 /-! ## 5. Epistemic Diagnosis -/
 

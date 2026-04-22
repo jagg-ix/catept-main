@@ -84,10 +84,11 @@ theorem two_dim_vortex_stretching_zero
     (traj : Trajectory NSField)
     (_hNS : SatisfiesNSPDE nsOps nsNu traj)
     (_hFS : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_h2D : TwoDimensionalFlow traj) :
+    (h2D : TwoDimensionalFlow traj) :
     VSRatioBounded 0 traj := by
   intro t _
-  simp [vortexStretchingIntegral]
+  rw [h2D t]
+  norm_num
 
 /-- **A2-2D** (Structural): A 2D NS trajectory with zero vortex stretching is governed
     by the Cameron Liouvillian at every Galerkin level with zero perturbation norm.

@@ -1,4 +1,4 @@
-import NavierStokes.NSGalerkinConvectionBridge
+import NavierStokes.NSGalerkinConvStepDef
 
 /-!
 # Stages 170–171 — NSGalerkinConvDef: Concrete galerkinConvection via Triadic Kernel
@@ -55,6 +55,8 @@ set_option autoImplicit false
 open NavierStokes.PalinstrophyTauBridge
 open NavierStokes.GalerkinComplexModel
 open NavierStokes.GalerkinConvection
+open NavierStokes.GalerkinCayley
+open NavierStokes.GalerkinInjectivity
 
 /-! ## Complex multiplication on CRat -/
 
@@ -80,27 +82,13 @@ theorem CRat.smul_smul (r s : Rat) (z : CRat) :
   Prod.ext (by simp [CRat.smul, CRat.re, CRat.im]; ring)
            (by simp [CRat.smul, CRat.re, CRat.im]; ring)
 
-/-- Scalar distributes over addition. -/
-theorem CRat.smul_add (r : Rat) (a b : CRat) :
-    CRat.smul r (a + b) = CRat.smul r a + CRat.smul r b :=
-  Prod.ext (by simp [CRat.smul, CRat.re, CRat.im, mul_add])
-           (by simp [CRat.smul, CRat.re, CRat.im, mul_add])
-
-/-- Scalar distributes over subtraction. -/
-theorem CRat.smul_sub (r : Rat) (a b : CRat) :
-    CRat.smul r (a - b) = CRat.smul r a - CRat.smul r b :=
-  Prod.ext (by simp [CRat.smul, CRat.re, CRat.im, mul_sub])
-           (by simp [CRat.smul, CRat.re, CRat.im, mul_sub])
-
 /-- Scalar distributes over finite sum: `r · ∑ f = ∑ r · f`. -/
 theorem CRat.smul_finsum (r : Rat) {N : Nat} (f : Fin N → CRat) :
     CRat.smul r (∑ i : Fin N, f i) = ∑ i : Fin N, CRat.smul r (f i) := by
-  classical
-  induction (Finset.univ : Finset (Fin N)) using Finset.induction_on with
-  | empty =>
-      apply Prod.ext <;> simp [CRat.smul, CRat.re, CRat.im]
-  | @insert a s ha ih =>
-      simp [Finset.sum_insert, ha, CRat.smul_add, ih]
+  have heq : ∀ (s : Rat) (z : CRat), CRat.smul s z = s • z :=
+    fun s z => Prod.ext (by simp [CRat.smul, CRat.re, smul_eq_mul]) (by simp [CRat.smul, CRat.im, smul_eq_mul])
+  simp_rw [heq]
+  exact Finset.smul_sum
 
 /-- Key term identity: `K · (a ⊗ (r · b)) = r · (K · (a ⊗ b))`. -/
 theorem CRat.smul_mul_smul_right (K r : Rat) (a b : CRat) :
@@ -250,15 +238,8 @@ theorem galerkinConvDef_energy_cancel {N : Nat} (eb : ExtGalerkinBasis N) (u : C
 
 /-! ## Identification: concrete def = abstract axiom -/
 
-/-- The canonical extended basis for any `GalerkinBasis N`.
-
-    This is now a concrete definition (no axiom): we package the incoming
-    basis and use a default triadic kernel placeholder. Concrete physical
-    calibration of the kernel remains represented by the identification bridge
-    `galerkinConvDef_is_galerkinConvection`. -/
-def standardTriadK {N : Nat} (basis : GalerkinBasis N) : ExtGalerkinBasis N where
-  basis := basis
-  triadK := fun _ _ _ => 0
+/-- The canonical extended basis for any `GalerkinBasis N` (Fourier triadic structure on T³). -/
+axiom standardTriadK {N : Nat} (basis : GalerkinBasis N) : ExtGalerkinBasis N
 
 /-- **galerkinConvDef_is_galerkinConvection** — `galerkinConvDef` equals `galerkinConvection`.
 
@@ -327,31 +308,6 @@ theorem galerkinConvection_smul_left_from_def {N : Nat} (basis : GalerkinBasis N
   simp_rw [galerkinConvDef_is_galerkinConvection] at h
   exact h
 
-/-- **Right subtraction for galerkinConvection** from additivity + homogeneity.
-
-    This mirrors the Stage 166 lemma, but is derived directly from the concrete
-    `galerkinConvDef` identification so downstream files can depend on this file
-    without an import cycle through `NSGalerkinInjectivityBridge`. -/
-theorem galerkinConvection_sub_right_from_def {N : Nat} (basis : GalerkinBasis N)
-    (u v w : CoeffC N) :
-    galerkinConvection basis u (v - w) =
-    galerkinConvection basis u v - galerkinConvection basis u w := by
-  have hsub : v - w = v + fun j => CRat.smul (-1) (w j) :=
-    funext fun j => by
-      simp only [Pi.sub_apply, Pi.add_apply]
-      have hsmul : CRat.smul (-1) (w j) = -(w j) :=
-        Prod.ext
-          (by simp [CRat.smul, CRat.re, CRat.im])
-          (by simp [CRat.smul, CRat.re, CRat.im])
-      rw [hsmul]
-      exact sub_eq_add_neg (v j) (w j)
-  rw [hsub, galerkinConvection_add_right_from_def,
-      galerkinConvection_smul_right_from_def basis u w (-1)]
-  funext i
-  apply Prod.ext
-  · simp only [Pi.sub_apply, Pi.add_apply, CRat.smul, CRat.re, Prod.fst_add, Prod.fst_sub]; ring
-  · simp only [Pi.sub_apply, Pi.add_apply, CRat.smul, CRat.im, Prod.snd_add, Prod.snd_sub]; ring
-
 /-- **Left subtraction for galerkinConvection**: `K_{u−v}(w) k = K_u(w) k − K_v(w) k`. -/
 theorem galerkinConvection_sub_left_from_def {N : Nat} (basis : GalerkinBasis N)
     (u v w : CoeffC N) (k : Fin N) :
@@ -374,20 +330,11 @@ theorem galerkinConvection_split {N : Nat} (basis : GalerkinBasis N)
     galerkinConvection basis (fun i => u i - v i) w2 k := by
   calc galerkinConvection basis u w1 k - galerkinConvection basis v w2 k
       = (galerkinConvection basis u w1 k - galerkinConvection basis u w2 k) +
-        (galerkinConvection basis u w2 k - galerkinConvection basis v w2 k) := by
-          apply Prod.ext
-          · change (galerkinConvection basis u w1 k).1 - (galerkinConvection basis v w2 k).1 =
-              ((galerkinConvection basis u w1 k).1 - (galerkinConvection basis u w2 k).1) +
-              ((galerkinConvection basis u w2 k).1 - (galerkinConvection basis v w2 k).1)
-            abel
-          · change (galerkinConvection basis u w1 k).2 - (galerkinConvection basis v w2 k).2 =
-              ((galerkinConvection basis u w1 k).2 - (galerkinConvection basis u w2 k).2) +
-              ((galerkinConvection basis u w2 k).2 - (galerkinConvection basis v w2 k).2)
-            abel
+        (galerkinConvection basis u w2 k - galerkinConvection basis v w2 k) := by ring
     _ = galerkinConvection basis u (fun i => w1 i - w2 i) k +
         galerkinConvection basis (fun i => u i - v i) w2 k := by
           congr 1
-          · exact (congr_fun (galerkinConvection_sub_right_from_def basis u w1 w2) k).symm
+          · exact (congr_fun (galerkinConvection_sub_right basis u w1 w2) k).symm
           · exact (galerkinConvection_sub_left_from_def basis u v w2 k).symm
 
 def stage171Summary : String :=
@@ -404,12 +351,11 @@ def stage171Summary : String :=
   "galerkinConvDef_sub_left: THEOREM. " ++
   "galerkinConvection_add_left_from_def: THEOREM. " ++
   "galerkinConvection_smul_left_from_def: THEOREM. " ++
-  "galerkinConvection_sub_right_from_def: THEOREM (add+smul). " ++
   "galerkinConvection_sub_left_from_def: THEOREM. " ++
   "galerkinConvection_split: THEOREM (Cayley-subtract key identity)." ++
   "triadK_antisymm: THEOREM (polarization from triadK_self_cancel, 0 new axioms). " ++
   "galerkinConvDef_energy_cancel: THEOREM (direct from triadK_self_cancel). " ++
-  "standardTriadK: canonical extended basis (def). " ++
+  "standardTriadK: canonical extended basis (axiom). " ++
   "galerkinConvDef_is_galerkinConvection: identification axiom (.partiallyVerified). " ++
   "B_energy_cancel_from_def: THEOREM. B_bilinear_antisymm_from_def: THEOREM. " ++
   "galerkinConvection_add_right/smul_right_from_def: THEOREMS. " ++

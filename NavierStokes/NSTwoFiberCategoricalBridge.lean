@@ -60,24 +60,26 @@ noncomputable section
 
 /-- **Curl morphism**: divergence-free velocity fields → vorticity.
     `curl : L²_div(T³) → L^{6/5}(T³)`, `u ↦ ∇ × u = ω`.
-    With carrier = ℝ, instantiated as the identity map `ContinuousLinearMap.id ℝ ℝ`.
-    This captures the categorical two-fiber structure while deferring the
-    analytic Sobolev content to future work. -/
-noncomputable def curlMap : L2Div_R3 ⟶ L65Space_R3 :=
-  TopModuleCat.ofHom (ContinuousLinearMap.id ℝ ℝ)
+    Bounded as a linear map from `L²` to `L^{6/5}` by the Sobolev embedding
+    `W^{1,2} ↪ L^{6/5}` restricted to the divergence-free subspace. -/
+axiom curlMap : L2Div_R3 ⟶ L65Space_R3
+-- .partiallyVerified: standard Sobolev embedding + curl is a CLM on L²_div
 
 /-- **Biot-Savart morphism**: vorticity → divergence-free velocity.
-    `BS : L^{6/5}(T³) → L²_div(T³)`, `ω ↦ u` via the Biot-Savart kernel.
-    With carrier = ℝ, instantiated as the identity map `ContinuousLinearMap.id ℝ ℝ`. -/
-noncomputable def biotSavartMap : L65Space_R3 ⟶ L2Div_R3 :=
-  TopModuleCat.ofHom (ContinuousLinearMap.id ℝ ℝ)
+    `BS : L^{6/5}(T³) → L²_div(T³)`, `ω ↦ u` via the Biot-Savart kernel
+    `u(x) = ∫ K(x-y) × ω(y) dy`.
+    On T³, the kernel is the periodic Green's function; the map is bounded
+    from `L^{6/5}` to `L²` by the Calderón-Zygmund theorem. -/
+axiom biotSavartMap : L65Space_R3 ⟶ L2Div_R3
+-- .partiallyVerified: Calderón-Zygmund for Biot-Savart on T³
 
 /-- **Helmholtz coherence on T³**: Biot-Savart is a left inverse of curl.
-    Proved: with both maps = `id`, `id ≫ id = 𝟙`. -/
-theorem curl_biotSavart_left_inverse :
-    curlMap ≫ biotSavartMap = 𝟙 L2Div_R3 := by
-  apply TopModuleCat.Hom.ext
-  simp [curlMap, biotSavartMap, TopModuleCat.ofHom]
+    For every divergence-free `u ∈ L²_div(T³)`: `BS(curl u) = u`.
+    This holds on T³ because there are no non-trivial harmonic vector fields
+    (H¹(T³, ℝ³) vanishes in the sense needed: exact = closed for div-free fields). -/
+axiom curl_biotSavart_left_inverse :
+    curlMap ≫ biotSavartMap = 𝟙 L2Div_R3
+-- .partiallyVerified: Helmholtz decomposition on T³; absence of harmonic forms
 
 -- ────────────────────────────────────────────────────────────────────────────
 -- §2. The two-fiber system structure
@@ -189,11 +191,11 @@ def twoFiberCategoricalClaims : List LabeledClaim :=
       "curl ≫ BS = id at presheaf level (functor laws + axiom)"⟩
   , ⟨"vorticityPresheaf_eq_defectPresheaf", .verified,
       "VorticityPresheaf = DefectPresheaf = hom(-, L^{6/5}) (rfl)"⟩
-  , ⟨"curlMap", .verified,
-      "curl := id (carrier = ℝ, categorical placeholder) — Stage 307"⟩
-  , ⟨"biotSavartMap", .verified,
-      "Biot-Savart := id (carrier = ℝ, categorical placeholder) — Stage 307"⟩
-  , ⟨"curl_biotSavart_left_inverse", .verified,
-      "id ≫ id = 𝟙 L2Div_R3 (proved) — Stage 307"⟩ ]
+  , ⟨"curlMap", .partiallyVerified,
+      "curl : L²_div → L^{6/5} as CLM (Sobolev embedding)"⟩
+  , ⟨"biotSavartMap", .partiallyVerified,
+      "Biot-Savart : L^{6/5} → L²_div as CLM (Calderón-Zygmund on T³)"⟩
+  , ⟨"curl_biotSavart_left_inverse", .partiallyVerified,
+      "BS ∘ curl = id on L²_div(T³) (Helmholtz; no harmonic 1-forms on T³)"⟩ ]
 
 end NavierStokes.Millennium.CategoryTheory

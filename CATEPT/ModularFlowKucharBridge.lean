@@ -1,7 +1,3 @@
-import Mathlib
+import CATEPT.CATEPT.ModularFlowKucharCoreAbstractions
 
 set_option autoImplicit false
-
-namespace CATEPT
-
-end CATEPT

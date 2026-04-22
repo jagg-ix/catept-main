@@ -1,5 +1,4 @@
-import NavierStokes.NSHelicalSmallDataCaseC
-import NavierStokes.BKMMinimalBridge
+import NavierStokes.NSK41EPTUniversalityBridge
 
 /-!
 # Stage 273 — NSHamiltonianComplexityBridge
@@ -196,7 +195,7 @@ theorem k41_via_complexity_front
     (traj : Trajectory NSField)
     (hNS  : SatisfiesNSPDE nsOps nsNu traj)
     (hFS  : RespectsFunctionSpaces nsSpacesR3 traj)
-    (_hLarge :
+    (hLarge :
       enstrophy (traj.stateAt 0).velocity *
       enstrophy (traj.stateAt 0).velocity >
         40 * (nsNu * nsNu * nsNu * nsNu)) :

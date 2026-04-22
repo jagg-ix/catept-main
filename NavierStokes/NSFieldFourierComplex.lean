@@ -73,12 +73,6 @@ abbrev CoeffC (N : Nat) : Type := Fin N → CRat
 
 /-! ## Algebraic identities for CRat -/
 
-/-- Scalar multiplication `r • z = (r·re, r·im)` for `r : Rat`, `z : CRat`. -/
-def CRat.smul (r : Rat) (z : CRat) : CRat := (r * z.re, r * z.im)
-
-theorem CRat.smul_re (r : Rat) (z : CRat) : (CRat.smul r z).re = r * z.re := rfl
-theorem CRat.smul_im (r : Rat) (z : CRat) : (CRat.smul r z).im = r * z.im := rfl
-
 /-- Norm squared is nonnegative. -/
 theorem normSqC_nonneg (z : CRat) : 0 ≤ normSqC z :=
   add_nonneg (sq_nonneg _) (sq_nonneg _)

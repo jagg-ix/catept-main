@@ -19,6 +19,9 @@ require HilleYosida from git
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
+-- QuantumAlgebra: absorbed into catept-main (2026-04-22). Original lived at ../QuantumAlgebra.
+-- See lean_lib QuantumAlgebra below.
+
 require pphi2 from git
   "https://github.com/jagg-ix/pphi2.git" @ "b0cbac4703cfa6c6bb859a10687915472ad88fca"
 
@@ -92,4 +95,9 @@ lean_lib NavierStokes where
 -- NavierStokesClean module hierarchy (NavierStokesClean/*.lean).
 -- Imported by CATEPTSelfConsistency and related integration modules.
 lean_lib NavierStokesClean where
+  srcDir := "."
+
+-- QuantumAlgebra: absorbed 2026-04-22 (formerly external).
+-- Provides operator definitions, normal ordering, Pauli no-go, IsabelleMarresDirac subpackage.
+lean_lib QuantumAlgebra where
   srcDir := "."

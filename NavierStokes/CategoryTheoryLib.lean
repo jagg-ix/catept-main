@@ -70,13 +70,10 @@ open _root_.CategoryTheory
 -- ──────────────────────────────────────────────────────────────────────────
 
 /-- The category Diff: objects are smooth manifolds, morphisms are smooth maps.
-    Modelled as `TopModuleCat.{0} ℝ` — a concrete `Type 1` with a native
-    `Category` instance.  This is a faithful placeholder: it captures the
-    categorical infrastructure (composition, identities, functors) while
-    deferring the smooth-map geometry to future Mathlib DiffCat work. -/
-noncomputable def DiffCat : Type 1 := TopModuleCat.{0} ℝ
-noncomputable instance DiffCat.instCategory : Category DiffCat :=
-  (inferInstance : Category (TopModuleCat.{0} ℝ))
+    Axiomatised; Mathlib has the pieces (`ContMDiffMap`, `ManifoldWithCorners`)
+    but no bundled `Category` instance yet. -/
+axiom DiffCat : Type 1
+axiom DiffCat.instCategory : Category DiffCat
 
 -- ──────────────────────────────────────────────────────────────────────────
 -- Category: BanSp (Banach spaces and bounded linear maps)
@@ -98,21 +95,18 @@ noncomputable instance DiffCat.instCategory : Category DiffCat :=
 -- ZIL: USE CT_OBJECT(L2_R3, BanSp), etc.
 -- ──────────────────────────────────────────────────────────────────────────
 
--- Each space is a concrete object of `TopModuleCat ℝ`, instantiated as
--- `TopModuleCat.of ℝ ℝ` (the topological ℝ-module ℝ itself).
+-- Each space is axiomatised as an object of `TopModuleCat ℝ`.
 -- The coercion `TopModuleCat ℝ → Type` gives the underlying carrier type,
 -- so `L2Div_R3 →L[ℝ] HardySpace_R3` is well-typed directly.
--- These are faithful placeholders: the carrier is ℝ, capturing categorical
--- structure while deferring analytic content to future work.
 
-noncomputable def L2Space_R3    : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def L2Div_R3      : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def L2Sym_R3      : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def HardySpace_R3 : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def BMOSpace_R3   : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def L65Space_R3   : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def W12Space_S2   : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
-noncomputable def ExpL2Space_S2 : TopModuleCat ℝ := TopModuleCat.of ℝ ℝ
+axiom L2Space_R3    : TopModuleCat ℝ  -- L^2(R^3)
+axiom L2Div_R3      : TopModuleCat ℝ  -- ker(div : L^2 → H^{-1}), divergence-free
+axiom L2Sym_R3      : TopModuleCat ℝ  -- symmetric gradient part of L^2
+axiom HardySpace_R3 : TopModuleCat ℝ  -- h^1(R^3), local Hardy space
+axiom BMOSpace_R3   : TopModuleCat ℝ  -- BMO(R^3)
+axiom L65Space_R3   : TopModuleCat ℝ  -- L^{6/5}(R^3)
+axiom W12Space_S2   : TopModuleCat ℝ  -- W^{1,2}(S^2)
+axiom ExpL2Space_S2 : TopModuleCat ℝ  -- exp-L^2(S^2) (Orlicz space)
 
 /-! ## Structure-preserving bijections (isomorphisms) -/
 
@@ -185,13 +179,11 @@ The `→L[ℝ]` notation works directly because `TopModuleCat ℝ` coerces to `T
 -- Status: openBridge — Mathlib lacks h¹ bilinear theory
 -- ──────────────────────────────────────────────────────────────────────────
 
-/-- The CLMS bilinear map is bounded: B(ω, ∇u) ∈ h¹ for ω ∈ L²_div, ∇u ∈ L²_sym.
-    With carrier = ℝ the body is True, so this is trivially witnessed. -/
-theorem clms_bilinear_bounded :
+/-- The CLMS bilinear map is bounded: B(ω, ∇u) ∈ h¹ for ω ∈ L²_div, ∇u ∈ L²_sym. -/
+axiom clms_bilinear_bounded :
     ∃ (C : ℝ), 0 < C ∧
     ∀ (_ : L2Div_R3) (_ : L2Sym_R3),
-      True :=
-  ⟨1, one_pos, fun _ _ => trivial⟩
+      True  -- placeholder: ‖B(f,g)‖_{h¹} ≤ C * ‖f‖_{L²} * ‖g‖_{L²}
 
 -- ──────────────────────────────────────────────────────────────────────────
 -- Fefferman-Stein duality: h¹* ≅ BMO
@@ -199,13 +191,9 @@ theorem clms_bilinear_bounded :
 -- Reference: Fefferman-Stein, Acta Math. 129 (1972)
 -- ──────────────────────────────────────────────────────────────────────────
 
-/-- The Fefferman-Stein pairing: h¹(R³)* ≅ BMO(R³).
-    With carrier = ℝ, `ContinuousLinearMap.id ℝ ℝ` is bijective. -/
-theorem fefferman_stein_duality :
-    ∃ (pair : HardySpace_R3 →L[ℝ] BMOSpace_R3), Function.Bijective pair :=
-  ⟨ContinuousLinearMap.id ℝ ℝ,
-   fun a b h => by simp [ContinuousLinearMap.id_apply] at h; exact h,
-   fun b => ⟨b, by simp [ContinuousLinearMap.id_apply]⟩⟩
+/-- The Fefferman-Stein pairing: h¹(R³)* ≅ BMO(R³). -/
+axiom fefferman_stein_duality :
+    ∃ (pair : HardySpace_R3 →L[ℝ] BMOSpace_R3), Function.Bijective pair
 
 -- ──────────────────────────────────────────────────────────────────────────
 -- Trudinger-Moser embedding: W^{1,2}(S²) → exp-L²(S²)
@@ -213,12 +201,9 @@ theorem fefferman_stein_duality :
 -- Reference: Trudinger 1967, Moser 1971
 -- ──────────────────────────────────────────────────────────────────────────
 
-/-- The Trudinger-Moser embedding: W^{1,2}(S²) → exp-L²(S²) is a bounded injection.
-    With carrier = ℝ, `ContinuousLinearMap.id ℝ ℝ` is injective. -/
-theorem trudinger_moser_embedding :
-    ∃ (emb : W12Space_S2 →L[ℝ] ExpL2Space_S2), Function.Injective emb :=
-  ⟨ContinuousLinearMap.id ℝ ℝ,
-   fun a b h => by simp [ContinuousLinearMap.id_apply] at h; exact h⟩
+/-- The Trudinger-Moser embedding: W^{1,2}(S²) → exp-L²(S²) is a bounded injection. -/
+axiom trudinger_moser_embedding :
+    ∃ (emb : W12Space_S2 →L[ℝ] ExpL2Space_S2), Function.Injective emb
 
 -- ──────────────────────────────────────────────────────────────────────────
 -- John-Nirenberg: BMO → L^{6/5}
@@ -227,12 +212,9 @@ theorem trudinger_moser_embedding :
 -- ──────────────────────────────────────────────────────────────────────────
 
 /-- The John-Nirenberg embedding: BMO(R³) → L^{6/5}(R³).
-    The exponent 6/5 is the four-way coincidence exponent.
-    With carrier = ℝ, `ContinuousLinearMap.id ℝ ℝ` is injective. -/
-theorem john_nirenberg_lp_embedding :
-    ∃ (emb : BMOSpace_R3 →L[ℝ] L65Space_R3), Function.Injective emb :=
-  ⟨ContinuousLinearMap.id ℝ ℝ,
-   fun a b h => by simp [ContinuousLinearMap.id_apply] at h; exact h⟩
+    The exponent 6/5 is the four-way coincidence exponent. -/
+axiom john_nirenberg_lp_embedding :
+    ∃ (emb : BMOSpace_R3 →L[ℝ] L65Space_R3), Function.Injective emb
 
 /-! ## The open content in categorical language -/
 
@@ -258,14 +240,14 @@ def categoryTheoryLibClaims : List LabeledClaim :=
       "Tadmor=Sobolev-dual=Fisher-tangent=spatial-sector=6/5 (native_decide)"⟩
   , ⟨"ct_factorization_eq_spatial_gradient", .verified,
       "CT factorization = SpatialDirectionGradientConjecture (rfl)"⟩
-  , ⟨"clms_bilinear_bounded", .verified,
-      "CLMS B: trivially witnessed (carrier = ℝ, body = True) — Stage 306"⟩
-  , ⟨"fefferman_stein_duality", .verified,
-      "h¹* = BMO: id map bijective (carrier = ℝ) — Stage 306"⟩
-  , ⟨"trudinger_moser_embedding", .verified,
-      "W^{1,2} → exp-L²: id map injective (carrier = ℝ) — Stage 306"⟩
-  , ⟨"john_nirenberg_lp_embedding", .verified,
-      "BMO → L^{6/5}: id map injective (carrier = ℝ) — Stage 306"⟩
+  , ⟨"clms_bilinear_bounded", .openBridge,
+      "CLMS B: L²_div × L²_sym → h¹ bounded (Mathlib h¹ not yet available)"⟩
+  , ⟨"fefferman_stein_duality", .openBridge,
+      "h¹* = BMO duality (Fefferman-Stein 1972)"⟩
+  , ⟨"trudinger_moser_embedding", .openBridge,
+      "W^{1,2}(S²) → exp-L²(S²) (Trudinger 1967)"⟩
+  , ⟨"john_nirenberg_lp_embedding", .openBridge,
+      "BMO → L^{6/5} (John-Nirenberg 1961)"⟩
   , ⟨"SpatialGradientFactorizationConjecture", .openBridge,
       "CT: ∇ξ factors through Γ_{L^{6/5}} in VectBun — OPEN"⟩ ]
 

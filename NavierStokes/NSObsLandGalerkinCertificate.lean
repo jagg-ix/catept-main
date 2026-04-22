@@ -108,12 +108,12 @@ theorem pgs_galerkin_agmon :
     All three former blockers (freq bound + Parseval pair) are now theorems. -/
 def obsLandGalerkinOpenAxioms : List OpenAxiomRecord := []
 
-/-- **The Galerkin Obs-land Millennium certificate — status: `.proven`**
+/-- **The Galerkin Obs-land Millennium certificate — status: `.proved`**
 
     `pgs_galerkin_agmon` is the anchor theorem.
     - `openAxioms = []`      : no sorry, no `.openBridge`, no `.partiallyVerified`
     - `hasSorry = false`     : machine-checked
-    - `status = .proven`     : strict first-principles lifecycle tier
+    - `status = .proved`     : certificate lifecycle at the highest tier
 
     Semantics note: this certificate covers the **Galerkin model** (trajectories
     over `NSFieldGalerkin`, a band-limited Fourier type).  The physical T³ chain
@@ -129,10 +129,8 @@ def obsLandGalerkinCertificate : MillenniumPathCertificate :=
     leanTheoremName := "pgs_galerkin_agmon"
     leanFile        := "NSObsLandGalerkinCertificate.lean"
     hasSorry        := false
-    status          := .proven
-    assumptionsFirstPrinciples := true
+    status          := .proved
     openAxioms      := obsLandGalerkinOpenAxioms
-    semanticRisks   := []
     downgradeReason := "" }
 
 /-! ## Certificate honesty theorems (all by `decide`) -/
@@ -149,9 +147,9 @@ theorem obsLandGalerkinCertificate_no_open_axioms :
 theorem obsLandGalerkinCertificate_no_blockers :
     (obsLandGalerkinCertificate.openAxioms.filter OpenAxiomRecord.isBlocker).length = 0 := by decide
 
-/-- The Galerkin certificate is strict first-principles `proven`. -/
-theorem obsLandGalerkinCertificate_is_proven :
-    obsLandGalerkinCertificate.status = .proven := by decide
+/-- The Galerkin certificate is fully proved (not merely conditionally). -/
+theorem obsLandGalerkinCertificate_is_proved :
+    obsLandGalerkinCertificate.status = .proved := by decide
 
 /-- The Galerkin certificate has no sorry. -/
 theorem obsLandGalerkinCertificate_no_sorry :
@@ -163,7 +161,7 @@ def stage161ASummary : String :=
   "All 3 former blockers (freq bound + 2 Parseval) discharged: " ++
   "  freq bound → v.freq_le (struct field); " ++
   "  Parseval IDs → rfl (enstrophy/palinstrophy defined as Fourier sums). " ++
-  "obsLandGalerkinCertificate: status=.proven, openAxioms=[], hasSorry=false. " ++
+  "obsLandGalerkinCertificate: status=.proved, openAxioms=[], hasSorry=false. " ++
   "+0 axioms, +6 theorems, 0 sorry."
 
 end NavierStokes.GalerkinObsLand

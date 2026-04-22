@@ -117,8 +117,10 @@ theorem sobolev_gap_is_half : sobolevGap3d = 1 / 2 := by
 
     This is the compactness result that drives the Galerkin convergence argument.
     In NS: if Galerkin approximations are uniformly H¹-bounded (energy estimate),
-    then a subsequence converges strongly in L². -/
-theorem rellich_kondrachov_ns :
+    then a subsequence converges strongly in L².
+
+    Epistemic status: `.partiallyVerified` (analytic compactness theorem). -/
+axiom rellich_kondrachov_ns :
     ∀ (seq : Nat → NSField),
       (∀ n, nsVelocityMem (seq n)) →
       (∃ (E_bound : Rat), ∀ n, kineticEnergy (seq n) ≤ E_bound) →
@@ -127,21 +129,18 @@ theorem rellich_kondrachov_ns :
         (∀ n m, n < m → subseq n < subseq m) ∧
         (∀ (ε : Rat), 0 < ε →
           ∃ N, ∀ n, N ≤ n →
-            kineticEnergy (nsAdd (seq (subseq n)) (nsSmul (-1) limit)) < ε) := by
-  intro _seq _hMem _hBound
-  exact ⟨id, nsZero, nsVelocityMem_default nsZero,
-    fun n m h => h,
-    fun ε hε => ⟨0, fun _n _hn => by simp [kineticEnergy]; exact hε⟩⟩
+            kineticEnergy (nsAdd (seq (subseq n)) (nsSmul (-1) limit)) < ε)
 
 /-- The Galerkin level energy bounds are uniform (consequence of Leray energy inequality).
-    For NS trajectories, the kinetic energy is monotone non-increasing. -/
-theorem galerkin_energy_uniform_bound :
+    For NS trajectories, the kinetic energy is monotone non-increasing.
+
+    Epistemic status: `.partiallyVerified` (Leray energy inequality). -/
+axiom galerkin_energy_uniform_bound :
     ∀ (traj : Trajectory NSField),
       SatisfiesNSPDE nsOps nsNu traj →
       ∀ (T : Rat), 0 < T →
         kineticEnergy (traj.stateAt T).velocity ≤
-          kineticEnergy (traj.stateAt 0).velocity :=
-  fun _traj _hNS _T _hT => by simp [kineticEnergy]
+          kineticEnergy (traj.stateAt 0).velocity
 
 /-! ## 3. Stokes Spectral Basis (Qualitative Weyl Law) -/
 

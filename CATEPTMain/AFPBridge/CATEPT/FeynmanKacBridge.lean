@@ -24,8 +24,9 @@ where u solves the backward parabolic PDE:
 
 ## Source
 
-Ported from:
-  `navier-stokes-project-clean-translator/NavierStokesClean/CATEPT/FeynmanKacBridge.lean`
+Ported from (originally external sibling `navier-stokes-project-clean-translator`,
+no longer maintained). The corresponding content now lives in-repo at:
+  `NavierStokesClean/CATEPT/FeynmanKacBridge.lean`
 
 ## Theorem status
 

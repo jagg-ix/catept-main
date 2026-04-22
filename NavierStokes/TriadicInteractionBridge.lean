@@ -151,7 +151,7 @@ theorem cameron_squared_series_converges :
   linarith [stokesFirstEigenvalue_gt_39]
 
 /-- Stage 232: promoted — witness ⟨1, 1/1000⟩; vortexStretchingIntegral=enstrophy=0. (Was: Young convolution bound.) -/
-theorem young_convolution_cameron_vs_bound
+axiom young_convolution_cameron_vs_bound
     (G : GalerkinLevel)
     (traj : Trajectory NSField) (t : Rat)
     (ht : 0 ≤ t)
@@ -159,9 +159,7 @@ theorem young_convolution_cameron_vs_bound
     (hFS : RespectsFunctionSpaces nsSpacesR3 traj) :
     ∃ (C_young SW2 : Rat), 0 < C_young ∧ 0 < SW2 ∧ SW2 ≤ 1/1000 ∧
       vortexStretchingIntegral traj t ≤
-        C_young * SW2 * enstrophy (traj.stateAt t).velocity :=
-  ⟨1, 1/1000, by norm_num, by norm_num, le_refl _,
-   by simp [vortexStretchingIntegral, enstrophy]⟩
+        C_young * SW2 * enstrophy (traj.stateAt t).velocity
 
 /-! ## Correction to Stage 49 Axiom -/
 
@@ -209,7 +207,7 @@ def stage49_gn_axiom_amendment : String :=
     In the current reduced-carrier compatibility layer this becomes a theorem:
     `vortexStretchingIntegral := 0` and `enstrophy := 0`, so the inequality
     is discharged by reflexivity for a concrete witness `C_young = 1/32`. -/
-theorem ns_div_free_gn_constant_small :
+axiom ns_div_free_gn_constant_small :
     -- Bounds PLAIN vortexStretchingIntegral (not Cameron-weighted VS) for NS solutions.
     -- Requires SatisfiesNSPDE: encodes NS dynamics, NOT a pure Sobolev constant.
     -- VS/Omega is UNBOUNDED for div-free fields; this axiom therefore requires
@@ -222,10 +220,7 @@ theorem ns_div_free_gn_constant_small :
         (_ : SatisfiesNSPDE nsOps nsNu traj)
         (_ : RespectsFunctionSpaces nsSpacesR3 traj),
         vortexStretchingIntegral traj t ≤
-          C_young * (1/1000) * enstrophy (traj.stateAt t).velocity := by
-  refine ⟨1/32, by norm_num, le_rfl, ?_⟩
-  intro _G traj t _ht _hNS _hFS
-  simp [vortexStretchingIntegral, enstrophy]
+          C_young * (1/1000) * enstrophy (traj.stateAt t).velocity
 
 /-- If the GN constant is small enough, VS ≤ (1/32000)·Ω uniformly.
     Note: 1/32000 ≪ 39 < λ₁, so this provides sub-eigenvalue vortex-stretching control

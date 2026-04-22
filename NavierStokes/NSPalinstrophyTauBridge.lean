@@ -26,13 +26,13 @@ Stage 156 replaces the three Stage 154 axioms (`kmax`, `liftTrajToBounded`,
 
 * `galerkinN : Nat := 1024` — concrete Galerkin order (a **def**, 0 axioms).
 * `kmax : Rat := (galerkinN : Rat)^2` — cutoff, **derived def**.
-* `liftTrajToFourier_freq_le_galerkinN` — THEOREM: freq ≤ galerkinN along the lift.
+* `liftTrajToFourier_freq_le_galerkinN` — ONE axiom: freq ≤ galerkinN along the lift.
 * `liftTrajToBounded` — **def** wrapping `liftTrajToFourier` in `BoundedFrequencyFourierTrajectory kmax`.
 * `liftTrajToBounded_eq_lift` — **theorem** with proof `rfl` (by construction of the def).
 
-Net reduction: 3 axioms → 0 axioms in the Galerkin bucket.
+Net reduction: 3 axioms → 1 axiom in the Galerkin bucket.
 
-## Galerkin bucket (theoremized)
+## Galerkin bucket (1 remaining axiom)
 
 `liftTrajToFourier_freq_le_galerkinN` says: every wavenumber label in the lifted
 trajectory is ≤ 1024.  This is the exact content of "the Galerkin lift uses a fixed
@@ -50,12 +50,12 @@ construction of `liftTrajToFourier`.
 ## Net axiom counts
 
   - Stage 154 axioms: kmax (def), liftTrajToBounded (def), liftTrajToBounded_eq_lift (rfl)
-  - Stage 156 theorem: liftTrajToFourier_freq_le_galerkinN (discharged)
+  - Stage 156 axiom: liftTrajToFourier_freq_le_galerkinN (1, openBridge)
   - Parseval axioms: physicalObs_enstrophy_fourier_id, physicalObs_palinstrophy_fourier_id
     (in NSPhysicalT3Bridge, partiallyVerified)
 
-  - New axioms (this file): 0
-  - New theorems: 7
+  - New axioms (this file): 1
+  - New theorems: 6
   - sorry: 0
   - warnings: 0
 -/
@@ -84,7 +84,7 @@ def kmax : Rat := (galerkinN : Rat) ^ 2
 
 theorem kmax_pos : 0 < kmax := by unfold kmax galerkinN; norm_num
 
-/-! ## Galerkin frequency bound (concrete theorem) -/
+/-! ## The one remaining Galerkin axiom -/
 
 /-- Every wavenumber label in `liftTrajToFourier traj` is ≤ galerkinN.
 
@@ -92,14 +92,13 @@ theorem kmax_pos : 0 < kmax := by unfold kmax galerkinN; norm_num
     the lift uses wavenumbers in {0, 1, …, galerkinN}, so all mode labels
     are bounded by 1024.
 
-    In the concrete Stage-218 lift shim (`N = 1`, `freqs = 1`), this is
-    discharged by simplification. -/
-theorem liftTrajToFourier_freq_le_galerkinN
+    Epistemic status: `.openBridge` — follows from the definition of
+    `liftTrajToFourier` once that lift is given a concrete construction
+    (e.g., the Galerkin projection Pₙ : H¹(T³) → Vₙ for n = galerkinN). -/
+axiom liftTrajToFourier_freq_le_galerkinN
     (traj : Trajectory NSField)
     (i : Fin (liftTrajToFourier traj).N) :
-    (liftTrajToFourier traj).freqs i ≤ galerkinN := by
-  unfold liftTrajToFourier galerkinN
-  simp
+    (liftTrajToFourier traj).freqs i ≤ galerkinN
 
 /-! ## Definitional bounded lift -/
 
@@ -173,10 +172,11 @@ theorem pgs_obs_physical_millennium :
   pgs_obs_physical_from_agmon pgs_obs_agmon_from_kmax
 
 def stage156Summary : String :=
-  "Stage 156: Galerkin bucket refactor — 3 axioms → 0 axioms. " ++
+  "Stage 156: Galerkin bucket refactor — 3 axioms → 1 axiom. " ++
   "galerkinN := 1024 (def), kmax := galerkinN² (def), liftTrajToBounded (def), " ++
-  "liftTrajToBounded_eq_lift (rfl), liftTrajToFourier_freq_le_galerkinN (theorem). " ++
+  "liftTrajToBounded_eq_lift (rfl). Sole remaining Galerkin axiom: " ++
+  "liftTrajToFourier_freq_le_galerkinN (freqs i ≤ 1024). " ++
   "PreciseGapStatementObs physicalNSObservables still PROVED. " ++
-  "+0 axioms, +7 theorems, 0 sorry."
+  "+1 axiom, +6 theorems, 0 sorry."
 
 end NavierStokes.PalinstrophyTauBridge
