@@ -49,12 +49,17 @@ lake build CATEPTMain
 
 ## Entry Points
 
-| Surface | File | What it gives you |
-|---------|------|--------------------|
-| Full integration hub | `CATEPTMain.lean` | All bridges, NS, QM, GR, YM, EPT |
-| GR tensors only | `CATEPTMain/GravitasStandalone.lean` | Riemann/Einstein/Weyl tensors + CATEPT bridge |
-| Quantum info only | `CATEPTMain/QuantumInfoStandalone.lean` | Von Neumann entropy, quantum Fisher, EPT bridge |
-| CATEPT core | `CATEPT/CATEPT/Core.lean` | Minimal foundations: EPT definitions, Δτ/t_P formula |
+Verified on 2026-04-22.
+
+| Surface | Lake target | Build command | Status | What it gives you |
+|---------|-------------|---------------|--------|--------------------|
+| Full integration hub | `CATEPTMain` | `lake build CATEPTMain` | Pass* | All bridges, NS, QM, GR, YM, EPT |
+| Bridge aggregator | `CATEPTMain.Bridges` | `lake build CATEPTMain.Bridges` | Pass | Flattened bridge-only surface |
+| GR tensors only | `CATEPTMain.GravitasStandalone` | `lake build CATEPTMain.GravitasStandalone` | Pass | Riemann/Einstein/Weyl tensors + CATEPT bridge |
+| Quantum info only | `CATEPTMain.QuantumInfoStandalone` | `lake build CATEPTMain.QuantumInfoStandalone` | Pass | Von Neumann entropy, quantum Fisher, EPT bridge |
+| CATEPT core | `CATEPT.CATEPT.Core` | `lake build CATEPT.CATEPT.Core` | Pass | Minimal foundations: EPT definitions, Δτ/t_P formula |
+
+\* In heavily loaded sessions, `lake build CATEPTMain` may occasionally terminate with exit 143 (external interruption). Re-running the same command succeeds when the interrupting process is cleared.
 
 ## What Is Formalized
 

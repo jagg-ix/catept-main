@@ -46,7 +46,6 @@ import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
 import CATEPTMain.Integration.TheoryPluginOriginBridge
 import CATEPTMain.Integration.TheoryPluginThermodynamicsOfChoiceBridge
 import CATEPTMain.Integration.TheoryPluginPhyslibConstructBridge
--- Previously-orphaned bridges now wired into root:
 import CATEPTMain.Integration.AQEIBridgeLane
 import CATEPTMain.Integration.AdSCFTEntropicEntanglementBridge
 import CATEPTMain.Integration.AdSCFTExtended
@@ -74,12 +73,13 @@ import CATEPTMain.Integration.SpectralPhysicsBridge
 import CATEPTMain.Integration.NSStressEnergyEinsteinBridge
 import CATEPTMain.Integration.NSNoetherEinsteinLocalityBridge
 import CATEPTMain.Integration.EinsteinViscosityMpembaBridge
-import CATEPTMain.AFPBridge
+import CATEPTMain.Bridges
 import CATEPTMain.Gravitas
+import CATEPTMain.ActionIntegrationBridge
+-- Previously-orphaned bridges now wired into root:
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.
 -/
 
 def integratedRepoCount : Nat := CATEPTMain.External.repos.length
-import CATEPTMain.ActionIntegrationBridge

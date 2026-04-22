@@ -34,30 +34,28 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Integration
 
-open CATEPT
-
 -- ── Concrete plugin slot ──────────────────────────────────────────────────────
 
 /-- The concrete `CATEPTPluginSlot` for the classical damped oscillator
     with Herglotz identification of the imaginary action. -/
-def herglotzPluginSlot (p : DampedOscillatorParams) (hbar : ℝ) (hbar_pos : 0 < hbar)
+def herglotzPluginSlot (p : CATEPT.DampedOscillatorParams) (hbar : ℝ) (hbar_pos : 0 < hbar)
     (hγ : 0 ≤ p.gamma) (hk : 0 ≤ p.k) :
     CATEPTPluginSlot :=
   classicalETHSiteSlot p hbar
-    (herglotzContactRate p) hbar_pos
-    (fun J => mechanicalEnergy p J.x J.v)
-    (herglotzActionIm p)
-    (fun J => herglotzActionIm_nonneg p hγ hk J)
+  (CATEPT.herglotzContactRate p) hbar_pos
+  (fun J => CATEPT.mechanicalEnergy p J.x J.v)
+  (CATEPT.herglotzActionIm p)
+  (fun J => CATEPT.herglotzActionIm_nonneg p hγ hk J)
     (fun _ => rfl)
 
 -- ── The clock is the Herglotz entropic proper time ────────────────────────────
 
 /-- The plugin clock matches `canonicalTauDiag` from `herglotzETHParams`. -/
-theorem herglotzPlugin_clock_eq_tauEnt (p : DampedOscillatorParams) (hbar : ℝ)
+theorem herglotzPlugin_clock_eq_tauEnt (p : CATEPT.DampedOscillatorParams) (hbar : ℝ)
     (hbar_pos : 0 < hbar) (hγ : 0 ≤ p.gamma) (hk : 0 ≤ p.k)
-    (J : OscillatorJet) :
+  (J : CATEPT.OscillatorJet) :
     (herglotzPluginSlot p hbar hbar_pos hγ hk).eptClock J =
-    canonicalTauDiag (herglotzETHParams p hbar hbar_pos) J := by
+  CATEPT.canonicalTauDiag (CATEPT.herglotzETHParams p hbar hbar_pos) J := by
   unfold herglotzPluginSlot
   rw [classicalETHSite_clock_matches_canonicalTauDiag]
   rfl
@@ -66,14 +64,14 @@ theorem herglotzPlugin_clock_eq_tauEnt (p : DampedOscillatorParams) (hbar : ℝ)
 
 /-- The Herglotz plugin slot satisfies the universal CATEPT consistency
     constraint `eptClock J = actionImScaled J`. -/
-theorem herglotzPlugin_is_consistent (p : DampedOscillatorParams) (hbar : ℝ)
+theorem herglotzPlugin_is_consistent (p : CATEPT.DampedOscillatorParams) (hbar : ℝ)
     (hbar_pos : 0 < hbar) (hγ : 0 ≤ p.gamma) (hk : 0 ≤ p.k) :
     cateptConsistencyConstraint (herglotzPluginSlot p hbar hbar_pos hγ hk) :=
   classicalETHPluginSlot_is_consistent p hbar
-    (herglotzContactRate p) hbar_pos
-    (fun J => mechanicalEnergy p J.x J.v)
-    (herglotzActionIm p)
-    (fun J => herglotzActionIm_nonneg p hγ hk J)
+  (CATEPT.herglotzContactRate p) hbar_pos
+  (fun J => CATEPT.mechanicalEnergy p J.x J.v)
+  (CATEPT.herglotzActionIm p)
+  (fun J => CATEPT.herglotzActionIm_nonneg p hγ hk J)
     (fun _ => rfl)
 
 -- ── Dissipation is bounded by the ETH suppression factor ─────────────────────
@@ -82,12 +80,12 @@ theorem herglotzPlugin_is_consistent (p : DampedOscillatorParams) (hbar : ℝ)
     equals `-γ v²`, which is bounded above by zero (energy decreases).
     Combined with the suppression factor `W_ETH = exp(-τ_ent)`, this shows the
     dissipation rate decays as the system thermalizes. -/
-theorem herglotzPlugin_dissipation_nonpos (p : DampedOscillatorParams)
+theorem herglotzPlugin_dissipation_nonpos (p : CATEPT.DampedOscillatorParams)
     (hbar : ℝ) (hbar_pos : 0 < hbar)
-    (J : OscillatorJet) (hJ : JetSatisfiesDampedEquation p J)
+    (J : CATEPT.OscillatorJet) (hJ : CATEPT.JetSatisfiesDampedEquation p J)
     (hγ : 0 ≤ p.gamma) :
-    mechanicalEnergyDerivAtJet p J ≤ 0 := by
-  rw [herglotz_energyDecay_ETH_compatible p hbar hbar_pos J hJ]
+    CATEPT.mechanicalEnergyDerivAtJet p J ≤ 0 := by
+  rw [CATEPT.herglotz_energyDecay_ETH_compatible p hbar hbar_pos J hJ]
   have : 0 ≤ p.gamma * J.v ^ 2 := mul_nonneg hγ (sq_nonneg _)
   linarith
 
@@ -95,10 +93,10 @@ theorem herglotzPlugin_dissipation_nonpos (p : DampedOscillatorParams)
     = `herglotzContactRate p · p.m · J.v²`.
     This matches the ETH imaginary action structure:
       `action_im J = (γ/m) · E_mech`  and  `m·v² ≤ 2·E_mech` for `k ≥ 0`. -/
-theorem herglotzPlugin_decayRate_eq (p : DampedOscillatorParams)
-    (J : OscillatorJet) (hJ : JetSatisfiesDampedEquation p J) :
-    -mechanicalEnergyDerivAtJet p J = herglotzContactRate p * p.m * J.v ^ 2 := by
-  rw [herglotz_energyDecay_via_contactRate p J hJ]; ring
+theorem herglotzPlugin_decayRate_eq (p : CATEPT.DampedOscillatorParams)
+    (J : CATEPT.OscillatorJet) (hJ : CATEPT.JetSatisfiesDampedEquation p J) :
+    -CATEPT.mechanicalEnergyDerivAtJet p J = CATEPT.herglotzContactRate p * p.m * J.v ^ 2 := by
+  rw [CATEPT.herglotz_energyDecay_via_contactRate p J hJ]; ring
 
 end CATEPTMain.Integration
 

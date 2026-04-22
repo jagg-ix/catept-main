@@ -1,5 +1,5 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
-import CATEPTMain.AFPBridge.CATEPT.ModularFlowBridge
+import CATEPTMain.CATEPT.ModularFlowBridge
 import CATEPTMain.Integration.AdSCFT1907Port
 import CATEPTMain.Integration.AdSCFT1907Phase2Bridge
 import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
@@ -41,7 +41,7 @@ the instance-bundling diamond problem that affects generic slot theorems.
 set_option autoImplicit false
 
 open MeasureTheory Real Complex
-open CATEPTMain.AFPBridge.CATEPT
+open CATEPTMain.CATEPT
 open CATEPTMain.Integration
 
 namespace CATEPTMain.Integration.UnifiedSpine
@@ -59,7 +59,7 @@ def headrick1907Phase1ToyPort : Headrick1907PortWitness :=
 /-- Re-export the canonical phase-2 Headrick-1907 toy witness:
 phase-1 1907 port + replica analytic contract + NHQM EP continuity lane. -/
 def headrick1907Phase2ToyPort
-    (N : ℕ) (H : CATEPTMain.AFPBridge.NHQM.NHHamiltonian N)
+    (N : ℕ) (H : CATEPTMain.NHQM.NHHamiltonian N)
     (β μ ħ : ℝ) (hħ : 0 < ħ) :
     Headrick1907Phase2Witness N H β μ ħ hħ :=
   phase2PortWitness_pureToy N H β μ ħ hħ
@@ -190,8 +190,8 @@ theorem modularFlow_measure_exists
       ∀ s : Set α, MeasurableSet s →
         ν s = ∫ x in s,
           (modularFlowToPathIntegral clk φ hφ hnn).weight x ∂clk.μ := by
-  -- Forward IsFiniteMeasure: (modularFlowToPathIntegral ...).μ = clk.μ definitionally
-  haveI : IsFiniteMeasure (modularFlowToPathIntegral clk φ hφ hnn).μ :=
+  -- Forward IsFiniteMeasure: (modularFlowToPathIntegral ...).mu = clk.μ definitionally
+  haveI : IsFiniteMeasure (modularFlowToPathIntegral clk φ hφ hnn).mu :=
     ‹IsFiniteMeasure clk.μ›
   exact fk_complex_measure_from_finite_space (modularFlowToPathIntegral clk φ hφ hnn)
 
