@@ -46,6 +46,64 @@ jobs:
         echo "Axiom surface OK"
         cat /tmp/axiom_output.txt
 
+    - name: Check axiom surface — publication bridges (CATEPT.Bridges.*)
+      run: |
+        cat > /tmp/check_bridges.lean << 'EOF'
+        import CATEPT.Bridges.Pphi2N
+        import CATEPT.Bridges.QFT
+        import CATEPT.Bridges.GR
+        import CATEPT.Bridges.Gravitas
+
+        -- 17 publication bridge theorems must depend on ONLY the three
+        -- Lean kernel axioms: propext, Classical.choice, Quot.sound.
+        #print axioms CATEPT.Bridges.Pphi2N.tauEnt_eq_div
+        #print axioms CATEPT.Bridges.Pphi2N.tauEnt_nonneg
+        #print axioms CATEPT.Bridges.Pphi2N.tauEnt_linear
+        #print axioms CATEPT.Bridges.QFT.tauEnt_eq_div
+        #print axioms CATEPT.Bridges.QFT.tauEnt_nonneg
+        #print axioms CATEPT.Bridges.QFT.damping_abs_le_one
+        #print axioms CATEPT.Bridges.QFT.kinetic_pos
+        #print axioms CATEPT.Bridges.QFT.propagator_pos
+        #print axioms CATEPT.Bridges.GR.schwarzschild_f_pos
+        #print axioms CATEPT.Bridges.GR.bh_entropy_pos
+        #print axioms CATEPT.Bridges.GR.tauEnt_eq_div
+        #print axioms CATEPT.Bridges.GR.tauEnt_nonneg
+        #print axioms CATEPT.Bridges.GR.unruh_temperature_pos
+        #print axioms CATEPT.Bridges.Gravitas.bh_entropy_pos
+        #print axioms CATEPT.Bridges.Gravitas.bh_entropy_ratio
+        #print axioms CATEPT.Bridges.Gravitas.bh_entropy_doubling
+        #print axioms CATEPT.Bridges.Gravitas.catept_gravitas_coherence
+        EOF
+        lake env lean /tmp/check_bridges.lean 2>&1 | tee /tmp/bridges_output.txt
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$" /tmp/bridges_output.txt | grep -qE "axiom|sorryAx"; then
+          echo "REGRESSION: non-kernel axiom or sorry in publication bridge surface"
+          cat /tmp/bridges_output.txt
+          exit 1
+        fi
+        echo "Publication bridge surface OK (17 theorems, kernel-only axioms)"
+
+    - name: Check axiom surface — QM+GR unification showcase
+      run: |
+        cat > /tmp/check_showcase.lean << 'EOF'
+        import CATEPT.Showcase.QMGRUnification
+
+        -- The headline reviewer-facing claim that CAT/EPT admits QM and GR
+        -- as instances of one plugin architecture must depend on ONLY the
+        -- three Lean kernel axioms. Any other axiom here is a regression
+        -- and invalidates the publication claim.
+        #print axioms CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine
+        #print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
+        #print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
+        #print axioms CATEPT.Showcase.QMGRUnification.qm_gr_unified_via_entropic_proper_time
+        EOF
+        lake env lean /tmp/check_showcase.lean 2>&1 | tee /tmp/showcase_output.txt
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$" /tmp/showcase_output.txt | grep -qE "axiom|sorryAx"; then
+          echo "REGRESSION: non-kernel axiom or sorry in QM+GR unification showcase"
+          cat /tmp/showcase_output.txt
+          exit 1
+        fi
+        echo "QM+GR unification showcase OK (4 theorems, kernel-only axioms)"
+
     - name: Check sorry count — NavierStokesClean (must not regress)
       run: |
         COUNT=$(grep -r "\bsorry\b" NavierStokesClean/ --include="*.lean" \

@@ -47,6 +47,96 @@ lake exe cache get   # warm Mathlib olean cache (~10 min first run)
 lake build CATEPTMain
 ```
 
+## Reviewer-facing showcase — Quantum Mechanics ↔ General Relativity via entropic proper time
+
+The file [`CATEPT/Showcase/QMGRUnification.lean`](CATEPT/Showcase/QMGRUnification.lean)
+is the single machine-checkable artifact demonstrating that **CAT/EPT
+admits Quantum Mechanics and General Relativity as instances of one
+plugin architecture**, unified by `τ_ent = S_I / ℏ` as the shared clock.
+
+### What it proves
+
+Both theories supply a `CATEPTPluginSlot` (abstract carrier of
+`actionRe`, `actionIm`, `ℏ`, `eptClock`) and a proof that the
+universal constraint
+
+```
+cateptConsistencyConstraint slot  ≡  ∀ x, actionIm(x) / ℏ = eptClock(x)
+```
+
+holds on their slot:
+
+| Theory | Instance | Spine theorem |
+|---|---|---|
+| Quantum Mechanics (n-level density matrices) | `quantumCATEPTSlot n` | `qm_satisfies_catept_spine` |
+| General Relativity (Minkowski background) | `gravitasMinkowskiSlot` | `gr_minkowski_satisfies_catept_spine` |
+| General Relativity (full electrovacuum plugin) | `gravitasElectrovacuumPlugin` | `gr_electrovacuum_satisfies_catept_spine` |
+| **Unification headline** | — | `qm_gr_unified_via_entropic_proper_time` |
+
+Every theorem depends on only the Lean kernel axioms — no framework
+axioms, no sorries, no physical-identification axioms.
+
+Scope disclaimer: this is a **compatibility demonstration** — the same
+abstract constraint is proved in both domains. It is *not* a proof that
+QM and GR are physically equivalent.
+
+### Running the showcase from the command line
+
+Three steps. From the repo root after `lake exe cache get`:
+
+**1. Build the showcase:**
+```bash
+lake build CATEPT.Showcase.QMGRUnification
+```
+Expected: `Build completed successfully (... jobs).`
+
+**2. Machine-check the unification claim (axiom audit):**
+```bash
+cat > /tmp/catept_showcase.lean <<'EOF'
+import CATEPT.Showcase.QMGRUnification
+#print axioms CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.qm_gr_unified_via_entropic_proper_time
+EOF
+lake env lean /tmp/catept_showcase.lean
+```
+Expected output (each of the four lines):
+```
+'…qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'…gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'…qm_gr_unified_via_entropic_proper_time' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+Any other axiom appearing in the list is a regression and must be reviewed.
+
+**3. (Optional) Inspect type signatures to confirm the universal carrier:**
+```bash
+cat > /tmp/catept_showcase_types.lean <<'EOF'
+import CATEPT.Showcase.QMGRUnification
+open CATEPT.Showcase.QMGRUnification
+open CATEPTMain.Integration
+#check @qm_satisfies_catept_spine
+#check @gr_minkowski_satisfies_catept_spine
+#check @qm_gr_unified_via_entropic_proper_time
+-- All three use the same predicate `cateptConsistencyConstraint`
+-- applied to their respective CATEPTPluginSlot instances.
+EOF
+lake env lean /tmp/catept_showcase_types.lean
+```
+
+### Pointer to the plugin architecture
+
+The universal slot and constraint live in
+[`CATEPTMain/Integration/TheoryPluginArchitecture.lean`](CATEPTMain/Integration/TheoryPluginArchitecture.lean).
+The QM and GR plugin instances live in
+[`CATEPTMain/Integration/QuantumCATEPTBridge.lean`](CATEPTMain/Integration/QuantumCATEPTBridge.lean)
+and
+[`CATEPTMain/Integration/GravitasBridge.lean`](CATEPTMain/Integration/GravitasBridge.lean).
+To add a new domain as a third instance, supply a `CATEPTPluginSlot`
+(or a full `TheoryPlugin`) and prove `cateptConsistencyConstraint`
+for it.
+
 ## Entry Points
 
 Verified on 2026-04-22.
