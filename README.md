@@ -238,6 +238,23 @@ architecture over Mathlib.
   — carries the Marres–Dirac quantum-operator formalization, originally
   developed in Isabelle/HOL, as a Lean 4 compatibility port.
 
+### Lean 4 mathematical-physics dependencies by Michael R. Douglas
+
+Three of the analytic-functional pillars this repository depends on are
+contributed by [**mrdouglasny**](https://github.com/mrdouglasny) — Lean 4
+formalizations of foundational theorems for measure-theoretic QFT and
+semigroup dynamics. Whose wonderful work makes the CATEPT analytic lane
+practical:
+
+- [**bochner**](https://github.com/mrdouglasny/bochner) — the
+  Bochner–Minlos theorem (characteristic functionals on nuclear spaces;
+  the measure-theoretic foundation of Euclidean QFT).
+- [**hille-yosida**](https://github.com/mrdouglasny/hille-yosida) — the
+  Hille–Yosida generation theorem for `C₀`-semigroups (analytic backbone
+  of modular flow and heat-kernel arguments).
+- [**pphi2**](https://github.com/mrdouglasny/pphi2) — φ⁴ scalar field
+  theory infrastructure.
+
 ### External Lean 4 dependencies
 
 Every package below is pinned by commit in [`lakefile.lean`](lakefile.lean)
