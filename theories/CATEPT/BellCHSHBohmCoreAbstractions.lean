@@ -1,0 +1,3 @@
+import CATEPT.CATEPT.BellCHSHBohmCoreAbstractions
+
+set_option autoImplicit false

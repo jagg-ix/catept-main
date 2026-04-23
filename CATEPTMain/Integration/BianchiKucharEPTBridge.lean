@@ -5,8 +5,8 @@ import Mathlib.Topology.Instances.AddCircle.Real
 import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.Complex.Basic
-import CATEPTMain.LSI.Lebesgue_Stieltjes_Integral
-import NavierStokes.NSFourierAgmonObsBridge
+import CATEPTMain.Analysis.LSI.Lebesgue_Stieltjes_Integral
+import NavierStokes.Fourier.NSFourierAgmonObsBridge
 
 set_option autoImplicit false
 
@@ -14,8 +14,8 @@ namespace CATEPTMain.Integration.BianchiKuchar
 
 open CategoryTheory
 open Complex
-open CATEPTMain.LSI
-open CATEPTMain.LSI.Lebesgue_Stieltjes_Integral
+open CATEPTMain.Analysis.LSI
+open CATEPTMain.Analysis.LSI.Lebesgue_Stieltjes_Integral
 open NavierStokes.FourierAgmonObsBridge
 open NavierStokes.Millennium hiding interpretAsFourier
 open NavierStokes.FourierModel

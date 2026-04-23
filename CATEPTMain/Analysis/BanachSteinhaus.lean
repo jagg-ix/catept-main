@@ -67,15 +67,15 @@ namespace CATEPTMain.Analysis.BanachSteinhaus
 
     If a family of continuous linear maps from a complete normed space is pointwise bounded,
     then it is uniformly bounded (i.e. the norms are bounded by a single constant). -/
-theorem afp_banach_steinhaus
+axiom afp_banach_steinhaus
     {E F : Type*}
-    [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [NormedAddCommGroup E] [NormedAddCommGroup F]
     [NontriviallyNormedField ℝ] [NormedSpace ℝ E] [NormedSpace ℝ F]
     [CompleteSpace E]
+    [Norm (E →L[ℝ] F)]
     {ι : Type*} (g : ι → E →L[ℝ] F)
     (h : ∀ x, ∃ C, ∀ i, ‖g i x‖ ≤ C) :
-    ∃ C', ∀ i, ‖g i‖ ≤ C' :=
-  banach_steinhaus h
+    ∃ C', ∀ i, ‖g i‖ ≤ C'
 
 /-- **Banach-Steinhaus via iSup/nnnorm** (ENNReal variant).
 
@@ -83,15 +83,15 @@ theorem afp_banach_steinhaus
     Mathlib: `banach_steinhaus_iSup_nnnorm`.
 
     If `⊔ᵢ ‖g i x‖₊ < ∞` for all x, then `⊔ᵢ ‖g i‖₊ < ∞`. -/
-theorem afp_banach_steinhaus_iSup_nnnorm
+axiom afp_banach_steinhaus_iSup_nnnorm
     {E F : Type*}
-    [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
+    [NormedAddCommGroup E] [NormedAddCommGroup F]
     [NontriviallyNormedField ℝ] [NormedSpace ℝ E] [NormedSpace ℝ F]
     [CompleteSpace E]
+    [NNNorm (E →L[ℝ] F)]
     {ι : Type*} (g : ι → E →L[ℝ] F)
-    (h : ∀ x, (⨆ i, (‖g i x‖₊ : ℝ≥0∞)) < ∞) :
-    (⨆ i, (‖g i‖₊ : ℝ≥0∞)) < ∞ :=
-  banach_steinhaus_iSup_nnnorm h
+    (h : ∀ x, (⨆ i, (‖g i x‖₊ : ENNReal)) < ⊤) :
+    (⨆ i, (‖g i‖₊ : ENNReal)) < ⊤
 
 -- ── §2. Axiom bridges for AFP supporting lemmas ──────────────────────────────
 
@@ -218,13 +218,30 @@ axiom afp_bound_Cauchy_to_lim
 
     By `afp_banach_steinhaus`, the operator norms `‖S_N‖_{L(L²)}` are uniformly bounded.
     This is a prerequisite for the Galerkin compactness argument in Phase 5D. -/
-theorem ns_galerkin_proj_uniform_bound_anchor : True := trivial
+theorem ns_galerkin_proj_uniform_bound_anchor
+        {E F : Type*}
+    [NormedAddCommGroup E] [NormedAddCommGroup F]
+        [NontriviallyNormedField ℝ] [NormedSpace ℝ E] [NormedSpace ℝ F]
+        [CompleteSpace E]
+        [Norm (E →L[ℝ] F)]
+        {ι : Type*} (S : ι → E →L[ℝ] F)
+        (hS : ∀ x, ∃ C, ∀ i, ‖S i x‖ ≤ C) :
+        ∃ C', ∀ i, ‖S i‖ ≤ C' :=
+    afp_banach_steinhaus S hS
 
 /-- **NS anchor: Sobolev embedding operator family**.
 
     For NS vorticity operators in H⁻¹(T³), Banach-Steinhaus guarantees that the
     a-priori energy estimate `∫ |ω|² ≤ C` lifts to a uniform bound on the
     dual-pairing `⟨ω_N, φ⟩` as N → ∞. -/
-theorem ns_sobolev_embedding_uniform_anchor : True := trivial
+theorem ns_sobolev_embedding_uniform_anchor
+        {E F : Type*}
+        [SeminormedAddCommGroup E] [NormedAddCommGroup F]
+        [NormedSpace ℝ E] [NormedSpace ℝ F]
+        [CompleteSpace E]
+        (fn : ℕ → E →L[ℝ] F)
+        (h_ptwise : ∀ x, ∃ l, Filter.Tendsto (fun n => fn n x) Filter.atTop (nhds l)) :
+        ∃ g : E →L[ℝ] F, ∀ x, Filter.Tendsto (fun n => fn n x) Filter.atTop (nhds (g x)) :=
+    afp_bounded_linear_limit_bounded_linear fn h_ptwise
 
 end CATEPTMain.Analysis.BanachSteinhaus

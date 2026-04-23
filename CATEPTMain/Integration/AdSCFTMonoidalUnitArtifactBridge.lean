@@ -785,9 +785,9 @@ theorem adscft_rt_ssa_from_monoidalUnit_determinants
     hG hAreaSSA
 
 theorem phase1_rt_ssa_from_monoidalUnit_determinants
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants)
+    (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
+    (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants)
     (G_N detAB detBC detB detABC : ℝ) (hG : 0 < G_N)
     (hAreaSSA :
       metricMonoidalUnitFromDet detAB + metricMonoidalUnitFromDet detBC ≥
@@ -802,9 +802,9 @@ theorem phase1_rt_ssa_from_monoidalUnit_determinants
     G_N detAB detBC detB detABC hG hAreaSSA
 
 theorem phase1UnifiedWitness_einsteinFlat_alias
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+    (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
+    (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants) :
     (phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP).coords.EinsteinFlat :=
   phase1_witness_einstein_flat constants locality entropicEEP
 

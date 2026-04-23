@@ -87,17 +87,11 @@ lean_lib ClassicalInfo where
 lean_lib StatMech where
   srcDir := "."
 
--- NavierStokes module hierarchy (NavierStokes/*.lean).
--- These are imported directly by BianchiKucharEPTBridge and ComplexFunctionalsBridge.
 lean_lib NavierStokes where
   srcDir := "."
 
--- NavierStokesClean module hierarchy (NavierStokesClean/*.lean).
--- Imported by CATEPTSelfConsistency and related integration modules.
 lean_lib NavierStokesClean where
   srcDir := "."
 
--- QuantumAlgebra: absorbed 2026-04-22 (formerly external).
--- Provides operator definitions, normal ordering, Pauli no-go, IsabelleMarresDirac subpackage.
 lean_lib QuantumAlgebra where
   srcDir := "."

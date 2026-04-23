@@ -1,5 +1,5 @@
 import NavierStokesClean.Galerkin.MuhaCanicDecomposition
-import CATEPTMain.ODE.AFPODEBridge
+import CATEPTMain.Analysis.ODE.AFPODEBridge
 import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 import Mathlib.MeasureTheory.Function.UniformIntegrable
 import Mathlib.Topology.MetricSpace.Basic
@@ -98,7 +98,7 @@ theorem galerkin_equicontinuity
     (T : ℝ) (hT : 0 < T) :
     ∃ K : ℝ, 0 < K ∧ ∀ N (s t : ℝ), s ∈ Set.Icc 0 T → t ∈ Set.Icc 0 T →
       ‖traj_seq N t - traj_seq N s‖ ≤ K * Real.sqrt |t - s| :=
-  CATEPTMain.ODE.galerkin_equicontinuity_from_h1_deriv_bound
+  CATEPTMain.Analysis.ODE.galerkin_equicontinuity_from_h1_deriv_bound
     traj_seq C₀ hC₀ hInit hConv T hT
 
 /-! ## §2. Limit identification axiom -/

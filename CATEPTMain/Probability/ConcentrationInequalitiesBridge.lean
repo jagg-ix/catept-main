@@ -1,4 +1,4 @@
-import Mathlib.Probability.Variance
+import Mathlib.Probability.Moments.Variance
 import Mathlib.Probability.Independence.Basic
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Analysis.MeanInequalities
@@ -60,7 +60,7 @@ variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasu
 /-- **afp_variance**: AFP `variance X = 𝔼[X²] - 𝔼[X]²`.
     Mathlib: `ProbabilityTheory.variance f μ` (identical definition). -/
 theorem afp_variance_eq_mathlib
-    {f : Ω → ℝ} (hf : Memℒp f 2 μ) :
+    {f : Ω → ℝ} (hf : MemLp f 2 μ) :
     variance f μ = variance f μ := rfl
 
 -- ── §2. Bienaymé identity ─────────────────────────────────────────────────────
@@ -71,8 +71,8 @@ theorem afp_variance_eq_mathlib
     For independent `X₁, …, Xₙ`: `Var[X₁ + ⋯ + Xₙ] = Var[X₁] + ⋯ + Var[Xₙ]`. -/
 axiom afp_bienayme_identity {ι : Type*} (s : Finset ι)
     (X : ι → Ω → ℝ)
-    (hX_sq : ∀ i, Memℒp (X i) 2 μ)
-    (hX_indep : iIndepFun (fun _ => inferInstance) X μ) :
+    (hX_sq : ∀ i, MemLp (X i) 2 μ)
+    (hX_indep : iIndepFun X μ) :
     variance (fun ω => ∑ i ∈ s, X i ω) μ = ∑ i ∈ s, variance (X i) μ
 
 -- ── §3. Efron–Stein inequality ────────────────────────────────────────────────
@@ -84,17 +84,17 @@ axiom afp_bienayme_identity {ι : Type*} (s : Finset ι)
       `Var[f(X)] ≤ (1/2) · Σᵢ 𝔼[(f(X) - f(Xᵢ replaced by X'ᵢ))²]`.
 
     Here we state the finite-index abstract version. -/
-axiom afp_efron_stein {ι : Type*} (s : Finset ι) [Fintype ι]
+axiom afp_efron_stein {ι : Type*} [DecidableEq ι] (s : Finset ι) [Fintype ι]
     (X X' : ι → Ω → ℝ)
-    (hX : iIndepFun (fun _ => inferInstance) X μ)
-    (hX' : iIndepFun (fun _ => inferInstance) X' μ)
-    (hXX' : iIndepFun (fun _ => inferInstance) (Sum.elim X X') μ)
+        (hX : iIndepFun X μ)
+        (hX' : iIndepFun X' μ)
+        (hXX' : iIndepFun (Sum.elim X X') μ)
     (f : (ι → ℝ) → ℝ) (hf : Measurable f)
-    (hf_sq : Memℒp (fun ω => f (fun i => X i ω)) 2 μ) :
+        (hf_sq : MemLp (fun ω => f (fun i => X i ω)) 2 μ) :
     variance (fun ω => f (fun i => X i ω)) μ ≤
-    (1/2) * ∑ i ∈ s, 𝔼[fun ω =>
+        (1 / 2) * ∑ i ∈ s, μ[fun ω =>
       (f (fun j => X j ω) -
-       f (fun j => if j = i then X' i ω else X j ω))^2 |μ]
+             f (fun j => if j = i then X' i ω else X j ω))^2]
 
 -- ── §4. Cantelli inequality ───────────────────────────────────────────────────
 
@@ -104,8 +104,8 @@ axiom afp_efron_stein {ι : Type*} (s : Finset ι) [Fintype ι]
     For square-integrable `X` and `t > 0`:
       `P(X - 𝔼[X] ≥ t) ≤ Var[X] / (Var[X] + t²)`. -/
 axiom afp_cantelli_inequality
-    (X : Ω → ℝ) (hX : Memℒp X 2 μ) (t : ℝ) (ht : 0 < t) :
-    μ {ω | X ω - 𝔼[X|μ] ≥ t} ≤
+    (X : Ω → ℝ) (hX : MemLp X 2 μ) (t : ℝ) (ht : 0 < t) :
+    μ {ω | X ω - μ[X] ≥ t} ≤
     ENNReal.ofReal (variance X μ / (variance X μ + t^2))
 
 -- ── §5. Paley–Zygmund inequality ─────────────────────────────────────────────
@@ -116,10 +116,10 @@ axiom afp_cantelli_inequality
     For non-negative `X ≥ 0`, `X ∈ L²`, and `0 ≤ θ ≤ 1`:
       `P(X > θ · 𝔼[X]) ≥ (1 - θ)² · 𝔼[X]² / 𝔼[X²]`. -/
 axiom afp_paley_zygmund_inequality
-    (X : Ω → ℝ) (hX_nn : ∀ ω, 0 ≤ X ω) (hX_sq : Memℒp X 2 μ)
+    (X : Ω → ℝ) (hX_nn : ∀ ω, 0 ≤ X ω) (hX_sq : MemLp X 2 μ)
     (θ : ℝ) (hθ₀ : 0 ≤ θ) (hθ₁ : θ ≤ 1) :
-    ENNReal.ofReal ((1 - θ)^2 * 𝔼[X|μ]^2) / ENNReal.ofReal 𝔼[(X^2 : Ω → ℝ)|μ] ≤
-    μ {ω | X ω > θ * 𝔼[X|μ]}
+    ENNReal.ofReal ((1 - θ)^2 * μ[X]^2) / ENNReal.ofReal μ[(X^2 : Ω → ℝ)] ≤
+    μ {ω | X ω > θ * μ[X]}
 
 -- ── §6. Hoeffding's lemma ─────────────────────────────────────────────────────
 
@@ -133,9 +133,9 @@ axiom afp_paley_zygmund_inequality
 axiom afp_hoeffding_lemma
     (X : Ω → ℝ) (a b s : ℝ) (hab : a < b)
     (hX_bounded : ∀ᵐ ω ∂μ, a ≤ X ω ∧ X ω ≤ b)
-    (hX_mean0 : 𝔼[X|μ] = 0)
+    (hX_mean0 : μ[X] = 0)
     (hX_int : Integrable X μ) :
-    𝔼[fun ω => Real.exp (s * X ω)|μ] ≤ Real.exp (s^2 * (b - a)^2 / 8)
+    μ[fun ω => Real.exp (s * X ω)] ≤ Real.exp (s^2 * (b - a)^2 / 8)
 
 -- ── §7. Bennett inequality ────────────────────────────────────────────────────
 
@@ -146,10 +146,10 @@ axiom afp_hoeffding_lemma
       `P(Σ Xᵢ ≥ t) ≤ exp(-t² / (2(Σ Var[Xᵢ] + c·t/3)))`. -/
 axiom afp_bennett_inequality {ι : Type*} (s : Finset ι)
     (X : ι → Ω → ℝ) (c t : ℝ) (hc : 0 < c) (ht : 0 < t)
-    (hX_mean0 : ∀ i, 𝔼[X i|μ] = 0)
+    (hX_mean0 : ∀ i, μ[X i] = 0)
     (hX_bounded : ∀ i, ∀ᵐ ω ∂μ, |X i ω| ≤ c)
-    (hX_indep : iIndepFun (fun _ => inferInstance) X μ)
-    (hX_sq : ∀ i, Memℒp (X i) 2 μ) :
+    (hX_indep : iIndepFun X μ)
+    (hX_sq : ∀ i, MemLp (X i) 2 μ) :
     μ {ω | ∑ i ∈ s, X i ω ≥ t} ≤
     ENNReal.ofReal (Real.exp (- t^2 / (2 * (∑ i ∈ s, variance (X i) μ + c * t / 3))))
 
@@ -160,7 +160,7 @@ axiom afp_bennett_inequality {ι : Type*} (s : Finset ι)
     AFP: `Concentration_Inequalities.mc_diarmid_inequality_aux` (`McDiarmid_Inequality.thy`).
     A function `f : (ι → ℝ) → ℝ` satisfies the bounded differences property with constants
     `c : ι → ℝ≥0` if changing a single coordinate by arbitrary amount changes `f` by at most `c i`. -/
-def BoundedDifferences {ι : Type*} (f : (ι → ℝ) → ℝ) (c : ι → ℝ) : Prop :=
+def BoundedDifferences {ι : Type*} [DecidableEq ι] (f : (ι → ℝ) → ℝ) (c : ι → ℝ) : Prop :=
   ∀ (x : ι → ℝ) (i : ι) (y : ℝ),
     |f x - f (Function.update x i y)| ≤ c i
 
@@ -172,15 +172,15 @@ def BoundedDifferences {ι : Type*} (f : (ι → ℝ) → ℝ) (c : ι → ℝ) 
       `P(f(X₁,…,Xₙ) - 𝔼[f(X₁,…,Xₙ)] ≥ t) ≤ exp(-2t² / Σᵢ cᵢ²)`.
 
     This is the most powerful general tool in the AFP module. -/
-axiom afp_mc_diarmid_inequality {ι : Type*} (s : Finset ι)
+axiom afp_mc_diarmid_inequality {ι : Type*} [DecidableEq ι] (s : Finset ι)
     (X : ι → Ω → ℝ) (f : (ι → ℝ) → ℝ) (c : ι → ℝ) (t : ℝ)
     (hf_meas : Measurable f)
     (ht : 0 < t)
     (hc : ∀ i, 0 ≤ c i)
     (hf_bd : BoundedDifferences f c)
-    (hX_indep : iIndepFun (fun _ => inferInstance) X μ)
-    (hX_sq : ∀ i, Memℒp (X i) 2 μ) :
-    μ {ω | f (fun i => X i ω) - 𝔼[fun ω => f (fun i => X i ω)|μ] ≥ t} ≤
+    (hX_indep : iIndepFun X μ)
+    (hX_sq : ∀ i, MemLp (X i) 2 μ) :
+    μ {ω | f (fun i => X i ω) - μ[fun ω => f (fun i => X i ω)] ≥ t} ≤
     ENNReal.ofReal (Real.exp (- 2 * t^2 / ∑ i ∈ s, (c i)^2))
 
 -- ── §9. NS application anchors ────────────────────────────────────────────────
@@ -191,13 +191,30 @@ axiom afp_mc_diarmid_inequality {ι : Type*} (s : Finset ι)
     of the Fourier coefficients. Under bounded perturbations of each `a_k`, `E_N` changes
     by at most `2·|a_k|/N` per coordinate.
     `afp_mc_diarmid_inequality` gives that `E_N` concentrates around its mean. -/
-theorem ns_galerkin_energy_concentration_anchor : True := trivial
+theorem ns_galerkin_energy_concentration_anchor {ι : Type*}
+    [DecidableEq ι]
+        (s : Finset ι)
+        (X : ι → Ω → ℝ) (f : (ι → ℝ) → ℝ) (c : ι → ℝ) (t : ℝ)
+        (hf_meas : Measurable f)
+        (ht : 0 < t)
+        (hc : ∀ i, 0 ≤ c i)
+        (hf_bd : BoundedDifferences f c)
+    (hX_indep : iIndepFun X μ)
+    (hX_sq : ∀ i, MemLp (X i) 2 μ) :
+    μ {ω | f (fun i => X i ω) - μ[fun ω => f (fun i => X i ω)] ≥ t} ≤
+        ENNReal.ofReal (Real.exp (- 2 * t^2 / ∑ i ∈ s, (c i)^2)) :=
+    afp_mc_diarmid_inequality (μ := μ) s X f c t hf_meas ht hc hf_bd hX_indep hX_sq
 
 /-- **NS anchor: Paley–Zygmund positivity for NS solutions**.
 
     In the Caffarelli–Kohn–Nirenberg partial regularity proof, a non-negative test function
     is shown to be positive on a set of positive measure via `afp_paley_zygmund_inequality`.
     (Used in the `Pr(ε-regularity`)` step.) -/
-theorem ns_paley_zygmund_positivity_anchor : True := trivial
+theorem ns_paley_zygmund_positivity_anchor
+    (X : Ω → ℝ) (hX_nn : ∀ ω, 0 ≤ X ω) (hX_sq : MemLp X 2 μ)
+        (θ : ℝ) (hθ₀ : 0 ≤ θ) (hθ₁ : θ ≤ 1) :
+    ENNReal.ofReal ((1 - θ)^2 * μ[X]^2) / ENNReal.ofReal μ[(X^2 : Ω → ℝ)] ≤
+    μ {ω | X ω > θ * μ[X]} :=
+    afp_paley_zygmund_inequality (μ := μ) X hX_nn hX_sq θ hθ₀ hθ₁
 
 end CATEPTMain.Probability.ConcentrationIneqs

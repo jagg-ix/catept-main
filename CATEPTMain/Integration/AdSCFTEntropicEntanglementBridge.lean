@@ -1,7 +1,7 @@
 import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
 import CATEPTMain.Integration.AdSCFTHeadrick1907Bridge
-import CATEPTMain.IMD.Entanglement
-import CATEPTMain.PM.CHSH_Inequality
+import CATEPTMain.Quantum.IMD.Entanglement
+import CATEPTMain.Quantum.PM.CHSH_Inequality
 
 /-!
 # AdS/CFT × Entropic Entanglement × NoFTL Bridge
@@ -48,10 +48,10 @@ open CATEPTMain.Integration.AdSCFT
 open CATEPTMain.Integration.AdSCFT.Headrick1907
 open CATEPTMain.Integration.AdSCFT.EntropicEinsteinLocality
 open CATEPTMain.Integration.CATEPTSpaceTime
-open CATEPTMain.IMD
-open CATEPTMain.IMD.Quantum
-open CATEPTMain.IMD.Entanglement
-open CATEPTMain.PM.CHSH_Inequality
+open CATEPTMain.Quantum.IMD
+open CATEPTMain.Quantum.IMD.Quantum
+open CATEPTMain.Quantum.IMD.Entanglement
+open CATEPTMain.Quantum.PM.CHSH_Inequality
 open NavierStokesClean.CATEPT
 
 -- ── Part A: Spacelike Bell Locality ──────────────────────────────────────────

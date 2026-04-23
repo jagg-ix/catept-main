@@ -352,11 +352,11 @@ class KwantCATPTAdapter:
         # CAT/EPT correction
         if lambda_ent > 0:
             L = system_length(system)
-            G_eff = G_0 * np.exp(-lambda_ent * L * 1e-9)  # Convert nm to m
+            G_cond = G_0 * np.exp(-lambda_ent * L * 1e-9)  # Convert nm to m
         else:
-            G_eff = G_0
+            G_cond = G_0
         
-        return G_eff
+        return G_cond
 ```
 
 **Integration:**

@@ -10,13 +10,13 @@ Direct 4.29 integration for:
 
 ## CATEPT leverage points
 
-* `CATEPTMain.PHQ` (Physical Quantities): use explicit dimensional
+* `CATEPTMain.Core.PHQ` (Physical Quantities): use explicit dimensional
   witnesses (`dimension`, `PhysicalVariable`) to validate unit coherence.
 
-* `CATEPTMain.LSI` and `CATEPTMain.CPM`: dimensional
+* `CATEPTMain.Analysis.LSI` and `CATEPTMain.Analysis.CPM`: dimensional
   constraints for derived fields used in measure/integral side conditions.
 
-* `CATEPTMain.IMD`: cross-check scalar constants and derived formulas
+* `CATEPTMain.Quantum.IMD`: cross-check scalar constants and derived formulas
   with unit-correctness obligations before theorem promotion.
 
 The upstream package now runs on Lean 4.29 in place; this bridge records the

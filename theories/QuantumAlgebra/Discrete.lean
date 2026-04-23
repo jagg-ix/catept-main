@@ -1,0 +1,7 @@
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Definitions
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Basics
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Deutsch
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Quantum
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Measurement
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Teleportation
+import QuantumAlgebra.Discrete.IsabelleMarresDirac.Tensor

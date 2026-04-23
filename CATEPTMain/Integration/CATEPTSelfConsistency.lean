@@ -1,26 +1,26 @@
 import CATEPTMain.Integration.CATEPTSpaceTime
-import CATEPTMain.IMD.IMDPrelude
-import CATEPTMain.QFT.QFTPrelude
-import CATEPTMain.PM.PMPrelude
-import CATEPTMain.CBO.CBOPrelude
-import CATEPTMain.HSTP.HSTPPrelude
-import CATEPTMain.FOU.FOUPrelude
-import CATEPTMain.LSI.LSIPrelude
-import CATEPTMain.CPM.CPMPrelude
+import CATEPTMain.Quantum.IMD.IMDPrelude
+import CATEPTMain.CATEPT.QFT.QFTPrelude
+import CATEPTMain.Quantum.PM.PMPrelude
+import CATEPTMain.Quantum.CBO.CBOPrelude
+import CATEPTMain.Quantum.HSTP.HSTPPrelude
+import CATEPTMain.Analysis.FOU.FOUPrelude
+import CATEPTMain.Analysis.LSI.LSIPrelude
+import CATEPTMain.Analysis.CPM.CPMPrelude
 import CATEPTMain.Integration.VMLSteadyStateBridge
 import CATEPTMain.Integration.VMLCATEPTBridge
 import CATEPTMain.Integration.ComplexEinsteinPathIntegralBridge
-import CATEPTMain.LAPL.LAPLPrelude
-import CATEPTMain.QUAT.QUATPrelude
-import CATEPTMain.OCT.OCTPrelude
-import CATEPTMain.MINK.MINKPrelude
-import CATEPTMain.MTN.MTNPrelude
-import CATEPTMain.ODE.ODEPrelude
-import CATEPTMain.MODE.MODEPrelude
-import CATEPTMain.GYR.GYRPrelude
-import CATEPTMain.SCHTZ.SCHTZPrelude
-import CATEPTMain.PDC.PDCPrelude
-import CATEPTMain.PHQ.PHQPrelude
+import CATEPTMain.Analysis.LAPL.LAPLPrelude
+import CATEPTMain.Geometry.QUAT.QUATPrelude
+import CATEPTMain.Geometry.OCT.OCTPrelude
+import CATEPTMain.Geometry.MINK.MINKPrelude
+import CATEPTMain.Core.MTN.MTNPrelude
+import CATEPTMain.Analysis.ODE.ODEPrelude
+import CATEPTMain.Analysis.MODE.MODEPrelude
+import CATEPTMain.Geometry.GYR.GYRPrelude
+import CATEPTMain.Quantum.SCHTZ.SCHTZPrelude
+import CATEPTMain.Core.PDC.PDCPrelude
+import CATEPTMain.Core.PHQ.PHQPrelude
 import NavierStokesClean.Sobolev.TorusBridge
 import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
 -- CATEPTNSGNEmbedding provides the sorry-free GN H¹↪L⁴ proof.
@@ -30,10 +30,10 @@ import CATEPTMain.Integration.CATEPTNSGNEmbedding
 -- It must also be imported BEFORE NoFTL for real tactic support.
 import CATEPTMain.Integration.CATEPTNSDivCurl
 -- Fourier-Agmon observable bridge provides non-vacuous P3 gap statements.
-import NavierStokes.NSFourierAgmonObsBridge
+import NavierStokes.Fourier.NSFourierAgmonObsBridge
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
-import CATEPTMain.NoFTL.NoFTLPrelude
+import CATEPTMain.Geometry.NoFTL.NoFTLPrelude
 /-!
 # CATEPTSelfConsistency — Self-Consistency of the CAT/EPT Framework
 
@@ -281,7 +281,7 @@ end NoFTLConsistency
 
 section IMDConsistency
 
-open CATEPTMain.IMD
+open CATEPTMain.Quantum.IMD
 
 /-- IMD consistency: for any unitary gate `U : QMat`, the state evolution
     `v ↦ matVecMul U v` on the CAT/EPT Hilbert space preserves the L²-norm.
@@ -315,8 +315,8 @@ end IMDConsistency
 
 section QFTConsistency
 
-open CATEPTMain.QFT
-open CATEPTMain.IMD
+open CATEPTMain.CATEPT.QFT
+open CATEPTMain.Quantum.IMD
 
 /-- QFT consistency: for every n the QFT circuit `qftCircuit n` is a unitary
     on the space of n-qubit states, well-typed with respect to the EPT
@@ -338,8 +338,8 @@ end QFTConsistency
 
 section PMConsistency
 
-open CATEPTMain.PM
-open CATEPTMain.IMD
+open CATEPTMain.Quantum.PM
+open CATEPTMain.Quantum.IMD
 
 /-- PM consistency: projective measurements on the CAT/EPT background are
     non-negative trace-class operators forming a valid PVM.
@@ -361,7 +361,7 @@ end PMConsistency
 
 section CBOConsistency
 
-open CATEPTMain.CBO
+open CATEPTMain.Quantum.CBO
 
 /-- CBO consistency: every Hermitian operator on the EPT Hilbert space has a
     real spectrum and is bounded.
@@ -392,8 +392,8 @@ end CBOConsistency
 
 section HSTPConsistency
 
-open CATEPTMain.HSTP
-open CATEPTMain.CBO
+open CATEPTMain.Quantum.HSTP
+open CATEPTMain.Quantum.CBO
 
 /-- HSTP consistency: elementary tensors in the Hilbert tensor product satisfy
     the inner-product bilinear formula on the EPT background.
@@ -412,7 +412,7 @@ end HSTPConsistency
 
 section FOUConsistency
 
-open CATEPTMain.FOU
+open CATEPTMain.Analysis.FOU
 
 /-- FOU consistency: every EPT-periodic function is square-integrable on the
     corresponding temporal slice.
@@ -445,7 +445,7 @@ end FOUConsistency
 
 section LSIConsistency
 
-open CATEPTMain.LSI
+open CATEPTMain.Analysis.LSI
 
 /-- LSI consistency: the EPT function τ : ℝ → ℝ is monotone, so it generates
     a Lebesgue-Stieltjes measure `lsiMeasure τ` on any worldline segment.
@@ -467,7 +467,7 @@ end LSIConsistency
 
 section CPMConsistency
 
-open CATEPTMain.CPM
+open CATEPTMain.Analysis.CPM
 
 /-- CPM consistency: the field configuration space at a fixed EPT level is a
     disjoint union of finite-dimensional fibers, each equipped with a
@@ -528,7 +528,7 @@ end ComplexEinsteinPathIntegralConsistency
 
 section LAPLConsistency
 
-open CATEPTMain.LAPL
+open CATEPTMain.Analysis.LAPL
 
 /-- LAPL consistency: Laplace transforms of EPT-observable signals are
     linear and convergent for every signal of exponential order.
@@ -551,7 +551,7 @@ end LAPLConsistency
 
 section QUATConsistency
 
-open CATEPTMain.QUAT
+open CATEPTMain.Geometry.QUAT
 
 /-- QUAT consistency: unit quaternions are closed under multiplication and
     inversion, providing the SU(2) rotation group for EPT spatial fibers.
@@ -571,7 +571,7 @@ end QUATConsistency
 
 section OCTConsistency
 
-open CATEPTMain.OCT
+open CATEPTMain.Geometry.OCT
 
 /-- OCT consistency: the octonion norm is non-negative and zero iff the
     octonion is zero, providing a valid 8-dimensional normed division algebra.
@@ -592,7 +592,7 @@ end OCTConsistency
 
 section MINKConsistency
 
-open CATEPTMain.MINK
+open CATEPTMain.Geometry.MINK
 
 /-- MINK consistency: Minkowski's theorem guarantees a lattice point in any
     centrally-symmetric convex body of volume > 2ⁿ.
@@ -613,7 +613,7 @@ end MINKConsistency
 
 section MTNConsistency
 
-open CATEPTMain.MTN
+open CATEPTMain.Core.MTN
 
 /-- MTN consistency: the Kronecker (tensor) product of matrices is stable
     under scalar multiplication and transpose, providing correct multi-qubit
@@ -634,7 +634,7 @@ end MTNConsistency
 
 section ODEConsistency
 
-open CATEPTMain.ODE
+open CATEPTMain.Analysis.ODE
 
 /-- ODE consistency: for every locally Lipschitz vector field f on the EPT
     spatial fiber, the flow `odeFlow n f` satisfies the semigroup law and
@@ -668,7 +668,7 @@ end ODEConsistency
 
 section MODEConsistency
 
-open CATEPTMain.MODE
+open CATEPTMain.Analysis.MODE
 
 /-- MODE consistency: the matrix exponential satisfies `exp(0) = 1`, which is
     the identity gate in the linear evolution of the EPT Hilbert fiber.
@@ -697,7 +697,7 @@ end MODEConsistency
 
 section GYRConsistency
 
-open CATEPTMain.GYR
+open CATEPTMain.Geometry.GYR
 
 /-- GYR consistency: gyrovector addition `gyroAdd gyroZero a = a` provides
     a left-identity, making the gyrovector carrier a gyrogroup under the EPT
@@ -751,7 +751,7 @@ end GYRConsistency
 
 section SCHTZConsistency
 
-open CATEPTMain.SCHTZ
+open CATEPTMain.Quantum.SCHTZ
 
 /-- SCHTZ consistency: the Schutz betweenness axioms O1–O6 hold on EPT event
     paths, providing a causal order on CATEPT spacetime without assuming
@@ -780,7 +780,7 @@ end SCHTZConsistency
 
 section PDCConsistency
 
-open CATEPTMain.PDC
+open CATEPTMain.Core.PDC
 
 /-- PDC consistency: the Poincaré disc distance is non-negative and symmetric,
     making `(PDCPoint, pdcDist)` a metric space that models 2D hyperbolic EPT
@@ -801,7 +801,7 @@ end PDCConsistency
 
 section PHQConsistency
 
-open CATEPTMain.PHQ
+open CATEPTMain.Core.PHQ
 
 /-- PHQ consistency: the dimensional analysis algebra `PhysDim` is an abelian
     group under `dimAdd`, providing type-safe physical quantity arithmetic on

@@ -53,7 +53,7 @@ physics identifications.
 -/
 
 -- ── Framework ─────────────────────────────────────────────────────────────────
-import CATEPTMain.Framework.AFPBridgeFramework
+import CATEPTMain.Core.Framework.AFPBridgeFramework
 
 -- ── L2 time integral ──────────────────────────────────────────────────────────
 import CATEPTMain.L2TimeIntegral
@@ -64,95 +64,95 @@ import CATEPTMain.CALCULUS.Normalization
 import CATEPTMain.CALCULUS.Attention
 
 -- ── CBO: Complex Bounded Operators ───────────────────────────────────────────
-import CATEPTMain.CBO.Cblinfun_Code
-import CATEPTMain.CBO.Cblinfun_Code_Examples
-import CATEPTMain.CBO.Cblinfun_Matrix
-import CATEPTMain.CBO.Complex_Bounded_Linear_Function
-import CATEPTMain.CBO.Complex_Bounded_Linear_Function0
-import CATEPTMain.CBO.Complex_Euclidean_Space0
-import CATEPTMain.CBO.Complex_Inner_Product
-import CATEPTMain.CBO.Complex_Inner_Product0
-import CATEPTMain.CBO.Complex_L2
-import CATEPTMain.CBO.Complex_Vector_Spaces
-import CATEPTMain.CBO.Complex_Vector_Spaces0
-import CATEPTMain.CBO.Extra_General
-import CATEPTMain.CBO.Extra_Jordan_Normal_Form
-import CATEPTMain.CBO.Extra_Operator_Norm
-import CATEPTMain.CBO.Extra_Ordered_Fields
-import CATEPTMain.CBO.Extra_Pretty_Code_Examples
-import CATEPTMain.CBO.Extra_Vector_Spaces
-import CATEPTMain.CBO.One_Dimensional_Spaces
+import CATEPTMain.Quantum.CBO.Cblinfun_Code
+import CATEPTMain.Quantum.CBO.Cblinfun_Code_Examples
+import CATEPTMain.Quantum.CBO.Cblinfun_Matrix
+import CATEPTMain.Quantum.CBO.Complex_Bounded_Linear_Function
+import CATEPTMain.Quantum.CBO.Complex_Bounded_Linear_Function0
+import CATEPTMain.Quantum.CBO.Complex_Euclidean_Space0
+import CATEPTMain.Quantum.CBO.Complex_Inner_Product
+import CATEPTMain.Quantum.CBO.Complex_Inner_Product0
+import CATEPTMain.Quantum.CBO.Complex_L2
+import CATEPTMain.Quantum.CBO.Complex_Vector_Spaces
+import CATEPTMain.Quantum.CBO.Complex_Vector_Spaces0
+import CATEPTMain.Quantum.CBO.Extra_General
+import CATEPTMain.Quantum.CBO.Extra_Jordan_Normal_Form
+import CATEPTMain.Quantum.CBO.Extra_Operator_Norm
+import CATEPTMain.Quantum.CBO.Extra_Ordered_Fields
+import CATEPTMain.Quantum.CBO.Extra_Pretty_Code_Examples
+import CATEPTMain.Quantum.CBO.Extra_Vector_Spaces
+import CATEPTMain.Quantum.CBO.One_Dimensional_Spaces
 
 -- ── CPM: Coproduct Measure ────────────────────────────────────────────────────
-import CATEPTMain.CPM.Coproduct_Measure
-import CATEPTMain.CPM.Coproduct_Measure_Additional
-import CATEPTMain.CPM.Lemmas_Coproduct_Measure
+import CATEPTMain.Analysis.CPM.Coproduct_Measure
+import CATEPTMain.Analysis.CPM.Coproduct_Measure_Additional
+import CATEPTMain.Analysis.CPM.Lemmas_Coproduct_Measure
 
 -- ── FOU: Fourier Series ───────────────────────────────────────────────────────
-import CATEPTMain.FOU.Confine
-import CATEPTMain.FOU.Fourier
-import CATEPTMain.FOU.Fourier_Aux2
-import CATEPTMain.FOU.Lspace
-import CATEPTMain.FOU.Periodic
-import CATEPTMain.FOU.Square_Integrable
+import CATEPTMain.Analysis.FOU.Confine
+import CATEPTMain.Analysis.FOU.Fourier
+import CATEPTMain.Analysis.FOU.Fourier_Aux2
+import CATEPTMain.Analysis.FOU.Lspace
+import CATEPTMain.Analysis.FOU.Periodic
+import CATEPTMain.Analysis.FOU.Square_Integrable
 
 -- ── GYR: Gyrovector Spaces (Prelude only; Theories pending Phase 2) ───────────
-import CATEPTMain.GYR.GYRPrelude
+import CATEPTMain.Geometry.GYR.GYRPrelude
 
 -- ── HSTP: Hilbert Space Tensor Product ───────────────────────────────────────
-import CATEPTMain.HSTP.Compact_Operators
-import CATEPTMain.HSTP.Eigenvalues
-import CATEPTMain.HSTP.HS2Ell2
-import CATEPTMain.HSTP.Hilbert_Space_Tensor_Product
-import CATEPTMain.HSTP.Misc_TP
-import CATEPTMain.HSTP.Misc_TP_TTS
-import CATEPTMain.HSTP.Partial_Trace
-import CATEPTMain.HSTP.Positive_Operators
-import CATEPTMain.HSTP.Spectral_Theorem
-import CATEPTMain.HSTP.Strong_Operator_Topology
-import CATEPTMain.HSTP.Tensor_Product_Code
-import CATEPTMain.HSTP.Trace_Class
-import CATEPTMain.HSTP.Von_Neumann_Algebras
-import CATEPTMain.HSTP.Weak_Operator_Topology
-import CATEPTMain.HSTP.Weak_Star_Topology
+import CATEPTMain.Quantum.HSTP.Compact_Operators
+import CATEPTMain.Quantum.HSTP.Eigenvalues
+import CATEPTMain.Quantum.HSTP.HS2Ell2
+import CATEPTMain.Quantum.HSTP.Hilbert_Space_Tensor_Product
+import CATEPTMain.Quantum.HSTP.Misc_TP
+import CATEPTMain.Quantum.HSTP.Misc_TP_TTS
+import CATEPTMain.Quantum.HSTP.Partial_Trace
+import CATEPTMain.Quantum.HSTP.Positive_Operators
+import CATEPTMain.Quantum.HSTP.Spectral_Theorem
+import CATEPTMain.Quantum.HSTP.Strong_Operator_Topology
+import CATEPTMain.Quantum.HSTP.Tensor_Product_Code
+import CATEPTMain.Quantum.HSTP.Trace_Class
+import CATEPTMain.Quantum.HSTP.Von_Neumann_Algebras
+import CATEPTMain.Quantum.HSTP.Weak_Operator_Topology
+import CATEPTMain.Quantum.HSTP.Weak_Star_Topology
 
 -- ── IMD: Isabelle Markov Decision / Quantum Information ──────────────────────
-import CATEPTMain.IMD.Basics
-import CATEPTMain.IMD.Binary_Nat
-import CATEPTMain.IMD.Complex_Vectors
-import CATEPTMain.IMD.Deutsch
-import CATEPTMain.IMD.Deutsch_Jozsa
-import CATEPTMain.IMD.Entanglement
-import CATEPTMain.IMD.Measurement
-import CATEPTMain.IMD.More_Tensor
-import CATEPTMain.IMD.No_Cloning
-import CATEPTMain.IMD.Quantum
-import CATEPTMain.IMD.Quantum_Prisoners_Dilemma
-import CATEPTMain.IMD.Quantum_Teleportation
-import CATEPTMain.IMD.Tensor
+import CATEPTMain.Quantum.IMD.Basics
+import CATEPTMain.Quantum.IMD.Binary_Nat
+import CATEPTMain.Quantum.IMD.Complex_Vectors
+import CATEPTMain.Quantum.IMD.Deutsch
+import CATEPTMain.Quantum.IMD.Deutsch_Jozsa
+import CATEPTMain.Quantum.IMD.Entanglement
+import CATEPTMain.Quantum.IMD.Measurement
+import CATEPTMain.Quantum.IMD.More_Tensor
+import CATEPTMain.Quantum.IMD.No_Cloning
+import CATEPTMain.Quantum.IMD.Quantum
+import CATEPTMain.Quantum.IMD.Quantum_Prisoners_Dilemma
+import CATEPTMain.Quantum.IMD.Quantum_Teleportation
+import CATEPTMain.Quantum.IMD.Tensor
 
 -- ── LAPL: Laplace Transform ───────────────────────────────────────────────────
-import CATEPTMain.LAPL.Convolution_Theorem
-import CATEPTMain.LAPL.Inversion
-import CATEPTMain.LAPL.Laplace_Transform
+import CATEPTMain.Analysis.LAPL.Convolution_Theorem
+import CATEPTMain.Analysis.LAPL.Inversion
+import CATEPTMain.Analysis.LAPL.Laplace_Transform
 
 -- ── LSI: Lebesgue–Stieltjes Integral ─────────────────────────────────────────
-import CATEPTMain.LSI.Lebesgue_Stieltjes_Integral
-import CATEPTMain.LSI.Preliminaries_LSI
+import CATEPTMain.Analysis.LSI.Lebesgue_Stieltjes_Integral
+import CATEPTMain.Analysis.LSI.Preliminaries_LSI
 
 -- ── MINK: Minkowski Theorem ───────────────────────────────────────────────────
-import CATEPTMain.MINK.Convex_Body
-import CATEPTMain.MINK.Lattice_Points
-import CATEPTMain.MINK.Minkowski_Main
+import CATEPTMain.Geometry.MINK.Convex_Body
+import CATEPTMain.Geometry.MINK.Lattice_Points
+import CATEPTMain.Geometry.MINK.Minkowski_Main
 
 -- ── MODE: Matrix ODEs ─────────────────────────────────────────────────────────
-import CATEPTMain.MODE.Affine_ODE
-import CATEPTMain.MODE.Matrix_Exp
+import CATEPTMain.Analysis.MODE.Affine_ODE
+import CATEPTMain.Analysis.MODE.Matrix_Exp
 
 -- ── MTN: Matrix Tensor / Kronecker Product ────────────────────────────────────
-import CATEPTMain.MTN.Eigenvalues_Kron
-import CATEPTMain.MTN.Kronecker_Product
-import CATEPTMain.MTN.Mixed_Product
+import CATEPTMain.Core.MTN.Eigenvalues_Kron
+import CATEPTMain.Core.MTN.Kronecker_Product
+import CATEPTMain.Core.MTN.Mixed_Product
 
 -- ── NoFTL: No Faster-Than-Light Observers ────────────────────────────────────
 -- Idiomatic port from AFP `No_FTL_observers_Gen_Rel` (Sulzbacher–Martins 2023).
@@ -160,112 +160,112 @@ import CATEPTMain.MTN.Mixed_Product
 -- Remaining Isabelle theories (Norms, Vectors, Functions, …, NoFTLGR) will be
 -- ported incrementally as real proofs; the previous auto-translated stubs
 -- (all-sorry, wrong types) were removed 2026-04-19.
-import CATEPTMain.NoFTL.NoFTLPrelude
-import CATEPTMain.NoFTL.Sorts
-import CATEPTMain.NoFTL.Points
-import CATEPTMain.NoFTL.AxEField
-import CATEPTMain.NoFTL.WorldView
-import CATEPTMain.NoFTL.AxSelfMinus
-import CATEPTMain.NoFTL.AxEventMinus
-import CATEPTMain.NoFTL.Functions
-import CATEPTMain.NoFTL.Norms
-import CATEPTMain.NoFTL.WorldLine
-import CATEPTMain.NoFTL.Translations
-import CATEPTMain.NoFTL.Vectors
-import CATEPTMain.NoFTL.Matrices
-import CATEPTMain.NoFTL.AxTriangleInequality
-import CATEPTMain.NoFTL.TangentLines
-import CATEPTMain.NoFTL.CauchySchwarz
-import CATEPTMain.NoFTL.Quadratics
-import CATEPTMain.NoFTL.LinearMaps
-import CATEPTMain.NoFTL.ReverseCauchySchwarz
-import CATEPTMain.NoFTL.Cardinalities
-import CATEPTMain.NoFTL.AxLightMinus
-import CATEPTMain.NoFTL.Cones
-import CATEPTMain.NoFTL.Affine
-import CATEPTMain.NoFTL.AxDiff
-import CATEPTMain.NoFTL.Classification
-import CATEPTMain.NoFTL.Sublemma3
-import CATEPTMain.NoFTL.Sublemma4
-import CATEPTMain.NoFTL.MainLemma
-import CATEPTMain.NoFTL.TangentLineLemma
-import CATEPTMain.NoFTL.KeyLemma
-import CATEPTMain.NoFTL.AffineConeLemma
-import CATEPTMain.NoFTL.Proposition1
-import CATEPTMain.NoFTL.Proposition2
-import CATEPTMain.NoFTL.Proposition3
-import CATEPTMain.NoFTL.ObserverConeLemma
-import CATEPTMain.NoFTL.NoFTLGR
+import CATEPTMain.Geometry.NoFTL.NoFTLPrelude
+import CATEPTMain.Geometry.NoFTL.Sorts
+import CATEPTMain.Geometry.NoFTL.Points
+import CATEPTMain.Geometry.NoFTL.AxEField
+import CATEPTMain.Geometry.NoFTL.WorldView
+import CATEPTMain.Geometry.NoFTL.AxSelfMinus
+import CATEPTMain.Geometry.NoFTL.AxEventMinus
+import CATEPTMain.Geometry.NoFTL.Functions
+import CATEPTMain.Geometry.NoFTL.Norms
+import CATEPTMain.Geometry.NoFTL.WorldLine
+import CATEPTMain.Geometry.NoFTL.Translations
+import CATEPTMain.Geometry.NoFTL.Vectors
+import CATEPTMain.Geometry.NoFTL.Matrices
+import CATEPTMain.Geometry.NoFTL.AxTriangleInequality
+import CATEPTMain.Geometry.NoFTL.TangentLines
+import CATEPTMain.Geometry.NoFTL.CauchySchwarz
+import CATEPTMain.Geometry.NoFTL.Quadratics
+import CATEPTMain.Geometry.NoFTL.LinearMaps
+import CATEPTMain.Geometry.NoFTL.ReverseCauchySchwarz
+import CATEPTMain.Geometry.NoFTL.Cardinalities
+import CATEPTMain.Geometry.NoFTL.AxLightMinus
+import CATEPTMain.Geometry.NoFTL.Cones
+import CATEPTMain.Geometry.NoFTL.Affine
+import CATEPTMain.Geometry.NoFTL.AxDiff
+import CATEPTMain.Geometry.NoFTL.Classification
+import CATEPTMain.Geometry.NoFTL.Sublemma3
+import CATEPTMain.Geometry.NoFTL.Sublemma4
+import CATEPTMain.Geometry.NoFTL.MainLemma
+import CATEPTMain.Geometry.NoFTL.TangentLineLemma
+import CATEPTMain.Geometry.NoFTL.KeyLemma
+import CATEPTMain.Geometry.NoFTL.AffineConeLemma
+import CATEPTMain.Geometry.NoFTL.Proposition1
+import CATEPTMain.Geometry.NoFTL.Proposition2
+import CATEPTMain.Geometry.NoFTL.Proposition3
+import CATEPTMain.Geometry.NoFTL.ObserverConeLemma
+import CATEPTMain.Geometry.NoFTL.NoFTLGR
 
 -- ── OCT: Octonions ────────────────────────────────────────────────────────────
-import CATEPTMain.OCT.Norm_Octonions
-import CATEPTMain.OCT.Octonion_Algebra
+import CATEPTMain.Geometry.OCT.Norm_Octonions
+import CATEPTMain.Geometry.OCT.Octonion_Algebra
 
 -- ── ODE: Ordinary Differential Equations ─────────────────────────────────────
-import CATEPTMain.ODE.Euler_Method
-import CATEPTMain.ODE.Flow
-import CATEPTMain.ODE.Picard_Lindelof
+import CATEPTMain.Analysis.ODE.Euler_Method
+import CATEPTMain.Analysis.ODE.Flow
+import CATEPTMain.Analysis.ODE.Picard_Lindelof
 
 -- ── PDC: Probabilistic Directed Acyclic Graphs (Prelude only) ────────────────
-import CATEPTMain.PDC.PDCPrelude
+import CATEPTMain.Core.PDC.PDCPrelude
 
 -- ── PHQ: Physical Quantities (Prelude only) ───────────────────────────────────
-import CATEPTMain.PHQ.PHQPrelude
+import CATEPTMain.Core.PHQ.PHQPrelude
 
 -- ── PM: Projective Measurements ──────────────────────────────────────────────
-import CATEPTMain.PM.CHSH_Inequality
-import CATEPTMain.PM.Linear_Algebra_Complements
-import CATEPTMain.PM.Projective_Measurements
+import CATEPTMain.Quantum.PM.CHSH_Inequality
+import CATEPTMain.Quantum.PM.Linear_Algebra_Complements
+import CATEPTMain.Quantum.PM.Projective_Measurements
 
 -- ── QFT: QFT / Ising Model ───────────────────────────────────────────────────
-import CATEPTMain.QFT.QFT
+import CATEPTMain.CATEPT.QFT.QFT
 
 -- ── QUAT: Unit Quaternions ────────────────────────────────────────────────────
-import CATEPTMain.QUAT.Unit_Quaternions
+import CATEPTMain.Geometry.QUAT.Unit_Quaternions
 
 -- ── SCHTZ: Schröder–Bernstein–Cantor (Prelude only) ──────────────────────────
-import CATEPTMain.SCHTZ.SCHTZPrelude
+import CATEPTMain.Quantum.SCHTZ.SCHTZPrelude
 
 -- ── FEYNCALC: FeynCalc Dirac/Lorentz algebra port (Wolfram Mathematica → Lean 4) ──
-import CATEPTMain.FEYNCALC.FeynCalcPort
+import CATEPTMain.GaugeTheory.FEYNCALC.FeynCalcPort
 
 -- ── ELECTROWEAK: Higgs mechanism, W/Z mass theorems (Mathematica → Lean 4) ───
-import CATEPTMain.ELECTROWEAK.ElectroweakPort
+import CATEPTMain.GaugeTheory.ELECTROWEAK.ElectroweakPort
 
 -- ── QUANTUM: Density matrices, QFI, Cramér-Rao (lean4-quantum lift) ───────────
-import CATEPTMain.QUANTUM.QuantumPort
+import CATEPTMain.Quantum.QUANTUM.QuantumPort
 
 -- ── FBD: Fermion-Boson Duality, omega matrices, QED processes (Mathematica) ──
-import CATEPTMain.FBD.FBDPort
+import CATEPTMain.GaugeTheory.FBD.FBDPort
 
 -- ── LDO: LatticeDiracOperators.jl (lattice QCD fermion operators) ────────────
-import CATEPTMain.LDO.LDOPort
+import CATEPTMain.GaugeTheory.LDO.LDOPort
 
 -- ── QCD: Quantum Chromodynamics — SU(3) gauge theory (Phase 1) ───────────────
-import CATEPTMain.QCD.QCDPort
+import CATEPTMain.GaugeTheory.QCD.QCDPort
 
 -- ── CATEPT: Complex Action / Entropic Time framework (Phase 1) ───────────────
-import CATEPTMain.CATEPT.CATEPTPort
+import CATEPTMain.CATEPT.CATEPT.CATEPTPort
 
 -- ── EPT: Entropic Proper Time — NS BKM bounds (Phase 1) ──────────────────────
-import CATEPTMain.EPT.EPTPort
+import CATEPTMain.CATEPT.EPT.EPTPort
 
 -- ── NHQM: Non-Hermitian QM / Fermi-Dirac Persistent Current (Phase 1) ────────
 import CATEPTMain.NHQM.NHQMPort
 
 -- ── CATEPT Planck mode bridge (ex-TTT, merged into CATEPT) ───────────────────
-import CATEPTMain.CATEPT.PlanckModeBridge
+import CATEPTMain.CATEPT.CATEPT.PlanckModeBridge
 
 -- ── SM: Smooth Manifolds ──────────────────────────────────────────────────────
-import CATEPTMain.SM.Analysis_More
-import CATEPTMain.SM.Bump_Function
-import CATEPTMain.SM.Chart
-import CATEPTMain.SM.Cotangent_Space
-import CATEPTMain.SM.Differentiable_Manifold
-import CATEPTMain.SM.Partition_Of_Unity
-import CATEPTMain.SM.Product_Manifold
-import CATEPTMain.SM.Projective_Space
-import CATEPTMain.SM.Smooth
-import CATEPTMain.SM.Sphere
-import CATEPTMain.SM.Tangent_Space
-import CATEPTMain.SM.Topological_Manifold
+import CATEPTMain.Geometry.SM.Analysis_More
+import CATEPTMain.Geometry.SM.Bump_Function
+import CATEPTMain.Geometry.SM.Chart
+import CATEPTMain.Geometry.SM.Cotangent_Space
+import CATEPTMain.Geometry.SM.Differentiable_Manifold
+import CATEPTMain.Geometry.SM.Partition_Of_Unity
+import CATEPTMain.Geometry.SM.Product_Manifold
+import CATEPTMain.Geometry.SM.Projective_Space
+import CATEPTMain.Geometry.SM.Smooth
+import CATEPTMain.Geometry.SM.Sphere
+import CATEPTMain.Geometry.SM.Tangent_Space
+import CATEPTMain.Geometry.SM.Topological_Manifold

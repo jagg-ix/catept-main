@@ -1,7 +1,7 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
 import CATEPTMain.Integration.TheoryPluginDimCore
-import CATEPTMain.CATEPT.CATEPTPort
+import CATEPTMain.CATEPT.CATEPT.CATEPTPort
 import CATEPTMain.Integration.ComplexFunctionalsBridge
 import CATEPTMain.Gravitas.Basic
 import CATEPTMain.Gravitas.MetricTensor
@@ -12,7 +12,7 @@ import CATEPTMain.Gravitas.SolveEinsteinEquations
 import CATEPTMain.Gravitas.SolveElectrovacuumEinsteinEquations
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Geometry.Manifold.Instances.Real
-import NavierStokes.NSFieldFourier
+import NavierStokes.Core.NSFieldFourier
 
 /-!
 # TheoryPlugin Adapter (WP01 scaffold)

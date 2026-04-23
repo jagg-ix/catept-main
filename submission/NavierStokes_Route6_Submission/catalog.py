@@ -503,6 +503,91 @@ ROUTE6_PATH = [
      'PreciseGapStatement for T^3(L=1) via Route 6', 'PROVED (= quantitative_route6_pipeline)'),
 ]
 
+# Backward-compatible symbol aliases across Route 6 evolutions.
+# If a legacy metadata name is missing, any listed replacement name is accepted.
+ROUTE6_SYMBOL_ALIASES = {
+    # Legacy external-certificate names now represented by native Lean bounds.
+    'unit_torus_ci_certificate': ['lean_native_sum_bound'],
+    'unit_torus_ci_certificate_domain': ['unit_torus_eigenvalue_matches'],
+    'unit_torus_ci_certificate_rate': ['unit_torus_cameron_rate', 'cameron_suppression_from_entropic_time'],
+    'integral_upper_bound_formula': ['lean_native_sum_bound', 'cameron_trace_sum_below_spectral_gap'],
+}
+
+
+def validate_route6_configuration(lean_dir: Path) -> list[str]:
+    """Static integrity checks for Route 6 metadata tables."""
+    errors = []
+
+    step_orders = [step[0] for step in ROUTE6_PATH]
+    expected_orders = list(range(1, len(ROUTE6_PATH) + 1))
+    if sorted(step_orders) != expected_orders:
+        errors.append(
+            f"ROUTE6_PATH step_order mismatch: expected {expected_orders}, got {sorted(step_orders)}")
+
+    path_axioms = {item_name for _, item_type, item_name, _, _, _ in ROUTE6_PATH if item_type == 'axiom'}
+    path_theorems = {item_name for _, item_type, item_name, _, _, _ in ROUTE6_PATH if item_type == 'theorem'}
+
+    missing_axiom_flags = sorted(path_axioms - ROUTE6_CRITICAL)
+    if missing_axiom_flags:
+        errors.append(
+            "Route 6 path axioms missing from ROUTE6_CRITICAL: " + ", ".join(missing_axiom_flags))
+
+    missing_theorem_flags = sorted(path_theorems - ROUTE6_CRITICAL_THEOREMS)
+    if missing_theorem_flags:
+        errors.append(
+            "Route 6 path theorems missing from ROUTE6_CRITICAL_THEOREMS: " +
+            ", ".join(missing_theorem_flags))
+
+    src_dir = lean_dir / "NavierStokes"
+    known_files = {p.name for p in src_dir.glob("*.lean")}
+    missing_path_files = sorted({step[3] for step in ROUTE6_PATH} - known_files)
+    if missing_path_files:
+        errors.append("Route 6 path references missing Lean file(s): " + ", ".join(missing_path_files))
+
+    eq_theorems = {lean_theorem for _, _, lean_theorem, _, _ in EQUATION_MAP if lean_theorem}
+    required_equation_links = {
+        'maxExponent_is_half',
+        'quantitative_route6_pipeline',
+        'unit_torus_route6_closed',
+    }
+    missing_equation_links = sorted(required_equation_links - eq_theorems)
+    if missing_equation_links:
+        errors.append(
+            "EQUATION_MAP missing required Route 6 theorem link(s): " +
+            ", ".join(missing_equation_links))
+
+    return errors
+
+
+def validate_route6_entries_present(conn: sqlite3.Connection) -> list[str]:
+    """Database-level checks that critical Route 6 entries were actually parsed."""
+    errors = []
+
+    def _exists(name: str) -> bool:
+        for table in ('axioms', 'theorems', 'definitions'):
+            row = conn.execute(f"SELECT 1 FROM {table} WHERE name = ?", (name,)).fetchone()
+            if row is not None:
+                return True
+        return False
+
+    def _exists_with_alias(name: str) -> bool:
+        if _exists(name):
+            return True
+        for alias in ROUTE6_SYMBOL_ALIASES.get(name, []):
+            if _exists(alias):
+                return True
+        return False
+
+    for name in sorted(ROUTE6_CRITICAL):
+        if not _exists_with_alias(name):
+            errors.append(f"Missing critical Route 6 axiom in catalog: {name}")
+
+    for name in sorted(ROUTE6_CRITICAL_THEOREMS):
+        if not _exists_with_alias(name):
+            errors.append(f"Missing critical Route 6 theorem in catalog: {name}")
+
+    return errors
+
 
 # ---------------------------------------------------------------------------
 # Database builder
@@ -663,10 +748,24 @@ def main():
     parser = argparse.ArgumentParser(description="Build NavierStokes Route 6 catalog")
     parser.add_argument("--output", "-o", default="catalog.db", help="Output database path")
     parser.add_argument("--query", "-q", action="store_true", help="Run sample queries after building")
+    parser.add_argument(
+        "--strict-route6",
+        action="store_true",
+        help="Fail if Route 6 metadata integrity checks report issues",
+    )
     args = parser.parse_args()
 
     lean_dir = find_lean_dir()
     print(f"Lean source directory: {lean_dir}")
+
+    preflight_errors = validate_route6_configuration(lean_dir)
+    if preflight_errors:
+        print("\nRoute 6 metadata preflight:")
+        for err in preflight_errors:
+            print(f"  [warn] {err}")
+        if args.strict_route6:
+            print("\nAborting due to --strict-route6 preflight failure.")
+            sys.exit(2)
 
     db_path = args.output
     if os.path.exists(db_path):
@@ -679,6 +778,16 @@ def main():
     th_count = conn.execute("SELECT COUNT(*) FROM theorems").fetchone()[0]
     fi_count = conn.execute("SELECT COUNT(*) FROM files").fetchone()[0]
     print(f"  {fi_count} files, {ax_count} axioms, {th_count} theorems")
+
+    db_errors = validate_route6_entries_present(conn)
+    if db_errors:
+        print("\nRoute 6 catalog integrity:")
+        for err in db_errors:
+            print(f"  [warn] {err}")
+        if args.strict_route6:
+            conn.close()
+            print("\nAborting due to --strict-route6 catalog integrity failure.")
+            sys.exit(2)
 
     if args.query:
         run_sample_queries(conn)

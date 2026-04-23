@@ -1,0 +1,1103 @@
+warning: UnifiedTheory: repository '/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/UnifiedTheory' has local changes
+warning: DimensionalAnalysis: repository '/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/DimensionalAnalysis' has local changes
+warning: LGT: repository '/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/LGT' has local changes
+warning: MarkovSemigroups: repository '/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/MarkovSemigroups' has local changes
+⚠ [2413/2462] Replayed CATEPTMain.CATEPT.CATEPT.Foundations
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:47:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexAction.S_I_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:45:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexAction.S_R'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:46:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexAction.S_I'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:44:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexAction'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:44:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexAction.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:52:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexHamiltonian.H_I'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:50:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexHamiltonian'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:50:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexHamiltonian.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:51:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexHamiltonian.H_R'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:53:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ComplexHamiltonian.H_I_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:56:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_time'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:59:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicRate.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:59:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicRate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:60:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicRate.lambdaRate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:61:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicRate.nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:70:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq001_complex_action_structure'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:83:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq002_complex_hamiltonian'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:96:45: unused variable `hℏ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:96:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq003_entropic_time_def'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:99:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq003_entropic_time_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:104:53: unused variable `hℏ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:104:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq003_entropic_time_linear'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:113:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.bose_einstein'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:116:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.hawking_temperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:124:5: unused variable `hℏ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:124:18: unused variable `hκ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:124:31: unused variable `hc`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:124:44: unused variable `hkB`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:123:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq012_thermal_response'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:127:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq012_temperature_positive'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:146:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq013_entropic_rate_formula'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:153:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq013_entropic_rate_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:164:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq014_energy_dissipation'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:167:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq014_energy_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:184:17: unused variable `hℏ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:183:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq017_thermal_hamiltonian_equals_entropic_time'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:192:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.landauer_cost'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:199:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq027_landauer_principle'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/Foundations.lean:220:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.foundations_consistency'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2414/2462] Replayed CATEPTMain.CATEPT.CATEPT.PathIntegrals
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:34:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.CoercivityCondition.bound'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:31:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.CoercivityCondition.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:33:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.CoercivityCondition.C_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:31:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.CoercivityCondition'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:32:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.CoercivityCondition.C'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:37:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.path_integral_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:46:55: unused variable `hℏ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:46:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq054_path_integral_structure'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:50:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq054_damping_magnitude'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:71:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq057_coercivity_implies_convergence'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:84:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq057_coercivity_ensures_integrability'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:113:5: unused variable `S_R`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:111:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq058_exponential_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:124:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.euclidean_propagator'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:131:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq075_propagator_well_defined'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:135:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq075_propagator_positive'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:145:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.effective_mass'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:148:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.yukawa_potential'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:155:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq076_effective_mass_increases'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:163:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.eq076_screening_length_decreases'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:183:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.FeynmanKacModel.potential'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:182:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.FeynmanKacModel'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:182:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.FeynmanKacModel.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:185:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.FeynmanKacModel.compose'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:184:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.FeynmanKacModel.pathIntegral'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:191:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.feynman_kac_weight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:195:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.feynman_kac_integrand'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:200:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.feynman_kac_propagator'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:204:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.feynman_kac_weight_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:210:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.feynman_kac_weight_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:216:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.feynman_kac_propagator_semigroup'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:227:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.heat_kernel_propagator'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:230:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.damped_heat_propagator'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:232:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.damped_heat_propagator_positive'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:237:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.damped_heat_propagator_le_one'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:248:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.damped_heat_factorization'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:272:5: unused variable `S_R`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/PathIntegrals.lean:270:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.qft_consistency'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2476/2603] Replayed CATEPTMain.CATEPT.CATEPT.MeasurePathIntegral
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:19:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.actionRe'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:18:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.hbar_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:20:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.actionIm'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:22:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.measurable_actionIm'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:15:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:15:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:17:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.hbar'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:21:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.measurable_actionRe'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:23:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.actionIm_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:16:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.mu'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:30:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.actionReScaled'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:33:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.actionImScaled'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:36:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.phase'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:40:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:44:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.weight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:50:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.weight_factorizes'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:63:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.phase_norm_one'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:69:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.weight_norm_is_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:79:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.damping_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:84:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.damping_le_one'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:90:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.weight_bochner_bounded'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:95:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.measurable_weight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:105:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.measurable_actionImScaled'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:109:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.measurable_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/MeasurePathIntegral.lean:113:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.MeasurePathIntegralModel.weight_eq_damping_of_actionRe_zero'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2491/2603] Replayed CATEPTMain.CATEPT.CATEPT.ComplexMeasureBridge
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:15:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.partitionFunction'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:21:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.partitionFunction_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:28:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.weight_integrable_of_damping_integrable'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:38:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.weight_integrableOn_of_damping_integrable'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:47:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.integral_weight_hasSum'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:60:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.setIntegral_weight_norm_le_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:75:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_complex_measure'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:90:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_complex_measure_apply'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:99:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_complex_measure_norm_le'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexMeasureBridge.lean:116:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_measure_exists_from_finite_reference'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2590/2603] Replayed CATEPTMain.CATEPT.CATEPT.FeynmanKacBridge
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:23:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.euclidean_weight_is_real_positive'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:29:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.constant_potential_fk_weight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:38:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_time_is_cumulative_potential'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:47:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fk_weight_equals_catept_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:58:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.damping_satisfies_decay_ODE'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:70:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.decay_ODE_initial_condition'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:78:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_fk_euclidean_correspondence'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:93:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fkPathPotential'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:97:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fkPathWeight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:101:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fkPathWeight_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:107:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fkPathWeight_le_one'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:119:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_time_equals_path_potential'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:129:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_damping_equals_fk_path_weight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:142:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.complex_FK_bridge'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:152:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fk_path_integral_eq_complex_measure'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:161:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.euclidean_fk_measure_is_real_valued'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:178:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fk_partition_bounds_total_variation'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/FeynmanKacBridge.lean:186:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.fk_complex_measure_from_finite_space'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2591/2603] Replayed CATEPTMain.CATEPT.CATEPT.ModularFlowBridge
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:60:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.measurable_rate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:63:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.entropicTime_eq'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:58:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.μ'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:57:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:59:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.modularRate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:61:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.integrable_rate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:62:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.entropicTime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:57:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicModularFlowClock.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:65:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_time_eq_accumulated_modular_flow'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:74:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersBridgeData.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:76:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersBridgeData.relationalTime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:75:12: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersBridgeData.toEntropicModularFlowClock'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:77:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersBridgeData.relationalTime_eq_ent'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:74:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersBridgeData'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:79:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.page_wootters_time_eq_accumulated_modular_flow'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:93:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData.thermalTime_eq_ent'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:92:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData.thermalTime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:88:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:89:12: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData.toEntropicModularFlowClock'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:88:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:91:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData.inverseTemperature_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:90:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ConnesRovelliBridgeData.inverseTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:95:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.connes_rovelli_time_eq_accumulated_modular_flow'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:107:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersConnesRovelliCompatibility.shared_flow'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:105:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersConnesRovelliCompatibility.pw'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:104:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersConnesRovelliCompatibility.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:104:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersConnesRovelliCompatibility'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:106:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PageWoottersConnesRovelliCompatibility.cr'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:111:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.relational_time_eq_thermal_time'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:127:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.hyers_ulam_weight_stability'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:205:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.kms_condition'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:211:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cameron_martin_girsanov'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:226:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.modularFlowToPathIntegral'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:243:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.modularFlow_actionImScaled_eq_rate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:254:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.modularFlow_damping_eq_exp_neg_rate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:272:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.modular_flow_complex_measure_exists'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ModularFlowBridge.lean:300:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.connes_rovelli_determines_complex_measure'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2594/2603] Replayed CATEPTMain.CATEPT.CATEPT.CATEPTPlanckBridge
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:89:18: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.planckTime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:93:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.planckTime_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:99:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.planckTime_ne_zero'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:108:18: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tauTimeQuantum'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:112:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tauTimeQuantum_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:123:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tauTimeQuantum_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:139:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tauTime_planck_ratio'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:147:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tauTime_planck_ratio_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:160:53: unused variable `hn`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:160:18: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gravitationalConstFromTau'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:166:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gravitationalConst_from_tau_consistent'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:191:18: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptCorrection'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:194:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptCorrection_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:199:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptCorrection_zero'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:203:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptCorrection_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:215:18: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:219:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:223:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_ne_zero'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:227:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_lt_one'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:236:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_vacuum'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:240:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_antitone'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:254:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_eq_planckRatio'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:268:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptQuantizedEntropy'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:272:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptQuantizedEntropy_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:282:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptEntropyNonDecrease'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:291:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptIrreversibilityBound'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:300:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptEntropyProductionRate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:313:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptAmplitude'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:317:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptBCJClassicalLimit'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:323:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptAmplitude_le_bcj'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:332:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptLoopAmplitude'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:337:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptQuantumEquivalence'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:352:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptModifiedEinstein'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:358:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptModifiedFriedmann'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:365:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptModifiedHawkingTemp'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:370:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptModifiedHawkingTemp_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:379:6: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptModifiedUncertainty'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:390:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_eq_catept_weight'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:395:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_vacuum_no_decay'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CATEPTPlanckBridge.lean:398:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.cateptFKFactor_mul_le'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2596/2603] Replayed CATEPTMain.CATEPT.CATEPT.GeometryGauge
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:17:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.hbar_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:19:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.c_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:13:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:18:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.kB_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:14:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.hbar'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:15:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.kB'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:16:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.c'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:13:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:23:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalRegion.Carrier'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:22:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalRegion'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:22:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalRegion.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:27:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalAlgebra.Obs'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:26:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalAlgebra.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:26:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalAlgebra'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:30:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ModularData'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:31:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ModularData.K'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:30:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ModularData.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:35:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicActionOfEntropy'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:40:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicTimeField'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:48:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.data_processing_monotone'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:44:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:47:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.no_superluminal_influence'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:44:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:45:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.microcausality'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:46:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.local_modular_origin'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:56:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicForceDensity'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:62:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.localUnruhTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:69:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicRedshiftedBeta'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:78:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicStressScalar'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:86:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.SatisfiesComplexEinsteinSectionXI'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:91:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.local_real_SR_frame'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:94:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.shared_redshift'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:90:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:90:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:93:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.local_unruh_scale'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:92:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.local_rindler_imaginary_sector'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:97:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.modularSlopeCriterion'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:107:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanLocalTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:112:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.flatTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:119:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanTemperature_eq_flat_over_redshift'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:133:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanTemperature_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:145:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanTemperature_ratio'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:166:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.arrowOfTime_scales_as_localTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:191:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.localUnruhTemperature_eq_hawkingTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:208:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicTime_eq_localInverseTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2597/2603] Replayed CATEPTMain.CATEPT.CATEPT.ClassicalGravityBridge
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:48:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.beta_ratio'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:51:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gamma_factor'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:54:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.sr_proper_time_rate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:56:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.sr_proper_time_rate_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:59:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.sr_proper_time_rate_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:64:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.sr_proper_time_rate_at_zero'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:69:44: unused variable `h`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:69:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.sr_proper_time_rate_le_one'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:77:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gamma_factor_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:83:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gamma_factor_at_zero'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:91:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_radius_classical'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:94:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_radius_classical_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:101:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gr_time_dilation_factor'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:104:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gr_time_dilation_factor_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:108:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gr_time_dilation_factor_flat_at_infinity'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:118:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.perihelion_precession_per_orbit'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:122:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.perihelion_precession_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:136:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.perihelion_precession_monotone_in_mass'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:159:54: unused variable `hh`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:159:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_classical_limit_entropic_time'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:166:48: unused variable `hh`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:166:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_classical_limit_damping'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ClassicalGravityBridge.lean:173:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.catept_sr_consistency'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2598/2603] Replayed CATEPTMain.CATEPT.CATEPT.CatsimGRObserversBridge
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:42:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.minkowski_g00'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:45:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.minkowski_redshift_factor'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:54:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_g00'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:58:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_g00_negative_outside_horizon'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:72:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_g00_zero_at_horizon'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:84:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.static_observer_dtau_dt'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:87:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.static_observer_dtau_dt_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:91:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_static_dtau_dt_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:102:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.schwarzschild_static_dtau_dt_zero_at_horizon'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:113:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.minkowski_static_observer_rate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:122:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.rotating_observer_g_eff'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:127:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.rotating_observer_dtau_dt'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:131:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.rotating_observer_dtau_dt_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/CatsimGRObserversBridge.lean:137:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.rotating_observer_zero_omega_is_static'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2599/2603] Replayed CATEPTMain.CATEPT.CATEPT.ComplexEFEBridge
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:49:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gravitational_kappa'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:52:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.gravitational_kappa_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:66:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_stress_diag'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:70:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_stress_vacuum'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:76:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropic_stress_vanishes_if_phi_constant'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:88:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.imaginary_curvature_diag'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:91:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.imaginary_curvature_vanishes_of_linear_phi'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:97:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.real_efe_residual'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:101:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.imag_efe_residual'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:105:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.complex_efe_residual'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:109:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.complex_efe_residual_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:116:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.complex_efe_vacuum_agreement'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/ComplexEFEBridge.lean:125:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.complex_efe_zero_iff'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2600/2603] Replayed CATEPTMain.CATEPT.CATEPT.EntropicLambdaCoupler
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:45:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_coupled'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:52:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_coupled_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:64:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_coupled_zero_gain'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:72:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_coupled_zero_residual'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:80:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_coupled_flat_space'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:88:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_coupled_monotone_base'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:98:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_schwarzschild_static'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/EntropicLambdaCoupler.lean:104:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.lambda_eff_schwarzschild_static_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [2601/2603] Replayed CATEPTMain.CATEPT.CATEPT.DSFCouplingKernel
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:26:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:32:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfGeff'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:37:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda_no_feedback'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:44:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda_entropy_term_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:50:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfGeff_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:65:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda_dRicci'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:69:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda_dPhi'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:74:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda_dRicci_nonpos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:90:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLambda_dPhi_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:113:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.qcfMassFromTauFrequency'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:118:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.qcfMassFromTauFrequency_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:130:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.qcfDeltaTau'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:140:5: unused variable `hspec`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:135:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.qcfDeltaTau_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:150:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.qcfDeltaTau_sq'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:165:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLocalEntropyRate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:174:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfCoupledEntropyRate'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:185:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfEntropyIncrementOverQcfStep'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:195:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfEntropyIncrementOverQcfStep_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:222:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfCoupledEntropyRate_eq_local_times_backreaction'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:235:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLocalEntropyRate_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:248:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfCoupledEntropyRate_nonneg'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:269:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfLocalEntropyRate_eq_geff_mul_flat_over_redshift'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:284:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfSecondLaw_from_rate_identification'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/DSFCouplingKernel.lean:300:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.dsfSecondLaw_from_coupled_rate_identification'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+✖ [2602/2603] Building CATEPTMain.CATEPT.CATEPT.BridgeTheoryCompatibility (6.5s)
+trace: .> LEAN_PATH=/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/kolmogorov_extension4/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/bochner/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/MarkovSemigroups/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/MD4Lean/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/BibtexQuery/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/UnicodeBasic/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/doc-gen4/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/REPL/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/Cli/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/batteries/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/Qq/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/aesop/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/importGraph/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/plausible/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/Physlib/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/BochnerMinlos/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/HilleYosida/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/cslib/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/pphi2/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/GaussianField/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/pphi2N/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/LGT/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/DimensionalAnalysis/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/aqeiBridge/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/lean-inf/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/aristotle/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/UnifiedTheory/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/DeGiorgi/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/spectralPhysics/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/mathlib/.lake/build/lib/lean:/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/build/lib/lean /Users/macbookpro/.elan/toolchains/leanprover--lean4---v4.29.0/bin/lean /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean -o /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/build/lib/lean/CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.olean -i /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/build/lib/lean/CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.ilean -c /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/build/ir/CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.c --setup /Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/build/ir/CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.setup.json --json
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:30:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btTotalEnergy'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:34:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btTotalMomentum'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:38:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btInvariantEnergySq'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:42:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btPhotonEnergyEq6'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:46:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btDopplerFactor'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:50:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btObservedFrequency'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:54:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btObservedPhotonEnergy'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:58:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btPeriodPrime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:62:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btWavelengthPrime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:66:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btLorentzTime'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:70:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btLorentzSpace'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:74:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btRelativisticEnergy'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:78:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btRelativisticMomentumTimesC'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:83:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btInvariantEnergySq_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:88:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btDopplerFactor_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:93:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btObservedFrequency_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:99:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btObservedPhotonEnergy_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:105:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btPeriodPrime_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:110:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btWavelengthPrime_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:115:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btLorentzTime_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:120:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btLorentzSpace_at_rest'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+error: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:138:2: linarith failed to find a contradiction
+case h1.h
+eps beta : ℝ
+hbeta : beta ^ 2 < 1
+hsqrt_pos : 0 < √(1 - beta ^ 2)
+hsqrt_ne : √(1 - beta ^ 2) ≠ 0
+a✝ : eps ^ 2 - eps ^ 2 * beta ^ 2 < eps ^ 2 * √(1 - beta ^ 2) ^ 2
+⊢ False
+failed
+warning: CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean:126:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.btInvariant_from_relativistic_param'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+error: Lean exited with code 1
+Some required targets logged failures:
+- CATEPTMain.CATEPT.CATEPT.BridgeTheoryCompatibility
+error: build failed

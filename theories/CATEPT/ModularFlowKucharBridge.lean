@@ -1,0 +1,3 @@
+import CATEPT.CATEPT.ModularFlowKucharCoreAbstractions
+
+set_option autoImplicit false

@@ -1,0 +1,85 @@
+import Bochner
+import HilleYosida
+import Cslib
+import CATEPTMain.External.Registry
+import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
+import CATEPTMain.Integration.EntropicProperTimeCoreBridge
+import CATEPTMain.Integration.Pphi2CATEPTEPTBridge
+import CATEPTMain.Integration.ComplexDimensionalModularBridge
+import CATEPTMain.Integration.AlphaDivergencePathIntegralBridge
+import CATEPTMain.Integration.AlphaPathIntegralIntegration
+import CATEPTMain.Integration.ComplexEinsteinPathIntegralBridge
+import CATEPTMain.Integration.YoshidaFreeFisherBridge
+import CATEPTMain.Integration.QuantumFisherBridge
+import CATEPTMain.Integration.InformationDimensionalFrameworkBridge
+import CATEPTMain.Integration.Pphi2NCATEPTBridge
+import CATEPTMain.Integration.LGTCATEPTBridge
+import CATEPTMain.Integration.LatticeQCDWilsonBridge
+import CATEPTMain.Integration.NSCATEPTCoreBridge
+import CATEPTMain.Integration.NSCATEPTExtendedBridge
+import CATEPTMain.Integration.AdSCFTBridge
+import CATEPTMain.Integration.CATEPTSpaceTime
+import CATEPTMain.Integration.CarlesonBridge
+import CATEPTMain.Integration.NSEPTNoetherInvariantBridge
+import CATEPTMain.Integration.AdSCFTFourierCATEPTBridge
+import CATEPTMain.Integration.AdSCFTMonoidalUnitArtifactBridge
+import CATEPTMain.Integration.BohmianQMBridge
+import CATEPTMain.Integration.QuantumInfoFisherBridge
+import CATEPTMain.Integration.GravitasBridge
+import CATEPTMain.Integration.BCJBridge
+import CATEPTMain.Integration.TheoryPluginArchitecture
+import CATEPTMain.Integration.TheoryPluginClassicalETHBridge
+import CATEPTMain.Integration.UnifiedTheorySpine
+import CATEPTMain.Integration.QuantumCATEPTBridge
+import CATEPTMain.Integration.ElectroweakCATEPTBridge
+import CATEPTMain.Integration.VMLCATEPTBridge
+import CATEPTMain.Integration.TheoryPluginAdapterSupport
+import CATEPTMain.Integration.TheoryPluginAdapter
+import CATEPTMain.Integration.TheoryPluginStressTests
+import CATEPTMain.Integration.TheoryPluginDimSlot
+import CATEPTMain.Integration.TheoryPluginDimCore
+import CATEPTMain.Integration.TheoryPluginDimCategory
+import CATEPTMain.Integration.TheoryPluginDimFundamental
+import CATEPTMain.Integration.TheoryPluginQTMBridge
+import CATEPTMain.Integration.QuantumMpembaUnificationBridge
+import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
+import CATEPTMain.Integration.TheoryPluginOriginBridge
+import CATEPTMain.Integration.TheoryPluginThermodynamicsOfChoiceBridge
+import CATEPTMain.Integration.TheoryPluginPhyslibConstructBridge
+import CATEPTMain.Integration.AQEIBridgeLane
+import CATEPTMain.Integration.AdSCFTEntropicEntanglementBridge
+import CATEPTMain.Integration.AdSCFTExtended
+import CATEPTMain.Integration.BochnerMinlosBridge
+import CATEPTMain.Integration.BrownianMotionBridge
+import CATEPTMain.Integration.CslibBridge
+import CATEPTMain.Integration.EnergyTensorConeLane
+import CATEPTMain.Integration.GibbsMeasureBridge
+import CATEPTMain.Integration.HilleYosidaBridge
+import CATEPTMain.Integration.HopfLeanBridge
+import CATEPTMain.Integration.LeanDimensionalAnalysisBridge
+import CATEPTMain.Integration.LeanInfBridge
+import CATEPTMain.Integration.QuantumInfoBridge
+import CATEPTMain.Integration.TheoryPluginHerglotzETH
+import CATEPTMain.Integration.ThermodynamicsLeanBridge
+import CATEPTMain.Integration.UnifiedTheoryBellBridge
+import CATEPTMain.Integration.BornRuleUnificationBridge
+import CATEPTMain.Integration.VMLSteadyStateBridge
+import CATEPTMain.Integration.ConditionalEinsteinBridge
+import CATEPTMain.Integration.DiscreteHolographyBridge
+import CATEPTMain.Integration.GaussianFieldLogSobolevBridge
+import CATEPTMain.Integration.Pphi2CameronBridge
+import CATEPTMain.Integration.DeGiorgiBridge
+import CATEPTMain.Integration.SpectralPhysicsBridge
+import CATEPTMain.Integration.NSStressEnergyEinsteinBridge
+import CATEPTMain.Integration.NSNoetherEinsteinLocalityBridge
+import CATEPTMain.Integration.EinsteinViscosityMpembaBridge
+import CATEPTMain.Bridges
+import CATEPTMain.Gravitas
+import CATEPTMain.ActionIntegrationBridge
+-- Previously-orphaned bridges now wired into root:
+
+/-!
+CATEPTMain root module for clean Lean 4.29 migration work.
+-/
+
+def integratedRepoCount : Nat := CATEPTMain.External.repos.length

@@ -29,6 +29,7 @@ import CATEPTMain.Integration.GravitasBridge
 import CATEPTMain.Integration.BCJBridge
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.TheoryPluginClassicalETHBridge
+import CATEPTMain.Integration.SuperstatisticsTsallisBridge
 import CATEPTMain.Integration.UnifiedTheorySpine
 import CATEPTMain.Integration.QuantumCATEPTBridge
 import CATEPTMain.Integration.ElectroweakCATEPTBridge

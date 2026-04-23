@@ -1,4 +1,4 @@
-import CATEPTMain.SM.SMPrelude
+import CATEPTMain.Geometry.SM.SMPrelude
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.MeasureTheory.Measure.MeasureSpace
@@ -55,7 +55,7 @@ Conceptual anchors:
 
 set_option autoImplicit false
 
-open CATEPTMain.SM
+open CATEPTMain.Geometry.SM
 
 namespace CATEPTMain.Integration.CATEPTSpaceTime
 

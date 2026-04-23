@@ -1,5 +1,5 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
-import CATEPTMain.CATEPT.ModularFlowBridge
+import CATEPTMain.CATEPT.CATEPT.ModularFlowBridge
 import CATEPTMain.Integration.AdSCFT1907Port
 import CATEPTMain.Integration.AdSCFT1907Phase2Bridge
 import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
@@ -41,7 +41,7 @@ the instance-bundling diamond problem that affects generic slot theorems.
 set_option autoImplicit false
 
 open MeasureTheory Real Complex
-open CATEPTMain.CATEPT
+open CATEPTMain.CATEPT.CATEPT
 open CATEPTMain.Integration
 
 namespace CATEPTMain.Integration.UnifiedSpine
@@ -67,11 +67,37 @@ def headrick1907Phase2ToyPort
 /-- Re-export the phase-1 AdSCFT × Entropic-Einstein-locality unification
 witness through the unified spine surface. -/
 noncomputable def adscftEntropicEinsteinLocalityPhase1Witness
-    (constants : CATEPT.PhysicalConstants)
-    (locality : CATEPT.EntropicLocalityPrinciple constants)
-    (entropicEEP : CATEPT.EntropicEEPPrinciple constants) :
+    (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
+    (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants) :
     AdSCFTEntropicEinsteinLocalityWitness :=
   phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP
+
+/-- Spine-level projection: the canonical phase-1 AdS/CFT entropic locality
+witness is Einstein-flat. -/
+theorem adscftEntropicEinsteinLocalityPhase1Witness_einstein_flat
+    (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
+    (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants) :
+    (adscftEntropicEinsteinLocalityPhase1Witness constants locality entropicEEP).coords.EinsteinFlat := by
+  simpa [adscftEntropicEinsteinLocalityPhase1Witness] using
+    (phase1_witness_einstein_flat constants locality entropicEEP)
+
+/-- Spine-level bundle projection: Einstein-flatness and RT-SSA are available
+from the same canonical phase-1 witness. -/
+theorem adscftEntropicEinsteinLocalityPhase1Witness_bundle
+    (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
+    (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
+    (entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants)
+    (G_N aAB aBC aB aABC : ℝ) (hG : 0 < G_N)
+    (hAreaSSA : aAB + aBC ≥ aB + aABC) :
+    (adscftEntropicEinsteinLocalityPhase1Witness constants locality entropicEEP).coords.EinsteinFlat ∧
+    strongSubadditivity (rtEntropy aAB G_N) (rtEntropy aBC G_N)
+      (rtEntropy aB G_N) (rtEntropy aABC G_N) := by
+  simpa [adscftEntropicEinsteinLocalityPhase1Witness] using
+    (adscft_locality_and_rt_ssa_bundle
+      (phase1AdSCFTEntropicEinsteinLocalityWitness constants locality entropicEEP)
+      G_N aAB aBC aB aABC hG hAreaSSA)
 
 -- ── Step 1: CATEPTPluginSlot from an entropic modular flow clock ──────────────
 
@@ -106,7 +132,7 @@ theorem modularFlowCATEPTSlot_consistent
     (hnn : ∀ x, 0 ≤ clk.modularRate x) :
     cateptConsistencyConstraint (modularFlowCATEPTSlot clk φ hnn) := by
   intro x
-  simp [modularFlowCATEPTSlot, cateptConsistencyConstraint]
+  simp [modularFlowCATEPTSlot]
 
 -- ── Step 2: Full TheoryPlugin instance ───────────────────────────────────────
 
