@@ -6,7 +6,7 @@ Mechanics** and **General Relativity** via **entropic proper time**
 `τ_ent = S_I / ℏ`.
 
 > For the curated publication artifact, see the
-> [`catept-publication`](https://github.com/jagg-ix/catept-main/tree/catept-publication)
+> [`feat/publication`](https://github.com/jagg-ix/catept-main/tree/feat/publication)
 > branch of this repository.
 
 ## Quick Start
@@ -14,7 +14,7 @@ Mechanics** and **General Relativity** via **entropic proper time**
 ```bash
 git clone https://github.com/jagg-ix/catept-main.git
 cd catept-main
-git checkout catept-publication
+git checkout feat/publication
 lake exe cache get                    # warm Mathlib olean cache (first run)
 lake build CATEPT.Showcase.QMGRUnification
 ```
