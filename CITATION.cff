@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "catept-main: CAT/EPT Complex Action Theory / Entropic Proper Time — Lean 4 formalization with cross-domain compatibility bridges"
+type: software
+authors:
+  - family-names: "Garcia"
+    given-names: "Jorge A."
+    email: "jorge.garcia.gonzalez@gmail.com"
+repository-code: "https://github.com/jagg-ix/catept-main"
+license: Apache-2.0
+keywords:
+  - lean-4
+  - formal-verification
+  - cat-ept
+  - complex-action-theory
+  - entropic-proper-time
+  - quantum-mechanics
+  - general-relativity
+  - quantum-field-theory
+  - navier-stokes
+  - pphi2n
+  - gravitas
+abstract: >-
+  catept-main is a Lean 4 formalization of the Complex Action Theory /
+  Entropic Proper Time (CAT/EPT) framework. The repository includes an
+  axiom-free core of CAT/EPT identities (under CATEPT/CATEPT/) together
+  with compatibility bridges (CATEPT/Bridges/) showing the core is
+  simultaneously consistent with the pphi2N O(N) sigma model, Euclidean
+  QFT, Schwarzschild/ADM general relativity, and the Gravitas symbolic
+  black-hole thermodynamics library. Every theorem in the publication
+  surface depends only on the Lean kernel axioms (propext,
+  Classical.choice, Quot.sound), with zero framework axioms and zero
+  sorries. The repo also carries a Route-6 Navier-Stokes conditional
+  regularity pipeline and an extensive family of cross-theory bridges
+  under CATEPTMain/.

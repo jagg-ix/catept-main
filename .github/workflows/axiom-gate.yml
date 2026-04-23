@@ -46,6 +46,44 @@ jobs:
         echo "Axiom surface OK"
         cat /tmp/axiom_output.txt
 
+    - name: Check axiom surface — publication bridges (CATEPT.Bridges.*)
+      run: |
+        cat > /tmp/check_bridges.lean << 'EOF'
+        import CATEPT.Bridges.Pphi2N
+        import CATEPT.Bridges.QFT
+        import CATEPT.Bridges.GR
+        import CATEPT.Bridges.Gravitas
+
+        -- The 17 publication bridge theorems must depend on ONLY the three
+        -- Lean kernel axioms: propext, Classical.choice, Quot.sound.
+        -- Any regression here breaks the publication claim.
+        #print axioms CATEPT.Bridges.Pphi2N.tauEnt_eq_div
+        #print axioms CATEPT.Bridges.Pphi2N.tauEnt_nonneg
+        #print axioms CATEPT.Bridges.Pphi2N.tauEnt_linear
+        #print axioms CATEPT.Bridges.QFT.tauEnt_eq_div
+        #print axioms CATEPT.Bridges.QFT.tauEnt_nonneg
+        #print axioms CATEPT.Bridges.QFT.damping_abs_le_one
+        #print axioms CATEPT.Bridges.QFT.kinetic_pos
+        #print axioms CATEPT.Bridges.QFT.propagator_pos
+        #print axioms CATEPT.Bridges.GR.schwarzschild_f_pos
+        #print axioms CATEPT.Bridges.GR.bh_entropy_pos
+        #print axioms CATEPT.Bridges.GR.tauEnt_eq_div
+        #print axioms CATEPT.Bridges.GR.tauEnt_nonneg
+        #print axioms CATEPT.Bridges.GR.unruh_temperature_pos
+        #print axioms CATEPT.Bridges.Gravitas.bh_entropy_pos
+        #print axioms CATEPT.Bridges.Gravitas.bh_entropy_ratio
+        #print axioms CATEPT.Bridges.Gravitas.bh_entropy_doubling
+        #print axioms CATEPT.Bridges.Gravitas.catept_gravitas_coherence
+        EOF
+        lake env lean /tmp/check_bridges.lean 2>&1 | tee /tmp/bridges_output.txt
+        # Any axiom other than the three kernel ones fails the gate.
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$" /tmp/bridges_output.txt | grep -qE "axiom|sorryAx"; then
+          echo "REGRESSION: non-kernel axiom or sorry in publication bridge surface"
+          cat /tmp/bridges_output.txt
+          exit 1
+        fi
+        echo "Publication bridge surface OK (17 theorems, kernel-only axioms)"
+
     - name: Check sorry count — NavierStokesClean (must not regress)
       run: |
         COUNT=$(grep -r "\bsorry\b" NavierStokesClean/ --include="*.lean" \

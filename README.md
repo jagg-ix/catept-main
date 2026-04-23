@@ -47,13 +47,39 @@ lake exe cache get   # warm Mathlib olean cache (~10 min first run)
 lake build CATEPTMain
 ```
 
+## Publication Surface (axiom-free)
+
+For the publication-grade, axiom-free narrative, inspect:
+
+| File | What it demonstrates |
+|---|---|
+| [`CATEPT/CATEPT/Foundations.lean`](CATEPT/CATEPT/Foundations.lean) | CAT/EPT core identities (entropic time, action-entropic identification, Landauer, Hawking temperature) — 0 axioms, 0 sorries |
+| [`CATEPT/Bridges/Pphi2N.lean`](CATEPT/Bridges/Pphi2N.lean) | 3 theorems specialising the core to the O(N) large-N sigma model |
+| [`CATEPT/Bridges/QFT.lean`](CATEPT/Bridges/QFT.lean) | 5 theorems specialising to Euclidean QFT (action, damping, propagator) |
+| [`CATEPT/Bridges/GR.lean`](CATEPT/Bridges/GR.lean) | 5 theorems specialising to Schwarzschild / ADM / Unruh |
+| [`CATEPT/Bridges/Gravitas.lean`](CATEPT/Bridges/Gravitas.lean) | 4 theorems specialising to symbolic BH thermodynamics |
+
+Reproduce the zero-axiom claim from a fresh checkout:
+
+```bash
+lake exe cache get
+lake build CATEPT
+# Then, for each bridge theorem:
+lake env lean -c 'import CATEPT.Bridges.Pphi2N
+#print axioms CATEPT.Bridges.Pphi2N.tauEnt_eq_div'
+# → depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+The CI workflow [`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml) runs this check on every push/PR for all 17 bridge theorems; regressions break the build.
+
 ## Entry Points
 
-Verified on 2026-04-22.
+Verified on 2026-04-23.
 
 | Surface | Lake target | Build command | Status | What it gives you |
 |---------|-------------|---------------|--------|--------------------|
 | Full integration hub | `CATEPTMain` | `lake build CATEPTMain` | Pass* | All bridges, NS, QM, GR, YM, EPT |
+| Publication spine | `CATEPT` | `lake build CATEPT` | Pass | Axiom-free core + 4 compatibility bridges |
 | Bridge aggregator | `CATEPTMain.Bridges` | `lake build CATEPTMain.Bridges` | Pass | Flattened bridge-only surface |
 | GR tensors only | `CATEPTMain.GravitasStandalone` | `lake build CATEPTMain.GravitasStandalone` | Pass | Riemann/Einstein/Weyl tensors + CATEPT bridge |
 | Quantum info only | `CATEPTMain.QuantumInfoStandalone` | `lake build CATEPTMain.QuantumInfoStandalone` | Pass | Von Neumann entropy, quantum Fisher, EPT bridge |

@@ -36,7 +36,7 @@ require pphi2N from git
 -- Requires GaussianField + MarkovSemigroups transitively via pphi2/pphi2N.
 -- GaugeFixing.lean has 2 localized sorries (Faddeev-Popov); bridge staged for Ph2.
 require LGT from
-  git "https://github.com/jagg-ix/lgt.git" @ "9879f2cc06b507a0ba1bef9efd11ab0591a0471f"
+  git "https://github.com/jagg-ix/lgt.git" @ "f09c3991044ae1f2a750a3b2de9e8e36931f03cb"
 
 require DimensionalAnalysis from
   git "https://github.com/ATOMSLab/LeanDimensionalAnalysis.git" @ "de263eed945693058ef2b8a1fa56c2ec5642ea7a"
@@ -56,7 +56,7 @@ require aristotle from git
 -- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
 -- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
 require UnifiedTheory from
-  git "https://github.com/tomdif/unifiedtheory.git" @ "b73c5d2a22ca3c0c6fd5796f0b62de25e19c296d"
+  git "https://github.com/jagg-ix/unifiedtheory.git" @ "3c830dd58278a82e5f85d6c30ce7523406042893"
 
 -- DeGiorgi: 0-sorry De Giorgi–Nash–Moser regularity theory.
 -- Proves: GNS inequality, Poincaré, Sobolev-Poincaré, Caccioppoli, Harnack, Hölder, Lax-Milgram.
