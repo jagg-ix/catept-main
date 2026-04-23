@@ -2,6 +2,34 @@
 
 A Lean 4.29 integration repository for the **Causal-Algebraic Thermodynamic Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a unified formal verification surface.
 
+---
+
+> ### 📄 Looking to review / cite the publication?
+>
+> The reviewer-facing publication artifact — axiom-free CAT/EPT core, four
+> cross-domain compatibility bridges (pphi2N, QFT, GR, Gravitas), the
+> **QM+GR unification showcase**, plus LICENSE / CITATION.cff / axiom-gate
+> CI — lives on the dedicated **[`catept-publication`](https://github.com/jagg-ix/catept-main/tree/catept-publication)** branch of this repository.
+>
+> ```bash
+> git clone https://github.com/jagg-ix/catept-main.git
+> cd catept-main
+> git checkout catept-publication
+> lake exe cache get
+> lake build CATEPT.Showcase.QMGRUnification
+> ```
+>
+> See that branch's [README](https://github.com/jagg-ix/catept-main/blob/catept-publication/README.md)
+> for the three-step command-line reproduce, expected `#print axioms`
+> output, and the Acknowledgments section (Caticha's entropic-dynamics
+> foundations, Gravitas port, Lean 4 dependencies).
+>
+> The `main` branch contains the full integration tree (kitchen-sink
+> development repo); the `catept-publication` branch is the curated
+> surface meant for publication citation and reviewer audits.
+
+---
+
 ## Architecture & Implementation Overview
 
 Based on the `catept-core` design, this repository connects into a highly modular, rigorously verified, dual-layer architecture built in Lean 4. The primary design goal is to maintain a **"Zero-Axiom" mathematical spine** for the CAT/EPT framework, allowing distinct physical theories to plug in without compromising mathematical safety.
