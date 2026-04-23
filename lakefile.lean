@@ -53,11 +53,6 @@ require «lean-inf» from git
 require aristotle from git
   "https://github.com/jagg-ix/aristotle.git" @ "5150aee67b9ac385730b0404bd9fbd72289fb686"
 
--- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
--- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
-require UnifiedTheory from
-  git "https://github.com/jagg-ix/unifiedtheory.git" @ "3c830dd58278a82e5f85d6c30ce7523406042893"
-
 -- DeGiorgi: 0-sorry De Giorgi–Nash–Moser regularity theory.
 -- Proves: GNS inequality, Poincaré, Sobolev-Poincaré, Caccioppoli, Harnack, Hölder, Lax-Milgram.
 require «DeGiorgi» from
