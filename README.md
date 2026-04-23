@@ -197,3 +197,81 @@ BrownianMotion/      Brownian motion / Kolmogorov extension
 - Axiom gate: `#print axioms CATEPTMain.strategy_d_popkov_route`
 - NS contract checks: `python3 tools/verification/check_ns_semantic_strictness.py --strict`
 - LeanMillennium conformance: `python3 tools/verification/run_ns_leanmillennium_conformance_bundle.py`
+
+## Acknowledgments
+
+This repository stands on the work of several research groups and open-source
+projects. We thank them explicitly.
+
+### Intellectual foundations — entropic dynamics
+
+The framework's core idea — that quantum field theory and gravity can be
+reformulated as forms of **entropic dynamics** — builds directly on the
+research of **Prof. Ariel Caticha** (University at Albany, SUNY). See
+[arielcaticha.com/entropic-dynamics-qft-and-gravity](https://www.arielcaticha.com/entropic-dynamics-qft-and-gravity)
+for the programme and publication list. Works especially relevant to the
+CAT/EPT formalization:
+
+- A. Caticha and S. Ipek, *The Entropic Dynamics of Quantum Scalar Fields
+  coupled to Gravity*, Symmetry **12**, 1324 (2020). [arXiv:2006.05036](https://arxiv.org/abs/2006.05036)
+- S. Ipek, M. Abedi, and A. Caticha, *Entropic Dynamics: Reconstructing
+  Quantum Field Theory in Curved Spacetime*, Class. Quantum Grav. **36**,
+  205013 (2019). [arXiv:1803.07493](https://arxiv.org/abs/1803.07493)
+- A. Caticha and S. Ipek, *Entropic quantization of scalar fields*, AIP
+  Conf. Proc. **1641**, 345 (2015). [arXiv:1412.5637](https://arxiv.org/abs/1412.5637)
+- P. Pessoa and A. Caticha, *Exact renormalization groups as a form of
+  entropic dynamics*, Entropy **20**, 25 (2018). [arXiv:1712.02267](https://arxiv.org/abs/1712.02267)
+
+The CAT/EPT formalization operationalizes entropic-dynamics concepts
+(entropic proper time, irreversible action, modular flow) as a plugin
+architecture over Mathlib.
+
+### Ported libraries
+
+- **[`CATEPTMain/Gravitas/`](CATEPTMain/Gravitas/)** — Lean 4 port of the
+  Gravitas symbolic general-relativity package. The index convention
+  (`True` = covariant lower, `False` = contravariant upper) and the
+  tensor-algebra design follow the original Wolfram Language source. The
+  port was staged across commits `957674189 → 0dad194c7` to reach 26
+  modules clean on Lean 4.29.
+- **IsabelleMarresDirac** ([`CATEPTMain/QuantumOps/IsabelleMarresDirac/`](CATEPTMain/QuantumOps/IsabelleMarresDirac/))
+  — carries the Marres–Dirac quantum-operator formalization, originally
+  developed in Isabelle/HOL, as a Lean 4 compatibility port.
+
+### External Lean 4 dependencies
+
+Every package below is pinned by commit in [`lakefile.lean`](lakefile.lean)
+and fetched over HTTPS from a public repository. No local paths required.
+
+| Package | Upstream | Contribution |
+|---|---|---|
+| **mathlib4** | [leanprover-community/mathlib4](https://github.com/leanprover-community/mathlib4) @ v4.29.0 | Foundational Lean 4 mathematical library |
+| **Physlib** | [leanprover-community/physlib](https://github.com/leanprover-community/physlib) | Physics formalization primitives for Lean 4 |
+| **BochnerMinlos** | [mrdouglasny/bochner](https://github.com/mrdouglasny/bochner) | Bochner–Minlos theorem (Gaussian measures on nuclear spaces) |
+| **HilleYosida** | [mrdouglasny/hille-yosida](https://github.com/mrdouglasny/hille-yosida) | Hille–Yosida semigroup theorem |
+| **pphi2** | [mrdouglasny/pphi2](https://github.com/mrdouglasny/pphi2) | φ⁴ theory infrastructure |
+| **pphi2N** | [jagg-ix/pphi2N](https://github.com/jagg-ix/pphi2N) | O(N) linear sigma model, large-N mass gap via Hubbard–Stratonovich |
+| **GaussianField** | [jagg-ix/gaussian-field](https://github.com/jagg-ix/gaussian-field) | Gaussian free-field formalization |
+| **LGT** | [jagg-ix/lgt](https://github.com/jagg-ix/lgt) | 2D Yang–Mills mass gap via discrete differential geometry + Doeblin mixing |
+| **cslib** | [Timeroot/cslib](https://github.com/Timeroot/cslib) | Category / complex-systems primitives |
+| **DeGiorgi** | [scottnarmstrong/DeGiorgi](https://github.com/scottnarmstrong/DeGiorgi) | 0-sorry De Giorgi–Nash–Moser regularity theory |
+| **spectralPhysics** | [ember-research-lab/Spectral-Physics-Lean](https://github.com/ember-research-lab/Spectral-Physics-Lean) | Spectral gap, Rayleigh quotient, Bakry–Émery |
+| **DimensionalAnalysis** | [ATOMSLab/LeanDimensionalAnalysis](https://github.com/ATOMSLab/LeanDimensionalAnalysis) | Lean 4 dimensional analysis |
+| **UnifiedTheory** | [tomdif/unifiedtheory](https://github.com/tomdif/unifiedtheory) (via [jagg-ix/unifiedtheory fork](https://github.com/jagg-ix/unifiedtheory) for v4.29 compat) | Bell theorem, causal foundation, Einstein equation from causal set |
+| **aristotle (VML)** | [jagg-ix/aristotle](https://github.com/jagg-ix/aristotle) | Formal verification of the Vlasov–Maxwell–Landau steady-state theorem |
+| **aqeiBridge** | [jagg-ix/aqei-bridge-lean](https://github.com/jagg-ix/aqei-bridge-lean) | AQEI stress-energy causal-poset H₁ bridge |
+| **lean-inf** | [jagg-ix/lean-inf](https://github.com/jagg-ix/lean-inf) | Levi-Civita numbers, SafeFloat, Array utilities |
+| **QuantumAlgebra** | [jagg-ix/QuantumAlgebra](https://github.com/jagg-ix/QuantumAlgebra) | Quantum algebra primitives |
+
+Thanks to all upstream authors and maintainers for the work their code embodies and for
+releasing it under permissive licenses.
+
+### Tooling
+
+The formal verification surface builds on [Lean 4](https://leanprover.github.io/)
+and the Mathlib community toolchain. The zero-framework-axiom property is
+enforced by `#print axioms` (a Lean kernel command) and gated in CI by
+[`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml).
+
+If your work is represented here and you would like the attribution expanded,
+corrected, or removed, please open an issue.
