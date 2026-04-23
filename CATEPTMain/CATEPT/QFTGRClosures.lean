@@ -12,7 +12,7 @@ Formal closure layer for deep QFT/GR obligations requested by the stack:
 - Kuchar six-problem closure contract.
 -/
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Minimal UV renormalization state. -/
 structure RenormState where
@@ -316,4 +316,4 @@ theorem kuchar_constructive_complete
   rcases hSolved with ⟨h1, h2, h3, h4, h5, h6⟩
   exact kuchar_complete_of_components (kucharClosureFromConstructive s) h1 h2 h3 h4 h5 h6
 
-end CATEPT
+end CATEPTMain.CATEPT

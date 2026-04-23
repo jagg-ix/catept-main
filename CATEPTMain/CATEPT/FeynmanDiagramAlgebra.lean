@@ -1,7 +1,7 @@
 import CATEPTMain.CATEPT.DiracMatrixAlgebra
 import CATEPTMain.CATEPT.PerturbativeExpansionBridge
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # Feynman Diagram Algebra
@@ -52,4 +52,4 @@ Dirac trace / integral amplitude form, ready for Passarino-Veltman reduction.
 -/
 opaque evaluateDiagram (diagram : FeynmanDiagram) : DiracAlgebra
 
-end CATEPT
+end CATEPTMain.CATEPT

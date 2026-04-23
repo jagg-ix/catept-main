@@ -2,7 +2,7 @@ import Mathlib
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -102,4 +102,4 @@ theorem measurementCommunicationCompatibility_contract_of_fields
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -1,5 +1,5 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
-import CATEPTMain.AFPBridge.QUANTUM.QFIToolbox
+import CATEPTMain.QUANTUM.QFIToolbox
 /-!
 # Quantum CATEPT Bridge — von Neumann Entropy as Imaginary Action
 
@@ -44,7 +44,7 @@ consistent with the modular flow clock from `ModularFlowBridge.lean`.
 set_option autoImplicit false
 
 open Real Complex MeasureTheory
-open CATEPTMain.AFPBridge.QUANTUM
+open CATEPTMain.QUANTUM
 open CATEPTMain.Integration
 
 namespace CATEPTMain.Integration.QuantumCATEPTBridge
@@ -98,9 +98,9 @@ theorem quantumCATEPTSlot_damping (n : ℕ) (ρ : DensityMatrix n) :
 `Δ⟨K⟩ = ⟨K⟩_ρ - ⟨K⟩_{ρ₀}`. -/
 theorem quantum_relativeModularWeight_def {n : ℕ}
     (ρ ρ₀ : DensityMatrix n) (K : QSquare n) :
-    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K =
-      CATEPTMain.AFPBridge.QUANTUM.modularWeight ρ K -
-        CATEPTMain.AFPBridge.QUANTUM.modularWeight ρ₀ K := rfl
+    CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀ K =
+      CATEPTMain.QUANTUM.modularWeight ρ K -
+        CATEPTMain.QUANTUM.modularWeight ρ₀ K := rfl
 
 /-- Bridge-level constant-shift invariance:
 `Δ⟨K + cI⟩ = Δ⟨K⟩`.
@@ -109,10 +109,10 @@ This is the finite-dimensional constant-free relative form used by the
 integration notes (`Δ⟨K⟩` is insensitive to additive shifts in `K`). -/
 theorem quantum_relativeModularWeight_add_const {n : ℕ}
     (ρ ρ₀ : DensityMatrix n) (K : QSquare n) (c : ℂ) :
-    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ (K + c • (1 : QSquare n)) =
-      CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K := by
+    CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀ (K + c • (1 : QSquare n)) =
+      CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀ K := by
   simpa using
-    (CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight_add_const
+    (CATEPTMain.QUANTUM.relativeModularWeight_add_const
       (ρ := ρ) (ρ₀ := ρ₀) (K := K) (c := c))
 
 -- ── Liouville / doubled-space bridge ──────────────────────────────────────────
@@ -122,10 +122,10 @@ for any chosen effective generator `H_eff(t)`, there exists a doubled-space
 trajectory solving `d/dt |Ψ⟩⟩ = -i H_eff |Ψ⟩⟩`. -/
 theorem quantum_doubleSpace_mapping_for (n : ℕ)
     (Heff : ℝ → QSquare (n * n)) :
-    ∃ traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n,
-      CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj := by
+    ∃ traj : CATEPTMain.QUANTUM.LiouvilleTrajectory n,
+      CATEPTMain.QUANTUM.doubleSpaceSchrodinger n Heff traj := by
   simpa using
-    (CATEPTMain.AFPBridge.QUANTUM.densityMatrixEvolution_doubleSpace_mapping_for
+    (CATEPTMain.QUANTUM.densityMatrixEvolution_doubleSpace_mapping_for
       (n := n) Heff)
 
 /-- Bridge-level existential form:
@@ -133,10 +133,10 @@ there exist `H_eff(t)` and a doubled-space trajectory solving the Schrödinger
 equation in Liouville space. -/
 theorem quantum_doubleSpace_mapping_exists (n : ℕ) :
     ∃ (Heff : ℝ → QSquare (n * n))
-      (traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n),
-      CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj := by
+      (traj : CATEPTMain.QUANTUM.LiouvilleTrajectory n),
+      CATEPTMain.QUANTUM.doubleSpaceSchrodinger n Heff traj := by
   simpa using
-    (CATEPTMain.AFPBridge.QUANTUM.densityMatrixEvolution_doubleSpace_mapping (n := n))
+    (CATEPTMain.QUANTUM.densityMatrixEvolution_doubleSpace_mapping (n := n))
 
 end  -- noncomputable section
 

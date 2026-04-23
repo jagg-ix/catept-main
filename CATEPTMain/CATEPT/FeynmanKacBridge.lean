@@ -11,7 +11,7 @@ noncomputable section
 
 open Real Complex MeasureTheory
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! # Feynman-Kac <-> CAT/EPT Bridge (Core Surface)
 
@@ -193,4 +193,4 @@ theorem fk_complex_measure_from_finite_space
   intro s hs
   exact catept_complex_measure_apply m _ s hs
 
-end CATEPT
+end CATEPTMain.CATEPT

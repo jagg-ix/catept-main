@@ -30,7 +30,7 @@ strong thermal coupling.
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- CAT/EPT-predicted thermal decoherence rate (rad/s). -/
 def thermal_decoherence_rate (k_B T hbar : ℝ) : ℝ :=
@@ -101,4 +101,4 @@ theorem fk_weight_faster_decay_for_larger_γ
   have hmul : γ₁ * t < γ₂ * t := mul_lt_mul_of_pos_right h12 ht
   linarith
 
-end CATEPT
+end CATEPTMain.CATEPT

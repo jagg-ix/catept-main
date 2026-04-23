@@ -3,7 +3,7 @@ import CATEPTMain.CATEPT.UnitsDimensionalAnalysis
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Lift a channel to `Option` states so `none` behaves as a vacuum absorber. -/
 def liftChannel
@@ -82,4 +82,4 @@ theorem catept_origin_path_integral_exponent :
     dimPathIntegralExponent = Dimension.one :=
   dim_path_integral_exponent_dimensionless
 
-end CATEPT
+end CATEPTMain.CATEPT

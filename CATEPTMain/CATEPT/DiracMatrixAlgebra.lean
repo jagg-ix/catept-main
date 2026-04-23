@@ -2,7 +2,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # Dirac Matrix Algebra and FeynCalc Extensions
@@ -94,4 +94,4 @@ $\text{Tr}(\gamma^\mu \gamma^\nu) = 4\eta^{\mu\nu}$
 -/
 axiom dirac_trace_two_gammas (μ ν : LorentzIndex) : True
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 noncomputable section
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open BigOperators
 
@@ -133,4 +133,4 @@ theorem constant_temporalOrder_has_zero_tick
   simpa using (hasDerivAt_const t (Texp 0)).deriv
 
 
-end CATEPT
+end CATEPTMain.CATEPT

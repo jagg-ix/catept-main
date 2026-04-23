@@ -5,7 +5,7 @@ import Mathlib
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -93,4 +93,4 @@ theorem gravitasCompatibility_contract_of_fields
     gravitasCompatibilityContract w :=
   ⟨h1, h2, h3, h4, h5, h6⟩
 
-end CATEPT
+end CATEPTMain.CATEPT

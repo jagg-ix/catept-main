@@ -34,7 +34,7 @@ aligns with the Dyson-resummed form to first order in C'_tot.
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Schwinger Leading-Order Term -/
 
@@ -159,4 +159,4 @@ theorem a_mu_from_shift_nonneg (ΔE μ_B B : ℝ)
     0 ≤ a_mu_from_shift ΔE μ_B B :=
   div_nonneg hΔE (le_of_lt (mul_pos hμ hB))
 
-end CATEPT
+end CATEPTMain.CATEPT

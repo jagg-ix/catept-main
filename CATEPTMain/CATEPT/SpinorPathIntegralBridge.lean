@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Topology.Basic
 import Mathlib.Analysis.Complex.Basic
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # Relativistic Spinor Transport Layer and Entropic Suppression
@@ -72,4 +72,4 @@ theorem dirac_limit_hermitian (layer : SpinorTransportLayer) (h_rev : ∀ ψ, la
   rw [h_null]
   simp
 
-end CATEPT
+end CATEPTMain.CATEPT

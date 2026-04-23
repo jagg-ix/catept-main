@@ -4,7 +4,7 @@ import CATEPTMain.CATEPT.UnitsDimensionalAnalysis
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open Real
 
@@ -169,4 +169,4 @@ theorem nhqm_units_contract :
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

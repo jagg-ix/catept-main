@@ -1,7 +1,7 @@
 import CATEPTMain.CATEPT.FeynmanDiagramAlgebra
 import Mathlib.Analysis.Complex.Basic
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # Loop Integration Reduction
@@ -37,4 +37,4 @@ distributes functionally into the scalar integral families.
 axiom loop_reduction_theorem (expr : DiracAlgebra) :
   True -- Expandable abstract theorem for full dimensional regularization proofs
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -1,4 +1,4 @@
-import CATEPTMain.AFPBridge.SM.SMPrelude
+import CATEPTMain.SM.SMPrelude
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.MeasureTheory.Measure.MeasureSpace
@@ -55,7 +55,7 @@ Conceptual anchors:
 
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridge.SM
+open CATEPTMain.SM
 
 namespace CATEPTMain.Integration.CATEPTSpaceTime
 

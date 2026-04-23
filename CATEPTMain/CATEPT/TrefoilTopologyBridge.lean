@@ -40,7 +40,7 @@ determines its Feynman-Kac damping weight exp(-S_I/ℏ).
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Topological Information from Crossing Number -/
 
@@ -157,4 +157,4 @@ theorem generation_info_nondecreasing :
   simp [generation_info]
   exact le_of_lt trefoil_more_info_than_trivial
 
-end CATEPT
+end CATEPTMain.CATEPT

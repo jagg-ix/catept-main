@@ -22,7 +22,7 @@ noncomputable section
 
 open Real Complex Classical
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Schwarzschild Geometry -/
 
@@ -250,4 +250,4 @@ theorem quantum_gravity_consistency (ℏ G M c k_B : ℝ)
   · unfold bekenstein_hawking_entropy
     rfl
 
-end CATEPT
+end CATEPTMain.CATEPT

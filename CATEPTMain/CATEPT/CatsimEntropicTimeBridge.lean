@@ -38,7 +38,7 @@ equivalence so downstream lemmas can use whichever is convenient.
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open MeasureTheory
 
@@ -86,4 +86,4 @@ theorem entropic_time_integral_unit_duration
       entropic_time ℏ S_I := by
   rw [entropic_time_integral_eq_algebraic, mul_one]
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -3,7 +3,7 @@ import CATEPTMain.CATEPT.MeasurePathIntegral
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 namespace Thermodynamics
 
@@ -884,4 +884,4 @@ end
 
 end Thermodynamics
 
-end CATEPT
+end CATEPTMain.CATEPT

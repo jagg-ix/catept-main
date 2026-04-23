@@ -38,7 +38,7 @@ noncomputable section
 
 open Real MeasureTheory
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## 1. Positive-Semi-Definite Quadratic Forms -/
 
@@ -164,7 +164,7 @@ theorem markovian_actionIm_monotone
   · exact intervalIntegral.integral_mono_on htf
       hint1
       hint2
-      (fun t ht => h t (by exact Set.Ioc_subset_Icc_self ht))
+      (fun t ht => h t ht)
   · apply mul_nonneg
     · apply mul_nonneg
       · linarith
@@ -271,7 +271,9 @@ theorem markovian_entropic_rate_nonneg (m : MarkovianInfluenceFunctional)
   apply div_nonneg
   · apply mul_nonneg
     · apply mul_nonneg
-      · apply mul_nonneg; · linarith; · exact le_of_lt m.gamma_pos
+      · apply mul_nonneg
+        · norm_num
+        · exact le_of_lt m.gamma_pos
       · exact le_of_lt m.kBT_pos
     · exact sq_nonneg _
   · exact le_of_lt m.hbar_pos
@@ -293,7 +295,11 @@ theorem markovian_entropic_rate_quantum_thermo_bridge
     (eta_t k_B : ℝ) (hkB : 0 < k_B) :
     markovian_entropic_rate m eta_t =
       (2 * m.gamma * (m.kBT / k_B) * eta_t ^ 2) * (k_B / m.hbar) := by
-  unfold markovian_entropic_rate; ring
+  unfold markovian_entropic_rate
+  calc 
+    2 * m.gamma * m.kBT * eta_t ^ 2 / m.hbar = 2 * m.gamma * m.kBT * eta_t ^ 2 / m.hbar * (k_B / k_B) := by
+      rw [div_self (ne_of_gt hkB), mul_one]
+    _ = (2 * m.gamma * (m.kBT / k_B) * eta_t ^ 2) * (k_B / m.hbar) := by ring
 
 /-! ## 9. Constructors: Building ComplexAction from Influence Functional -/
 
@@ -369,4 +375,4 @@ The influence-functional derivation establishes:
    derive `S_I_nonneg` from influence-functional data.
 -/
 
-end CATEPT
+end CATEPTMain.CATEPT

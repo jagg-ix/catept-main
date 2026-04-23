@@ -1,7 +1,7 @@
 import Mathlib.Topology.Basic
 import Mathlib.Analysis.Complex.Basic
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # CAT/EPT Eigenstate Thermalization Hypothesis (ETH) Variational Bridge
@@ -72,4 +72,4 @@ The explicit definition of the Euclidean rate candidate matching the Boué-Dupui
 def euclideanRateCandidate (inst : EuclideanVariationalInstantiation) : ℝ :=
   inst.infimum (fun v => inst.ExpectedValue inst.V_T v + inst.controlCost v)
 
-end CATEPT
+end CATEPTMain.CATEPT

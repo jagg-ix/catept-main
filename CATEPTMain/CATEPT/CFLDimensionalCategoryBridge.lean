@@ -3,7 +3,7 @@ import CATEPTMain.CATEPT.UnitsDimensionalAnalysis
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open Real
 
@@ -236,4 +236,4 @@ theorem cfl_and_catept_unit_compatibility
     cfl_same_courant_both_times Δt Δx a lam hΔx ha hlam⟩
 
 end
-end CATEPT
+end CATEPTMain.CATEPT

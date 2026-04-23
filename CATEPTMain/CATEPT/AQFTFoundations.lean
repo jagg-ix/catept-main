@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 noncomputable section
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Basic constants. -/
 structure PhysicalConstants where
@@ -198,4 +198,4 @@ theorem flatSector_restores_unitarity
   exact ⟨F.HI_vanishes_if_flat hflat, F.Lj_vanishes_if_flat hflat⟩
 
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -4,7 +4,7 @@ import NavierStokesClean.CATEPT.SchwarzschildCurvatureIdentities
 import NavierStokesClean.CATEPT.External.NoFasterThanLightInterface
 import NavierStokesClean.CATEPT.External.NoFasterThanLightTranslatorSnapshot
 import NavierStokesClean.CATEPT.External.IsabelleMarriesDiracInterface
-import CATEPTMain.AFPBridge.L2TimeIntegral
+import CATEPTMain.L2TimeIntegral
 
 /-!
 # Integrated Equation Contracts
@@ -170,7 +170,7 @@ theorem interval_norm_le_sqrt_interval_mul_sqrt_energy
     (hg_sq : IntegrableOn (fun r => ‖g r‖ ^ 2) (Set.Icc s t) volume) :
     ‖∫ r in Set.Icc s t, g r‖ ≤
       Real.sqrt (t - s) * Real.sqrt (∫ r in Set.Icc s t, ‖g r‖ ^ 2) :=
-  CATEPTMain.AFPBridge.L2TimeIntegral.interval_norm_le_sqrt_mul_sqrt_sq hst g hg_sq
+  CATEPTMain.L2TimeIntegral.interval_norm_le_sqrt_mul_sqrt_sq hst g hg_sq
 
 /-- Squared Bochner-integral bound from AFP L2 bridge. -/
 theorem sq_norm_integral_le_interval_measure_mul_energy
@@ -179,7 +179,7 @@ theorem sq_norm_integral_le_interval_measure_mul_energy
     (hf_sq : IntegrableOn (fun x => ‖f x‖ ^ 2) (Set.Icc a b) volume) :
     ‖∫ x in Set.Icc a b, f x‖ ^ 2 ≤
       (b - a) * ∫ x in Set.Icc a b, ‖f x‖ ^ 2 :=
-  CATEPTMain.AFPBridge.L2TimeIntegral.sq_norm_setIntegral_le_measure_mul_setIntegral_sq hab f hf_sq
+  CATEPTMain.L2TimeIntegral.sq_norm_setIntegral_le_measure_mul_setIntegral_sq hab f hf_sq
 
 end AFP
 

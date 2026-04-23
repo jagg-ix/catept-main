@@ -1,5 +1,5 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
-import CATEPTMain.AFPBridge.ELECTROWEAK.HiggsMechanism
+import CATEPTMain.ELECTROWEAK.HiggsMechanism
 /-!
 # Electroweak CATEPT Bridge — Higgs Vacuum Action as Imaginary Action
 

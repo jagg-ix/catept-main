@@ -2,7 +2,7 @@ import Mathlib
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 namespace QIF
 
@@ -135,4 +135,4 @@ end
 
 end QIF
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -512,7 +512,7 @@ This module provides an abstract witness; the concrete construction is Phase-2
     Records the key algebraic properties without importing the AFP HSTP bridge.
 
     Phase-2 target: instantiate with `IsVonNeumannAlgebra` from
-    `CATEPTMain.AFPBridge.HSTP.Theories.Von_Neumann_Algebras`. -/
+    `CATEPTMain.HSTP.Theories.Von_Neumann_Algebras`. -/
 structure VNAlgebraRegionWitness (backend : QTMQuantumBackend) where
   /-- The Von Neumann algebra as a predicate on channels (observables ↔ channels
       by Heisenberg picture: `A ↦ Λ_A` where `Λ_A(ρ) = A ρ A†`). -/

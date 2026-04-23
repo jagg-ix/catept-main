@@ -2,7 +2,7 @@ import CATEPTMain.CATEPT.UnitsDimensionalAnalysis
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Named physical scales for plugin unit policies. -/
 inductive PhysicalScale
@@ -118,4 +118,4 @@ theorem canonicalInfoUnitContext_clock_dimensionless :
     canonicalInfoUnitContext, informationNaturalUnits, dimEntropicTime]
     using dim_entropic_time_dimensionless
 
-end CATEPT
+end CATEPTMain.CATEPT

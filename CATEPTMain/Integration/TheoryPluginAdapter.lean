@@ -1,7 +1,7 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Integration.TheoryPluginAdapterSupport
 import CATEPTMain.Integration.TheoryPluginDimCore
-import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
+import CATEPTMain.CATEPT.CATEPTPort
 import CATEPTMain.Integration.ComplexFunctionalsBridge
 import CATEPTMain.Gravitas.Basic
 import CATEPTMain.Gravitas.MetricTensor

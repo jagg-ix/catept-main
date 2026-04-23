@@ -5,7 +5,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open Complex
 open Real
@@ -72,4 +72,4 @@ structure CanonicalETHBridge (X : Type) where
   diagonalValue_is_generic : ∀ x, canonicalDiagonalETHValue params O_thermal varepsilon x = 
       O_thermal x + Real.exp (-((params.beta_I * params.I x) / params.hbar)) * varepsilon x
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -5,7 +5,7 @@ import QuantumAlgebra.PauliNoGo
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! # Pauli No-Go vs Entropic Proper Time
 
@@ -80,4 +80,4 @@ theorem pauliCompatibleKucharClosure_complete
   refine ⟨hFrozen, hObs, ?_, hSpace, hConstraint, hHilbert⟩
   exact pauliTimeOperatorObstruction_holds (H := H) hbar h_hbar_ne_zero
 
-end CATEPT
+end CATEPTMain.CATEPT

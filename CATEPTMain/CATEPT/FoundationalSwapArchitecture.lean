@@ -4,7 +4,7 @@ import CATEPTMain.CATEPT.ModularFlowKucharCoreAbstractions
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -132,4 +132,4 @@ theorem single_framework_time_for_gr_and_qm
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

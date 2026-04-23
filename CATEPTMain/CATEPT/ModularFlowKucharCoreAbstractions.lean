@@ -1,11 +1,11 @@
 import Mathlib.Topology.Order.Real
 import Mathlib.Topology.Basic
 import Mathlib
-import CATEPT.Foundations
+import CATEPTMain.CATEPT.Foundations
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -437,4 +437,4 @@ theorem WeylEqBlockCoverageWitness.contract_of_fields
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

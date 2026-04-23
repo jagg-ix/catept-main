@@ -35,7 +35,7 @@ by the catsim authors in `multiphysics/catsim/docs/cfl_clock.md`:
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- CFL parameters: grid spacing and wave speed. -/
 structure CFLParams where
@@ -71,4 +71,4 @@ theorem cfl_t_implies_cfl_tau
   dsimp [CFL_ok, cflBound, dtau] at *
   nlinarith
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -301,19 +301,19 @@ theorem fidelity_cptp_nondecreasing
 /-- Relative modular-weight constant-shift invariance:
 `Δ⟨K + cI⟩ = Δ⟨K⟩` (bridge import from `QuantumCATEPTBridge`). -/
 theorem relative_modularWeight_shift_invariant
-    {n : ℕ} (ρ ρ₀ : CATEPTMain.AFPBridge.QUANTUM.DensityMatrix n)
-    (K : CATEPTMain.AFPBridge.QUANTUM.QSquare n) (c : ℂ) :
-    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀
-      (K + c • (1 : CATEPTMain.AFPBridge.QUANTUM.QSquare n)) =
-    CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K :=
+    {n : ℕ} (ρ ρ₀ : CATEPTMain.QUANTUM.DensityMatrix n)
+    (K : CATEPTMain.QUANTUM.QSquare n) (c : ℂ) :
+    CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀
+      (K + c • (1 : CATEPTMain.QUANTUM.QSquare n)) =
+    CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀ K :=
   CATEPTMain.Integration.QuantumCATEPTBridge.quantum_relativeModularWeight_add_const ρ ρ₀ K c
 
 /-- Liouville-space mapping existence for any chosen effective generator
 (`d/dt|Ψ⟩⟩ = -iH_eff|Ψ⟩⟩`) imported from `QuantumCATEPTBridge`. -/
 theorem liouville_doubleSpace_mapping_for
-    (n : ℕ) (Heff : ℝ → CATEPTMain.AFPBridge.QUANTUM.QSquare (n * n)) :
-    ∃ traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n,
-      CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj :=
+    (n : ℕ) (Heff : ℝ → CATEPTMain.QUANTUM.QSquare (n * n)) :
+    ∃ traj : CATEPTMain.QUANTUM.LiouvilleTrajectory n,
+      CATEPTMain.QUANTUM.doubleSpaceSchrodinger n Heff traj :=
   CATEPTMain.Integration.QuantumCATEPTBridge.quantum_doubleSpace_mapping_for n Heff
 
 /-- Strong subadditivity of quantum entropy. -/
@@ -495,16 +495,16 @@ def phase1QInfoFisherWitness : QInfoFisherWitness :=
         w.freeFisherDist_defined
     dpi_cptp_holds    := True  -- see §6 dpi_cptp for the universe-poly proof
     modular_const_free :=
-      ∀ {n : ℕ} (ρ ρ₀ : CATEPTMain.AFPBridge.QUANTUM.DensityMatrix n)
-        (K : CATEPTMain.AFPBridge.QUANTUM.QSquare n) (c : ℂ),
-          CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀
-            (K + c • (1 : CATEPTMain.AFPBridge.QUANTUM.QSquare n)) =
-          CATEPTMain.AFPBridge.QUANTUM.relativeModularWeight ρ ρ₀ K
+      ∀ {n : ℕ} (ρ ρ₀ : CATEPTMain.QUANTUM.DensityMatrix n)
+        (K : CATEPTMain.QUANTUM.QSquare n) (c : ℂ),
+          CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀
+            (K + c • (1 : CATEPTMain.QUANTUM.QSquare n)) =
+          CATEPTMain.QUANTUM.relativeModularWeight ρ ρ₀ K
     doubleSpace_mapping :=
       ∀ n : ℕ,
-        ∃ (Heff : ℝ → CATEPTMain.AFPBridge.QUANTUM.QSquare (n * n))
-          (traj : CATEPTMain.AFPBridge.QUANTUM.LiouvilleTrajectory n),
-            CATEPTMain.AFPBridge.QUANTUM.doubleSpaceSchrodinger n Heff traj
+        ∃ (Heff : ℝ → CATEPTMain.QUANTUM.QSquare (n * n))
+          (traj : CATEPTMain.QUANTUM.LiouvilleTrajectory n),
+            CATEPTMain.QUANTUM.doubleSpaceSchrodinger n Heff traj
     ssa_holds         := True  -- see §6 strong_subadditivity for the proof
     cond_state_norm :=
       ∀ (psi p : ℝ), 0 < p → (psi / Real.sqrt p) ^ 2 = psi ^ 2 / p

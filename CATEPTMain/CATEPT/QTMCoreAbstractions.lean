@@ -2,7 +2,7 @@ import Mathlib.Data.Real.Basic
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Abstract quantum backend used by core-safe QTM bridges. -/
 structure QTMQuantumBackend where
@@ -112,4 +112,4 @@ theorem sequentialCompose_right_identity_computation
   simpa [identityRegion, sequentialCompose,
     backend.channelId_apply (backend.applyChannel R.computationChannel rho)] using h
 
-end CATEPT
+end CATEPTMain.CATEPT

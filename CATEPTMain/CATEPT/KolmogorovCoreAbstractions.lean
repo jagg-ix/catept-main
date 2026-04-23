@@ -2,7 +2,7 @@ import CATEPTMain.CATEPT.QTMCoreAbstractions
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Kolmogorov-style complexity certificate over a QTM region. -/
 structure QTMKolmogorovCert
@@ -99,4 +99,4 @@ theorem canonicalLadderRung_covers_depth
       (canonicalLadderRung cert n).complexityFloor := by
   simpa [canonicalLadderRung] using applyCompN_complexity_ge_depth cert n rho
 
-end CATEPT
+end CATEPTMain.CATEPT

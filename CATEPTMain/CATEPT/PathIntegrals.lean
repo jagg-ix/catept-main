@@ -23,7 +23,7 @@ noncomputable section
 
 open Real Complex Classical
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Path Integral Structures -/
 
@@ -284,4 +284,4 @@ theorem qft_consistency
   · intro lam' hLam'
     exact eq076_effective_mass_increases m_sq lam lam' hm (le_of_lt hLam) hLam'
 
-end CATEPT
+end CATEPTMain.CATEPT

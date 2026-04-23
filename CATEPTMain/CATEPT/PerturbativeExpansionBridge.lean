@@ -1,7 +1,7 @@
 import CATEPTMain.CATEPT.SpinorPathIntegralBridge
 import CATEPTMain.CATEPT.DiracMatrixAlgebra
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # Perturbative Expansion Bridge
@@ -36,4 +36,4 @@ to a sum over its perturbative orders (the Dyson expansion context).
 -/
 axiom dyson_series_expansion (layer : SpinorTransportLayer) : PerturbativeExpansion
 
-end CATEPT
+end CATEPTMain.CATEPT

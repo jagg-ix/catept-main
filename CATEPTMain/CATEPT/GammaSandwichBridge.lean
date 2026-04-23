@@ -40,7 +40,7 @@ the authoritative implementation.
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Clifford anticommutator applied to two Lorentz indices: records the
     metric sign of γ^α·γ^α (diagonal sandwich of width 1). -/
@@ -75,4 +75,4 @@ axiom chiral_projector_idempotent : True
 /-- Chiral-projector orthogonality: P_+ · P_- = 0. -/
 axiom chiral_projector_orthogonal : True
 
-end CATEPT
+end CATEPTMain.CATEPT

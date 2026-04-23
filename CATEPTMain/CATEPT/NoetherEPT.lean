@@ -8,7 +8,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 noncomputable section
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open Real
 
@@ -316,4 +316,4 @@ theorem eptDecay_implies_EPTInvariant
     (hE_diff t).hasDerivAt.mul hg.exp
   rw [hmul.deriv, hE t]; ring
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -1,9 +1,9 @@
 import Mathlib
-import CATEPT.Foundations
+import CATEPTMain.CATEPT.Foundations
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -169,4 +169,4 @@ theorem bohmianBornRuleCompatibility_contract_of_fields
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

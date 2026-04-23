@@ -5,7 +5,7 @@ import CATEPTMain.CATEPT.QCDCoreAbstractions
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Aggregate witness covering EM, Gravitas, QED, and QCD core lanes. -/
 structure FundamentalInteractionsCompatibilityWitness where
@@ -30,4 +30,4 @@ theorem fundamentalInteractionsCompatibility_of_contract_fields
     fundamentalInteractionsCompatibilityContract w :=
   ⟨hEM, hGr, hQED, hQCD⟩
 
-end CATEPT
+end CATEPTMain.CATEPT

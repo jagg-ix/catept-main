@@ -37,7 +37,7 @@ and `qutip_spacetime_coupling/entropic_stress.py` from catept-main/catsim.
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Scalar placeholders for tensor components
 
@@ -136,4 +136,4 @@ theorem complex_efe_zero_iff
     add_nonneg (sq_nonneg _) (sq_nonneg _)
   exact le_antisymm hle hnonneg
 
-end CATEPT
+end CATEPTMain.CATEPT

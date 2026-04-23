@@ -40,7 +40,7 @@ in pure `Real` arithmetic so we can verify:
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Special Relativity: Time Dilation -/
 
@@ -175,4 +175,4 @@ theorem catept_sr_consistency (ℏ t β : ℝ) (hh : 0 < ℏ) :
   rw [catept_classical_limit_entropic_time ℏ hh]
   ring
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -38,7 +38,7 @@ and Ex20 (catsim integration) into one predictive quantity.
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Effective entropic rate:
     λ_eff = λ_base · a · (1 + g · r). -/
@@ -109,4 +109,4 @@ theorem lambda_eff_schwarzschild_static_nonneg
   lambda_eff_coupled_nonneg _ _ _ _
     hlam (static_observer_dtau_dt_nonneg _) hg hr
 
-end CATEPT
+end CATEPTMain.CATEPT

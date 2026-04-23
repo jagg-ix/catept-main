@@ -7,7 +7,7 @@ set_option autoImplicit false
 
 open MeasureTheory Complex Real
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 

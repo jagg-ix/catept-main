@@ -36,7 +36,7 @@ noncomputable section
 
 open Real Complex Classical
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Core Definitions -/
 
@@ -234,4 +234,4 @@ theorem foundations_consistency
   · exact eq012_temperature_positive ℏ κ c k_B hℏ hκ hc hkB
   · exact eq013_entropic_rate_nonneg κ (le_of_lt hκ)
 
-end CATEPT
+end CATEPTMain.CATEPT

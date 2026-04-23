@@ -1,13 +1,13 @@
 import Mathlib.Data.Real.Basic
-import CATEPT.ClassicalCore
-import CATEPT.CAT_EPT_ETH_CanonicalBridge
-import CATEPT.MicrocanonicalETHInterface
+import CATEPTMain.CATEPT.ClassicalCore
+import CATEPTMain.CATEPT.CAT_EPT_ETH_CanonicalBridge
+import CATEPTMain.CATEPT.MicrocanonicalETHInterface
 
 noncomputable section
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Instantiates the Canonical ETH parameters for an OscillatorJet state space. -/
 def oscillatorETHParams (hbar' beta_I' : ℝ) (h_pos : 0 < hbar')
@@ -63,4 +63,4 @@ theorem oscillator_dissipation_ETH_value (p : DampedOscillatorParams)
   simp only
   rw [← h_avg]
 
-end CATEPT
+end CATEPTMain.CATEPT

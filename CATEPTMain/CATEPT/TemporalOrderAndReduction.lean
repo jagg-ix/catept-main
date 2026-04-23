@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 noncomputable section
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Basic constants. -/
 structure PhysicalConstants where
@@ -87,4 +87,4 @@ theorem tracingOut_HI_yields_effective_dissipation
   intro _; trivial
 
 
-end CATEPT
+end CATEPTMain.CATEPT

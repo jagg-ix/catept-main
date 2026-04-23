@@ -1,5 +1,5 @@
 import CATEPTMain.Integration.AdSCFT1907Port
-import CATEPTMain.AFPBridge.NHQM.NHQMCATEPTBridge
+import CATEPTMain.NHQM.NHQMCATEPTBridge
 import Mathlib
 /-!
 # AdS/CFT 1907 Phase-2 Bridge (Replica Analytics + EP Continuity)
@@ -31,8 +31,8 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Integration.AdSCFT.Headrick1907
 
-open CATEPTMain.AFPBridge.NHQM
-open CATEPTMain.AFPBridge.NHQM.NHQMCATEPTBridge
+open CATEPTMain.NHQM
+open CATEPTMain.NHQM.NHQMCATEPTBridge
 
 noncomputable section
 

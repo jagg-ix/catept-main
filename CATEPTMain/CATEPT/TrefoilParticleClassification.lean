@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 import CATEPTMain.CATEPT.GeometryGauge
-import CATEPTMain.AFPBridge.CATEPT.CATEPTPrelude
+import CATEPTMain.CATEPT.CATEPTPrelude
 
 /-!
 # Trefoil Particle Classification
@@ -26,7 +26,7 @@ The `TrefoilAction` on a trefoil is `⟨energy, τ_ent⟩` where `τ_ent = S_I/�
 encodes irreversibility.  A particle is **Majorana** iff `τ_ent = 0`
 (the path weight is purely oscillatory; particle = antiparticle).
 
-## Connection to CATEPTMain.AFPBridge.CATEPT.CATEPTPrelude
+## Connection to CATEPTMain.CATEPT.CATEPTPrelude
 
 `TrefoilAction` is the *pointwise* (scalar) analogue of the functional
 `ComplexAction Φ` in `CATEPTPrelude`.  For a single path `φ : Φ` in a
@@ -48,9 +48,9 @@ encodes irreversibility.  A particle is **Majorana** iff `τ_ent = 0`
 noncomputable section
 set_option autoImplicit false
 
-open CATEPTMain.AFPBridge.CATEPT
+open CATEPTMain.CATEPT
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 open CATEPTMain.CATEPT
 
@@ -391,4 +391,4 @@ theorem pathIntegral_isMajorana_iff
   rw [isMajorana_iff_zero_SI]
   simp only [TrefoilAction.ofPathPoint]
 
-end CATEPT
+end CATEPTMain.CATEPT

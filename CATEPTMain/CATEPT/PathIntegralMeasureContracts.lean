@@ -3,7 +3,7 @@ import CATEPTMain.CATEPT.MeasurePathIntegral
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -94,4 +94,4 @@ theorem pathIntegralCompatibility_contract_of_fields
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

@@ -1,8 +1,9 @@
 import CATEPTMain.CATEPT.DiracMatrixAlgebra
 import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # QCD Confinement & Strong CP
@@ -36,4 +37,4 @@ $\mathcal{L}_I^{\mathrm{QCD}}(x) = \frac{g}{32\pi^2} F^a_{\mu\nu}(x)\tilde{F}^{a
 noncomputable def QCD_ImaginaryAction_Integrand (x : FourVector ℝ) : ℝ :=
   (g_QCD / (32 * Real.pi^2)) * TopologicalChargeDensity x * ThetaField x
 
-end CATEPT
+end CATEPTMain.CATEPT

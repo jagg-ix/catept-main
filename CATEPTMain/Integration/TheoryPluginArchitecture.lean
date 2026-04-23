@@ -2,7 +2,7 @@
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic.Linarith
-import CATEPTMain.AFPBridge.CATEPT.CATEPTPort
+import CATEPTMain.CATEPT.CATEPTPort
 
 open Manifold MeasureTheory
 
@@ -35,7 +35,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Integration
 
-open CATEPTMain.AFPBridge.CATEPT
+open CATEPTMain.CATEPT
 
 -- The background Spacetime is now declared as an abstract semantic manifold
 -- replacing the previously hardcoded `Real × Real × Real × Real` vector space.

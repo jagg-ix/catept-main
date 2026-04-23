@@ -3,7 +3,7 @@ import CATEPTMain.CATEPT.PathIntegrals
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Base-dimension exponent bookkeeping for CAT/EPT dimensional analysis. -/
 @[ext] structure Dimension where
@@ -192,4 +192,4 @@ theorem yukawa_potential_dimension_contract (M_eff r : ℝ) :
   · rfl
   · exact dim_yukawa_exponent_dimensionless_natural_units
 
-end CATEPT
+end CATEPTMain.CATEPT

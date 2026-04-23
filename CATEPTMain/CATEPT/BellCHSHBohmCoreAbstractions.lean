@@ -2,11 +2,11 @@ import Mathlib.Data.Int.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Sqrt
-import CATEPT.Foundations
+import CATEPTMain.CATEPT.Foundations
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 noncomputable section
 
@@ -148,4 +148,4 @@ theorem bellBohmCompatibility_contract_of_fields
 
 end
 
-end CATEPT
+end CATEPTMain.CATEPT

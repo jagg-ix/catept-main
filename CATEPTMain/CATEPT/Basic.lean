@@ -6,7 +6,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- Compatibility theorem name tracked by bridge mapping (Eq 1). -/
 theorem complex_action_definition : True := by
@@ -98,4 +98,4 @@ theorem catept_framework_consistency
         (S_I := χ.S_I) (ℏ := hbar) h_hbar coer φ (coer.bound χ.S_I φ)
     simpa [path_integral_damping] using h
 
-end CATEPT
+end CATEPTMain.CATEPT

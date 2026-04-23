@@ -3,7 +3,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-!
 # Muon Anomalous Magnetic Moment ($a_\mu$)
@@ -59,4 +59,4 @@ $a_\mu^{\Theta} \approx \frac{g_H^2}{96\pi^2}\ln\frac{\Lambda}{m_\mu}$
 noncomputable def a_mu_entropic_simplified : ℝ :=
   (g_H^2 / (96 * Real.pi^2)) * log (Lambda_scale / m_mu)
 
-end CATEPT
+end CATEPTMain.CATEPT

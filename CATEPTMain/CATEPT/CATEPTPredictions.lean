@@ -50,7 +50,7 @@ predict_within_rel ε   (tolerance-based comparison)
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Input Bundle -/
 
@@ -620,4 +620,4 @@ def catEPTPaperExperimentalDossier : List AccuracyReport :=
 
 end Numerics
 
-end CATEPT
+end CATEPTMain.CATEPT

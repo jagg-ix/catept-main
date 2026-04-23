@@ -5,7 +5,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-- A Microcanonical Shell in a given Phase Space. -/
 structure MicrocanonicalShell (PhaseSpace : Type) where
@@ -38,4 +38,4 @@ theorem ETH_diagonal_is_microcanonical {PhaseSpace X : Type}
   intro x
   rw [interface.O_thermal_eq_average]
 
-end CATEPT
+end CATEPTMain.CATEPT

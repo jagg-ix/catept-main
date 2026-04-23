@@ -34,7 +34,7 @@ importing numpy/Python). Focus is on:
 
 noncomputable section
 
-namespace CATEPT
+namespace CATEPTMain.CATEPT
 
 /-! ## Minkowski (flat-space) metric -/
 
@@ -141,4 +141,4 @@ theorem rotating_observer_zero_omega_is_static
   unfold rotating_observer_dtau_dt rotating_observer_g_eff static_observer_dtau_dt
   simp
 
-end CATEPT
+end CATEPTMain.CATEPT
