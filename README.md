@@ -1,6 +1,6 @@
 # CATEPT Main — Lean 4 Formal Verification Hub
 
-A Lean 4.29 integration repository for the **Causal-Algebraic Thermodynamic Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a unified formal verification surface.
+A Lean 4.29 integration repository for the **Complex Action Theory and Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a unified formal verification surface.
 
 ## Architecture & Implementation Overview
 
