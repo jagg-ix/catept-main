@@ -1,5 +1,9 @@
 import CATEPTMain.CATEPT.CATEPT.ComplexMeasureBridge
+import CATEPTMain.Core.Assumptions
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+open CATEPTMain (CATEPTAssumption)
+open CATEPTMain.AssumptionId
 /-!
 # CATEPT Port — Modular Flow / Tomita-Takesaki Bridge
 
@@ -202,13 +206,13 @@ theorem hyers_ulam_weight_stability
     At equilibrium: ⟨A B(t)⟩_β = ⟨B(t + iħβ) A⟩_β.
     Source: modular flow theory, Tomita-Takesaki theorem.
     Status: requires full Type III₁ factor machinery. -/
-axiom kms_condition : True
+axiom kms_condition : CATEPTAssumption kmsCondition True
   -- phase2: ⟨A B(t)⟩ = ⟨B(t + iħβ) A⟩ where β = 1/(k_B T_Hawking)
 
 /-- Cameron-Martin-Girsanov (axiom).
     dμ_CAT/EPT = exp(−τ_ent) dμ_Wiener.
     Source: StochasticWeberBridge.lean, RemainingObligationsBridge.lean. -/
-axiom cameron_martin_girsanov : True
+axiom cameron_martin_girsanov : CATEPTAssumption cameronMartinGirsanov True
   -- phase2: absolute continuity, Radon-Nikodym derivative = exp(-τ_ent)
 
 -- ── ComplexMeasureBridge: modular flow → complex measure ─────────────────────
