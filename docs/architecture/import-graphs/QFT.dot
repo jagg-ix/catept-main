@@ -1,0 +1,9 @@
+digraph "import_graph" {
+  "CATEPT.Foundations" [style=filled, fillcolor="#e0e0e0", shape=ellipse];
+  "CATEPT.CATEPT.Foundations" -> "CATEPT.Foundations";
+  "CATEPT.CATEPT.PathIntegrals" [shape=ellipse];
+  "CATEPT.Foundations" -> "CATEPT.CATEPT.PathIntegrals";
+  "CATEPT.CATEPT.Foundations" [shape=ellipse];
+  "CATEPT.Bridges.QFT" [shape=house];
+  "CATEPT.CATEPT.PathIntegrals" -> "CATEPT.Bridges.QFT";
+}
