@@ -327,17 +327,17 @@ Selection ranking from the survey at extraction time
 M (≤500 LoC), L (>500 LoC).  This list is informational — the
 selection criteria above are authoritative.
 
-| Effort | Plugin | LoC | `CATEPTMain.*` imports | Incoming refs |
-|---|---|---|---|---|
-| **S** | `HilleYosidaBridge` (PILOT) | 195 | 0 | 0 |
-| S | `BrownianMotionBridge` | 74 | 0 | 0 |
-| S | `QuantumInfoBridge` | 73 | 0 | 0 |
-| S | `LeanInfBridge` | 46 | 0 | 0 |
-| S | `LeanDimensionalAnalysisBridge` | 58 | 0 | 0 |
-| S | `CslibBridge` | 69 | 0 | 0 |
-| M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 |
-| M | `SpectralPhysicsBridge` | 229 | 0 | 0 |
-| M | `DeGiorgiBridge` | 277 | 0 | 0 |
+| Effort | Plugin | LoC | `CATEPTMain.*` imports | Incoming refs | Status |
+|---|---|---|---|---|---|
+| S | `HilleYosidaBridge` | 195 | 0 | 0 | **EXTRACTED** (T4.2 — pilot) |
+| S | `BrownianMotionBridge` | 74 | 0 | 0 | **EXTRACTED** (T4.5) |
+| S | `LeanDimensionalAnalysisBridge` | 58 | 0 | 0 | **EXTRACTED** (T4 follow-up) |
+| S | `QuantumInfoBridge` | 73 | 0 | 0 | candidate |
+| S | `LeanInfBridge` | 46 | 0 | 0 | NOT viable — has 0 theorems, fails selection criterion #3 |
+| S | `CslibBridge` | 69 | 0 | 0 | candidate |
+| M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 | candidate |
+| M | `SpectralPhysicsBridge` | 229 | 0 | 0 | candidate |
+| M | `DeGiorgiBridge` | 277 | 0 | 0 | candidate |
 
 After T4.5 lands, refresh this table by re-running the survey command
 in [`targets/target-4-plan.md`](targets/target-4-plan.md).

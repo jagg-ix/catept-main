@@ -26,6 +26,11 @@ require «catept-plugin-hille-yosida» from git
 require «catept-plugin-brownian-motion» from git
   "https://github.com/jagg-ix/catept-plugin-brownian-motion.git" @ "318d4d750a09f5fde73c0c62cd790c57bb8e1bdf"
 
+-- catept-plugin-dimensional-analysis: extracted CATEPTMain.Integration.LeanDimensionalAnalysisBridge.
+-- Third plugin under Target 4 sibling-split pattern (Target 4 follow-up beyond the >=2 minimum).
+require «catept-plugin-dimensional-analysis» from git
+  "https://github.com/jagg-ix/catept-plugin-dimensional-analysis.git" @ "d89c87a3612d9c1fccf469b13ad3d12c29ac3f40"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

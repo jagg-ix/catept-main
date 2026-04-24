@@ -50,6 +50,7 @@ state.
 |---|---|---|---|---|
 | [`jagg-ix/catept-plugin-hille-yosida`](https://github.com/jagg-ix/catept-plugin-hille-yosida) | `a25792615fe64d7a551dc32a940d60c219fa3d06` | `v0.1.0` | 5 | [`CATEPTMain/Integration/HilleYosidaBridge.lean`](../../CATEPTMain/Integration/HilleYosidaBridge.lean) |
 | [`jagg-ix/catept-plugin-brownian-motion`](https://github.com/jagg-ix/catept-plugin-brownian-motion) | `318d4d750a09f5fde73c0c62cd790c57bb8e1bdf` | `v0.1.0` | 1 | [`CATEPTMain/Integration/BrownianMotionBridge.lean`](../../CATEPTMain/Integration/BrownianMotionBridge.lean) |
+| [`jagg-ix/catept-plugin-dimensional-analysis`](https://github.com/jagg-ix/catept-plugin-dimensional-analysis) | `d89c87a3612d9c1fccf469b13ad3d12c29ac3f40` | `v0.1.0` | 1 | [`CATEPTMain/Integration/LeanDimensionalAnalysisBridge.lean`](../../CATEPTMain/Integration/LeanDimensionalAnalysisBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
