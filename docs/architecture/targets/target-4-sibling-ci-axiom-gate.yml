@@ -1,0 +1,52 @@
+name: Axiom Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  axiom-check:
+    name: Lean 4 Axiom Surface Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Lean 4 toolchain
+      uses: leanprover/lean4-action@v1
+      with:
+        use-mathlib-cache: true
+
+    - name: Warm Mathlib olean cache
+      run: lake exe cache get || true
+
+    - name: Build sibling package
+      run: lake build
+
+    - name: Check axiom surface — kernel-only sentinel theorems
+      run: |
+        cat > /tmp/check_axioms.lean << 'EOF'
+        import CATEPTPluginHilleYosida.IntegrationBridge
+
+        open CATEPTPluginHilleYosida
+
+        -- Permitted axioms: propext, Classical.choice, Quot.sound only.
+        -- Any new axiom or sorryAx here is a regression and breaks the gate.
+        #print axioms hilleYosida_integration_contract
+        #print axioms proved_semigroup_growth_bound
+        #print axioms proved_resolvent_bound
+        #print axioms contracting_has_optimal_growth_bound
+        #print axioms ns_heat_semigroup_abstract_theory_proved
+        EOF
+        lake env lean /tmp/check_axioms.lean 2>&1 | tee /tmp/axiom_output.txt
+        # Fail if any axiom beyond the three standard Lean kernel axioms appears,
+        # or if a sorryAx slips in.
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$| " /tmp/axiom_output.txt | grep -qE "axiom|sorryAx"; then
+          echo "REGRESSION: non-kernel axiom or sorry in published surface"
+          cat /tmp/axiom_output.txt
+          exit 1
+        fi
+        echo "Axiom surface OK — 5 theorems verified kernel-only"

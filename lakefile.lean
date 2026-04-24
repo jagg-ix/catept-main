@@ -16,6 +16,11 @@ require «BochnerMinlos» from git
 require HilleYosida from git
   "https://github.com/mrdouglasny/hille-yosida.git" @ "7731442e5b0144dcede6aaf33f535b7a4bf95ef6"
 
+-- catept-plugin-hille-yosida: extracted CATEPTMain.Integration.HilleYosidaBridge.
+-- Sibling repo following Target 4 sibling-split pattern (target-4-plan.md).
+require «catept-plugin-hille-yosida» from git
+  "https://github.com/jagg-ix/catept-plugin-hille-yosida.git" @ "a25792615fe64d7a551dc32a940d60c219fa3d06"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
