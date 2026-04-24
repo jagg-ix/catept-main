@@ -69,4 +69,23 @@ theorem emSuperiorSlot_vacuum_action_zero (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
     (emSuperiorSlot μ₀ hμ₀).actionFn (fun _ => 0) = 0 := by
   simp [emSuperiorSlot]
 
+/-- The Bohmian-EM (minimally-coupled) Superior-Method slot.
+
+    Configuration space: `Fin 4 → ℝ` (the 4-velocity/4-potential v^μ).
+    Imaginary action: `S_I(v) = Σ_μ (v^μ − A_bg^μ)² / 2 ≥ 0` (natural units
+    `m = ħ = e = 1`).  The background field `A_bg` shifts the origin of the
+    Gaussian; at `A_bg = 0` this reduces to the free Bohmian action `‖v‖²/2`. -/
+noncomputable def bohmianEMSuperiorSlot (A_bg : Fin 4 → ℝ) : SuperiorMethodSlot where
+  ConfigSpaceTy   := Fin 4 → ℝ
+  actionRe        := fun _ => 0
+  actionFn        := fun v => (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2
+  actionFn_nonneg := fun v =>
+    div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (v μ - A_bg μ)) (by norm_num)
+
+/-- The Bohmian-EM slot satisfies the CATEPT consistency constraint by `div_one`. -/
+theorem bohmianEMSuperiorSlot_consistent (A_bg : Fin 4 → ℝ) :
+    CATEPTMain.Integration.cateptConsistencyConstraint
+      (bohmianEMSuperiorSlot A_bg).toCATEPTSlot :=
+  (bohmianEMSuperiorSlot A_bg).consistent
+
 end CATEPTMain.Domains.GR

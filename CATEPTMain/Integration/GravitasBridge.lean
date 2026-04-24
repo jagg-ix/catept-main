@@ -65,7 +65,7 @@ set_option autoImplicit false
 open CATEPTMain.Integration
 open Gravitas
 open CATEPTMain.Integration.VMLCATEPTBridge
-open CATEPTMain.Domains.GR (minkowskiSuperiorSlot emSuperiorSlot)
+open CATEPTMain.Domains.GR (minkowskiSuperiorSlot emSuperiorSlot bohmianEMSuperiorSlot)
 
 namespace CATEPTMain.Integration.GravitasBridge
 
@@ -204,30 +204,24 @@ theorem vml_total_catept_weight_factorizes
 
     **CATEPT identification**: the gauge field shifts the Bohm guidance equation
     `v = ∇S/m` to `v − A = ∇S_phys/m`, identifying the EM potential with the
-    shift in the entropic time density. -/
-noncomputable def bohmianEMCATEPTSlot (A_bg : Fin 4 → ℝ) : CATEPTPluginSlot where
-  ConfigSpaceTy   := Fin 4 → ℝ
-  actionRe        := fun _ => 0
-  actionIm        := fun v => (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2
-  actionIm_nonneg := fun v =>
-    div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (v μ - A_bg μ)) (by norm_num)
-  hbar            := 1
-  hbar_pos        := one_pos
-  eptClock        := fun v => (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2
-  eptClock_nonneg := fun v =>
-    div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (v μ - A_bg μ)) (by norm_num)
+    shift in the entropic time density.
 
-/-- The Bohmian-EM slot satisfies the CATEPT consistency constraint. -/
+    Built from the Superior-Method `bohmianEMSuperiorSlot A_bg`. -/
+noncomputable def bohmianEMCATEPTSlot (A_bg : Fin 4 → ℝ) : CATEPTPluginSlot :=
+  (bohmianEMSuperiorSlot A_bg).toCATEPTSlot
+
+/-- The Bohmian-EM slot satisfies the CATEPT consistency constraint.
+    Term-mode proof via `div_one`. -/
 theorem bohmianEMCATEPTSlot_consistent (A_bg : Fin 4 → ℝ) :
-    cateptConsistencyConstraint (bohmianEMCATEPTSlot A_bg) := by
-  intro v
-  simp [bohmianEMCATEPTSlot]
+    cateptConsistencyConstraint (bohmianEMCATEPTSlot A_bg) :=
+  (bohmianEMSuperiorSlot A_bg).consistent
 
 /-- At zero background (A_bg = 0), the Bohmian-EM action equals the free
     Bohmian action `‖v‖²/2`. -/
 theorem bohmianEM_zero_A_eq_free (v : Fin 4 → ℝ) :
     (bohmianEMCATEPTSlot (fun _ => 0)).actionIm v = (∑ μ : Fin 4, v μ ^ 2) / 2 := by
-  simp [bohmianEMCATEPTSlot]
+  simp [bohmianEMCATEPTSlot,
+    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot, bohmianEMSuperiorSlot]
 
 /-- The Bohmian-EM action is nonneg for all velocities and backgrounds. -/
 theorem bohmianEM_nonneg (A_bg : Fin 4 → ℝ) (v : Fin 4 → ℝ) :
@@ -242,7 +236,9 @@ theorem bohmianEM_action_expansion (A_bg v : Fin 4 → ℝ) :
       (∑ μ : Fin 4, v μ ^ 2) / 2
       - (∑ μ : Fin 4, v μ * A_bg μ)
       + (∑ μ : Fin 4, A_bg μ ^ 2) / 2 := by
-  simp only [bohmianEMCATEPTSlot, Fin.sum_univ_four]
+  simp only [bohmianEMCATEPTSlot,
+    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot, bohmianEMSuperiorSlot,
+    Fin.sum_univ_four]
   ring
 
 -- ── §6  Gravitas Faraday tensor and electrovacuum plugin ─────────────────────
