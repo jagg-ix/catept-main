@@ -1,4 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import NavierStokesClean.Sobolev.EnergyIdentityT3
 
@@ -29,6 +31,11 @@ Galerkin energy trajectory.  The central claim is:
 The actual proof that NS Galerkin trajectories satisfy the `HasDerivAt`
 hypothesis is left to future work (requires smoothness of the Galerkin ODE
 and chain rule for the squared norm).
+
+The chain-rule bridge `projectedEnergyCurve_hasDerivAt_chain` is sorry'd,
+pending formalization of `spectralProjL2 N` as a `ContinuousLinearMap`.
+The NS-equation bridge `inner_eq_projectedGradientTerm_of_NS` is sorry'd,
+pending the Parseval identity for the projected inner product.
 -/
 
 set_option autoImplicit false
@@ -87,15 +94,61 @@ theorem galerkin_energy_rhs_nonpos
     mul_nonneg (mul_nonneg (by norm_num) hν) hg
   linarith
 
-/-- Combined: under `GalerkinTrajectoryHyps` and the `HasDerivAt` assumption,
-    the energy derivative is nonpositive (energy is non-increasing). -/
-theorem galerkin_energy_nonincreasing
+/-! ## Chain-rule bridge -/
+
+/-- **Chain-rule bridge** (sorry): if `u : ℝ → L²(T³)` has derivative `u' t` at time `t`,
+    then the projected energy curve `E_N(t) = ‖P_N u(t)‖²` has derivative
+    `2 * re ⟪P_N u(t), P_N u'(t)⟫` at `t`.
+
+    **Proof route** (deferred):
+    1. `spectralProjL2 N` is a bounded ℝ-linear map on `L²` (finite-rank → bounded).
+    2. Chain rule: `HasDerivAt (spectralProjL2 N ∘ u) (spectralProjL2 N (u' t)) t`.
+    3. Derivative of `x ↦ ‖x‖² : L²(ℂ) → ℝ` at `v` in direction `w` is
+       `2 * Complex.re ⟪v, w⟫_ℂ` (real part of the ℂ-inner product).
+    4. Composition gives the stated derivative. -/
+theorem projectedEnergyCurve_hasDerivAt_chain
+    (N : ℕ) (u : ℝ → L²(UnitAddTorus (Fin 3)))
+    (u' : ℝ → L²(UnitAddTorus (Fin 3)))
+    (hdu : ∀ t, HasDerivAt u (u' t) t) (t : ℝ) :
+    HasDerivAt (projectedEnergyCurve N u)
+      (2 * Complex.re (inner (𝕜 := ℂ)
+          (spectralProjL2 N (u t))
+          (spectralProjL2 N (u' t)))) t := by
+  sorry
+
+/-- **NS-equation bridge** (sorry): when `u'` satisfies the projected Galerkin NS equation,
+    the chain-rule derivative equals `-2ν · projectedGradientTerm N (u t)`.
+
+    The identity uses:
+    ```
+    re ⟪P_N u, P_N (ν Δ u)⟫ = -ν · ∑_{k ∈ Λ_N} |k|² |û_k|²
+    ```
+    (Parseval + Fourier derivative: `⟪mFourier k, Δ mFourier k⟫ = -(2π|k|)²`). -/
+theorem inner_eq_projectedGradientTerm_of_NS
     (ν : ℝ) (N : ℕ) (u : ℝ → L²(UnitAddTorus (Fin 3)))
-    (hyps : GalerkinTrajectoryHyps ν N u) (t : ℝ)
-    (hd : HasDerivAt (projectedEnergyCurve N u)
-          (-2 * ν * projectedGradientTerm N (u t) - projectedConvectionTerm N (u t)) t) :
-    deriv (projectedEnergyCurve N u) t ≤ 0 := by
-  rw [galerkin_energy_deriv_eq ν N u t hd]
-  exact galerkin_energy_rhs_nonpos ν N u hyps.nu_nonneg t
+    (u' : ℝ → L²(UnitAddTorus (Fin 3)))
+    (t : ℝ) :
+    2 * Complex.re (inner (𝕜 := ℂ)
+        (spectralProjL2 N (u t))
+        (spectralProjL2 N (u' t))) =
+      -2 * ν * projectedGradientTerm N (u t) - projectedConvectionTerm N (u t) := by
+  sorry
+
+/-- **Full interface theorem**: given path differentiability and the NS-inner-product bridge,
+    the projected energy satisfies `phase5dEnergyIdentityStatement`. -/
+theorem phase5d_energy_identity_from_chain
+    (ν : ℝ) (N : ℕ) (u : ℝ → L²(UnitAddTorus (Fin 3)))
+    (u' : ℝ → L²(UnitAddTorus (Fin 3)))
+    (hdu : ∀ t, HasDerivAt u (u' t) t)
+    (hinner : ∀ t,
+      2 * Complex.re (inner (𝕜 := ℂ)
+          (spectralProjL2 N (u t))
+          (spectralProjL2 N (u' t))) =
+        -2 * ν * projectedGradientTerm N (u t) - projectedConvectionTerm N (u t))
+    (t : ℝ) :
+    phase5dEnergyIdentityStatement ν N u t := by
+  unfold phase5dEnergyIdentityStatement
+  have hd := projectedEnergyCurve_hasDerivAt_chain N u u' hdu t
+  rwa [hinner t] at hd
 
 end NavierStokesClean.Sobolev.HasDerivAtGalerkin
