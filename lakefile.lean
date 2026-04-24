@@ -39,7 +39,7 @@ require LGT from
   git "https://github.com/jagg-ix/lgt.git" @ "f09c3991044ae1f2a750a3b2de9e8e36931f03cb"
 
 require DimensionalAnalysis from
-  git "https://github.com/ATOMSLab/LeanDimensionalAnalysis.git" @ "de263eed945693058ef2b8a1fa56c2ec5642ea7a"
+  git "https://github.com/jagg-ix/LeanDimensionalAnalysis.git" @ "7cc72525a27032de4b2302db1bfa6dc29c68c088"
 
 -- AQEI-Bridge: causal poset H₁ stability under AQEI stress-energy perturbations.
 require aqeiBridge from git
@@ -73,9 +73,6 @@ require spectralPhysics from
 require OSreconstruction from
   git "https://github.com/xiyin137/OSreconstruction.git" @ "6d9a639a7e5aa0266c5b47fe072cb4aaec0141a2"
 
--- Keep mathlib last so its transitive versions win during resolution.
-require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0"
 
 @[default_target]
 lean_lib CATEPTMain where
@@ -101,3 +98,21 @@ lean_lib NavierStokesClean where
 
 lean_lib QuantumAlgebra where
   srcDir := "."
+
+-- External String/PDE Repositories Integration
+require StochasticPDE from "../StochasticPDE"
+require StochasticPDEItoCalculus from "../stochasticpde-itocalculus"
+require StochasticPDENonstandard from "../stochasticpde-nonstandard"
+require StringAlgebra from "../StringAlgebra"
+require StringAlgebraLinfinity from "../StringAlgebra-Linfinity"
+require StringAlgebraMTC from "../StringAlgebra-MTC"
+require StringAlgebraMZV from "../StringAlgebra-MZV"
+require StringAlgebraVOA from "../StringAlgebra-VOA"
+require StringGeometry from "../StringGeometry"
+require SGRiemannSurfaces from "../stringgeometry-riemann-surfaces"
+require SGSuperRiemannSurfaces from "../stringgeometry-super-riemann-surfaces"
+require SGSupermanifolds from "../stringgeometry-supermanifolds"
+
+-- Keep mathlib last so its transitive versions win during resolution.
+require mathlib from git
+  "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0"
