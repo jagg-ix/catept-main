@@ -2,6 +2,10 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
+import CATEPTMain.Core.Assumptions
+
+open CATEPTMain (CATEPTAssumption)
+open CATEPTMain.AssumptionId
 /-!
 # CATEPT Planck Bridge (Phase 1)
 
@@ -272,7 +276,8 @@ axiom cateptQuantizedEntropy
 axiom cateptQuantizedEntropy_nonneg
     (n : ℕ) (kB lnOmega xi x : ℝ)
     (hkB : 0 ≤ kB) (hΩ : 0 ≤ lnOmega) (hxi : 0 ≤ xi) (hx : 0 ≤ x) :
-    0 ≤ cateptQuantizedEntropy n kB lnOmega xi x
+    CATEPTAssumption cateptQuantizedEntropyNonneg
+      (0 ≤ cateptQuantizedEntropy n kB lnOmega xi x)
 
 -- ── Thermodynamic axioms ──────────────────────────────────────────────────────
 
@@ -283,7 +288,8 @@ axiom cateptEntropyNonDecrease
     (S : ℕ → ℝ) (ħ G c : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c)
     (hS : Monotone S)
     (n : ℕ) (hn : 0 < n) :
-    0 ≤ (S (n + 1) - S n) / tauTimeQuantum n ħ G c
+    CATEPTAssumption cateptEntropyNonDecrease
+      (0 ≤ (S (n + 1) - S n) / tauTimeQuantum n ħ G c)
 
 /-- Irreversibility lower bound: ΔS_irr ≥ ħ / (k_B · Δτₙ).
     This is the CATEPT analog of the Clausius inequality.
@@ -293,7 +299,8 @@ axiom cateptIrreversibilityBound
     (n : ℕ) (hn : 0 < n)
     (ħ G c : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c)
     (deltaS_irr : ℝ) :
-    ħ / (kB * tauTimeQuantum n ħ G c) ≤ deltaS_irr
+    CATEPTAssumption cateptIrreversibilityBound
+      (ħ / (kB * tauTimeQuantum n ħ G c) ≤ deltaS_irr)
 
 /-- Entropy production rate: Ṡ = Σ_k (1/T_k) ΔQ_k/Δτₙ.
     Phase-1 axiom. -/

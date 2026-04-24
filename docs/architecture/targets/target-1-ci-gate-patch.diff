@@ -1,0 +1,50 @@
+diff --git a/.github/workflows/axiom-gate.yml b/.github/workflows/axiom-gate.yml
+index 15f9c817e..313b7aba8 100644
+--- a/.github/workflows/axiom-gate.yml
++++ b/.github/workflows/axiom-gate.yml
+@@ -88,6 +88,45 @@ jobs:
+         fi
+         echo "Publication bridge surface OK (17 theorems, kernel-only axioms)"
+ 
++    - name: Check assumption-registry consistency (CATEPTAssumption ids)
++      run: |
++        cat > /tmp/check_registry.py << 'PYEOF'
++        """Fail if any CATEPTAssumption call site uses an unregistered id."""
++        import re, sys
++        from pathlib import Path
++
++        ROOT = Path(".")
++        REGISTRY = ROOT / "CATEPTMain/Core/Assumptions.lean"
++        ID_DEF_RE = re.compile(r'^def\s+(\w+)\s*:\s*String\s*:=\s*"', re.MULTILINE)
++        CALL_RE = re.compile(r'CATEPTAssumption\s+(?:AssumptionId\.)?(\w+)\b')
++
++        if not REGISTRY.exists():
++            print(f"SKIP: {REGISTRY} not present; registry not yet introduced.")
++            sys.exit(0)
++
++        registered = set(ID_DEF_RE.findall(REGISTRY.read_text()))
++        print(f"Registry: {len(registered)} ids in {REGISTRY}")
++
++        bad = []
++        for p in ROOT.rglob("*.lean"):
++            if ".lake" in p.parts or p == REGISTRY: continue
++            try:
++                text = p.read_text(errors='ignore')
++            except Exception:
++                continue
++            for m in CALL_RE.finditer(text):
++                if m.group(1) not in registered:
++                    bad.append((str(p), m.group(1)))
++
++        if bad:
++            print(f"REGRESSION: {len(bad)} call site(s) use unregistered ids:")
++            for path, name in sorted(bad):
++                print(f"  {path}: {name}")
++            sys.exit(1)
++        print("Assumption registry: all call sites tagged with registered ids")
++        PYEOF
++        python3 /tmp/check_registry.py
++
+     - name: Check sorry count — NavierStokesClean (must not regress)
+       run: |
+         COUNT=$(grep -r "\bsorry\b" NavierStokesClean/ --include="*.lean" \
