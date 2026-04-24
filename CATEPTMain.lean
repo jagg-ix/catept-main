@@ -2,6 +2,12 @@ import Bochner
 import HilleYosida
 import Cslib
 import CATEPTMain.External.Registry
+-- Superior-Method plugin architecture (Target 3)
+import CATEPTMain.Domains.SuperiorMethod
+import CATEPTMain.Domains.QM.Domain
+import CATEPTMain.Domains.GR.Domain
+import CATEPTMain.Domains.ETH.Domain
+import CATEPTMain.Bridges.SuperiorMethodBridges
 import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.Pphi2CATEPTEPTBridge
@@ -77,6 +83,18 @@ import CATEPTMain.Integration.EinsteinViscosityMpembaBridge
 import CATEPTMain.Bridges
 import CATEPTMain.Gravitas
 import CATEPTMain.ActionIntegrationBridge
+import CATEPTMain.Integration.SGSupermanifoldsBridge
+import CATEPTMain.Integration.SGSuperRiemannSurfacesBridge
+import CATEPTMain.Integration.SGRiemannSurfacesBridge
+import CATEPTMain.Integration.StringGeometryBridge
+import CATEPTMain.Integration.StringAlgebraVOABridge
+import CATEPTMain.Integration.StringAlgebraMZVBridge
+import CATEPTMain.Integration.StringAlgebraMTCBridge
+import CATEPTMain.Integration.StringAlgebraLinfinityBridge
+import CATEPTMain.Integration.StringAlgebraBridge
+import CATEPTMain.Integration.StochasticPDENonstandardBridge
+import CATEPTMain.Integration.StochasticPDEItoCalculusBridge
+import CATEPTMain.Integration.StochasticPDEBridge
 -- Previously-orphaned bridges now wired into root:
 
 /-!
