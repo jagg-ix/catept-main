@@ -1,5 +1,6 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.Quantum.QUANTUM.QFIToolbox
+import CATEPTMain.Domains.QM.Domain
 /-!
 # Quantum CATEPT Bridge — von Neumann Entropy as Imaginary Action
 
@@ -46,6 +47,7 @@ set_option autoImplicit false
 open Real Complex MeasureTheory
 open CATEPTMain.Quantum.QUANTUM
 open CATEPTMain.Integration
+open CATEPTMain.Domains.QM (qmSuperiorSlot)
 
 namespace CATEPTMain.Integration.QuantumCATEPTBridge
 
@@ -53,44 +55,34 @@ noncomputable section
 
 -- ── Quantum CATEPT slot ───────────────────────────────────────────────────────
 
-/-- The CATEPT plugin slot for quantum density matrices.
+/-- The CATEPT plugin slot for quantum density matrices, built from the
+    Superior-Method `qmSuperiorSlot` (von Neumann entropy).
 
     Configuration space: `DensityMatrix n`  (n × n mixed quantum states).
 
-    The imaginary action is the von Neumann entropy S(ρ) = −Tr(ρ log₂ ρ) ≥ 0.
-    With ħ = 1, the entropic clock τ_ent = S(ρ)/1 = S(ρ).
-
-    The phase-1 implementation uses the placeholder `vonNeumannEntropy = 0`;
-    the CATEPT consistency constraint `S(ρ)/1 = S(ρ)` holds for any value
-    (proved by `div_one`).  Phase-2 replaces the placeholder with the full
-    eigenspectrum definition. -/
-def quantumCATEPTSlot (n : ℕ) : CATEPTPluginSlot where
-  ConfigSpaceTy   := DensityMatrix n
-  actionRe        := fun _ => 0
-  actionIm        := fun ρ => vonNeumannEntropy n ρ
-  actionIm_nonneg := vonNeumannEntropy_nonneg n
-  hbar            := 1
-  hbar_pos        := one_pos
-  eptClock        := fun ρ => vonNeumannEntropy n ρ
-  eptClock_nonneg := vonNeumannEntropy_nonneg n
+    `actionIm = eptClock = vonNeumannEntropy n`, `ħ = 1`.  Because both
+    fields are the same `actionFn` by construction, the consistency
+    constraint holds by `div_one` — no slot unfolding required. -/
+def quantumCATEPTSlot (n : ℕ) : CATEPTPluginSlot :=
+  (qmSuperiorSlot n).toCATEPTSlot
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 
 /-- The quantum CATEPT slot satisfies the CATEPT consistency constraint:
-    S(ρ) / 1 = S(ρ)  (entropic clock = scaled imaginary action, ħ = 1). -/
+    `S(ρ) / 1 = S(ρ)`.  Term-mode proof via the universal
+    `SuperiorMethodSlot.consistent` (`fun _ => div_one _`). -/
 theorem quantumCATEPTSlot_consistent (n : ℕ) :
-    cateptConsistencyConstraint (quantumCATEPTSlot n) := by
-  intro ρ
-  simp [quantumCATEPTSlot]
+    cateptConsistencyConstraint (quantumCATEPTSlot n) :=
+  (qmSuperiorSlot n).consistent
 
 -- ── Damping factor ────────────────────────────────────────────────────────────
 
-/-- Feynman-Kac damping: exp(−S(ρ)/1) = exp(−S(ρ)).
+/-- Feynman-Kac damping: `exp(−S(ρ)/1) = exp(−S(ρ))`.
     The Gibbs-like weight measuring quantum mixedness. -/
 theorem quantumCATEPTSlot_damping (n : ℕ) (ρ : DensityMatrix n) :
-    Real.exp (-(vonNeumannEntropy n ρ / 1)) =
-    Real.exp (-(vonNeumannEntropy n ρ)) := by
-  norm_num
+    Real.exp (-((quantumCATEPTSlot n).actionIm ρ / (quantumCATEPTSlot n).hbar)) =
+    Real.exp (-(vonNeumannEntropy n ρ)) :=
+  (qmSuperiorSlot n).damping_eq ρ
 
 -- ── Relative modular-weight bridge (constant-free form) ───────────────────────
 

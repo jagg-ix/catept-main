@@ -36,8 +36,10 @@ namespace CATEPTMain.Domains.QM
     Configuration space: `DensityMatrix n` (n × n mixed quantum states).
     The entropic action is the von Neumann entropy S(ρ) ≥ 0.
 
-    With ħ = 1 (canonical), `eptClock = actionIm = S(ρ)` by construction. -/
-def qmSuperiorSlot (n : ℕ) : SuperiorMethodSlot where
+    With ħ = 1 (canonical), `eptClock = actionIm = S(ρ)` by construction.
+
+    Marked `noncomputable` because `vonNeumannEntropy` is noncomputable. -/
+noncomputable def qmSuperiorSlot (n : ℕ) : SuperiorMethodSlot where
   ConfigSpaceTy   := DensityMatrix n
   actionRe        := fun _ => 0
   actionFn        := fun ρ => vonNeumannEntropy n ρ
