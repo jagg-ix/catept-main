@@ -43,8 +43,14 @@ def nonlinearProjectedTerm (_N : ℕ) (_f : L²(UnitAddTorus (Fin 3))) : ℝ := 
 noncomputable def projectedEnergyRHS (ν : ℝ) (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) : ℝ :=
   viscousProjectedTerm ν N f + nonlinearProjectedTerm N f
 
-/-- Placeholder projected gradient contribution in the Phase 5D identity. -/
-def projectedGradientTerm (_N : ℕ) (_f : L²(UnitAddTorus (Fin 3))) : ℝ := 0
+/-- Projected Fourier gradient semi-norm restricted to Galerkin modes at level `N`.
+
+    Concretely: `∑ k ∈ galerkinModeFinset N, (∑ i, (k i : ℝ)²) * ‖mFourierCoeff f k‖²`.
+    This is the H¹ Fourier seminorm of `f` truncated to the N-mode Galerkin subspace,
+    and equals `‖∇P_N f‖²_{L²} / (2π)²` for smooth `f` by the Fourier derivative identity. -/
+noncomputable def projectedGradientTerm (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) : ℝ :=
+  ∑ k ∈ NavierStokesClean.Sobolev.SpectralProjectionT3.galerkinModeFinset N,
+    (∑ i : Fin 3, (k i : ℝ) ^ 2) * ‖(mFourierCoeff f k : ℂ)‖ ^ 2
 
 /-- Placeholder projected convection pairing contribution in the Phase 5D identity. -/
 def projectedConvectionTerm (_N : ℕ) (_f : L²(UnitAddTorus (Fin 3))) : ℝ := 0
@@ -71,8 +77,10 @@ theorem projectedEnergyRHS_def (ν : ℝ) (N : ℕ) (f : L²(UnitAddTorus (Fin 3
     projectedEnergyRHS ν N f = -2 * ν * projectedEnergy N f := by
   simp [projectedEnergyRHS, viscousProjectedTerm, nonlinearProjectedTerm]
 
-@[simp] theorem projectedGradientTerm_eq_zero (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
-  projectedGradientTerm N f = 0 := rfl
+theorem projectedGradientTerm_nonneg (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
+    0 ≤ projectedGradientTerm N f :=
+  Finset.sum_nonneg fun _k _ =>
+    mul_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) (sq_nonneg _)
 
 @[simp] theorem projectedConvectionTerm_eq_zero (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
   projectedConvectionTerm N f = 0 := rfl
