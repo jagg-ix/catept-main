@@ -33,9 +33,10 @@ None of these slots import `CATEPTMain.CATEPT.CATEPT.CATEPTPort`.
 
 set_option autoImplicit false
 
-namespace CATEPTMain.Domains.ETH
+open _root_.CATEPT (DampedOscillatorParams OscillatorJet mechanicalEnergy
+  herglotzActionIm herglotzActionIm_nonneg)
 
-open CATEPT
+namespace CATEPTMain.Domains.ETH
 
 -- ── Kinetic slot ─────────────────────────────────────────────────────────────
 

@@ -62,7 +62,7 @@ namespace CATEPTMain.Bridges.SuperiorMethod
 
 /-- Quantum Superior-Method bridge for density matrices of size `n`.
     Consistency by `div_one`. -/
-def quantumSuperiorBridge (n : ℕ) :=
+noncomputable def quantumSuperiorBridge (n : ℕ) :=
   (qmSuperiorSlot n).toCATEPTSlot
 
 theorem quantumSuperiorBridge_consistent (n : ℕ) :
