@@ -125,6 +125,20 @@ EOF
 lake env lean /tmp/catept_showcase_types.lean
 ```
 
+### Related compatibility bridges
+
+Alongside the unification showcase, the `CATEPT/Bridges/` directory carries
+five per-domain compatibility bridges. All theorems in these files depend
+only on the Lean kernel axioms:
+
+| Bridge | What it links | File |
+|---|---|---|
+| pphi2N | O(N) sigma-model action → τ_ent | [`CATEPT/Bridges/Pphi2N.lean`](CATEPT/Bridges/Pphi2N.lean) |
+| QFT | Euclidean action, damping, propagator | [`CATEPT/Bridges/QFT.lean`](CATEPT/Bridges/QFT.lean) |
+| GR | Schwarzschild / ADM / Unruh temperature | [`CATEPT/Bridges/GR.lean`](CATEPT/Bridges/GR.lean) |
+| Gravitas | symbolic BH thermodynamics | [`CATEPT/Bridges/Gravitas.lean`](CATEPT/Bridges/Gravitas.lean) |
+| OSReconstruction | Wightman ↔ MinkowskiSpace Lorentz coincidence | [`CATEPT/Bridges/OSReconstruction.lean`](CATEPT/Bridges/OSReconstruction.lean) |
+
 ### Pointer to the plugin architecture
 
 The universal slot and constraint live in
@@ -237,6 +251,18 @@ architecture over Mathlib.
 - **IsabelleMarresDirac** ([`CATEPTMain/QuantumOps/IsabelleMarresDirac/`](CATEPTMain/QuantumOps/IsabelleMarresDirac/))
   — carries the Marres–Dirac quantum-operator formalization, originally
   developed in Isabelle/HOL, as a Lean 4 compatibility port.
+
+### Osterwalder–Schrader reconstruction infrastructure
+
+The [**xiyin137/OSreconstruction**](https://github.com/xiyin137/OSreconstruction)
+repository formalizes the Osterwalder–Schrader reconstruction theorem,
+the Wightman axioms, Several Complex Variables (SCV), Complex Lie groups,
+and a von Neumann algebra layer — on Mathlib v4.29.0 stable. CATEPT's
+[`CATEPT/Bridges/OSReconstruction.lean`](CATEPT/Bridges/OSReconstruction.lean)
+consumes three axiom-free coincidence theorems from that repository's
+`Bridge/AxiomBridge.lean` to record that the Lorentz/Minkowski
+infrastructure used on the Wightman (QFT) side coincides with the one
+used on the CATEPT GR side.
 
 ### Lean 4 mathematical-physics dependencies by Michael R. Douglas
 
