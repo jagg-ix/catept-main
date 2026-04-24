@@ -222,7 +222,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install Lean 4 toolchain
-      uses: leanprover/lean4-action@v1
+      uses: leanprover/lean-action@v1
       with:
         use-mathlib-cache: true
     - name: Warm Mathlib olean cache
