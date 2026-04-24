@@ -21,6 +21,11 @@ require HilleYosida from git
 require «catept-plugin-hille-yosida» from git
   "https://github.com/jagg-ix/catept-plugin-hille-yosida.git" @ "a25792615fe64d7a551dc32a940d60c219fa3d06"
 
+-- catept-plugin-brownian-motion: extracted CATEPTMain.Integration.BrownianMotionBridge.
+-- Second plugin under Target 4 sibling-split pattern (T4.5).
+require «catept-plugin-brownian-motion» from git
+  "https://github.com/jagg-ix/catept-plugin-brownian-motion.git" @ "318d4d750a09f5fde73c0c62cd790c57bb8e1bdf"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

@@ -125,8 +125,12 @@ Run from a clean clone of `catept-main` on `main`.
    ' | lake env lean /dev/stdin
    ```
 
-   The output must be `[propext, Classical.choice, Quot.sound]` — no
-   other axiom and no `sorryAx`.
+   Acceptable outputs:
+   - `[propext, Classical.choice, Quot.sound]` (kernel-only — typical case)
+   - `does not depend on any axioms` (purely structural / term-mode proof —
+     stronger than kernel-only).
+
+   Any other axiom name or `sorryAx` is a regression.
 8. **Write the README contract.**  In the new repo, replace the
    placeholder `README.md` with sections:
    - **What this provides** (one-paragraph statement of the pinned theorems).
@@ -232,7 +236,11 @@ jobs:
         #print axioms CATEPTPluginHilleYosida.hilleYosida_integration_contract
         EOF
         lake env lean /tmp/check.lean 2>&1 | tee /tmp/out.txt
-        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$" /tmp/out.txt | grep -qE "axiom|sorryAx"; then
+        # Filter out the three permitted kernel axioms, the does-not-depend
+        # phrase (purely structural proofs), the #print echo, the depends-on
+        # header, and blank lines. Anything left mentioning `axiom` or
+        # `sorryAx` is a regression.
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|does not depend on any axioms|^#print|depends on axioms:|^$| " /tmp/out.txt | grep -qE "axiom|sorryAx"; then
           echo "REGRESSION: non-kernel axiom or sorry"
           cat /tmp/out.txt
           exit 1

@@ -44,7 +44,7 @@ jobs:
         lake env lean /tmp/check_axioms.lean 2>&1 | tee /tmp/axiom_output.txt
         # Fail if any axiom beyond the three standard Lean kernel axioms appears,
         # or if a sorryAx slips in.
-        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$| " /tmp/axiom_output.txt | grep -qE "axiom|sorryAx"; then
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|does not depend on any axioms|^#print|depends on axioms:|^$| " /tmp/axiom_output.txt | grep -qE "axiom|sorryAx"; then
           echo "REGRESSION: non-kernel axiom or sorry in published surface"
           cat /tmp/axiom_output.txt
           exit 1
