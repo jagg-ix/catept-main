@@ -64,6 +64,27 @@ enforces this check on every push and pull request.
 Mathlib v4.29.0 and a set of pinned public Lean 4 packages; see
 [`lakefile.lean`](lakefile.lean) for the full list and exact revisions.
 
+## Coordination hub
+
+`catept-main` acts as a coordination hub for an expanding set of
+sibling-repo plugins. Each sibling lives in its own GitHub repository
+with independent versioning, builds, and CI, and is pulled in here via
+a SHA-pinned `require` in [`lakefile.lean`](lakefile.lean).
+
+| Sibling repo | Pin SHA (short) | Provides |
+|---|---|---|
+| [`jagg-ix/catept-plugin-hille-yosida`](https://github.com/jagg-ix/catept-plugin-hille-yosida) | `a257926` | C₀-semigroup integration bridge (5 theorems) |
+| [`jagg-ix/catept-plugin-brownian-motion`](https://github.com/jagg-ix/catept-plugin-brownian-motion) | `318d4d7` | Brownian-motion abstract integration contract |
+
+Authoritative pin SHAs live in [`lake-manifest.json`](lake-manifest.json).
+Existing consumers reach the sibling theorems through thin re-export
+shims under `CATEPTMain/Integration/` so source-level imports do not
+need to change.
+
+For the rationale, the playbook for adding a new sibling, and the
+pin-bump workflow, see
+[`docs/architecture/plugin-split.md`](docs/architecture/plugin-split.md).
+
 ## Acknowledgments
 
 ### Intellectual foundations

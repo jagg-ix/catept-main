@@ -1,0 +1,138 @@
+# Plugin split — coordination hub
+
+`catept-main` consumes its plugin sources via two mechanisms:
+
+1. **In-tree** — sources live under `CATEPTMain/` and are built by the
+   `CATEPTMain` lake target.
+2. **Sibling-repo (pinned)** — sources live in their own GitHub repo and
+   are pulled in via `require ... from git ... @ "<sha>"` in
+   [`lakefile.lean`](../../lakefile.lean), with the SHA recorded in
+   [`lake-manifest.json`](../../lake-manifest.json).
+
+This document is the index for the sibling-repo half. It records which
+plugins are split, where they live, what version they're pinned to, and
+how to add or update one.
+
+For the operational manual (extraction steps, re-integration steps,
+sibling-CI template, rollback procedure, per-plugin checklist), see the
+[**plugin-split-playbook.md**](plugin-split-playbook.md). For the
+target-level decomposition with measurable DONE criteria, see the
+[**target-4-plan.md**](targets/target-4-plan.md).
+
+---
+
+## Why splits
+
+Today most plugins live in `CATEPTMain/`. The cost of that monorepo:
+
+- A single failing plugin breaks the whole CI matrix.
+- Pin bumps on Mathlib cascade through every plugin at once.
+- The "core + Bridges" publication surface (5 files) is indistinguishable
+  in the dep graph from 20+ Integration plugins.
+- Plugin authors cannot version independently.
+
+Splitting a plugin to its own repo gives it: an independent CI, an
+independent version cadence, and a precise pin SHA in `catept-main`.
+The pattern is the one already used by `xiyin137/OSreconstruction` (the
+de-facto exemplar) and `mrdouglasny/hille-yosida` (the underlying
+package the first sibling wraps).
+
+---
+
+## Current sibling inventory
+
+Pin SHAs are authoritative in [`lake-manifest.json`](../../lake-manifest.json);
+this table is informational and may lag. Re-run
+`grep -A5 '"name": "«catept-plugin-' lake-manifest.json` for the live
+state.
+
+| Sibling repo | Pin SHA | Tag | Sentinel theorems | Re-export shim |
+|---|---|---|---|---|
+| [`jagg-ix/catept-plugin-hille-yosida`](https://github.com/jagg-ix/catept-plugin-hille-yosida) | `a25792615fe64d7a551dc32a940d60c219fa3d06` | `v0.1.0` | 5 | [`CATEPTMain/Integration/HilleYosidaBridge.lean`](../../CATEPTMain/Integration/HilleYosidaBridge.lean) |
+| [`jagg-ix/catept-plugin-brownian-motion`](https://github.com/jagg-ix/catept-plugin-brownian-motion) | `318d4d750a09f5fde73c0c62cd790c57bb8e1bdf` | `v0.1.0` | 1 | [`CATEPTMain/Integration/BrownianMotionBridge.lean`](../../CATEPTMain/Integration/BrownianMotionBridge.lean) |
+
+Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
+namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
+them also reachable under the original `CATEPTMain.Integration.<Old>`
+namespace, so existing consumers (e.g. `CATEPTMain.lean`,
+`External/Registry.lean`) keep compiling without source changes.
+
+### Related external pins (not catept-plugin-* siblings)
+
+These predate Target 4 but follow the same coordination-hub pattern.
+They are listed in [`lakefile.lean`](../../lakefile.lean) and are not
+considered "splits" because they were never in-tree.
+
+| External repo | What it provides |
+|---|---|
+| `xiyin137/OSreconstruction` | Osterwalder–Schrader Wightman/Minkowski coincidence (Target 2 publication-bridge exemplar) |
+| `mrdouglasny/hille-yosida` | C₀-semigroup theory used by `catept-plugin-hille-yosida` |
+| `mrdouglasny/bochner` | Bochner–Minlos theorem |
+| `mrdouglasny/pphi2` + `jagg-ix/pphi2N` | φ⁴ + O(N) σ-model |
+| `jagg-ix/gaussian-field`, `jagg-ix/lgt`, `jagg-ix/aristotle`, … | further pinned packages, see lakefile |
+
+---
+
+## Pin-bump workflow
+
+When a sibling repo's `main` advances and `catept-main` should pick up
+the new commit, the maintainer runs:
+
+```bash
+# 1. Identify the new SHA (e.g. from the sibling's commit page).
+SIBLING=catept-plugin-hille-yosida
+NEW_SHA=$(gh api repos/jagg-ix/$SIBLING/commits/main --jq .sha)
+
+# 2. Update the pin in lakefile.lean — replace the old @ "<old-sha>" with @ "<new-sha>".
+#    Either edit by hand or:
+sed -i '' -E "s|(catept-plugin-hille-yosida\.git\" @ \")[a-f0-9]+|\1$NEW_SHA|" lakefile.lean
+
+# 3. Resolve the pin and refresh lake-manifest.json.
+lake update $SIBLING
+
+# 4. Rebuild and run the sentinel-theorem axiom check
+#    (.github/workflows/axiom-gate.yml does this automatically on push).
+lake build
+```
+
+**Rule:** the sibling's CI must be green on its `main` at the
+post-bump SHA before catept-main bumps to it. The sibling-CI template
+in the playbook checks `#print axioms` on the sentinel theorems on
+every push, so a green badge is sufficient evidence.
+
+If the bump fails (build break, axiom regression):
+
+1. Don't revert immediately — the pin can stay at the old SHA. The
+   sibling repo continues to live; the bump just doesn't happen.
+2. File an issue against the sibling for the regression.
+3. When the sibling is fixed, re-run the bump procedure.
+
+---
+
+## Adding a new sibling
+
+Follow the steps in [**plugin-split-playbook.md**](plugin-split-playbook.md):
+
+1. **T4.1-style selection** — confirm the plugin meets the four
+   selection criteria (≤ 3 `CATEPTMain.*` imports, no `Integration/*`
+   outgoing deps, ≥ 1 verifiable theorem, willing maintainer).
+2. **Extraction** — 9-step procedure: new repo, lakefile, lean-toolchain,
+   namespace-renamed sources, lake build, axiom check, README contract,
+   tag, push.
+3. **Re-integration** — 7-step procedure: lakefile require, lake update,
+   re-export shim (or consumer rename), delete in-tree copy,
+   lake build, axiom-gate check, single atomic commit.
+4. **Sibling CI** — copy the workflow template from the playbook into
+   the new repo's `.github/workflows/axiom-gate.yml`.
+
+When adding the new sibling, append a row to the **Current sibling
+inventory** table above with the pin SHA, tag, sentinel-theorem count,
+and shim path.
+
+---
+
+## See also
+
+- [`plugin-split-playbook.md`](plugin-split-playbook.md) — operational manual
+- [`targets/target-4-plan.md`](targets/target-4-plan.md) — six middle-targets with measurable DONE criteria
+- [`targets/target-4-sibling-ci-axiom-gate.yml`](targets/target-4-sibling-ci-axiom-gate.yml) — workflow file pending application by maintainer with `gh auth refresh -s workflow`
