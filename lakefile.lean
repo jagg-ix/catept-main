@@ -51,7 +51,7 @@ require «lean-inf» from git
 
 -- VML: Formal verification of the Vlasov-Maxwell-Landau steady-state theorem.
 require aristotle from git
-  "https://github.com/jagg-ix/aristotle.git" @ "5150aee67b9ac385730b0404bd9fbd72289fb686"
+  "https://github.com/jagg-ix/aristotle.git" @ "10dad7ae6f7f91c9a1198cadad262e353ec9f4dd"
 
 -- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
 -- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
@@ -65,7 +65,7 @@ require «DeGiorgi» from
 
 -- Spectral-Physics-Lean: spectral gap, Rayleigh quotient, heat semigroup, Bakry-Émery.
 require spectralPhysics from
-  git "https://github.com/ember-research-lab/Spectral-Physics-Lean.git" @ "d41d27cd15f540d6dca442a67718200941bedf27"
+  git "https://github.com/jagg-ix/Spectral-Physics-Lean.git" @ "c6ad16c3873d6e6dc2e415d4da2fd727eea35990"
 
 -- OSreconstruction: Osterwalder-Schrader reconstruction, Wightman, SCV, ComplexLieGroups,
 -- von Neumann algebras. Provides the Euclidean-to-Lorentzian bridge used by the CATEPT
