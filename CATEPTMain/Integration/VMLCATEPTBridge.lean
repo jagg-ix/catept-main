@@ -87,11 +87,12 @@ def kineticCATEPTSlot (T : ℝ) (hT : 0 < T) : CATEPTPluginSlot where
 -- ── Consistency constraint ────────────────────────────────────────────────────
 
 /-- The kinetic slot satisfies the CATEPT consistency constraint:
-    S_I(v) / 1 = S_I(v)  (entropic clock = scaled imaginary action, ħ = 1). -/
+    S_I(v) / 1 = S_I(v)  (entropic clock = scaled imaginary action, ħ = 1).
+    Term-mode proof: both `actionIm` and `eptClock` are the same function and
+    `hbar = 1`, so the constraint reduces to `div_one _`. -/
 theorem kineticCATEPTSlot_consistent (T : ℝ) (hT : 0 < T) :
-    cateptConsistencyConstraint (kineticCATEPTSlot T hT) := by
-  intro v
-  simp [kineticCATEPTSlot]
+    cateptConsistencyConstraint (kineticCATEPTSlot T hT) :=
+  fun _ => div_one _
 
 -- ── Maxwellian = Feynman-Kac weight ──────────────────────────────────────────
 

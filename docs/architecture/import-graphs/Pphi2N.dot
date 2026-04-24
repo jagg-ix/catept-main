@@ -1,0 +1,5 @@
+digraph "import_graph" {
+  "CATEPT.Bridges.Pphi2N" [shape=house];
+  "CATEPT.CATEPT.Foundations" -> "CATEPT.Bridges.Pphi2N";
+  "CATEPT.CATEPT.Foundations" [shape=ellipse];
+}
