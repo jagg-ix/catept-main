@@ -422,21 +422,18 @@ theorem mFourierCoeff_partialDeriv
     -- Use have + symm to build the bridge explicitly.
     have hpre : ∫ sv : UnitAddCircle, G (sv, z) ∂volume =
         ∫ a in (0:ℝ)..(1:ℝ), G ((a : AddCircle (1:ℝ)), z) := by
-      -- NSFourierDerivRepair.tla: NEW BLOCKER — MeasureSpace instance conflict
-      -- UnitAddCircle.intervalIntegral_preimage uses AddCircle.measureSpace 1 (global):
-      --   volume_global = ENNReal.ofReal 1 • addHaarMeasure ⊤
-      -- Our local instance: volume_local = AddCircle.haarAddCircle = addHaarMeasure ⊤
-      -- These are propositionally equal (via ENNReal.ofReal_one + one_smul) but NOT rfl.
-      -- t_ent: the equivalence T¹_i ≅ [0,1)/ℤ is clear at the entropic time level;
-      --   the Lean4 instance conflict is a bookkeeping issue, not a mathematical one.
-      -- Resolution path: AddCircle.volume_eq_smul_haarAddCircle + ENNReal.ofReal_one + one_smul
-      --   OR: remove local MeasureSpace instance (risky: affects many proofs).
-      -- Tracked in ZIL §11 as tac_error E7_measurespace_conflict.
-      -- Fix: the local MeasureSpace instance (volume = haarAddCircle) differs from the
-      -- global AddCircle.measureSpace 1 used by intervalIntegral_preimage (not propositionally rfl).
-      -- Discharge: AddCircle.integral_haarAddCircle + ENNReal.ofReal_one + one_smul + preimage.
-      -- Tracked in ZIL §11 as tac_error E7_measurespace_conflict (bookkeeping, not math).
-      sorry
+      -- E7 resolve: local volume = haarAddCircle (local instance line 65);
+      -- global volume (used by UnitAddCircle.intervalIntegral_preimage) =
+      --   ENNReal.ofReal 1 • haarAddCircle  (by AddCircle.volume_eq_smul_haarAddCircle).
+      -- For T=1: ENNReal.ofReal_one + one_smul gives haarAddCircle = ENNReal.ofReal 1 • haarAddCircle.
+      -- Bridge local → global, then apply intervalIntegral_preimage.
+      have hv : (volume : Measure UnitAddCircle) =
+          ENNReal.ofReal 1 • AddCircle.haarAddCircle := by
+        -- local instance gives volume = haarAddCircle; show haarAddCircle = 1 • haarAddCircle
+        show AddCircle.haarAddCircle = ENNReal.ofReal 1 • AddCircle.haarAddCircle
+        simp [ENNReal.ofReal_one]
+      rw [hv, show (1 : ℝ) = 0 + 1 from by norm_num]
+      exact (UnitAddCircle.intervalIntegral_preimage 0 (fun sv => G (sv, z))).symm
     rw [hpre]
     -- §D. Define H_z and show G ((a:AddCircle 1), z) = deriv H_z a for a ∈ (0,1)
     let H_z : ℝ → ℂ := fun s =>
