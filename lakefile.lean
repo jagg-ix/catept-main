@@ -55,17 +55,22 @@ require aristotle from git
 
 -- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
 -- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
-require UnifiedTheory from
-  git "https://github.com/tomdif/unifiedtheory.git" @ "b73c5d2a22ca3c0c6fd5796f0b62de25e19c296d"
+require UnifiedTheory from "../Logos_Library/UnifiedTheory"
 
 -- DeGiorgi: 0-sorry De Giorgi–Nash–Moser regularity theory.
 -- Proves: GNS inequality, Poincaré, Sobolev-Poincaré, Caccioppoli, Harnack, Hölder, Lax-Milgram.
 require «DeGiorgi» from
-  git "https://github.com/scottnarmstrong/DeGiorgi.git" @ "4c1b3077d3782b24065184df4ba59501b2e56fc7"
+  git "https://github.com/jagg-ix/DeGiorgi.git" @ "da79aa390d608de383ce7bd087cfd004c0335576"
 
 -- Spectral-Physics-Lean: spectral gap, Rayleigh quotient, heat semigroup, Bakry-Émery.
 require spectralPhysics from
   git "https://github.com/ember-research-lab/Spectral-Physics-Lean.git" @ "d41d27cd15f540d6dca442a67718200941bedf27"
+
+-- OSreconstruction: Osterwalder-Schrader reconstruction, Wightman, SCV, ComplexLieGroups,
+-- von Neumann algebras. Provides the Euclidean-to-Lorentzian bridge used by the CATEPT
+-- QFT-GR infrastructure. Pinned on v4.29.0 stable.
+require OSreconstruction from
+  git "https://github.com/xiyin137/OSreconstruction.git" @ "6d9a639a7e5aa0266c5b47fe072cb4aaec0141a2"
 
 -- Keep mathlib last so its transitive versions win during resolution.
 require mathlib from git
