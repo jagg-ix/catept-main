@@ -67,6 +67,12 @@ require «DeGiorgi» from
 require spectralPhysics from
   git "https://github.com/ember-research-lab/Spectral-Physics-Lean.git" @ "d41d27cd15f540d6dca442a67718200941bedf27"
 
+-- OSreconstruction: Osterwalder-Schrader reconstruction, Wightman, SCV, ComplexLieGroups,
+-- von Neumann algebras. Provides the Euclidean-to-Lorentzian bridge used by the CATEPT
+-- QFT-GR infrastructure. Pinned on v4.29.0 stable.
+require OSreconstruction from
+  git "https://github.com/xiyin137/OSreconstruction.git" @ "6d9a639a7e5aa0266c5b47fe072cb4aaec0141a2"
+
 -- Keep mathlib last so its transitive versions win during resolution.
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "v4.29.0"

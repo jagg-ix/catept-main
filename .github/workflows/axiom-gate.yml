@@ -53,8 +53,9 @@ jobs:
         import CATEPT.Bridges.QFT
         import CATEPT.Bridges.GR
         import CATEPT.Bridges.Gravitas
+        import CATEPT.Bridges.OSReconstruction
 
-        -- The 17 publication bridge theorems must depend on ONLY the three
+        -- The publication bridge theorems must depend on ONLY the three
         -- Lean kernel axioms: propext, Classical.choice, Quot.sound.
         -- Any regression here breaks the publication claim.
         #print axioms CATEPT.Bridges.Pphi2N.tauEnt_eq_div
@@ -74,6 +75,9 @@ jobs:
         #print axioms CATEPT.Bridges.Gravitas.bh_entropy_ratio
         #print axioms CATEPT.Bridges.Gravitas.bh_entropy_doubling
         #print axioms CATEPT.Bridges.Gravitas.catept_gravitas_coherence
+        #print axioms CATEPT.Bridges.OSReconstruction.minkowski_signature_coincides
+        #print axioms CATEPT.Bridges.OSReconstruction.is_lorentz_matrix_coincides
+        #print axioms CATEPT.Bridges.OSReconstruction.spacelike_condition_coincides
         EOF
         lake env lean /tmp/check_bridges.lean 2>&1 | tee /tmp/bridges_output.txt
         # Any axiom other than the three kernel ones fails the gate.
