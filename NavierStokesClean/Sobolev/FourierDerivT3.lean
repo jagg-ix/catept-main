@@ -640,9 +640,17 @@ theorem mFourierCoeff_partialDeriv
   rw [integral_add hDeriv_int (hPf_int.const_mul _)]
   rw [hIntDeriv, zero_add]
   -- Pull out the constant factor from the integral.
-  -- integral_mul_left is ℝ-only; for ℂ use smul/sorry pending API generalisation.
-  -- Mathematically: ∫ c * f = c * ∫ f for constant c : ℂ and f : T³ → ℂ.
-  sorry
+  -- integral_mul_left is ℝ-only; for ℂ use integral_smul (smul = mul for ℂ-modules).
+  -- Rewrite c * g t → c • g t, then apply integral_smul, then smul_eq_mul closes the goal.
+  have hc_smul : ∀ t : UnitAddTorus (Fin 3),
+      (2 * ↑Real.pi * Complex.I * ↑(k i)) *
+        ((∏ j : Fin 3, fourier (-(k j)) (t j)) * f t) =
+      (2 * ↑Real.pi * Complex.I * ↑(k i)) •
+        ((∏ j : Fin 3, fourier (-(k j)) (t j)) * f t) :=
+    fun _ => (smul_eq_mul _ _).symm
+  simp_rw [hc_smul]
+  rw [integral_smul]
+  exact smul_eq_mul _ _
 
 /-- **Mean-zero of partial derivatives on T³** (NSC-P55, k=0 specialization):
 
@@ -1295,12 +1303,16 @@ theorem space_torus_vorticity_bridge_smooth
   have h_mean_zero : ∫ x : Fin 3 → ℝ, ω x
       ∂Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1)) = 0 := by
     -- Route: cateptTorus_measurePreserving.map_eq + integral_map.
-    -- `← map_eq` rewrites Measure.pi(...) → Measure.map φ volume.
-    -- `← integral_map` rewrites ∫ ω ∂(map φ vol) → ∫ ω(φ t) ∂vol = h_omega_T3.
-    -- Pattern match fails when map_eq's Measure.pi and the goal's Measure.pi differ in
-    -- implicit arguments. Fix: explicit Measure.pi congr or conv_rhs.
-    -- Suppressed pending Lean 4 unifier disambiguation.
-    sorry
+    -- Provide map_eq as an explicit have to avoid implicit-argument mismatch in rw.
+    have hmap_eq : Measure.pi (fun _ : Fin 3 =>
+          (volume : Measure ℝ).restrict (Set.Ioc 0 1)) =
+        Measure.map (fun t : UnitAddTorus (Fin 3) => fun i : Fin 3 =>
+          (AddCircle.equivIoc (1 : ℝ) 0 (t i)).val)
+          (volume : Measure (UnitAddTorus (Fin 3))) :=
+      Sobolev.cateptTorus_measurePreserving.map_eq.symm
+    rw [hmap_eq, integral_map Sobolev.cateptTorus_measurePreserving.measurable
+        hCont_ω.aestronglyMeasurable]
+    exact h_omega_T3
   -- **Step 2**: delegate to space_torus_vorticity_bridge_torus with derived h_mean_zero.
   exact Sobolev.space_torus_vorticity_bridge_torus u ω hCont_ω hPer
     h_ens_nonneg h_ens_le_pal h_ens_eq h_mean_zero h_otf_summable h_otf_h1
