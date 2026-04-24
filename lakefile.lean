@@ -61,7 +61,7 @@ require UnifiedTheory from
 -- DeGiorgi: 0-sorry De Giorgi–Nash–Moser regularity theory.
 -- Proves: GNS inequality, Poincaré, Sobolev-Poincaré, Caccioppoli, Harnack, Hölder, Lax-Milgram.
 require «DeGiorgi» from
-  git "https://github.com/scottnarmstrong/DeGiorgi.git" @ "4c1b3077d3782b24065184df4ba59501b2e56fc7"
+  git "https://github.com/jagg-ix/DeGiorgi.git" @ "da79aa390d608de383ce7bd087cfd004c0335576"
 
 -- Spectral-Physics-Lean: spectral gap, Rayleigh quotient, heat semigroup, Bakry-Émery.
 require spectralPhysics from
