@@ -43,6 +43,23 @@ def nonlinearProjectedTerm (_N : ℕ) (_f : L²(UnitAddTorus (Fin 3))) : ℝ := 
 noncomputable def projectedEnergyRHS (ν : ℝ) (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) : ℝ :=
   viscousProjectedTerm ν N f + nonlinearProjectedTerm N f
 
+/-- Placeholder projected gradient contribution in the Phase 5D identity. -/
+def projectedGradientTerm (_N : ℕ) (_f : L²(UnitAddTorus (Fin 3))) : ℝ := 0
+
+/-- Placeholder projected convection pairing contribution in the Phase 5D identity. -/
+def projectedConvectionTerm (_N : ℕ) (_f : L²(UnitAddTorus (Fin 3))) : ℝ := 0
+
+/-- Canonical curve of projected energies for a time-parametrized L² state. -/
+noncomputable def projectedEnergyCurve (N : ℕ)
+    (u : ℝ → L²(UnitAddTorus (Fin 3))) : ℝ → ℝ :=
+  fun t => projectedEnergy N (u t)
+
+/-- Phase 5D target statement (interface form) for the projected energy identity. -/
+noncomputable def phase5dEnergyIdentityStatement
+    (ν : ℝ) (N : ℕ) (u : ℝ → L²(UnitAddTorus (Fin 3))) (t : ℝ) : Prop :=
+  HasDerivAt (projectedEnergyCurve N u)
+    (-2 * ν * projectedGradientTerm N (u t) - projectedConvectionTerm N (u t)) t
+
 @[simp] theorem projectedEnergy_nonneg (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
     0 ≤ projectedEnergy N f := by
   simp [projectedEnergy]
@@ -53,5 +70,11 @@ noncomputable def projectedEnergyRHS (ν : ℝ) (N : ℕ) (f : L²(UnitAddTorus 
 theorem projectedEnergyRHS_def (ν : ℝ) (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
     projectedEnergyRHS ν N f = -2 * ν * projectedEnergy N f := by
   simp [projectedEnergyRHS, viscousProjectedTerm, nonlinearProjectedTerm]
+
+@[simp] theorem projectedGradientTerm_eq_zero (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
+  projectedGradientTerm N f = 0 := rfl
+
+@[simp] theorem projectedConvectionTerm_eq_zero (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
+  projectedConvectionTerm N f = 0 := rfl
 
 end NavierStokesClean.Sobolev.EnergyIdentityT3
