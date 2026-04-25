@@ -676,14 +676,16 @@ theorem cateptTorus_measurePreserving :
     `φ t i = (equivIoc 1 0 (t i)).val` (NSC-P59 measure bridge), then verify:
     - mean-zero: from `h_mean_zero` via `integral_map + cateptTorus_measurePreserving`
     - L² norm: from `h_ens_eq` via the same measure bridge
-    - H¹ seminorm: `h_otf_h1` provides the bound directly. -/
-axiom space_torus_vorticity_bridge_torus
+    - H¹ seminorm: `h_otf_h1` provides the bound directly.
+
+    **Axioms**: 0. -/
+theorem space_torus_vorticity_bridge_torus
     (u : NSTorusVelocityField)
     (ω : (Fin 3 → ℝ) → ℂ)
     (hCont_ω : Continuous ω)
-    (hPer : ∀ (x : Fin 3 → ℝ) (i : Fin 3), ω (Function.update x i (x i + 1)) = ω x)
-    (h_ens_nonneg : 0 ≤ torusEnstrophy u)
-    (h_ens_le_pal : torusEnstrophy u ≤ torusPalinstrophy u)
+    (_hPer : ∀ (x : Fin 3 → ℝ) (i : Fin 3), ω (Function.update x i (x i + 1)) = ω x)
+    (_h_ens_nonneg : 0 ≤ torusEnstrophy u)
+    (_h_ens_le_pal : torusEnstrophy u ≤ torusPalinstrophy u)
     (h_ens_eq : ∫ x : Fin 3 → ℝ, ‖ω x‖ ^ 2
         ∂Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1)) =
         torusEnstrophy u)
@@ -699,6 +701,121 @@ axiom space_torus_vorticity_bridge_torus
       mFourierCoeff (omega_tilde : UnitAddTorus (Fin 3) → ℂ) 0 = 0 ∧
       Summable (h1FourierSemiNormCoeffs (omega_tilde : UnitAddTorus (Fin 3) → ℂ)) ∧
       ∫ t, ‖(omega_tilde : UnitAddTorus (Fin 3) → ℂ) t‖ ^ 2 = torusEnstrophy u ∧
-      h1FourierSemiNorm (omega_tilde : UnitAddTorus (Fin 3) → ℂ) ≤ torusPalinstrophy u
+      h1FourierSemiNorm (omega_tilde : UnitAddTorus (Fin 3) → ℂ) ≤ torusPalinstrophy u := by
+  -- Flat lift φ : T³ → ℝ³ via canonical Ioc representatives.
+  set φ : UnitAddTorus (Fin 3) → (Fin 3 → ℝ) :=
+    fun t i => (AddCircle.equivIoc (1:ℝ) 0 (t i)).val with hφdef
+  set g : UnitAddTorus (Fin 3) → ℂ := ω ∘ φ with hgdef
+  -- Step 1: φ is measurable componentwise (measurableEquivIoc + Subtype.val).
+  have hφ_meas : Measurable φ := by
+    refine measurable_pi_iff.mpr (fun i => ?_)
+    have h2 : Measurable (AddCircle.equivIoc (1:ℝ) 0) :=
+      (AddCircle.measurableEquivIoc 1 0).measurable
+    exact measurable_subtype_coe.comp (h2.comp (measurable_pi_apply i))
+  -- Step 2: g = ω ∘ φ is measurable, hence AEStronglyMeasurable.
+  have hg_meas : Measurable g := hCont_ω.measurable.comp hφ_meas
+  have hg_aestrm : AEStronglyMeasurable g (volume : Measure (UnitAddTorus (Fin 3))) :=
+    hg_meas.aestronglyMeasurable
+  -- Step 3: bound g by sup of |ω| over [0,1]³ (compact).
+  have hCompact : IsCompact (Set.univ.pi (fun _ : Fin 3 => Set.Icc (0:ℝ) 1)) :=
+    isCompact_univ_pi (fun _ => isCompact_Icc)
+  have hne : (Set.univ.pi (fun _ : Fin 3 => Set.Icc (0:ℝ) 1)).Nonempty :=
+    ⟨0, fun _ _ => Set.mem_Icc.mpr ⟨le_refl _, zero_le_one⟩⟩
+  obtain ⟨x_max, _hxin, hM_max⟩ :=
+    hCompact.exists_isMaxOn hne hCont_ω.norm.continuousOn
+  set M : ℝ := ‖ω x_max‖
+  have hφ_in : ∀ t, φ t ∈ Set.univ.pi (fun _ : Fin 3 => Set.Icc (0:ℝ) 1) := by
+    intro t i _
+    have h := (AddCircle.equivIoc (1:ℝ) 0 (t i)).property
+    simp only [zero_add] at h
+    exact ⟨le_of_lt h.1, h.2⟩
+  have hM_bd : ∀ t, ‖g t‖ ≤ M := fun t => hM_max (hφ_in t)
+  -- Step 4: g ∈ L² (T³ has IsProbabilityMeasure → IsFiniteMeasure).
+  haveI : IsProbabilityMeasure (volume : Measure UnitAddCircle) :=
+    inferInstanceAs (IsProbabilityMeasure AddCircle.haarAddCircle)
+  haveI : IsProbabilityMeasure (volume : Measure (UnitAddTorus (Fin 3))) := by
+    show IsProbabilityMeasure (Measure.pi (fun _ : Fin 3 => (volume : Measure UnitAddCircle)))
+    infer_instance
+  have hg_memLp : MemLp g 2 (volume : Measure (UnitAddTorus (Fin 3))) :=
+    MemLp.of_bound hg_aestrm M (Filter.Eventually.of_forall hM_bd)
+  -- Step 5: ω̃ := MemLp.toLp g, with a.e. equality to g.
+  have hMP := cateptTorus_measurePreserving
+  have hMapEq : (volume : Measure (UnitAddTorus (Fin 3))).map φ =
+      Measure.pi (fun _ : Fin 3 => (volume : Measure ℝ).restrict (Set.Ioc 0 1)) :=
+    hMP.map_eq
+  refine ⟨hg_memLp.toLp g, ?_, ?_, ?_, ?_⟩
+  · -- Conclusion 1: mFourierCoeff ω̃ 0 = 0.
+    have hae : ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) =ᵐ[volume] g :=
+      hg_memLp.coeFn_toLp
+    have h_mFC : mFourierCoeff ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) 0 =
+        mFourierCoeff g 0 := by
+      unfold mFourierCoeff
+      refine integral_congr_ae ?_
+      filter_upwards [hae] with t ht; rw [ht]
+    rw [h_mFC]
+    show (∫ t, mFourier (-(0 : Fin 3 → ℤ)) t • g t) = 0
+    have h_mF0 : ∀ t, mFourier (-(0 : Fin 3 → ℤ)) t = (1 : ℂ) := by
+      intro t; rw [neg_zero]; simp [mFourier_zero]
+    have hω_aestrm_map : AEStronglyMeasurable ω
+        ((volume : Measure (UnitAddTorus (Fin 3))).map φ) := by
+      rw [hMapEq]; exact hCont_ω.aestronglyMeasurable
+    have h_int_eq : (∫ t, mFourier (-(0 : Fin 3 → ℤ)) t • g t) = ∫ t, ω (φ t) := by
+      refine integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
+      change mFourier (-(0 : Fin 3 → ℤ)) t • g t = ω (φ t)
+      rw [h_mF0]
+      change (1 : ℂ) • ω (φ t) = ω (φ t)
+      rw [one_smul]
+    rw [h_int_eq, ← integral_map hφ_meas.aemeasurable hω_aestrm_map, hMapEq, h_mean_zero]
+  · -- Conclusion 2: Summable h1FourierSemiNormCoeffs ω̃ — via a.e. equality of mFourierCoeff.
+    have hae : ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) =ᵐ[volume] g :=
+      hg_memLp.coeFn_toLp
+    have h_coeff_eq : ∀ k : Fin 3 → ℤ,
+        h1FourierSemiNormCoeffs ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) k =
+        h1FourierSemiNormCoeffs g k := fun k => by
+      have hmFC : mFourierCoeff ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) k =
+          mFourierCoeff g k := by
+        unfold mFourierCoeff
+        refine integral_congr_ae ?_
+        filter_upwards [hae] with t ht; rw [ht]
+      unfold h1FourierSemiNormCoeffs; rw [hmFC]
+    exact h_otf_summable.congr (fun k => (h_coeff_eq k).symm)
+  · -- Conclusion 3: ∫ ‖ω̃‖² = torusEnstrophy u.
+    have hae : ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) =ᵐ[volume] g :=
+      hg_memLp.coeFn_toLp
+    have h_norm_eq : ∫ t, ‖((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) t‖ ^ 2 =
+        ∫ t, ‖g t‖ ^ 2 := by
+      refine integral_congr_ae ?_
+      filter_upwards [hae] with t ht; rw [ht]
+    rw [h_norm_eq]
+    have hnorm_aestrm_map :
+        AEStronglyMeasurable (fun x : Fin 3 → ℝ => ‖ω x‖ ^ 2)
+          ((volume : Measure (UnitAddTorus (Fin 3))).map φ) := by
+      rw [hMapEq]
+      exact (hCont_ω.norm.pow 2).aestronglyMeasurable
+    calc (∫ t, ‖g t‖ ^ 2)
+        = ∫ t, ‖ω (φ t)‖ ^ 2 := rfl
+      _ = ∫ x, ‖ω x‖ ^ 2
+            ∂((volume : Measure (UnitAddTorus (Fin 3))).map φ) :=
+          (integral_map hφ_meas.aemeasurable hnorm_aestrm_map).symm
+      _ = ∫ x, ‖ω x‖ ^ 2
+            ∂Measure.pi (fun _ : Fin 3 => (volume : Measure ℝ).restrict (Set.Ioc 0 1)) := by
+          rw [hMapEq]
+      _ = torusEnstrophy u := h_ens_eq
+  · -- Conclusion 4: h1FourierSemiNorm ω̃ ≤ torusPalinstrophy u — same a.e. transfer.
+    have hae : ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) =ᵐ[volume] g :=
+      hg_memLp.coeFn_toLp
+    have h_coeff_eq : ∀ k : Fin 3 → ℤ,
+        h1FourierSemiNormCoeffs ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) k =
+        h1FourierSemiNormCoeffs g k := fun k => by
+      have hmFC : mFourierCoeff ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) k =
+          mFourierCoeff g k := by
+        unfold mFourierCoeff
+        refine integral_congr_ae ?_
+        filter_upwards [hae] with t ht; rw [ht]
+      unfold h1FourierSemiNormCoeffs; rw [hmFC]
+    unfold h1FourierSemiNorm
+    calc (∑' k, h1FourierSemiNormCoeffs ((hg_memLp.toLp g) : UnitAddTorus (Fin 3) → ℂ) k)
+        = ∑' k, h1FourierSemiNormCoeffs g k := tsum_congr h_coeff_eq
+      _ ≤ torusPalinstrophy u := h_otf_h1
 
 end NavierStokesClean.Sobolev
