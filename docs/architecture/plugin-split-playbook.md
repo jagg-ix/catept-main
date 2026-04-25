@@ -359,12 +359,54 @@ selection criteria above are authoritative.
 | M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 | **EXTRACTED** (T5.4) |
 | M | `SpectralPhysicsBridge` | 229 | 0 | 0 | **EXTRACTED** (T5.5) |
 | M | `DeGiorgiBridge` | 277 | 0 | 0 | **EXTRACTED** (T5.6) |
-| S | `MaxwellCurveSpacePphi2Bridge` | – | 0 | 0 | **EXTRACTED** (T5.8) |
-| S | `VMLLandauBridge` | ~30 | 0 | 0 | **EXTRACTED** (vml-landau, T5 follow-on; sibling-CI green; bumped `aristotle` pin to v4.29.0 port `08faff16c3`) |
+| S | `MaxwellCurveSpacePphi2Bridge` | 69 | 0 | 0 | **EXTRACTED** (T5.8) |
+| S | `VMLLandauBridge` | ~30 | 0 | 0 | **EXTRACTED** (vml-landau, T5 follow-on by other worker) |
+| S | `BochnerMinlosBridge` | 78 | 0 | 0 | **EXTRACTED** (T5.9) |
+| S | `CarlesonBridge` | 97 | 0 | 0 | **EXTRACTED** (T5.10) |
+| S | `GibbsMeasureBridge` | 76 | 0 | 0 | **EXTRACTED** (T5.11) |
+| S | `HopfLeanBridge` | 76 | 0 | 0 | **EXTRACTED** (T5.12) |
+| S | `KolmogorovComplexityBridge` | 77 | 0 | 0 | **EXTRACTED** (T5.13) |
+| S | `ThermodynamicsLeanBridge` | 76 | 0 | 0 | **EXTRACTED** (T5.14) |
 
-After T4.5 lands, refresh this table by re-running the survey command
-in [`targets/target-4-plan.md`](targets/target-4-plan.md).
+### Wave-1 saturation (2026-04-25)
 
-**Suggested T4.5 second pilot:** `BrownianMotionBridge` (smallest,
-zero everything — quickest second-pass validation that the playbook
-is complete).
+A strict re-survey for *more* leaf-wrapper candidates returned **zero** —
+every remaining `*Bridge.lean` in `CATEPTMain/Integration/` has at least
+one internal `CATEPTMain.*` / `NavierStokes.*` import that would cascade
+through extraction. The remaining bridges fall into three classes:
+
+| Bridge | Cascading internal deps |
+|---|---|
+| `BianchiKucharEPTBridge` | `CATEPTMain.Analysis.LSI` + `NavierStokes.Fourier` |
+| `SuperstatisticsTsallisBridge` | `CATEPTMain.CATEPT.CATEPT.*` + `NavierStokesClean.CATEPT.*` |
+| `ComplexFunctionalsBridge` | `CATEPTMain.Gravitas.*` (×3) + `NavierStokes.Fourier` |
+| `ElectroweakCATEPTBridge` | `Integration.TheoryPluginArchitecture` → `CATEPT.CATEPTPort` (the **central** plugin-slot module, used by every Integration plugin) |
+| `VMLCATEPTBridge` | `Integration.TheoryPluginArchitecture` + `Integration.VMLSteadyStateBridge` |
+| `GravitasBridge` | `CATEPTMain.Gravitas` + 3 other `Integration/` plugins + `CATEPT.GeometryGauge` |
+| AdSCFT/Bohmian/Quantum* siblings | similar cascades through `CATEPT.CATEPTPort` |
+
+**Anti-pattern (codified):** any plugin importing the central
+`CATEPTMain.CATEPT.CATEPT.CATEPTPort` (the plugin-slot abstraction) or a
+non-trivial sub-tree of `CATEPTMain.Gravitas/`, `NavierStokes.Fourier/`,
+or `CATEPTMain.GaugeTheory/` cannot be extracted as a leaf wrapper.
+Either the central plugin-slot machinery moves first (refactor of the
+whole framework) or those upstream sub-trees become siblings first.
+
+### Wave-2 directions (NOT auto-extractable)
+
+Further extraction falls into one of three buckets, none session-sized:
+
+1. **Domain-bundle pilots** — bundle a whole catept-main sub-tree
+   (`CATEPTMain/Quantum/QUANTUM/*` ≈ 9K LoC, `CATEPTMain/Gravitas/*` ≈ 4K,
+   `CATEPTMain/QuantumOps/*` ≈ 2.6K) into one sibling. Multi-day, invasive.
+   See [`targets/target-4-plan.md`](targets/target-4-plan.md) §T5.7 for
+   the originally-planned QM bundle pilot.
+2. **Plugin-slot decoupling** — extract `CATEPTMain.CATEPT.CATEPT.CATEPTPort`
+   first (as `catept-plugin-architecture` or similar), then cascade-unblock
+   Electroweak / VMLCATEPT / Gravitas / AdSCFT etc. Highest-leverage single
+   move, but architecturally invasive — the plugin-slot abstraction is
+   load-bearing across every Integration plugin.
+3. **Wait for Target 6** — the hub-shape reduction
+   (`feat/copilot-claude/target6-orphan-tree-removal`, already −150K LoC)
+   may reveal what's actually needed in catept-main after pruning.
+   Re-survey after that lands.
