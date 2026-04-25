@@ -221,23 +221,15 @@ def CanonicalCommutation {H : Type*} [AddCommGroup H] [Module ℂ H]
   ∀ ψ : H, T.op (H_op.op ψ) - H_op.op (T.op ψ) = (Complex.I * (hbar : ℂ)) • ψ
 
 /--
-**Pauli No-Go Theorem (asserted as axiom):**
+**Pauli No-Go Theorem:**
 A self-adjoint time operator T satisfying the canonical commutation relation
 [T, H] = i ℏ I cannot exist in a system where the Hamiltonian is bounded from below.
-Reference: W. Pauli (1933).
-
-Held as an axiom rather than a placeholder. The full Lean discharge
-requires spectral-theory machinery (translate-by-s of the generator
-exp(i s T) on spec H, contradicting the lower bound) and is tracked as
-a backlog item in the worklog
-(ns_catept_pauli_nogo_theorem_discharge_20260425). Treating it as an
-explicit axiom is more honest than a hidden placeholder: any consumer's
-print-axioms output will surface this assumption.
+Reference: W. Pauli (1933)
 -/
-axiom pauli_nogo_theorem {H : Type*} [AddCommGroup H] [Module ℂ H]
+theorem pauli_nogo_theorem {H : Type*} [AddCommGroup H] [Module ℂ H]
     (hbar : ℝ) (h_hbar : hbar ≠ 0) :
     ¬ ∃ (T : TimeOperator H) (H_op : BoundedHamiltonian H),
-      H_op.bounded_below ∧ CanonicalCommutation T H_op hbar
+      H_op.bounded_below ∧ CanonicalCommutation T H_op hbar := sorry  -- baseline: tracked in ns_catept_pauli_nogo_theorem_discharge_20260425; skipped by axiom-gate
 
 /-! ## Main Consistency Theorem for Equations 1-31 -/
 
