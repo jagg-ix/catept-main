@@ -64,6 +64,7 @@ state.
 | [`jagg-ix/catept-plugin-hopf-lean`](https://github.com/jagg-ix/catept-plugin-hopf-lean) | `6236741efbba64355b24ca699482c2acd3d67ac0` | `v0.1.0` | 1 | [`CATEPTMain/Integration/HopfLeanBridge.lean`](../../CATEPTMain/Integration/HopfLeanBridge.lean) |
 | [`jagg-ix/catept-plugin-kolmogorov-complexity`](https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity) | `b29f32d938dd6db0287ec6c6298934ffeda423e9` | `v0.1.0` | 1 | [`CATEPTMain/Integration/KolmogorovComplexityBridge.lean`](../../CATEPTMain/Integration/KolmogorovComplexityBridge.lean) |
 | [`jagg-ix/catept-plugin-thermodynamics-lean`](https://github.com/jagg-ix/catept-plugin-thermodynamics-lean) | `9a97fce70dd7e179c3219103df1f4a4053668aac` | `v0.1.0` | 1 | [`CATEPTMain/Integration/ThermodynamicsLeanBridge.lean`](../../CATEPTMain/Integration/ThermodynamicsLeanBridge.lean) |
+| [`jagg-ix/catept-plugin-bt-compat`](https://github.com/jagg-ix/catept-plugin-bt-compat) | `02918aecb838a9993af0a43374afca60f3595750` | `v0.1.0` | 10 | [`CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean`](../../CATEPTMain/CATEPT/CATEPT/BridgeTheoryCompatibility.lean) (CAT/EPT *core* — not Integration/) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes

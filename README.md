@@ -89,6 +89,7 @@ a SHA-pinned `require` in [`lakefile.lean`](lakefile.lean).
 | [`jagg-ix/catept-plugin-hopf-lean`](https://github.com/jagg-ix/catept-plugin-hopf-lean) | `6236741e` | Hopf-algebra integration bridge (coalgebra/bialgebra/Hopf/Yang-Baxter/BMod-monoidal witness) |
 | [`jagg-ix/catept-plugin-kolmogorov-complexity`](https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity) | `b29f32d9` | Kolmogorov-complexity integration bridge (AIT invariance, Chaitin Ω, incompressibility, Gödel-2 via K) |
 | [`jagg-ix/catept-plugin-thermodynamics-lean`](https://github.com/jagg-ix/catept-plugin-thermodynamics-lean) | `9a97fce7` | Lieb-Yngvason thermodynamics integration bridge (LY axioms, entropy existence/uniqueness/continuity, Kelvin-Planck) |
+| [`jagg-ix/catept-plugin-bt-compat`](https://github.com/jagg-ix/catept-plugin-bt-compat) | `02918aec` | Bridge Theory compatibility (Auci EM↔Relativity: BT Eqs 1-3,6,14-20 + Doppler/Lorentz invariants) — **first extraction from CAT/EPT core, not Integration/** |
 
 Authoritative pin SHAs live in [`lake-manifest.json`](lake-manifest.json).
 Existing consumers reach the sibling theorems through thin re-export

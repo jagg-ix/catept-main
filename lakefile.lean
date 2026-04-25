@@ -107,6 +107,12 @@ require «catept-plugin-kolmogorov-complexity» from git
 require «catept-plugin-thermodynamics-lean» from git
   "https://github.com/jagg-ix/catept-plugin-thermodynamics-lean.git" @ "9a97fce70dd7e179c3219103df1f4a4053668aac"
 
+-- catept-plugin-bt-compat: extracted CATEPTMain.CATEPT.CATEPT.BridgeTheoryCompatibility.
+-- 17th plugin (T60 step 1 — first extraction from the CAT/EPT *core* tree, not Integration/).
+-- Auci EM↔Relativity bridge: 11 scalar BT-equation defs + 10 sanity/invariance theorems.
+require «catept-plugin-bt-compat» from git
+  "https://github.com/jagg-ix/catept-plugin-bt-compat.git" @ "02918aecb838a9993af0a43374afca60f3595750"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
