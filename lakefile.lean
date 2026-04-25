@@ -36,6 +36,11 @@ require «catept-plugin-dimensional-analysis» from git
 require «catept-plugin-cslib» from git
   "https://github.com/jagg-ix/catept-plugin-cslib.git" @ "b71b95fc5859ef6277c994212979e009c79c1b76"
 
+-- catept-plugin-quantum-info: extracted CATEPTMain.Integration.QuantumInfoBridge.
+-- Fifth plugin under Target 5 (T5.3).
+require «catept-plugin-quantum-info» from git
+  "https://github.com/jagg-ix/catept-plugin-quantum-info.git" @ "ad9eada1f4449bdc7d5a25704a1c555b7bbc989f"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

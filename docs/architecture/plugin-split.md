@@ -52,6 +52,7 @@ state.
 | [`jagg-ix/catept-plugin-brownian-motion`](https://github.com/jagg-ix/catept-plugin-brownian-motion) | `318d4d750a09f5fde73c0c62cd790c57bb8e1bdf` | `v0.1.0` | 1 | [`CATEPTMain/Integration/BrownianMotionBridge.lean`](../../CATEPTMain/Integration/BrownianMotionBridge.lean) |
 | [`jagg-ix/catept-plugin-dimensional-analysis`](https://github.com/jagg-ix/catept-plugin-dimensional-analysis) | `d89c87a3612d9c1fccf469b13ad3d12c29ac3f40` | `v0.1.0` | 1 | [`CATEPTMain/Integration/LeanDimensionalAnalysisBridge.lean`](../../CATEPTMain/Integration/LeanDimensionalAnalysisBridge.lean) |
 | [`jagg-ix/catept-plugin-cslib`](https://github.com/jagg-ix/catept-plugin-cslib) | `b71b95fc5859ef6277c994212979e009c79c1b76` | `v0.1.0` | 1 | [`CATEPTMain/Integration/CslibBridge.lean`](../../CATEPTMain/Integration/CslibBridge.lean) |
+| [`jagg-ix/catept-plugin-quantum-info`](https://github.com/jagg-ix/catept-plugin-quantum-info) | `ad9eada1f4449bdc7d5a25704a1c555b7bbc989f` | `v0.1.0` | 1 | [`CATEPTMain/Integration/QuantumInfoBridge.lean`](../../CATEPTMain/Integration/QuantumInfoBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes

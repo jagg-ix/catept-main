@@ -77,6 +77,7 @@ a SHA-pinned `require` in [`lakefile.lean`](lakefile.lean).
 | [`jagg-ix/catept-plugin-brownian-motion`](https://github.com/jagg-ix/catept-plugin-brownian-motion) | `318d4d7` | Brownian-motion abstract integration contract |
 | [`jagg-ix/catept-plugin-dimensional-analysis`](https://github.com/jagg-ix/catept-plugin-dimensional-analysis) | `d89c87a` | Dimensional-analysis integration contract (PHQ/LSI/CPM/IMD) |
 | [`jagg-ix/catept-plugin-cslib`](https://github.com/jagg-ix/catept-plugin-cslib) | `b71b95f` | cslib integration contract (computability/automata/Ramsey) |
+| [`jagg-ix/catept-plugin-quantum-info`](https://github.com/jagg-ix/catept-plugin-quantum-info) | `ad9eada` | quantum-information integration contract (CPTP/Braket/von Neumann/Rényi/Shannon/capacity) |
 
 Authoritative pin SHAs live in [`lake-manifest.json`](lake-manifest.json).
 Existing consumers reach the sibling theorems through thin re-export
