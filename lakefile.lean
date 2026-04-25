@@ -101,6 +101,12 @@ require «catept-plugin-hopf-lean» from git
 require «catept-plugin-kolmogorov-complexity» from git
   "https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity.git" @ "b29f32d938dd6db0287ec6c6298934ffeda423e9"
 
+-- catept-plugin-thermodynamics-lean: extracted CATEPTMain.Integration.ThermodynamicsLeanBridge.
+-- 16th plugin (T5 follow-on). Abstract Lieb-Yngvason thermodynamics witness (LY axioms,
+-- entropy existence/uniqueness/continuity, Kelvin-Planck, entropy-increase). Upstream targets v4.24.0-rc1.
+require «catept-plugin-thermodynamics-lean» from git
+  "https://github.com/jagg-ix/catept-plugin-thermodynamics-lean.git" @ "9a97fce70dd7e179c3219103df1f4a4053668aac"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
