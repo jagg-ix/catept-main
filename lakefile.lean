@@ -82,6 +82,13 @@ require «catept-plugin-bochner-minlos» from git
 require «catept-plugin-carleson» from git
   "https://github.com/jagg-ix/catept-plugin-carleson.git" @ "684eeb46e364a0fca7709bb0c6c8ea6063538c57"
 
+-- catept-plugin-gibbs-measure: extracted CATEPTMain.Integration.GibbsMeasureBridge.
+-- 13th plugin (T5 follow-on). Abstract Gibbs-measure witness (Kolmogorov extension,
+-- conditional expectations, Giry monad, Gibbs-DLR, existence). Upstream targets v4.22.0;
+-- witness is toolchain-independent.
+require «catept-plugin-gibbs-measure» from git
+  "https://github.com/jagg-ix/catept-plugin-gibbs-measure.git" @ "6b0c701baddadfecf454b9319ab9071ecec0dd49"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

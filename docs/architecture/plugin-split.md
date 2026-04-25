@@ -60,6 +60,7 @@ state.
 | [`jagg-ix/catept-plugin-vml-landau`](https://github.com/jagg-ix/catept-plugin-vml-landau) | `7ef1b4b0d7c171aeee9f395b87a5ebb4a38add7d` | `v0.1.0` | 5 | [`CATEPTMain/Integration/VMLLandauBridge.lean`](../../CATEPTMain/Integration/VMLLandauBridge.lean) |
 | [`jagg-ix/catept-plugin-bochner-minlos`](https://github.com/jagg-ix/catept-plugin-bochner-minlos) | `dae9f683e724970f7d335cf4223b24bac8f4fa65` | `v0.1.0` | 1 | [`CATEPTMain/Integration/BochnerMinlosBridge.lean`](../../CATEPTMain/Integration/BochnerMinlosBridge.lean) |
 | [`jagg-ix/catept-plugin-carleson`](https://github.com/jagg-ix/catept-plugin-carleson) | `684eeb46e364a0fca7709bb0c6c8ea6063538c57` | `v0.1.0` | 2 | [`CATEPTMain/Integration/CarlesonBridge.lean`](../../CATEPTMain/Integration/CarlesonBridge.lean) |
+| [`jagg-ix/catept-plugin-gibbs-measure`](https://github.com/jagg-ix/catept-plugin-gibbs-measure) | `6b0c701baddadfecf454b9319ab9071ecec0dd49` | `v0.1.0` | 1 | [`CATEPTMain/Integration/GibbsMeasureBridge.lean`](../../CATEPTMain/Integration/GibbsMeasureBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
