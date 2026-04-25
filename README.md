@@ -6,9 +6,9 @@ A Lean 4.29 integration repository for the **Complex Action Theory and Entropic 
 
 Based on the `catept-core` design, this repository connects into a highly modular, rigorously verified, dual-layer architecture built in Lean 4. The primary design goal is to maintain a **"Zero-Axiom" mathematical spine** for the CAT/EPT framework, allowing distinct physical theories to plug in without compromising mathematical safety.
 
-### The Microkernel Architecture
-The system operates on a microkernel pattern tailored for formal verification:
-- **`CATEPTCore` (The Foundation):** The innermost kernel containing pure, decidable mathematical limits (e.g. `imaginaryNoetherDefect`, `entropicRate`). It serves as the immutable ground truth using concrete rational types (`Rat`) to ensure structural stability over floating-point approximations.
+### Core-and-Bridge Architecture
+The system is organized as a theorem-checked core plus bridge/plugin layers:
+- **`CATEPTCore` (The Foundation):** The core layer containing pure, decidable mathematical limits (e.g. `imaginaryNoetherDefect`, `entropicRate`). It serves as the immutable ground truth using concrete rational types (`Rat`) to ensure structural stability over floating-point approximations.
 - **Zero-Axiom Policy:** The architecture enforces that system invariants are mathematically proven. Core properties, such as `entropicTime_nonneg` or the mapping of vortex stretching to palinstrophy (`noBlowup_iff_defect_nonneg`), are strictly implemented as proven `theorem`s, rejecting unprovable assertions.
   
   *Example:*
