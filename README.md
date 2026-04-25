@@ -87,6 +87,7 @@ a SHA-pinned `require` in [`lakefile.lean`](lakefile.lean).
 | [`jagg-ix/catept-plugin-carleson`](https://github.com/jagg-ix/catept-plugin-carleson) | `684eeb46` | Carleson integration bridge (a.e. Fourier convergence, maximal-operator bound, Dirichlet, Jackson, antichain) |
 | [`jagg-ix/catept-plugin-gibbs-measure`](https://github.com/jagg-ix/catept-plugin-gibbs-measure) | `6b0c701b` | Gibbs-measure integration bridge (Kolmogorov extension, Gibbs-DLR, Giry monad witness) |
 | [`jagg-ix/catept-plugin-hopf-lean`](https://github.com/jagg-ix/catept-plugin-hopf-lean) | `6236741e` | Hopf-algebra integration bridge (coalgebra/bialgebra/Hopf/Yang-Baxter/BMod-monoidal witness) |
+| [`jagg-ix/catept-plugin-kolmogorov-complexity`](https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity) | `b29f32d9` | Kolmogorov-complexity integration bridge (AIT invariance, Chaitin Ω, incompressibility, Gödel-2 via K) |
 
 Authoritative pin SHAs live in [`lake-manifest.json`](lake-manifest.json).
 Existing consumers reach the sibling theorems through thin re-export

@@ -95,6 +95,12 @@ require «catept-plugin-gibbs-measure» from git
 require «catept-plugin-hopf-lean» from git
   "https://github.com/jagg-ix/catept-plugin-hopf-lean.git" @ "6236741efbba64355b24ca699482c2acd3d67ac0"
 
+-- catept-plugin-kolmogorov-complexity: extracted CATEPTMain.Integration.KolmogorovComplexityBridge.
+-- 15th plugin (T5 follow-on). Abstract Kolmogorov-complexity witness (AIT invariance,
+-- Chaitin Ω, incompressibility, Gödel-2 via K). Upstream targets v4.29.0-rc8.
+require «catept-plugin-kolmogorov-complexity» from git
+  "https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity.git" @ "b29f32d938dd6db0287ec6c6298934ffeda423e9"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

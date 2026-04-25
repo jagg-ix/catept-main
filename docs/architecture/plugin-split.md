@@ -62,6 +62,7 @@ state.
 | [`jagg-ix/catept-plugin-carleson`](https://github.com/jagg-ix/catept-plugin-carleson) | `684eeb46e364a0fca7709bb0c6c8ea6063538c57` | `v0.1.0` | 2 | [`CATEPTMain/Integration/CarlesonBridge.lean`](../../CATEPTMain/Integration/CarlesonBridge.lean) |
 | [`jagg-ix/catept-plugin-gibbs-measure`](https://github.com/jagg-ix/catept-plugin-gibbs-measure) | `6b0c701baddadfecf454b9319ab9071ecec0dd49` | `v0.1.0` | 1 | [`CATEPTMain/Integration/GibbsMeasureBridge.lean`](../../CATEPTMain/Integration/GibbsMeasureBridge.lean) |
 | [`jagg-ix/catept-plugin-hopf-lean`](https://github.com/jagg-ix/catept-plugin-hopf-lean) | `6236741efbba64355b24ca699482c2acd3d67ac0` | `v0.1.0` | 1 | [`CATEPTMain/Integration/HopfLeanBridge.lean`](../../CATEPTMain/Integration/HopfLeanBridge.lean) |
+| [`jagg-ix/catept-plugin-kolmogorov-complexity`](https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity) | `b29f32d938dd6db0287ec6c6298934ffeda423e9` | `v0.1.0` | 1 | [`CATEPTMain/Integration/KolmogorovComplexityBridge.lean`](../../CATEPTMain/Integration/KolmogorovComplexityBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
