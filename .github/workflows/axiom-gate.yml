@@ -26,6 +26,9 @@ jobs:
     - name: Build NavierStokesClean core
       run: lake build NavierStokesClean.Core.Types NavierStokesClean.Core.EnergyFunctionals
 
+    - name: Build NavierStokes Route-6 modules (sentinel targets for the next step)
+      run: lake build NavierStokes.GalerkinDescentTower NavierStokes.PopkovZenoBridge
+
     - name: Check axiom surface — Route 6 (NS strategy)
       run: |
         cat > /tmp/check_axioms.lean << 'EOF'
