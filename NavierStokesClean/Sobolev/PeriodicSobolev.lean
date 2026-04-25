@@ -623,14 +623,50 @@ noncomputable def torusPalinstrophy (u : NSTorusVelocityField) : ℝ :=
     The map `φ t i = (AddCircle.equivIoc 1 0 (t i)).val` from `UnitAddTorus (Fin 3)`
     to `Fin 3 → ℝ` is measure-preserving for the product measure on `(0,1]³`.
 
-    **Proof route**: Fubini decomposition + each coordinate `AddCircle.equivIoc 1 0`
-    is measure-preserving from `(AddCircle 1, haarAddCircle)` to `((0,1], volume.restrict)`.
-    This is a standard periodization fact (Temam 1984 §I.1). -/
-axiom cateptTorus_measurePreserving :
+    **Proof**: Componentwise `measurePreserving_pi` with per-component composition:
+    `equivIoc 1 0 : AddCircle 1 →[MP]→ Measure.comap Subtype.val volume`  (by AddCircle.measurePreserving_equivIoc)
+    `Subtype.val : Set.Ioc 0 (0+1) →[MP]→ volume.restrict (Ioc 0 1)`  (by map_comap_subtype_coe)
+
+    **Axioms**: 0. -/
+theorem cateptTorus_measurePreserving :
     MeasureTheory.MeasurePreserving
       (fun t : UnitAddTorus (Fin 3) => fun i : Fin 3 => (AddCircle.equivIoc (1:ℝ) 0 (t i)).val)
       (volume : Measure (UnitAddTorus (Fin 3)))
+      (Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1))) := by
+  -- The target measure components must be SigmaFinite; volume.restrict(Ioc 0 1) is finite.
+  haveI hFin : IsFiniteMeasure ((volume : Measure ℝ).restrict (Set.Ioc (0:ℝ) 1)) :=
+    ⟨by rw [Measure.restrict_apply_univ, Real.volume_Ioc]; norm_num⟩
+  -- Unfold: volume on UnitAddTorus (Fin 3) = Measure.pi (fun _ => volume : Measure (AddCircle 1))
+  show MeasurePreserving
+      (fun (a : Fin 3 → AddCircle (1:ℝ)) i => (AddCircle.equivIoc (1:ℝ) 0 (a i)).val)
+      (Measure.pi (fun _ => (volume : Measure (AddCircle (1:ℝ)))))
       (Measure.pi (fun _ => (volume : Measure ℝ).restrict (Set.Ioc 0 1)))
+  apply measurePreserving_pi _ _ fun _ => ?_
+  -- Per-component goal: MeasurePreserving (fun a => (equivIoc 1 0 a).val)
+  --   (volume : Measure (AddCircle 1)) (volume.restrict (Ioc 0 1))
+  -- Step 1: equivIoc 1 0 is MP from Haar to Measure.comap Subtype.val volume
+  -- The local MeasureSpace UnitAddCircle instance (line 84) shadows AddCircle.measureSpace 1
+  -- for AddCircle (1:ℝ). Both make `volume = haarAddCircle` but via different definitions
+  -- (`haarAddCircle` directly vs `ENNReal.ofReal 1 • addHaarMeasure ⊤`). Bridge them:
+  have hvol_local_eq_global :
+      (volume : Measure (AddCircle (1:ℝ))) =
+      @volume (AddCircle (1:ℝ)) (AddCircle.measureSpace 1) := by
+    show AddCircle.haarAddCircle = ENNReal.ofReal 1 • AddCircle.haarAddCircle
+    rw [ENNReal.ofReal_one, one_smul]
+  have hmp1 : MeasurePreserving (AddCircle.equivIoc (1:ℝ) 0)
+      (volume : Measure (AddCircle (1:ℝ)))
+      (Measure.comap Subtype.val (volume : Measure ℝ)) := by
+    rw [hvol_local_eq_global]
+    exact @AddCircle.measurePreserving_equivIoc 1 factPeriodOne 0
+  -- Step 2: Subtype.val is MP from comap to volume.restrict (Ioc 0 (0+1))
+  have hmp2 : MeasurePreserving (Subtype.val : Set.Ioc (0:ℝ) (0 + 1) → ℝ)
+      (Measure.comap Subtype.val (volume : Measure ℝ))
+      ((volume : Measure ℝ).restrict (Set.Ioc (0:ℝ) (0 + 1))) :=
+    ⟨measurable_subtype_coe, map_comap_subtype_coe measurableSet_Ioc volume⟩
+  -- Compose and normalize 0 + 1 = 1
+  have hcomp := hmp2.comp hmp1
+  simp only [zero_add] at hcomp
+  exact hcomp
 
 /-- **T³ vorticity Lp bridge** (NSC-P58): for a periodic scalar field `ω` with appropriate
     H¹ bounds, there exists an `Lp ℂ 2` representative on `T³` with matching enstrophy,
