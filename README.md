@@ -83,6 +83,7 @@ a SHA-pinned `require` in [`lakefile.lean`](lakefile.lean).
 | [`jagg-ix/catept-plugin-degiorgi`](https://github.com/jagg-ix/catept-plugin-degiorgi) | `5b06dc82` | De Giorgi-Nash-Moser regularity (GNS, Poincaré, Sobolev-Poincaré, Harnack, Hölder-Moser, Lax-Milgram) |
 | [`jagg-ix/catept-plugin-maxwell-curvespace-pphi2`](https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2) | `be3d80bd` | Maxwell-curved-space ↔ pphi2 OS-reconstruction integration contract |
 | [`jagg-ix/catept-plugin-vml-landau`](https://github.com/jagg-ix/catept-plugin-vml-landau) | `7ef1b4b0` | Vlasov-Maxwell-Landau steady-state rigidity (Aristotle/Clawristotle Theorem 4.2) |
+| [`jagg-ix/catept-plugin-bochner-minlos`](https://github.com/jagg-ix/catept-plugin-bochner-minlos) | `dae9f683` | Bochner-Minlos integration bridge (PD characteristic functions, Sazonov, Schur, abstract Minlos) |
 
 Authoritative pin SHAs live in [`lake-manifest.json`](lake-manifest.json).
 Existing consumers reach the sibling theorems through thin re-export

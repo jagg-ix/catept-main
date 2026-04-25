@@ -69,6 +69,12 @@ require «catept-plugin-maxwell-curvespace-pphi2» from git
 require «catept-plugin-vml-landau» from git
   "https://github.com/jagg-ix/catept-plugin-vml-landau.git" @ "7ef1b4b0d7c171aeee9f395b87a5ebb4a38add7d"
 
+-- catept-plugin-bochner-minlos: extracted CATEPTMain.Integration.BochnerMinlosBridge.
+-- Eleventh plugin (T5 follow-on). Wraps mrdouglasny/bochner (PD characteristic functions +
+-- Bochner-theorem + Sazonov tightness + Schur product + abstract Minlos extension witness).
+require «catept-plugin-bochner-minlos» from git
+  "https://github.com/jagg-ix/catept-plugin-bochner-minlos.git" @ "dae9f683e724970f7d335cf4223b24bac8f4fa65"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
