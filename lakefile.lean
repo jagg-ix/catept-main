@@ -46,6 +46,11 @@ require «catept-plugin-quantum-info» from git
 require «catept-plugin-gaussian-field-lsi» from git
   "https://github.com/jagg-ix/catept-plugin-gaussian-field-lsi.git" @ "3783875a6d58d59fdc93a9c10988c4fefe5cb6c5"
 
+-- catept-plugin-spectral-physics: extracted CATEPTMain.Integration.SpectralPhysicsBridge.
+-- Seventh plugin under Target 5 (T5.5). Wraps Spectral-Physics-Lean's gap/Rayleigh/heat/Bakry-Émery results.
+require «catept-plugin-spectral-physics» from git
+  "https://github.com/jagg-ix/catept-plugin-spectral-physics.git" @ "95b216bf92f2e8306abc14ec733f70da50411004"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
