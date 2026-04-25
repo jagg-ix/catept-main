@@ -1,6 +1,6 @@
 # CATEPT Main — Lean 4 Formal Verification Hub
 
-A Lean 4.29 integration repository for the **Complex Action Theory and Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a unified formal verification surface.
+A Lean 4.29 integration repository for the **Complex Action Theory and Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a shared formal verification surface.
 
 ## Architecture & Implementation Overview
 
@@ -50,9 +50,9 @@ lake build CATEPTMain
 ## Reviewer-facing showcase — Quantum Mechanics ↔ General Relativity via entropic proper time
 
 The file [`CATEPT/Showcase/QMGRUnification.lean`](CATEPT/Showcase/QMGRUnification.lean)
-is the single machine-checkable artifact demonstrating that **CAT/EPT
-admits Quantum Mechanics and General Relativity as instances of one
-plugin architecture**, unified by `τ_ent = S_I / ℏ` as the shared clock.
+is a machine-checkable artifact showing that **CAT/EPT can host
+Quantum Mechanics and General Relativity as separate plugin instances**
+checked against the same clock constraint `τ_ent = S_I / ℏ`.
 
 ### What it proves
 
@@ -71,7 +71,7 @@ holds on their slot:
 | Quantum Mechanics (n-level density matrices) | `quantumCATEPTSlot n` | `qm_satisfies_catept_spine` |
 | General Relativity (Minkowski background) | `gravitasMinkowskiSlot` | `gr_minkowski_satisfies_catept_spine` |
 | General Relativity (full electrovacuum plugin) | `gravitasElectrovacuumPlugin` | `gr_electrovacuum_satisfies_catept_spine` |
-| **Unification headline** | — | `qm_gr_unified_via_entropic_proper_time` |
+| **Cross-domain compatibility witness** | — | `qm_gr_unified_via_entropic_proper_time` |
 
 Every theorem depends on only the Lean kernel axioms — no framework
 axioms, no sorries, no physical-identification axioms.
@@ -90,7 +90,7 @@ lake build CATEPT.Showcase.QMGRUnification
 ```
 Expected: `Build completed successfully (... jobs).`
 
-**2. Machine-check the unification claim (axiom audit):**
+**2. Machine-check the showcase claims (axiom audit):**
 ```bash
 cat > /tmp/catept_showcase.lean <<'EOF'
 import CATEPT.Showcase.QMGRUnification
@@ -127,7 +127,7 @@ lake env lean /tmp/catept_showcase_types.lean
 
 ### Related compatibility bridges
 
-Alongside the unification showcase, the `CATEPT/Bridges/` directory carries
+Alongside the showcase, the `CATEPT/Bridges/` directory carries
 five per-domain compatibility bridges. All theorems in these files depend
 only on the Lean kernel axioms:
 
