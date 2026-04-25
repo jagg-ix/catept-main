@@ -307,7 +307,9 @@ theorem vml_em_product_slot_consistent
   · exact kineticCATEPTSlot_consistent T hT
   · exact gravitasEMCATEPTSlot_consistent μ₀ hμ₀
   · simp [kineticCATEPTSlot]
-  · simp [gravitasEMCATEPTSlot]
+  · simp [gravitasEMCATEPTSlot,
+      CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot,
+      CATEPTMain.Domains.GR.emSuperiorSlot]
 
 -- ── §7  Loop-level equivalence theorem (Phase-1 proposition) ─────────────────
 
