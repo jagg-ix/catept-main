@@ -1,320 +1,95 @@
-# CATEPT Main — Lean 4 Formal Verification Hub
+# CATEPT Main (Lean 4)
 
-A Lean 4.29 integration repository for the **Complex Action Theory and Entropic Proper Time (CATEPT)** framework, connecting Navier-Stokes regularity, quantum information theory, general relativity tensors, Yang-Mills mass gap, and entropic proper time into a shared formal verification surface.
+This repository is an integration workspace for Lean 4 formalization around
+Complex Action Theory and Entropic Proper Time (CATEPT), plus related domains.
+It is organized as a collection of modules, bridges, and audits.
 
-## Architecture & Implementation Overview
+This README is intentionally operational and conservative:
+- It describes what is in the repository.
+- It does not make broad physical claims beyond theorems explicitly present in code.
 
-Based on the `catept-core` design, this repository connects into a highly modular, rigorously verified, dual-layer architecture built in Lean 4. The primary design goal is to maintain a **"Zero-Axiom" mathematical spine** for the CAT/EPT framework, allowing distinct physical theories to plug in without compromising mathematical safety.
+## Purpose
 
-### Core-and-Bridge Architecture
-The system is organized as a theorem-checked core plus bridge/plugin layers:
-- **`CATEPTCore` (The Foundation):** The core layer containing pure, decidable mathematical limits (e.g. `imaginaryNoetherDefect`, `entropicRate`). It serves as the immutable ground truth using concrete rational types (`Rat`) to ensure structural stability over floating-point approximations.
-- **Zero-Axiom Policy:** The architecture enforces that system invariants are mathematically proven. Core properties, such as `entropicTime_nonneg` or the mapping of vortex stretching to palinstrophy (`noBlowup_iff_defect_nonneg`), are strictly implemented as proven `theorem`s, rejecting unprovable assertions.
-  
-  *Example:*
-  ```lean
-  /-- Algebraic equivalence: VS ≤ nu*P iff the defect D_I is nonnegative. -/
-  theorem noBlowup_iff_defect_nonneg
-      (nu palinstrophy vortexStretching : Rat) :
-      noBlowupCondition nu palinstrophy vortexStretching ↔
-        0 ≤ imaginaryNoetherDefect nu palinstrophy vortexStretching := by
-    simp [noBlowupCondition, imaginaryNoetherDefect, sub_nonneg]
-  ```
+- Provide Lean 4 implementations and interfaces for CATEPT-related constructs.
+- Host cross-domain bridge modules under explicit theorem/axiom boundaries.
+- Keep build, audit, and dependency workflows reproducible.
 
-### The Abstraction & Bridge Layer (`CATEPT`)
-This layer maps physical concepts (measurable spaces, path integrals, modular flows) via strict structural contracts regarding measure theory, translating physical phase spaces into rigorous Lean constraints.
+## Scope
 
-### Dynamic Plugin Architecture
-To enable safe downstream extensions across disparate fields (fluid dynamics, quantum gravity, statistical mechanics), the system uses a formal Plugin Interface:
-- **`PluginSpec`**: Defines the minimal variables a physical theory must provide (e.g., `eptClock`, `pathModel`, `measurableState`).
-- **`cateptConsistencyConstraint`**: Ensures the imported theory's logic aligns with CAT/EPT constraints.
-- **`PluginMeasureCertificate`**: Requires plugins to actively supply mathematical proofs (e.g., integrability bounds). The Lean compiler will reject the plugin if bounds cannot be proven finite.
+- CATEPT core definitions and plugin constraints.
+- Navier-Stokes and Sobolev/Fourier supporting modules.
+- Quantum and quantum-information modules.
+- GR tensor/ADM-oriented modules.
+- Statistical mechanics and measure-theory support modules.
 
-  *Example:*
-  ```lean
-  /-- A valid plugin must mathematically prove it adheres to the core contract. -/
-  structure PluginMeasureCertificate (spec : PluginSpec) where
-    integrability_bound : MeasureTheory.Integrable spec.pathModel
-    consistency_proof : cateptConsistencyConstraint spec
-  ```
+## Requirements
+
+- Lean toolchain from `lean-toolchain` (Lean 4.29 line on this branch).
+- `lake` and `git`.
+- Internet access for dependency fetch and cache warmup.
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/jagg-ix/catept-main.git
 cd catept-main
-lake exe cache get   # warm Mathlib olean cache (~10 min first run)
+lake exe cache get
 lake build CATEPTMain
 ```
 
-## Reviewer-facing showcase — Quantum Mechanics ↔ General Relativity via entropic proper time
+## Common Build Targets
 
-The file [`CATEPT/Showcase/QMGRUnification.lean`](CATEPT/Showcase/QMGRUnification.lean)
-is a machine-checkable artifact showing that **CAT/EPT can host
-Quantum Mechanics and General Relativity as separate plugin instances**
-checked against the same clock constraint `τ_ent = S_I / ℏ`.
+- Full integration surface:
+  - `lake build CATEPTMain`
+- Bridge aggregator:
+  - `lake build CATEPTMain.Bridges`
+- Core-only surface:
+  - `lake build CATEPT.CATEPT.Core`
+- Example focused surfaces:
+  - `lake build CATEPTMain.GravitasStandalone`
+  - `lake build CATEPTMain.QuantumInfoStandalone`
 
-### What it proves
+## Verification and Audits
 
-Both theories supply a `CATEPTPluginSlot` (abstract carrier of
-`actionRe`, `actionIm`, `ℏ`, `eptClock`) and a proof that the
-universal constraint
+- Lean axiom inspection:
+  - `#print axioms <theorem_name>`
+- NS semantic checks:
+  - `python3 tools/verification/check_ns_semantic_strictness.py --strict`
+- LeanMillennium bundle:
+  - `python3 tools/verification/run_ns_leanmillennium_conformance_bundle.py`
 
+## Axiom Policy
+
+- Kernel axioms should be inspectable via `#print axioms`.
+- Domain assumptions that are not yet theoremized are declared explicitly.
+- Mixed theorem/axiom status is tracked in worklogs and verification artifacts.
+
+## Repository Layout (Top Level)
+
+```text
+CATEPTMain/        Integration bridges and domain adapters
+CATEPT/            Core CATEPT framework and DSL modules
+NavierStokes/      NS strategy and bridge modules
+NavierStokesClean/ Clean NS carrier/types/Sobolev interfaces
+QuantumInfo/       Quantum information modules
+ClassicalInfo/     Classical information modules
+StatMech/          Statistical mechanics modules
+GibbsMeasure/      Gibbs/DLR modules
+Carleson/          Carleson formalization modules
+LY/                Lee-Yang modules
+BrownianMotion/    Brownian/Kolmogorov modules
+tools/             Verification and automation scripts
+verification/      Generated audit artifacts
 ```
-cateptConsistencyConstraint slot  ≡  ∀ x, actionIm(x) / ℏ = eptClock(x)
-```
-
-holds on their slot:
-
-| Theory | Instance | Spine theorem |
-|---|---|---|
-| Quantum Mechanics (n-level density matrices) | `quantumCATEPTSlot n` | `qm_satisfies_catept_spine` |
-| General Relativity (Minkowski background) | `gravitasMinkowskiSlot` | `gr_minkowski_satisfies_catept_spine` |
-| General Relativity (full electrovacuum plugin) | `gravitasElectrovacuumPlugin` | `gr_electrovacuum_satisfies_catept_spine` |
-| **Cross-domain compatibility witness** | — | `qm_gr_unified_via_entropic_proper_time` |
-
-Every theorem depends on only the Lean kernel axioms — no framework
-axioms, no sorries, no physical-identification axioms.
-
-Scope disclaimer: this is a **compatibility demonstration** — the same
-abstract constraint is proved in both domains. It is *not* a proof that
-QM and GR are physically equivalent.
-
-### Running the showcase from the command line
-
-Three steps. From the repo root after `lake exe cache get`:
-
-**1. Build the showcase:**
-```bash
-lake build CATEPT.Showcase.QMGRUnification
-```
-Expected: `Build completed successfully (... jobs).`
-
-**2. Machine-check the showcase claims (axiom audit):**
-```bash
-cat > /tmp/catept_showcase.lean <<'EOF'
-import CATEPT.Showcase.QMGRUnification
-#print axioms CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.qm_gr_unified_via_entropic_proper_time
-EOF
-lake env lean /tmp/catept_showcase.lean
-```
-Expected output (each of the four lines):
-```
-'…qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…qm_gr_unified_via_entropic_proper_time' depends on axioms: [propext, Classical.choice, Quot.sound]
-```
-Any other axiom appearing in the list is a regression and must be reviewed.
-
-**3. (Optional) Inspect type signatures to confirm the universal carrier:**
-```bash
-cat > /tmp/catept_showcase_types.lean <<'EOF'
-import CATEPT.Showcase.QMGRUnification
-open CATEPT.Showcase.QMGRUnification
-open CATEPTMain.Integration
-#check @qm_satisfies_catept_spine
-#check @gr_minkowski_satisfies_catept_spine
-#check @qm_gr_unified_via_entropic_proper_time
--- All three use the same predicate `cateptConsistencyConstraint`
--- applied to their respective CATEPTPluginSlot instances.
-EOF
-lake env lean /tmp/catept_showcase_types.lean
-```
-
-### Related compatibility bridges
-
-Alongside the showcase, the `CATEPT/Bridges/` directory carries
-five per-domain compatibility bridges. All theorems in these files depend
-only on the Lean kernel axioms:
-
-| Bridge | What it links | File |
-|---|---|---|
-| pphi2N | O(N) sigma-model action → τ_ent | [`CATEPT/Bridges/Pphi2N.lean`](CATEPT/Bridges/Pphi2N.lean) |
-| QFT | Euclidean action, damping, propagator | [`CATEPT/Bridges/QFT.lean`](CATEPT/Bridges/QFT.lean) |
-| GR | Schwarzschild / ADM / Unruh temperature | [`CATEPT/Bridges/GR.lean`](CATEPT/Bridges/GR.lean) |
-| Gravitas | symbolic BH thermodynamics | [`CATEPT/Bridges/Gravitas.lean`](CATEPT/Bridges/Gravitas.lean) |
-| OSReconstruction | Wightman ↔ MinkowskiSpace Lorentz coincidence | [`CATEPT/Bridges/OSReconstruction.lean`](CATEPT/Bridges/OSReconstruction.lean) |
-
-### Pointer to the plugin architecture
-
-The universal slot and constraint live in
-[`CATEPTMain/Integration/TheoryPluginArchitecture.lean`](CATEPTMain/Integration/TheoryPluginArchitecture.lean).
-The QM and GR plugin instances live in
-[`CATEPTMain/Integration/QuantumCATEPTBridge.lean`](CATEPTMain/Integration/QuantumCATEPTBridge.lean)
-and
-[`CATEPTMain/Integration/GravitasBridge.lean`](CATEPTMain/Integration/GravitasBridge.lean).
-To add a new domain as a third instance, supply a `CATEPTPluginSlot`
-(or a full `TheoryPlugin`) and prove `cateptConsistencyConstraint`
-for it.
-
-## Entry Points
-
-Verified on 2026-04-22.
-
-| Surface | Lake target | Build command | Status | What it gives you |
-|---------|-------------|---------------|--------|--------------------|
-| Full integration hub | `CATEPTMain` | `lake build CATEPTMain` | Pass* | All bridges, NS, QM, GR, YM, EPT |
-| Bridge aggregator | `CATEPTMain.Bridges` | `lake build CATEPTMain.Bridges` | Pass | Flattened bridge-only surface |
-| GR tensors only | `CATEPTMain.GravitasStandalone` | `lake build CATEPTMain.GravitasStandalone` | Pass | Riemann/Einstein/Weyl tensors + CATEPT bridge |
-| Quantum info only | `CATEPTMain.QuantumInfoStandalone` | `lake build CATEPTMain.QuantumInfoStandalone` | Pass | Von Neumann entropy, quantum Fisher, EPT bridge |
-| CATEPT core | `CATEPT.CATEPT.Core` | `lake build CATEPT.CATEPT.Core` | Pass | Minimal foundations: EPT definitions, Δτ/t_P formula |
-
-\* In heavily loaded sessions, `lake build CATEPTMain` may occasionally terminate with exit 143 (external interruption). Re-running the same command succeeds when the interrupting process is cleared.
-
-## What Is Formalized
-
-- **Navier-Stokes** (`NavierStokes/`, `NavierStokesClean/`) — Galerkin descent tower, BKM vorticity bound, enstrophy evolution, Fourier/Sobolev T³ analysis, Route 6 Cameron-Popkov-Zeno strategy
-- **Yang-Mills mass gap** (`LGT` dep) — 2D YM via discrete differential geometry + Doeblin mixing
-- **O(N) scalar field / large-N** (`pphi2N` dep) — Hubbard-Stratonovich mass gap
-- **GR tensors** (`CATEPTMain/Gravitas/`) — Riemann, Ricci, Weyl, Einstein, ADM decomposition
-- **Quantum information** (`QuantumInfo/`, `ClassicalInfo/`) — von Neumann entropy, quantum Fisher information, classical capacity
-- **Statistical mechanics** (`StatMech/`, `GibbsMeasure/`) — DLR Gibbs measures, KMS states
-- **Fourier/Sobolev on T³** (`NavierStokesClean/Sobolev/`) — Periodic Sobolev spaces, torus bridge
 
 ## Dependencies
 
-All dependencies are pinned by commit and fetched from public GitHub repositories. No local paths required.
+- Dependencies are pinned through:
+  - `lakefile.lean`
+  - `lake-manifest.json`
+- Main ecosystem dependency is Mathlib (version pinned by this branch).
 
-See `lakefile.lean` for the full list (Mathlib v4.29.0, Physlib, BochnerMinlos, HilleYosida, pphi2, pphi2N, LGT, GaussianField, lean-inf, aristotle, UnifiedTheory, DeGiorgi, spectralPhysics, aqeiBridge, DimensionalAnalysis, cslib).
+## Current Status
 
-## Axiom Surface
-
-Key theorems in this repository depend only on `propext`, `Classical.choice`, and `Quot.sound` (standard Lean 4 axioms). Physics-side axioms (Weyl law, Agmon estimates, Fourier-palinstrophy inequality, etc.) are explicitly declared as `axiom` and documented.
-
-Run `#print axioms <theorem>` in any file to inspect the full dependency chain.
-
-## Repository Structure
-
-```
-CATEPTMain/          Integration bridges (GR, QM, YM, NS, AdS/CFT, EPT)
-  Gravitas/          GR tensor library (Riemann → ADM, 0 sorry, Mathlib-only)
-  AFPBridge/         AFP/Isabelle proof port pipeline
-  Integration/       ~50 cross-domain bridge modules
-CATEPT/              Core EPT/CATEPT framework and DSL
-NavierStokes/        Route 6 NS strategy (Cameron-Popkov-Zeno)
-NavierStokesClean/   Clean NS types, Galerkin, Sobolev T³
-QuantumInfo/         Quantum information theory
-ClassicalInfo/       Classical information theory
-StatMech/            Statistical mechanics
-GibbsMeasure/        DLR Gibbs measures
-Carleson/            Carleson theorem formalization
-LY/                  Lee-Yang theorem
-BrownianMotion/      Brownian motion / Kolmogorov extension
-```
-
-## Verification
-
-- Axiom gate: `#print axioms CATEPTMain.strategy_d_popkov_route`
-- NS contract checks: `python3 tools/verification/check_ns_semantic_strictness.py --strict`
-- LeanMillennium conformance: `python3 tools/verification/run_ns_leanmillennium_conformance_bundle.py`
-
-## Acknowledgments
-
-This repository stands on the work of several research groups and open-source
-projects. We thank them explicitly.
-
-### Intellectual foundations — entropic dynamics
-
-The framework's core idea — that quantum field theory and gravity can be
-reformulated as forms of **entropic dynamics** — builds directly on the
-research of **Prof. Ariel Caticha** (University at Albany, SUNY). See
-[arielcaticha.com/entropic-dynamics-qft-and-gravity](https://www.arielcaticha.com/entropic-dynamics-qft-and-gravity)
-for the programme and publication list. Works especially relevant to the
-CAT/EPT formalization:
-
-- A. Caticha and S. Ipek, *The Entropic Dynamics of Quantum Scalar Fields
-  coupled to Gravity*, Symmetry **12**, 1324 (2020). [arXiv:2006.05036](https://arxiv.org/abs/2006.05036)
-- S. Ipek, M. Abedi, and A. Caticha, *Entropic Dynamics: Reconstructing
-  Quantum Field Theory in Curved Spacetime*, Class. Quantum Grav. **36**,
-  205013 (2019). [arXiv:1803.07493](https://arxiv.org/abs/1803.07493)
-- A. Caticha and S. Ipek, *Entropic quantization of scalar fields*, AIP
-  Conf. Proc. **1641**, 345 (2015). [arXiv:1412.5637](https://arxiv.org/abs/1412.5637)
-- P. Pessoa and A. Caticha, *Exact renormalization groups as a form of
-  entropic dynamics*, Entropy **20**, 25 (2018). [arXiv:1712.02267](https://arxiv.org/abs/1712.02267)
-
-The CAT/EPT formalization operationalizes entropic-dynamics concepts
-(entropic proper time, irreversible action, modular flow) as a plugin
-architecture over Mathlib.
-
-### Ported libraries
-
-- **[`CATEPTMain/Gravitas/`](CATEPTMain/Gravitas/)** — Lean 4 port of the
-  Gravitas symbolic general-relativity package. The index convention
-  (`True` = covariant lower, `False` = contravariant upper) and the
-  tensor-algebra design follow the original Wolfram Language source. The
-  port was staged across commits `957674189 → 0dad194c7` to reach 26
-  modules clean on Lean 4.29.
-- **IsabelleMarresDirac** ([`CATEPTMain/QuantumOps/IsabelleMarresDirac/`](CATEPTMain/QuantumOps/IsabelleMarresDirac/))
-  — carries the Marres–Dirac quantum-operator formalization, originally
-  developed in Isabelle/HOL, as a Lean 4 compatibility port.
-
-### Osterwalder–Schrader reconstruction infrastructure
-
-The [**xiyin137/OSreconstruction**](https://github.com/xiyin137/OSreconstruction)
-repository formalizes the Osterwalder–Schrader reconstruction theorem,
-the Wightman axioms, Several Complex Variables (SCV), Complex Lie groups,
-and a von Neumann algebra layer — on Mathlib v4.29.0 stable. CATEPT's
-[`CATEPT/Bridges/OSReconstruction.lean`](CATEPT/Bridges/OSReconstruction.lean)
-consumes three axiom-free coincidence theorems from that repository's
-`Bridge/AxiomBridge.lean` to record that the Lorentz/Minkowski
-infrastructure used on the Wightman (QFT) side coincides with the one
-used on the CATEPT GR side.
-
-### Lean 4 mathematical-physics dependencies by Michael R. Douglas
-
-Three of the analytic-functional pillars this repository depends on are
-contributed by [**mrdouglasny**](https://github.com/mrdouglasny) — Lean 4
-formalizations of foundational theorems for measure-theoretic QFT and
-semigroup dynamics. Whose wonderful work makes the CATEPT analytic lane
-practical:
-
-- [**bochner**](https://github.com/mrdouglasny/bochner) — the
-  Bochner–Minlos theorem (characteristic functionals on nuclear spaces;
-  the measure-theoretic foundation of Euclidean QFT).
-- [**hille-yosida**](https://github.com/mrdouglasny/hille-yosida) — the
-  Hille–Yosida generation theorem for `C₀`-semigroups (analytic backbone
-  of modular flow and heat-kernel arguments).
-- [**pphi2**](https://github.com/mrdouglasny/pphi2) — φ⁴ scalar field
-  theory infrastructure.
-
-### External Lean 4 dependencies
-
-Every package below is pinned by commit in [`lakefile.lean`](lakefile.lean)
-and fetched over HTTPS from a public repository. No local paths required.
-
-| Package | Upstream | Contribution |
-|---|---|---|
-| **mathlib4** | [leanprover-community/mathlib4](https://github.com/leanprover-community/mathlib4) @ v4.29.0 | Foundational Lean 4 mathematical library |
-| **Physlib** | [leanprover-community/physlib](https://github.com/leanprover-community/physlib) | Physics formalization primitives for Lean 4 |
-| **BochnerMinlos** | [mrdouglasny/bochner](https://github.com/mrdouglasny/bochner) | Bochner–Minlos theorem (Gaussian measures on nuclear spaces) |
-| **HilleYosida** | [mrdouglasny/hille-yosida](https://github.com/mrdouglasny/hille-yosida) | Hille–Yosida semigroup theorem |
-| **pphi2** | [mrdouglasny/pphi2](https://github.com/mrdouglasny/pphi2) | φ⁴ theory infrastructure |
-| **pphi2N** | [jagg-ix/pphi2N](https://github.com/jagg-ix/pphi2N) | O(N) linear sigma model, large-N mass gap via Hubbard–Stratonovich |
-| **GaussianField** | [jagg-ix/gaussian-field](https://github.com/jagg-ix/gaussian-field) | Gaussian free-field formalization |
-| **LGT** | [jagg-ix/lgt](https://github.com/jagg-ix/lgt) | 2D Yang–Mills mass gap via discrete differential geometry + Doeblin mixing |
-| **cslib** | [Timeroot/cslib](https://github.com/Timeroot/cslib) | Category / complex-systems primitives |
-| **DeGiorgi** | [scottnarmstrong/DeGiorgi](https://github.com/scottnarmstrong/DeGiorgi) | 0-sorry De Giorgi–Nash–Moser regularity theory |
-| **spectralPhysics** | [ember-research-lab/Spectral-Physics-Lean](https://github.com/ember-research-lab/Spectral-Physics-Lean) | Spectral gap, Rayleigh quotient, Bakry–Émery |
-| **DimensionalAnalysis** | [ATOMSLab/LeanDimensionalAnalysis](https://github.com/ATOMSLab/LeanDimensionalAnalysis) | Lean 4 dimensional analysis |
-| **UnifiedTheory** | [tomdif/unifiedtheory](https://github.com/tomdif/unifiedtheory) (via [jagg-ix/unifiedtheory fork](https://github.com/jagg-ix/unifiedtheory) for v4.29 compat) | Bell theorem, causal foundation, Einstein equation from causal set |
-| **aristotle (VML)** | [jagg-ix/aristotle](https://github.com/jagg-ix/aristotle) | Formal verification of the Vlasov–Maxwell–Landau steady-state theorem |
-| **aqeiBridge** | [jagg-ix/aqei-bridge-lean](https://github.com/jagg-ix/aqei-bridge-lean) | AQEI stress-energy causal-poset H₁ bridge |
-| **lean-inf** | [jagg-ix/lean-inf](https://github.com/jagg-ix/lean-inf) | Levi-Civita numbers, SafeFloat, Array utilities |
-| **QuantumAlgebra** | [jagg-ix/QuantumAlgebra](https://github.com/jagg-ix/QuantumAlgebra) | Quantum algebra primitives |
-
-Thanks to all upstream authors and maintainers for the work their code embodies and for
-releasing it under permissive licenses.
-
-### Tooling
-
-The formal verification surface builds on [Lean 4](https://leanprover.github.io/)
-and the Mathlib community toolchain. The zero-framework-axiom property is
-enforced by `#print axioms` (a Lean kernel command) and gated in CI by
-[`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml).
-
-If your work is represented here and you would like the attribution expanded,
-corrected, or removed, please open an issue.
+- This repository contains both theoremized modules and scaffold modules.
+- Read theorem statements and run `#print axioms` for exact assurance level.
