@@ -423,17 +423,16 @@ theorem mFourierCoeff_partialDeriv
     have hpre : ∫ sv : UnitAddCircle, G (sv, z) ∂volume =
         ∫ a in (0:ℝ)..(1:ℝ), G ((a : AddCircle (1:ℝ)), z) := by
       -- E7 resolve: local volume = haarAddCircle (local instance line 65);
-      -- global volume (used by UnitAddCircle.intervalIntegral_preimage) =
-      --   ENNReal.ofReal 1 • haarAddCircle  (by AddCircle.volume_eq_smul_haarAddCircle).
-      -- For T=1: ENNReal.ofReal_one + one_smul gives haarAddCircle = ENNReal.ofReal 1 • haarAddCircle.
-      -- Bridge local → global, then apply intervalIntegral_preimage.
+      -- canonical volume = ENNReal.ofReal 1 • haarAddCircle (AddCircle.volume_eq_smul_haarAddCircle).
+      -- Bridge: local volume →(hv)→ ENNReal.ofReal 1 • haarAddCircle ←(volume_eq)← canonical volume.
       have hv : (volume : Measure UnitAddCircle) =
           ENNReal.ofReal 1 • AddCircle.haarAddCircle := by
-        -- local instance gives volume = haarAddCircle; show haarAddCircle = 1 • haarAddCircle
         show AddCircle.haarAddCircle = ENNReal.ofReal 1 • AddCircle.haarAddCircle
         simp [ENNReal.ofReal_one]
-      rw [hv, show (1 : ℝ) = 0 + 1 from by norm_num]
-      exact (UnitAddCircle.intervalIntegral_preimage 0 (fun sv => G (sv, z))).symm
+      have h := (UnitAddCircle.intervalIntegral_preimage 0 (fun sv => G (sv, z))).symm
+      simp only [zero_add] at h
+      rw [hv, ← AddCircle.volume_eq_smul_haarAddCircle]
+      exact h
     rw [hpre]
     -- §D. Define H_z and show G ((a:AddCircle 1), z) = deriv H_z a for a ∈ (0,1)
     let H_z : ℝ → ℂ := fun s =>
@@ -1307,7 +1306,7 @@ theorem space_torus_vorticity_bridge_smooth
           (AddCircle.equivIoc (1 : ℝ) 0 (t i)).val)
           (volume : Measure (UnitAddTorus (Fin 3))) :=
       Sobolev.cateptTorus_measurePreserving.map_eq.symm
-    rw [hmap_eq, integral_map Sobolev.cateptTorus_measurePreserving.measurable
+    rw [hmap_eq, integral_map Sobolev.cateptTorus_measurePreserving.measurable.aemeasurable
         hCont_ω.aestronglyMeasurable]
     exact h_omega_T3
   -- **Step 2**: delegate to space_torus_vorticity_bridge_torus with derived h_mean_zero.
