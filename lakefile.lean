@@ -75,6 +75,13 @@ require «catept-plugin-vml-landau» from git
 require «catept-plugin-bochner-minlos» from git
   "https://github.com/jagg-ix/catept-plugin-bochner-minlos.git" @ "dae9f683e724970f7d335cf4223b24bac8f4fa65"
 
+-- catept-plugin-carleson: extracted CATEPTMain.Integration.CarlesonBridge.
+-- Twelfth plugin (T5 follow-on). Abstract Carleson integration witness (a.e. Fourier convergence,
+-- maximal-operator bound, Dirichlet kernel, Jackson, antichain) — upstream carleson @ v4.28.0
+-- not yet pinned in catept-main; witness is toolchain-independent.
+require «catept-plugin-carleson» from git
+  "https://github.com/jagg-ix/catept-plugin-carleson.git" @ "684eeb46e364a0fca7709bb0c6c8ea6063538c57"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

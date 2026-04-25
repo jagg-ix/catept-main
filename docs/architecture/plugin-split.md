@@ -59,6 +59,7 @@ state.
 | [`jagg-ix/catept-plugin-maxwell-curvespace-pphi2`](https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2) | `be3d80bd7946461bb0a8c3e3f737b29bd2f69efa` | `v0.1.0` | 1 | [`CATEPTMain/Integration/MaxwellCurveSpacePphi2Bridge.lean`](../../CATEPTMain/Integration/MaxwellCurveSpacePphi2Bridge.lean) |
 | [`jagg-ix/catept-plugin-vml-landau`](https://github.com/jagg-ix/catept-plugin-vml-landau) | `7ef1b4b0d7c171aeee9f395b87a5ebb4a38add7d` | `v0.1.0` | 5 | [`CATEPTMain/Integration/VMLLandauBridge.lean`](../../CATEPTMain/Integration/VMLLandauBridge.lean) |
 | [`jagg-ix/catept-plugin-bochner-minlos`](https://github.com/jagg-ix/catept-plugin-bochner-minlos) | `dae9f683e724970f7d335cf4223b24bac8f4fa65` | `v0.1.0` | 1 | [`CATEPTMain/Integration/BochnerMinlosBridge.lean`](../../CATEPTMain/Integration/BochnerMinlosBridge.lean) |
+| [`jagg-ix/catept-plugin-carleson`](https://github.com/jagg-ix/catept-plugin-carleson) | `684eeb46e364a0fca7709bb0c6c8ea6063538c57` | `v0.1.0` | 2 | [`CATEPTMain/Integration/CarlesonBridge.lean`](../../CATEPTMain/Integration/CarlesonBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
