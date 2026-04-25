@@ -281,6 +281,24 @@ theorem ns_bkm_criterion_t3
   have sol := ns_bkm_smooth_solution ν hν u₀ hsmooth hperiodic hdiv u_w hLeray hBKM
   exact ⟨sol, ns_smooth_periodic_fefferman10 ν hν u₀ hsmooth hperiodic hdiv sol⟩
 
+/-- Curl-facing wrapper for `ns_bkm_criterion_t3`.
+
+This keeps the theorem chain stable while the BKM hypothesis migrates from the
+velocity-L∞ proxy to an explicit vorticity-L∞ interface. -/
+theorem ns_bkm_criterion_t3_of_curl
+    (ν : ℝ) (hν : 0 < ν)
+    (u₀ : Euc ℝ 3 → Euc ℝ 3)
+    (hsmooth : ContDiff ℝ ⊤ u₀)
+    (hperiodic : FeffermanCond8_initial u₀)
+    (hdiv : DivergenceFreeInitial u₀)
+    (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3))
+    (hLeray : NSLerayHopfSolution ν u₀ u_w)
+    (hBKM : ∀ T : ℝ, 0 < T → SpatialBKMCurlFinite u_w T) :
+    ∃ sol : GlobalSmoothSolution (nseR3 ν hν u₀ hdiv (fun _ => 0)),
+      FeffermanCond10 sol.u sol.p := by
+  exact ns_bkm_criterion_t3 ν hν u₀ hsmooth hperiodic hdiv u_w hLeray
+    (fun T hT => (spatialBKMCurlFinite_iff u_w T).1 (hBKM T hT))
+
 /-! ## §4a. Sub-axiom C1: Leray-Hopf solution induces abstract NS trajectory -/
 
 /-- **Sub-axiom C1: Leray-Hopf solution has an associated abstract NS trajectory (NSC-P35).**
@@ -368,6 +386,24 @@ theorem ns_abstract_bkm_to_spatial_bkm
     SpatialBKMFinite u_w T :=
   ns_leray_hopf_linf_finite ν hν u₀ hsmooth hperiodic hdiv u_w hLeray T hT
 
+/-- Curl-facing wrapper of `ns_abstract_bkm_to_spatial_bkm`. -/
+theorem ns_abstract_bkm_to_spatial_bkm_curl
+    (ν : ℝ) (hν : 0 < ν)
+    (u₀ : Euc ℝ 3 → Euc ℝ 3)
+    (hsmooth : ContDiff ℝ ⊤ u₀)
+    (hperiodic : FeffermanCond8_initial u₀)
+    (hdiv : DivergenceFreeInitial u₀)
+    (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3))
+    (hLeray : NSLerayHopfSolution ν u₀ u_w)
+    (_traj : Trajectory)
+    (_hNS : SatisfiesNSPDE nsNu _traj)
+    (_hEnergy : ‖_traj 0‖ ^ 2 = ∫ x : Euc ℝ 3, ‖u₀ x‖ ^ 2)
+    (T : ℝ) (hT : 0 < T) :
+    SpatialBKMCurlFinite u_w T := by
+  exact (spatialBKMFinite_iff_curl u_w T).1
+    (ns_abstract_bkm_to_spatial_bkm ν hν u₀ hsmooth hperiodic hdiv
+      u_w hLeray _traj _hNS _hEnergy T hT)
+
 /-! ## §4c. `ns_pgs_implies_bkm_finite` as a THEOREM from C2a (NSC-P35 + NSC-P36) -/
 
 /-- **`ns_pgs_implies_bkm_finite` proved from C2a (`ns_leray_hopf_linf_finite`).**
@@ -398,6 +434,21 @@ theorem ns_pgs_implies_bkm_finite
     SpatialBKMFinite u_w T :=
   -- Direct: Leray-Hopf energy inequality + Agmon on T³ → finite BKM integral
   ns_leray_hopf_linf_finite ν hν u₀ hsmooth hperiodic hdiv u_w hLeray T hT
+
+/-- Curl-facing wrapper of `ns_pgs_implies_bkm_finite`. -/
+theorem ns_pgs_implies_bkm_curl_finite
+    (_hPGS : PreciseGapStatement)
+    (ν : ℝ) (hν : 0 < ν)
+    (u₀ : Euc ℝ 3 → Euc ℝ 3)
+    (hsmooth : ContDiff ℝ ⊤ u₀)
+    (hperiodic : FeffermanCond8_initial u₀)
+    (hdiv : DivergenceFreeInitial u₀)
+    (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3))
+    (hLeray : NSLerayHopfSolution ν u₀ u_w)
+    (T : ℝ) (hT : 0 < T) :
+    SpatialBKMCurlFinite u_w T := by
+  exact (spatialBKMFinite_iff_curl u_w T).1
+    (ns_pgs_implies_bkm_finite _hPGS ν hν u₀ hsmooth hperiodic hdiv u_w hLeray T hT)
 
 /-! ## §5. `pgs_implies_fefferman_b` as a THEOREM -/
 
