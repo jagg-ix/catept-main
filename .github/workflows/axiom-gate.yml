@@ -32,23 +32,23 @@ jobs:
       # The axiom-check steps below `lake env lean ...` — they don't trigger
       # builds. Build the oleans explicitly here.
       run: |
-        lake build NavierStokes.GalerkinDescentTower NavierStokes.PopkovZenoBridge \
+        lake build NavierStokes.Galerkin.GalerkinDescentTower NavierStokes.Popkov.PopkovZenoBridge \
           CATEPT.Bridges.Pphi2N CATEPT.Bridges.QFT CATEPT.Bridges.GR \
           CATEPT.Bridges.Gravitas CATEPT.Bridges.OSReconstruction
 
     - name: Check axiom surface — Route 6 (NS strategy)
       run: |
         cat > /tmp/check_axioms.lean << 'EOF'
-        import NavierStokes.GalerkinDescentTower
-        import NavierStokes.PopkovZenoBridge
+        import NavierStokes.Galerkin.GalerkinDescentTower
+        import NavierStokes.Popkov.PopkovZenoBridge
 
         -- Permitted axioms: propext, Classical.choice, Quot.sound only.
         -- Any new axiom here is a regression and must be reviewed.
-        #print axioms strategy_d_popkov_route
+        #print axioms NavierStokes.Millennium.strategy_d_popkov_route
         EOF
         lake env lean /tmp/check_axioms.lean 2>&1 | tee /tmp/axiom_output.txt
         # Fail if any axiom beyond the three standard Lean kernel axioms appears
-        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|^'strategy_d_popkov_route' depends on axioms:" /tmp/axiom_output.txt | grep -q "axiom"; then
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:" /tmp/axiom_output.txt | grep -q "axiom"; then
           echo "REGRESSION: unexpected axiom detected"
           cat /tmp/axiom_output.txt
           exit 1
