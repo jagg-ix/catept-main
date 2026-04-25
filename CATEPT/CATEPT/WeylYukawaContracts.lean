@@ -182,8 +182,24 @@ def sW2_plus_cW2_contract (p : EWSMParams) : Prop := (sW p) ^ 2 + (cW p) ^ 2 = 1
 /-- Contractized identity from 0243: tree-level custodial `ρ = 1`. -/
 def rho_tree_eq_one_contract (p : EWSMParams) : Prop := rhoTree p = 1
 
-axiom sW2_plus_cW2_holds : ∀ p : EWSMParams, sW2_plus_cW2_contract p
-axiom rho_tree_eq_one_holds : ∀ p : EWSMParams, rho_tree_eq_one_contract p
+theorem sW2_plus_cW2_holds : ∀ p : EWSMParams, sW2_plus_cW2_contract p := fun p => by
+  unfold sW2_plus_cW2_contract sW cW
+  have h1 : (0 : ℝ) < p.g ^ 2 + p.gp ^ 2 :=
+    add_pos (pow_pos p.g_pos 2) (pow_pos p.gp_pos 2)
+  have hsq : Real.sqrt (p.g ^ 2 + p.gp ^ 2) ^ 2 = p.g ^ 2 + p.gp ^ 2 :=
+    Real.sq_sqrt h1.le
+  rw [div_pow, div_pow, hsq, ← add_div, add_comm (p.gp ^ 2) (p.g ^ 2),
+      div_self h1.ne']
+
+theorem rho_tree_eq_one_holds : ∀ p : EWSMParams, rho_tree_eq_one_contract p := fun p => by
+  unfold rho_tree_eq_one_contract rhoTree mW mZ cW
+  have h1 : (0 : ℝ) < p.g ^ 2 + p.gp ^ 2 :=
+    add_pos (pow_pos p.g_pos 2) (pow_pos p.gp_pos 2)
+  have hg : p.g ≠ 0 := ne_of_gt p.g_pos
+  have hv : p.v ≠ 0 := ne_of_gt p.v_pos
+  have hsum : Real.sqrt (p.g ^ 2 + p.gp ^ 2) ≠ 0 :=
+    (Real.sqrt_pos.mpr h1).ne'
+  field_simp
 
 def fermionMassFromY (y v : ℝ) : ℝ := y * v / sqrt2R
 
