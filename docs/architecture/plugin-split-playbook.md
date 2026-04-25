@@ -354,11 +354,13 @@ selection criteria above are authoritative.
 | S | `BrownianMotionBridge` | 74 | 0 | 0 | **EXTRACTED** (T4.5) |
 | S | `LeanDimensionalAnalysisBridge` | 58 | 0 | 0 | **EXTRACTED** (T4 follow-up) |
 | S | `CslibBridge` | 69 | 0 | 0 | **EXTRACTED** (T5.2) |
-| S | `QuantumInfoBridge` | 73 | 0 | 0 | candidate (T5.3) |
+| S | `QuantumInfoBridge` | 73 | 0 | 0 | **EXTRACTED** (T5.3) |
 | S | `LeanInfBridge` | 46 | 0 | 0 | NOT viable — has 0 theorems, fails selection criterion #3 |
-| M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 | candidate (T5.4) |
-| M | `SpectralPhysicsBridge` | 229 | 0 | 0 | candidate (T5.5) |
-| M | `DeGiorgiBridge` | 277 | 0 | 0 | candidate (T5.6) |
+| M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 | **EXTRACTED** (T5.4) |
+| M | `SpectralPhysicsBridge` | 229 | 0 | 0 | **EXTRACTED** (T5.5) |
+| M | `DeGiorgiBridge` | 277 | 0 | 0 | **EXTRACTED** (T5.6) |
+| S | `MaxwellCurveSpacePphi2Bridge` | – | 0 | 0 | **EXTRACTED** (T5.8) |
+| S | `VMLLandauBridge` | ~30 | 0 | 0 | **EXTRACTED** (vml-landau, T5 follow-on; sibling-CI green; bumped `aristotle` pin to v4.29.0 port `08faff16c3`) |
 
 After T4.5 lands, refresh this table by re-running the survey command
 in [`targets/target-4-plan.md`](targets/target-4-plan.md).

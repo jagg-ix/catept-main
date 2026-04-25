@@ -57,6 +57,7 @@ state.
 | [`jagg-ix/catept-plugin-spectral-physics`](https://github.com/jagg-ix/catept-plugin-spectral-physics) | `95b216bf92f2e8306abc14ec733f70da50411004` | `v0.1.0` | 10 | [`CATEPTMain/Integration/SpectralPhysicsBridge.lean`](../../CATEPTMain/Integration/SpectralPhysicsBridge.lean) |
 | [`jagg-ix/catept-plugin-degiorgi`](https://github.com/jagg-ix/catept-plugin-degiorgi) | `5b06dc824b0dfb6c12cba57c1a364d142c678c93` | `v0.1.0` | 8 | [`CATEPTMain/Integration/DeGiorgiBridge.lean`](../../CATEPTMain/Integration/DeGiorgiBridge.lean) |
 | [`jagg-ix/catept-plugin-maxwell-curvespace-pphi2`](https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2) | `be3d80bd7946461bb0a8c3e3f737b29bd2f69efa` | `v0.1.0` | 1 | [`CATEPTMain/Integration/MaxwellCurveSpacePphi2Bridge.lean`](../../CATEPTMain/Integration/MaxwellCurveSpacePphi2Bridge.lean) |
+| [`jagg-ix/catept-plugin-vml-landau`](https://github.com/jagg-ix/catept-plugin-vml-landau) | `7ef1b4b0d7c171aeee9f395b87a5ebb4a38add7d` | `v0.1.0` | 5 | [`CATEPTMain/Integration/VMLLandauBridge.lean`](../../CATEPTMain/Integration/VMLLandauBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
