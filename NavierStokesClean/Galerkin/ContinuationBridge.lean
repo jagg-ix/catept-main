@@ -170,7 +170,76 @@ theorem vorticityLinf_pointwise_le
     _ ≤ Real.sqrt (palinstrophySpatial (traj t) * spatialEnstrophy (traj 0)) :=
         Real.sqrt_le_sqrt (mul_le_mul_of_nonneg_left hΩ hPnn)
 
-/-! ## §4. Continuation gap certificate -/
+/-! ## §4. Time-integrated spatial BKM bounds (theoremized under explicit hypotheses) -/
+
+/-- Uniform pointwise control implies an integrated spatial BKM bound.
+
+    If `‖ω(t)‖_{L^∞} ≤ B` for all `t ∈ [0,T]` and the integrand is interval-integrable,
+    then `∫₀ᵀ ‖ω(t)‖_{L^∞} dt ≤ T · B`.
+
+    This is a pure interval-integral estimate (`integral_mono_on` + `integral_const`). -/
+theorem spatialBKM_le_time_mul_uniform_bound
+    (traj : NSSpaceTrajectory)
+    (T : ℝ)
+    (hT : 0 ≤ T)
+    (B : ℝ)
+    (hInt : IntervalIntegrable
+      (fun t => (vorticityLinfNorm (traj t)).toReal) volume (0 : ℝ) T)
+    (hBound : ∀ t ∈ Icc (0 : ℝ) T, (vorticityLinfNorm (traj t)).toReal ≤ B) :
+    spatialBKMVorticityIntegral traj T ≤ T * B := by
+  unfold spatialBKMVorticityIntegral
+  calc
+    ∫ t in (0 : ℝ)..T, (vorticityLinfNorm (traj t)).toReal
+        ≤ ∫ t in (0 : ℝ)..T, B := by
+          apply intervalIntegral.integral_mono_on hT hInt intervalIntegrable_const
+          intro t ht
+          exact hBound t ht
+    _ = T * B := by
+      rw [intervalIntegral.integral_const, sub_zero]
+      simp [smul_eq_mul]
+
+/-- Integrated spatial BKM bound from Agmon + enstrophy non-increase + uniform palinstrophy.
+
+    On `[0,T]`, assume:
+    - small-data H¹ control and enstrophy continuity (for the m04 antitone step),
+    - `ContDiff ℝ 2 (traj t)` pointwise (for `sa_m05_agmon_t3`),
+    - uniform palinstrophy bound `palinstrophySpatial (traj t) ≤ Pmax`,
+    - interval-integrability of `t ↦ ‖ω(t)‖_{L^∞}`.
+
+    Then
+      `∫₀ᵀ ‖ω(t)‖_{L^∞} dt ≤ T · √(Pmax · Ω₀)`
+    where `Ω₀ = spatialEnstrophy (traj 0)`.
+
+    This theorem isolates the remaining bridge to full NSC-P38 discharge to a concrete
+    hypothesis (`Pmax`) rather than an axiom-level placeholder. -/
+theorem spatialBKM_le_time_mul_agmon_uniform_palinstrophy
+    (traj : NSSpaceTrajectory) (ν T : ℝ)
+    (hν : 0 < ν)
+    (hT : 0 ≤ T)
+    (hFull : SatisfiesSpatialNSPDEFull ν traj)
+    (hH1 : ∀ s ∈ Icc (0 : ℝ) T,
+      ∫ x : Space, ‖fderiv ℝ (traj s) x‖ ^ 2 ≤ ν ^ 2)
+    (hCont : ContinuousOn (fun s => spatialEnstrophy (traj s)) (Icc (0 : ℝ) T))
+    (hSmooth : ∀ s ∈ Icc (0 : ℝ) T, ContDiff ℝ 2 (traj s))
+    (Pmax : ℝ)
+    (hPmax_nonneg : 0 ≤ Pmax)
+    (hPal : ∀ s ∈ Icc (0 : ℝ) T, palinstrophySpatial (traj s) ≤ Pmax)
+    (hInt : IntervalIntegrable
+      (fun t => (vorticityLinfNorm (traj t)).toReal) volume (0 : ℝ) T) :
+    spatialBKMVorticityIntegral traj T ≤
+      T * Real.sqrt (Pmax * spatialEnstrophy (traj 0)) := by
+  apply spatialBKM_le_time_mul_uniform_bound traj T hT
+    (Real.sqrt (Pmax * spatialEnstrophy (traj 0))) hInt
+  intro t ht
+  have hPoint := vorticityLinf_pointwise_le traj ν t T hν hT ht hFull hH1 hCont
+    (hSmooth t ht)
+  have hMul :
+      palinstrophySpatial (traj t) * spatialEnstrophy (traj 0)
+        ≤ Pmax * spatialEnstrophy (traj 0) :=
+    mul_le_mul_of_nonneg_right (hPal t ht) (spatialEnstrophy_nonneg (traj 0))
+  exact hPoint.trans (Real.sqrt_le_sqrt hMul)
+
+/-! ## §5. Continuation gap certificate -/
 
 /-- Continuation gap certificate — records what remains for full spatial BKM bound.
 
