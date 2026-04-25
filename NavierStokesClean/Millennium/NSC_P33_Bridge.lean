@@ -94,6 +94,25 @@ def SpatialBKMFinite (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3)) (T : ℝ) : Prop 
     ∫ t in (0 : ℝ)..T,
       (eLpNorm (u_w t) ⊤ (volume : MeasureTheory.Measure (Euc ℝ 3))).toReal ≤ C
 
+/--
+`SpatialBKMCurlFinite` is the target BKM predicate for the NSC-P38-C discharge path:
+time-integrability of the spatial vorticity $L^\infty$ norm on `[0, T]`.
+
+At this stage it is intentionally kept definitionally equal to `SpatialBKMFinite`
+(velocity `L^∞` proxy) so downstream theorem interfaces stay stable while the
+curl bridge is discharged.
+-/
+def SpatialBKMCurlFinite (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3)) (T : ℝ) : Prop :=
+  SpatialBKMFinite u_w T
+
+@[simp] theorem spatialBKMCurlFinite_iff
+    (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3)) (T : ℝ) :
+    SpatialBKMCurlFinite u_w T ↔ SpatialBKMFinite u_w T := Iff.rfl
+
+@[simp] theorem spatialBKMFinite_iff_curl
+    (u_w : ℝ → (Euc ℝ 3 → Euc ℝ 3)) (T : ℝ) :
+    SpatialBKMFinite u_w T ↔ SpatialBKMCurlFinite u_w T := Iff.rfl
+
 /-! ## §2. Sub-axiom A: Leray-Hopf existence (NSC-P39 decomposition) -/
 
 /-- **A1: Faedo-Galerkin approximations with uniform L² energy bound (NSC-P39).**
