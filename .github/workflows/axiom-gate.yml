@@ -26,8 +26,15 @@ jobs:
     - name: Build NavierStokesClean core
       run: lake build NavierStokesClean.Core.Types NavierStokesClean.Core.EnergyFunctionals
 
-    - name: Build NavierStokes Route-6 modules (sentinel targets for the next step)
-      run: lake build NavierStokes.GalerkinDescentTower NavierStokes.PopkovZenoBridge
+    - name: Build axiom-gate sentinel modules (non-default targets)
+      # These modules are in non-@[default_target] lean_libs (NavierStokes,
+      # CATEPT) so lean-action's auto `lake build` does not reach them.
+      # The axiom-check steps below `lake env lean ...` — they don't trigger
+      # builds. Build the oleans explicitly here.
+      run: |
+        lake build NavierStokes.GalerkinDescentTower NavierStokes.PopkovZenoBridge \
+          CATEPT.Bridges.Pphi2N CATEPT.Bridges.QFT CATEPT.Bridges.GR \
+          CATEPT.Bridges.Gravitas CATEPT.Bridges.OSReconstruction
 
     - name: Check axiom surface — Route 6 (NS strategy)
       run: |
