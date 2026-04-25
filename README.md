@@ -80,6 +80,7 @@ a SHA-pinned `require` in [`lakefile.lean`](lakefile.lean).
 | [`jagg-ix/catept-plugin-quantum-info`](https://github.com/jagg-ix/catept-plugin-quantum-info) | `ad9eada` | quantum-information integration contract (CPTP/Braket/von Neumann/Rényi/Shannon/capacity) |
 | [`jagg-ix/catept-plugin-gaussian-field-lsi`](https://github.com/jagg-ix/catept-plugin-gaussian-field-lsi) | `3783875a` | Gaussian-field Gross LSI / spectral-gap / second-moment integration contract |
 | [`jagg-ix/catept-plugin-spectral-physics`](https://github.com/jagg-ix/catept-plugin-spectral-physics) | `95b216bf` | Spectral-physics integration contract (gap/Rayleigh/heat semigroup/Bakry-Émery) |
+| [`jagg-ix/catept-plugin-degiorgi`](https://github.com/jagg-ix/catept-plugin-degiorgi) | `5b06dc82` | De Giorgi-Nash-Moser regularity (GNS, Poincaré, Sobolev-Poincaré, Harnack, Hölder-Moser, Lax-Milgram) |
 
 Authoritative pin SHAs live in [`lake-manifest.json`](lake-manifest.json).
 Existing consumers reach the sibling theorems through thin re-export

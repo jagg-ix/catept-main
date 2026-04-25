@@ -51,6 +51,12 @@ require «catept-plugin-gaussian-field-lsi» from git
 require «catept-plugin-spectral-physics» from git
   "https://github.com/jagg-ix/catept-plugin-spectral-physics.git" @ "95b216bf92f2e8306abc14ec733f70da50411004"
 
+-- catept-plugin-degiorgi: extracted CATEPTMain.Integration.DeGiorgiBridge.
+-- Eighth plugin (T5.6) — hits Target 5's >=8 sibling milestone.
+-- Wraps the DeGiorgi package's GNS / Poincaré / Sobolev-Poincaré / Harnack / Hölder-Moser / Lax-Milgram results.
+require «catept-plugin-degiorgi» from git
+  "https://github.com/jagg-ix/catept-plugin-degiorgi.git" @ "5b06dc824b0dfb6c12cba57c1a364d142c678c93"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

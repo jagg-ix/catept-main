@@ -55,6 +55,7 @@ state.
 | [`jagg-ix/catept-plugin-quantum-info`](https://github.com/jagg-ix/catept-plugin-quantum-info) | `ad9eada1f4449bdc7d5a25704a1c555b7bbc989f` | `v0.1.0` | 1 | [`CATEPTMain/Integration/QuantumInfoBridge.lean`](../../CATEPTMain/Integration/QuantumInfoBridge.lean) |
 | [`jagg-ix/catept-plugin-gaussian-field-lsi`](https://github.com/jagg-ix/catept-plugin-gaussian-field-lsi) | `3783875a6d58d59fdc93a9c10988c4fefe5cb6c5` | `v0.1.0` | 6 | [`CATEPTMain/Integration/GaussianFieldLogSobolevBridge.lean`](../../CATEPTMain/Integration/GaussianFieldLogSobolevBridge.lean) |
 | [`jagg-ix/catept-plugin-spectral-physics`](https://github.com/jagg-ix/catept-plugin-spectral-physics) | `95b216bf92f2e8306abc14ec733f70da50411004` | `v0.1.0` | 10 | [`CATEPTMain/Integration/SpectralPhysicsBridge.lean`](../../CATEPTMain/Integration/SpectralPhysicsBridge.lean) |
+| [`jagg-ix/catept-plugin-degiorgi`](https://github.com/jagg-ix/catept-plugin-degiorgi) | `5b06dc824b0dfb6c12cba57c1a364d142c678c93` | `v0.1.0` | 8 | [`CATEPTMain/Integration/DeGiorgiBridge.lean`](../../CATEPTMain/Integration/DeGiorgiBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
