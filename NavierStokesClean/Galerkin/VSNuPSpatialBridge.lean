@@ -1,4 +1,5 @@
 import NavierStokesClean.Core.Operators
+import NavierStokesClean.Core.SpatialTypes
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 
@@ -46,6 +47,36 @@ namespace NavierStokesClean.Galerkin
 
 open NavierStokesClean MeasureTheory Set
 
+/-! ## Local spatial primitives used by this bridge -/
+
+/-- Vortex stretching term:
+    `∫_{Space} ⟪ω(x), (∇u(x)) · ω(x)⟫ dx`, where `ω = ∇ × u`. -/
+noncomputable def vorticityStretching (u : NSVelocityField) : ℝ :=
+  ∫ x : Space,
+    @inner ℝ _ _ (vorticity u x)
+      (fderiv ℝ u x (Space.basis.repr.symm (vorticity u x)))
+
+/-- Vortex stretching vanishes for constant velocity fields. -/
+theorem vorticityStretching_zero_of_const (v : EuclideanSpace ℝ (Fin 3)) :
+    vorticityStretching (fun _ : Space => v) = 0 := by
+  simp only [vorticityStretching]
+  have hv : ∀ x : Space, vorticity (fun _ : Space => v) x = 0 :=
+    fun x => congr_fun (vorticity_zero_of_const v) x
+  simp_rw [hv]
+  simp
+
+/-- Spatial palinstrophy of a constant field is zero. -/
+theorem palinstrophySpatial_zero_of_const (v : EuclideanSpace ℝ (Fin 3)) :
+    palinstrophySpatial (fun _ : Space => v) = 0 := by
+  have hv : vorticity (fun _ : Space => v) = fun _ => 0 := vorticity_zero_of_const v
+  have hInt : ∀ x : Space,
+      ‖fderiv ℝ (vorticity (fun _ : Space => v)) x‖ ^ 2 = 0 := by
+    intro x
+    have hfd : fderiv ℝ (vorticity (fun _ : Space => v)) x = 0 := by
+      simp [hv]
+    rw [hfd, ContinuousLinearMap.opNorm_zero, zero_pow (by norm_num : (2 : ℕ) ≠ 0)]
+  simp [palinstrophySpatial, hInt]
+
 /-! ## §1. SA-G1: trilinear Sobolev vortex stretching bound (NSP36-C1 + NSP36-C2 split) -/
 
 /-- **NSP36-C1 sub-axiom**: Hölder step — VS ≤ √H1 · ‖ω‖²_{L⁴(Space)}.
@@ -64,7 +95,7 @@ open NavierStokesClean MeasureTheory Set
     **Reference**: Cauchy-Schwarz; Young's inequality; functional analysis on L²(ℝ³). -/
 axiom vs_l4_holder_bound
     (u : NSVelocityField) (H1 : ℝ) (hH1_nn : 0 ≤ H1)
-    (hH1 : ∫ x : Space, ‖fderiv ℝ u x‖ ^ 2 ≤ H1) :
+  (hH1 : (∫ x : Space, ‖fderiv ℝ u x‖ ^ 2) ≤ H1) :
     vorticityStretching u ≤
     Real.sqrt H1 *
       (MeasureTheory.eLpNorm (vorticity u) 4 (MeasureTheory.volume : MeasureTheory.Measure Space)).toReal ^ 2
@@ -105,7 +136,7 @@ axiom vorticity_l4_le_enstrophy
     **Reference**: Temam 1984 §II.3 Lemma 3.3; Cauchy-Schwarz; T³ Sobolev chain. -/
 theorem sa_g1_vortex_stretching_bound (u : NSVelocityField) (H1 : ℝ)
     (hH1_nn : 0 ≤ H1)
-    (hH1 : ∫ x : Space, ‖fderiv ℝ u x‖ ^ 2 ≤ H1) :
+  (hH1 : (∫ x : Space, ‖fderiv ℝ u x‖ ^ 2) ≤ H1) :
     vorticityStretching u ≤ Real.sqrt H1 * spatialEnstrophy u := by
   have hL4 := vorticity_l4_le_enstrophy u
   have hHolder := vs_l4_holder_bound u H1 hH1_nn hH1
@@ -163,7 +194,7 @@ theorem vsnup_spatial_small_data
     (hν : 0 < ν)
     (_hNS : SatisfiesSpatialNSPDE ν traj)
     (t : ℝ)
-    (hH1_t : ∫ x : Space, ‖fderiv ℝ (traj t) x‖ ^ 2 ≤ ν ^ 2) :
+    (hH1_t : (∫ x : Space, ‖fderiv ℝ (traj t) x‖ ^ 2) ≤ ν ^ 2) :
     vorticityStretching (traj t) ≤ ν * palinstrophySpatial (traj t) := by
   have hH1_nn : 0 ≤ ν ^ 2 := sq_nonneg ν
   have hVS := sa_g1_vortex_stretching_bound (traj t) (ν ^ 2) hH1_nn hH1_t
@@ -192,7 +223,7 @@ theorem vsnup_spatial_integrated
     (hν : 0 < ν)
     (hNS : SatisfiesSpatialNSPDE ν traj)
     (hT : 0 < T)
-    (hH1_uniform : ∀ t ∈ Set.Icc 0 T, ∫ x : Space, ‖fderiv ℝ (traj t) x‖ ^ 2 ≤ ν ^ 2)
+    (hH1_uniform : ∀ t ∈ Set.Icc 0 T, (∫ x : Space, ‖fderiv ℝ (traj t) x‖ ^ 2) ≤ ν ^ 2)
     (hVS_intble : IntervalIntegrable (fun t => vorticityStretching (traj t)) volume 0 T)
     (hP_intble : IntervalIntegrable (fun t => palinstrophySpatial (traj t)) volume 0 T) :
     ∫ t in (0 : ℝ)..T, vorticityStretching (traj t) ≤
@@ -257,7 +288,7 @@ theorem trajectoryToSpatial_satisfies_spatial_ns_full (traj : Trajectory)
     have heq : (fun s => spatialEnstrophy (trajectoryToSpatial traj s)) = fun _ => (0 : ℝ) := by
       ext s; exact spatialEnstrophy_zero_of_const (traj s)
     rw [heq]
-    exact hasDerivAt_const t 0
+    simpa using (hasDerivAt_const (x := t) (c := (0 : ℝ)))
 
 /-! ## §6. Axiom surface certificate -/
 

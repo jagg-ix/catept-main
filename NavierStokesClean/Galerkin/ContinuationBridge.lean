@@ -70,6 +70,7 @@ open NavierStokesClean MeasureTheory Set
 theorem bkm_le_time_init_enstrophy
     (traj : Trajectory)
     (hNS : SatisfiesNSPDE nsNu traj)
+    (hEnergyDecay : ∀ t : ℝ, 0 ≤ t → ‖traj t‖ ≤ ‖traj 0‖)
     (T : ℝ)
     (hT : 0 ≤ T) :
     bkmVorticityIntegral traj T ≤ T * enstrophy (traj 0) := by
@@ -77,7 +78,7 @@ theorem bkm_le_time_init_enstrophy
   have hpoint : ∀ t ∈ Icc (0 : ℝ) T,
       enstrophy (traj t) ≤ enstrophy (traj 0) := fun t ht => by
     unfold enstrophy
-    nlinarith [norm_nonneg (traj t), hNS.hEnergyDecay t ht.1]
+    nlinarith [norm_nonneg (traj t), hEnergyDecay t ht.1]
   calc ∫ t in (0 : ℝ)..T, enstrophy (traj t)
       ≤ ∫ t in (0 : ℝ)..T, enstrophy (traj 0) := by
         apply intervalIntegral.integral_mono_on hT
@@ -97,10 +98,11 @@ theorem bkm_le_time_init_enstrophy
 theorem bkm_finite_from_energy_decay
     (traj : Trajectory)
     (hNS : SatisfiesNSPDE nsNu traj)
+    (hEnergyDecay : ∀ t : ℝ, 0 ≤ t → ‖traj t‖ ≤ ‖traj 0‖)
     (T : ℝ)
     (hT : 0 ≤ T) :
     BKMIntegralFiniteAt traj T :=
-  ⟨T * enstrophy (traj 0), bkm_le_time_init_enstrophy traj hNS T hT⟩
+  ⟨T * enstrophy (traj 0), bkm_le_time_init_enstrophy traj hNS hEnergyDecay T hT⟩
 
 /-! ## §2. SA-M05-Agmon: Agmon–Sobolev inequality on T³ -/
 
@@ -222,7 +224,6 @@ theorem spatialBKM_le_time_mul_agmon_uniform_palinstrophy
     (hCont : ContinuousOn (fun s => spatialEnstrophy (traj s)) (Icc (0 : ℝ) T))
     (hSmooth : ∀ s ∈ Icc (0 : ℝ) T, ContDiff ℝ 2 (traj s))
     (Pmax : ℝ)
-    (hPmax_nonneg : 0 ≤ Pmax)
     (hPal : ∀ s ∈ Icc (0 : ℝ) T, palinstrophySpatial (traj s) ≤ Pmax)
     (hInt : IntervalIntegrable
       (fun t => (vorticityLinfNorm (traj t)).toReal) volume (0 : ℝ) T) :

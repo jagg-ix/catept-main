@@ -141,6 +141,34 @@ noncomputable def palinstrophySpatial (u : NSVelocityField) : ℝ :=
 theorem palinstrophySpatial_nonneg (u : NSVelocityField) : 0 ≤ palinstrophySpatial u :=
   integral_nonneg fun _ => sq_nonneg _
 
+/-- Vortex stretching term:
+    `∫_{Space} ⟪ω(x), (∇u(x)) · ω(x)⟫ dx`, where `ω = ∇ × u`. -/
+noncomputable def vorticityStretching (u : NSVelocityField) : ℝ :=
+  ∫ x : Space,
+    @inner ℝ _ _ (vorticity u x)
+      (fderiv ℝ u x (Space.basis.repr.symm (vorticity u x)))
+
+/-- Vortex stretching vanishes for constant velocity fields. -/
+theorem vorticityStretching_zero_of_const (v : EuclideanSpace ℝ (Fin 3)) :
+    vorticityStretching (fun _ : Space => v) = 0 := by
+  simp only [vorticityStretching]
+  have hv : ∀ x : Space, vorticity (fun _ : Space => v) x = 0 :=
+    fun x => congr_fun (vorticity_zero_of_const v) x
+  simp_rw [hv]
+  simp
+
+/-- Spatial palinstrophy of a constant field is zero. -/
+theorem palinstrophySpatial_zero_of_const (v : EuclideanSpace ℝ (Fin 3)) :
+    palinstrophySpatial (fun _ : Space => v) = 0 := by
+  have hv : vorticity (fun _ : Space => v) = fun _ => 0 := vorticity_zero_of_const v
+  have hInt : ∀ x : Space,
+      ‖fderiv ℝ (vorticity (fun _ : Space => v)) x‖ ^ 2 = 0 := by
+    intro x
+    have hfd : fderiv ℝ (vorticity (fun _ : Space => v)) x = 0 := by
+      simp [hv]
+    rw [hfd, ContinuousLinearMap.opNorm_zero, zero_pow (by norm_num : (2 : ℕ) ≠ 0)]
+  simp [palinstrophySpatial, hInt]
+
 /-! ## §4. L^∞ vorticity norm and BKM integral -/
 
 /-- L^∞ norm of the vorticity field at a fixed time.
