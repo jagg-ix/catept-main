@@ -468,12 +468,18 @@ theorem ns_pgs_implies_bkm_curl_finite
     **Net (NSC-P33 + P35 + P36 + P39 + P40)**: all 3 load-bearing axioms promoted to theorems.
     `pgs_implies_fefferman_b`, A, B, C2, C are all theorems.
     Remaining axiom surface: A1 + A2 + B1 + B2 + C2a + C1(orphaned) = 5 load-bearing sub-axioms. -/
-theorem pgs_implies_fefferman_b_from_sub_axioms : PreciseGapStatement → FeffermanB := by
+theorem pgs_implies_fefferman_b_from_sub_axioms_curl : PreciseGapStatement → FeffermanB := by
   intro hPGS ν hν u₀ hsmooth hperiodic hdiv
   -- Get Leray-Hopf weak solution
   obtain ⟨u_w, hLeray⟩ := ns_leray_hopf_periodic ν hν u₀ hsmooth hperiodic hdiv
-  -- Get global smooth solution from BKM criterion
-  exact ns_bkm_criterion_t3 ν hν u₀ hsmooth hperiodic hdiv u_w hLeray
-    (fun T hT => ns_pgs_implies_bkm_finite hPGS ν hν u₀ hsmooth hperiodic hdiv u_w hLeray T hT)
+  -- Use the curl-facing bridge path (currently equivalent to the proxy path).
+  exact ns_bkm_criterion_t3_of_curl ν hν u₀ hsmooth hperiodic hdiv u_w hLeray
+    (fun T hT =>
+      ns_pgs_implies_bkm_curl_finite hPGS ν hν u₀ hsmooth hperiodic hdiv u_w hLeray T hT)
+
+/-- Backward-compatible entrypoint; now routed through the curl-facing chain. -/
+theorem pgs_implies_fefferman_b_from_sub_axioms : PreciseGapStatement → FeffermanB := by
+  intro hPGS
+  exact pgs_implies_fefferman_b_from_sub_axioms_curl hPGS
 
 end NavierStokesClean.Millennium
