@@ -31,6 +31,11 @@ require «catept-plugin-brownian-motion» from git
 require «catept-plugin-dimensional-analysis» from git
   "https://github.com/jagg-ix/catept-plugin-dimensional-analysis.git" @ "d89c87a3612d9c1fccf469b13ad3d12c29ac3f40"
 
+-- catept-plugin-cslib: extracted CATEPTMain.Integration.CslibBridge.
+-- Fourth plugin under Target 5 (scale-out wave).
+require «catept-plugin-cslib» from git
+  "https://github.com/jagg-ix/catept-plugin-cslib.git" @ "b71b95fc5859ef6277c994212979e009c79c1b76"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

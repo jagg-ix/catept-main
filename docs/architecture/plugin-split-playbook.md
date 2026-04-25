@@ -115,8 +115,29 @@ Run from a clean clone of `catept-main` on `main`.
    - Drop any `import CATEPTMain.*` lines (none expected for the pilot
      since it has zero such imports).
    - Re-prefix any internal references that used the old namespace.
-6. **Run `lake exe cache get && lake build`.** Must succeed with zero
-   errors and zero new `sorry`.  Fix any namespace fallout from step 5.
+6. **Test-build via `catept-main`'s lake context, NOT inside the sibling
+   clone.**
+
+   On a workstation that already has `catept-main` cloned, do **not** run
+   `lake exe cache get && lake build` inside the new sibling repo's own
+   directory: each scratch clone forces lake to fetch + build its own
+   ~7 GiB of Mathlib oleans, which exhausts disk after a few siblings
+   (lesson learned during T5.2). Instead, after pushing the initial
+   sibling commit (this step + step 9 below):
+
+   ```bash
+   # In catept-main:
+   #   1. add a temporary  require «catept-plugin-X» from git "<url>" @ "<sha>"  line
+   #      (mathlib must remain LAST in the lakefile so its pin wins)
+   #   2. lake update <pkg>      -> clones into catept-main/.lake/packages/<pkg>/
+   #   3. lake build CATEPTPlugin<X>.IntegrationBridge
+   #                              -> builds against catept-main's shared Mathlib
+   ```
+
+   If the build fails, fix the sibling source, push a new commit, then
+   `lake update` to bump the pin. Once green, fix any namespace fallout,
+   then tag v0.1.0 and finalize the catept-main pin (step 9 + T4.3
+   re-integration).
 7. **Verify axiom signatures.**  Pick the load-bearing theorem and run
 
    ```bash
@@ -332,12 +353,12 @@ selection criteria above are authoritative.
 | S | `HilleYosidaBridge` | 195 | 0 | 0 | **EXTRACTED** (T4.2 — pilot) |
 | S | `BrownianMotionBridge` | 74 | 0 | 0 | **EXTRACTED** (T4.5) |
 | S | `LeanDimensionalAnalysisBridge` | 58 | 0 | 0 | **EXTRACTED** (T4 follow-up) |
-| S | `QuantumInfoBridge` | 73 | 0 | 0 | candidate |
+| S | `CslibBridge` | 69 | 0 | 0 | **EXTRACTED** (T5.2) |
+| S | `QuantumInfoBridge` | 73 | 0 | 0 | candidate (T5.3) |
 | S | `LeanInfBridge` | 46 | 0 | 0 | NOT viable — has 0 theorems, fails selection criterion #3 |
-| S | `CslibBridge` | 69 | 0 | 0 | candidate |
-| M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 | candidate |
-| M | `SpectralPhysicsBridge` | 229 | 0 | 0 | candidate |
-| M | `DeGiorgiBridge` | 277 | 0 | 0 | candidate |
+| M | `GaussianFieldLogSobolevBridge` | 179 | 0 | 0 | candidate (T5.4) |
+| M | `SpectralPhysicsBridge` | 229 | 0 | 0 | candidate (T5.5) |
+| M | `DeGiorgiBridge` | 277 | 0 | 0 | candidate (T5.6) |
 
 After T4.5 lands, refresh this table by re-running the survey command
 in [`targets/target-4-plan.md`](targets/target-4-plan.md).
