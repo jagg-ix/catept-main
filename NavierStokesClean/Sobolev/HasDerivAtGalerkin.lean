@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import NavierStokesClean.Sobolev.EnergyIdentityT3
 
@@ -32,9 +33,9 @@ The actual proof that NS Galerkin trajectories satisfy the `HasDerivAt`
 hypothesis is left to future work (requires smoothness of the Galerkin ODE
 and chain rule for the squared norm).
 
-The chain-rule bridge `projectedEnergyCurve_hasDerivAt_chain` is sorry'd,
-pending formalization of `spectralProjL2 N` as a `ContinuousLinearMap`.
-The NS-equation bridge `inner_eq_projectedGradientTerm_of_NS` is sorry'd,
+The chain-rule bridge `projectedEnergyCurve_hasDerivAt_chain` is now discharged
+via the `spectralProjL2CLM` packaging of the Galerkin spectral projection.
+The NS-equation bridge `inner_eq_projectedGradientTerm_of_NS` is still sorry'd,
 pending the Parseval identity for the projected inner product.
 -/
 
@@ -114,7 +115,37 @@ theorem projectedEnergyCurve_hasDerivAt_chain
       (2 * Complex.re (inner (𝕜 := ℂ)
           (spectralProjL2 N (u t))
           (spectralProjL2 N (u' t)))) t := by
-  sorry
+  -- Express the projected energy curve as ‖spectralProjL2CLM N (u ·)‖^2.
+  have hcurve_eq : projectedEnergyCurve N u =
+      fun s => ‖spectralProjL2CLM N (u s)‖ ^ 2 := by
+    funext s
+    simp [projectedEnergyCurve, projectedEnergy, spectralProjL2CLM_apply]
+  rw [hcurve_eq]
+  -- Chain rule: composing a continuous linear map with `u`.
+  -- We need `IsScalarTower ℝ ℂ (Lp ℂ 2 volume)` so that `restrictScalars ℝ` typechecks.
+  haveI : IsScalarTower ℝ ℂ (L²(UnitAddTorus (Fin 3))) :=
+    IsScalarTower.restrictScalars ℝ ℂ _
+  have hL : HasDerivAt (fun s => spectralProjL2CLM N (u s))
+              (spectralProjL2CLM N (u' t)) t :=
+    ((spectralProjL2CLM N).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt t (hdu t)
+  -- Norm-squared chain rule (over ℝ): yields `2 * ⟪·, ·⟫_ℝ` using the canonical
+  -- real inner product on `Lp ℂ 2 volume`.
+  have hns := HasDerivAt.norm_sq hL
+  -- Identify the ℝ-inner product with `Complex.re` of the ℂ-inner product, and
+  -- rewrite `spectralProjL2CLM` back as `spectralProjL2`.
+  have key :
+      (2 : ℝ) * @inner ℝ _ _
+          (spectralProjL2CLM N (u t)) (spectralProjL2CLM N (u' t)) =
+        2 * Complex.re (inner (𝕜 := ℂ)
+            (spectralProjL2 N (u t)) (spectralProjL2 N (u' t))) := by
+    rw [spectralProjL2CLM_apply, spectralProjL2CLM_apply]
+    congr 1
+    -- ℝ-inner on `Lp ℂ 2 μ` integrates the pointwise ℝ-inner on ℂ, which equals
+    -- `Complex.re` of the ℂ-inner.  Pull `re` out of the integral.
+    rw [L2.inner_def, L2.inner_def]
+    exact integral_re (L2.integrable_inner (𝕜 := ℂ) _ _)
+  rw [← key]
+  exact hns
 
 /-- **NS-equation bridge** (sorry): when `u'` satisfies the projected Galerkin NS equation,
     the chain-rule derivative equals `-2ν · projectedGradientTerm N (u t)`.

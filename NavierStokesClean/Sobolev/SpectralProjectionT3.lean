@@ -53,4 +53,45 @@ noncomputable def spectralProjL2 (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
     spectralProjL2 N f =
       ∑ k ∈ galerkinModeFinset N, (mFourierCoeff f k : ℂ) • mFourierLp (d := Fin 3) 2 k := rfl
 
+/-! ## Continuous-linear-map packaging of the Galerkin projection
+
+`spectralProjL2CLM N` is `spectralProjL2 N` packaged as a `ContinuousLinearMap`
+over `ℂ`.  It is built as a finite sum of rank-one Riesz projections
+`f ↦ ⟪mFourierLp 2 k, f⟫_ℂ • mFourierLp 2 k`, which equals
+`mFourierCoeff f k • mFourierLp 2 k` by the orthonormality of the Fourier basis. -/
+
+/-- Rank-one Riesz projection onto the `k`-th Fourier mode. -/
+noncomputable def fourierModeProjCLM (k : Fin 3 → ℤ) :
+    L²(UnitAddTorus (Fin 3)) →L[ℂ] L²(UnitAddTorus (Fin 3)) :=
+  (innerSL ℂ (mFourierLp (d := Fin 3) 2 k)).smulRight
+    (mFourierLp (d := Fin 3) 2 k)
+
+theorem fourierModeProjCLM_apply (k : Fin 3 → ℤ) (f : L²(UnitAddTorus (Fin 3))) :
+    fourierModeProjCLM k f =
+      (mFourierCoeff f k : ℂ) • mFourierLp (d := Fin 3) 2 k := by
+  -- ⟪mFourierLp 2 k, f⟫_ℂ = mFourierBasis.repr f k = mFourierCoeff f k
+  unfold fourierModeProjCLM
+  simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply]
+  congr 1
+  -- Goal: ⟪mFourierLp 2 k, f⟫_ℂ = mFourierCoeff f k
+  have h1 : mFourierBasis.repr f k = mFourierCoeff f k := mFourierBasis_repr f k
+  have h2 : mFourierBasis.repr f k =
+      inner (𝕜 := ℂ) (mFourierBasis (d := Fin 3) k) f :=
+    HilbertBasis.repr_apply_apply (b := mFourierBasis) f k
+  have h3 : (mFourierBasis (d := Fin 3) k : L²(UnitAddTorus (Fin 3))) =
+      mFourierLp (d := Fin 3) 2 k := by
+    simp [coe_mFourierBasis]
+  rw [← h1, h2, h3]
+
+/-- The Galerkin spectral projection at level `N`, packaged as a
+    `ContinuousLinearMap` over `ℂ`. -/
+noncomputable def spectralProjL2CLM (N : ℕ) :
+    L²(UnitAddTorus (Fin 3)) →L[ℂ] L²(UnitAddTorus (Fin 3)) :=
+  ∑ k ∈ galerkinModeFinset N, fourierModeProjCLM k
+
+theorem spectralProjL2CLM_apply (N : ℕ) (f : L²(UnitAddTorus (Fin 3))) :
+    spectralProjL2CLM N f = spectralProjL2 N f := by
+  simp [spectralProjL2CLM, spectralProjL2,
+        ContinuousLinearMap.sum_apply, fourierModeProjCLM_apply]
+
 end NavierStokesClean.Sobolev.SpectralProjectionT3
