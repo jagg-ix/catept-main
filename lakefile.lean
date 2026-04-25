@@ -63,6 +63,12 @@ require «catept-plugin-degiorgi» from git
 require «catept-plugin-maxwell-curvespace-pphi2» from git
   "https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2.git" @ "be3d80bd7946461bb0a8c3e3f737b29bd2f69efa"
 
+-- catept-plugin-vml-landau: extracted CATEPTMain.Integration.VMLLandauBridge.
+-- Tenth plugin (T5 follow-on). Wraps Aristotle/Clawristotle's VML.CoulombConcreteTheorem42
+-- (Vlasov-Maxwell-Landau steady-state rigidity on T^3) under namespace CATEPTPluginVMLLandau.
+require «catept-plugin-vml-landau» from git
+  "https://github.com/jagg-ix/catept-plugin-vml-landau.git" @ "7ef1b4b0d7c171aeee9f395b87a5ebb4a38add7d"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
@@ -97,8 +103,9 @@ require «lean-inf» from git
   "https://github.com/jagg-ix/lean-inf.git" @ "2b1ce9a448fb9360c4b960809dec4ed42144da08"
 
 -- VML: Formal verification of the Vlasov-Maxwell-Landau steady-state theorem.
+-- Pinned at the v4.29.0 port branch (jagg-ix fork, feat/copilot-claude/aristotle-v429-port).
 require aristotle from git
-  "https://github.com/jagg-ix/aristotle.git" @ "10dad7ae6f7f91c9a1198cadad262e353ec9f4dd"
+  "https://github.com/jagg-ix/aristotle.git" @ "08faff16c3b3ff476f59d82356c4aac0c0bdb01e"
 
 -- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
 -- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
