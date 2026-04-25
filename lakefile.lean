@@ -57,6 +57,12 @@ require «catept-plugin-spectral-physics» from git
 require «catept-plugin-degiorgi» from git
   "https://github.com/jagg-ix/catept-plugin-degiorgi.git" @ "5b06dc824b0dfb6c12cba57c1a364d142c678c93"
 
+-- catept-plugin-maxwell-curvespace-pphi2: extracted CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge.
+-- Ninth plugin (T5.8). Interface-level Maxwell-curved-space ↔ pphi2 OS-reconstruction contract.
+-- Distinct from the parallel VML / Vlasov-Maxwell-Landau extraction (different physics, different upstream).
+require «catept-plugin-maxwell-curvespace-pphi2» from git
+  "https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2.git" @ "be3d80bd7946461bb0a8c3e3f737b29bd2f69efa"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
