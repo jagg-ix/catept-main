@@ -53,7 +53,8 @@ state.
 | [`jagg-ix/catept-plugin-dimensional-analysis`](https://github.com/jagg-ix/catept-plugin-dimensional-analysis) | `d89c87a3612d9c1fccf469b13ad3d12c29ac3f40` | `v0.1.0` | 1 | [`CATEPTMain/Integration/LeanDimensionalAnalysisBridge.lean`](../../CATEPTMain/Integration/LeanDimensionalAnalysisBridge.lean) |
 | [`jagg-ix/catept-plugin-cslib`](https://github.com/jagg-ix/catept-plugin-cslib) | `b71b95fc5859ef6277c994212979e009c79c1b76` | `v0.1.0` | 1 | [`CATEPTMain/Integration/CslibBridge.lean`](../../CATEPTMain/Integration/CslibBridge.lean) |
 | [`jagg-ix/catept-plugin-quantum-info`](https://github.com/jagg-ix/catept-plugin-quantum-info) | `ad9eada1f4449bdc7d5a25704a1c555b7bbc989f` | `v0.1.0` | 1 | [`CATEPTMain/Integration/QuantumInfoBridge.lean`](../../CATEPTMain/Integration/QuantumInfoBridge.lean) |
-| [`jagg-ix/catept-plugin-gaussian-field-lsi`](https://github.com/jagg-ix/catept-plugin-gaussian-field-lsi) | `3783875a6d58d59fdc93a9c10988c4fefe5cb6c5` | `main` | 1 | [`CATEPTMain/Integration/GaussianFieldLogSobolevBridge.lean`](../../CATEPTMain/Integration/GaussianFieldLogSobolevBridge.lean) |
+| [`jagg-ix/catept-plugin-gaussian-field-lsi`](https://github.com/jagg-ix/catept-plugin-gaussian-field-lsi) | `3783875a6d58d59fdc93a9c10988c4fefe5cb6c5` | `v0.1.0` | 6 | [`CATEPTMain/Integration/GaussianFieldLogSobolevBridge.lean`](../../CATEPTMain/Integration/GaussianFieldLogSobolevBridge.lean) |
+| [`jagg-ix/catept-plugin-spectral-physics`](https://github.com/jagg-ix/catept-plugin-spectral-physics) | `95b216bf92f2e8306abc14ec733f70da50411004` | `v0.1.0` | 10 | [`CATEPTMain/Integration/SpectralPhysicsBridge.lean`](../../CATEPTMain/Integration/SpectralPhysicsBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
