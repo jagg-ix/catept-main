@@ -89,6 +89,12 @@ require «catept-plugin-carleson» from git
 require «catept-plugin-gibbs-measure» from git
   "https://github.com/jagg-ix/catept-plugin-gibbs-measure.git" @ "6b0c701baddadfecf454b9319ab9071ecec0dd49"
 
+-- catept-plugin-hopf-lean: extracted CATEPTMain.Integration.HopfLeanBridge.
+-- 14th plugin (T5 follow-on). Abstract Hopf-algebra witness (coalgebra, bialgebra, Hopf,
+-- Yang-Baxter, BMod-monoidal). Upstream targets v4.26.0; witness is toolchain-independent.
+require «catept-plugin-hopf-lean» from git
+  "https://github.com/jagg-ix/catept-plugin-hopf-lean.git" @ "6236741efbba64355b24ca699482c2acd3d67ac0"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 

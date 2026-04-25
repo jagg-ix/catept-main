@@ -61,6 +61,7 @@ state.
 | [`jagg-ix/catept-plugin-bochner-minlos`](https://github.com/jagg-ix/catept-plugin-bochner-minlos) | `dae9f683e724970f7d335cf4223b24bac8f4fa65` | `v0.1.0` | 1 | [`CATEPTMain/Integration/BochnerMinlosBridge.lean`](../../CATEPTMain/Integration/BochnerMinlosBridge.lean) |
 | [`jagg-ix/catept-plugin-carleson`](https://github.com/jagg-ix/catept-plugin-carleson) | `684eeb46e364a0fca7709bb0c6c8ea6063538c57` | `v0.1.0` | 2 | [`CATEPTMain/Integration/CarlesonBridge.lean`](../../CATEPTMain/Integration/CarlesonBridge.lean) |
 | [`jagg-ix/catept-plugin-gibbs-measure`](https://github.com/jagg-ix/catept-plugin-gibbs-measure) | `6b0c701baddadfecf454b9319ab9071ecec0dd49` | `v0.1.0` | 1 | [`CATEPTMain/Integration/GibbsMeasureBridge.lean`](../../CATEPTMain/Integration/GibbsMeasureBridge.lean) |
+| [`jagg-ix/catept-plugin-hopf-lean`](https://github.com/jagg-ix/catept-plugin-hopf-lean) | `6236741efbba64355b24ca699482c2acd3d67ac0` | `v0.1.0` | 1 | [`CATEPTMain/Integration/HopfLeanBridge.lean`](../../CATEPTMain/Integration/HopfLeanBridge.lean) |
 
 Each sibling exposes its theorems under a `CATEPTPlugin<Name>`
 namespace. The thin re-export shim in `CATEPTMain/Integration/` makes
