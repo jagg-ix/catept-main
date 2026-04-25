@@ -41,15 +41,16 @@ namespace CATEPTMain.Core.MTN
 -- ── Kronecker product identity ────────────────────────────────────────────────
 -- AFP: `kronecker_product (mat_of 1) A = A`
 -- In Lean 4 / Mathlib: one_kronecker and kronecker_one exist.
-axiom kronecker_one_left {n m : ℕ} (A : Matrix (Fin n) (Fin m) ℝ) : True
+theorem kronecker_one_left {n m : ℕ} (_A : Matrix (Fin n) (Fin m) ℝ) : True := trivial
 
-axiom kronecker_one_right {n m : ℕ} (A : Matrix (Fin n) (Fin m) ℝ) : True
+theorem kronecker_one_right {n m : ℕ} (_A : Matrix (Fin n) (Fin m) ℝ) : True := trivial
 
 -- ── Kronecker product bilinearity ─────────────────────────────────────────────
 -- AFP: `kronecker_product (a *k A) B = a *k (kronecker_product A B)`
-private axiom kronecker_smul_left_law {m n p q : ℕ} (a : ℝ)
+private theorem kronecker_smul_left_law {m n p q : ℕ} (a : ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (B : Matrix (Fin p) (Fin q) ℝ) :
-    Matrix.kronecker (a • A) B = a • Matrix.kronecker A B
+    Matrix.kronecker (a • A) B = a • Matrix.kronecker A B :=
+  Matrix.smul_kronecker a A B
 
 theorem kronecker_smul_left {m n p q : ℕ} (a : ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (B : Matrix (Fin p) (Fin q) ℝ) :
@@ -59,25 +60,27 @@ theorem kronecker_smul_left {m n p q : ℕ} (a : ℝ)
 -- ── Transpose rule ────────────────────────────────────────────────────────────
 -- AFP: `(kronecker_product A B)ᵀ = kronecker_product Aᵀ Bᵀ`
 -- BINDER RULE B60: transpose of Kronecker = Kronecker of transposes
-axiom kronecker_transpose {m n p q : ℕ}
+theorem kronecker_transpose {m n p q : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (B : Matrix (Fin p) (Fin q) ℝ) :
-  (Matrix.kronecker A B).transpose = Matrix.kronecker A.transpose B.transpose
+  (Matrix.kronecker A B).transpose = Matrix.kronecker A.transpose B.transpose :=
+  (Matrix.kroneckerMap_transpose _ A B).symm
 
 -- ── Associativity ─────────────────────────────────────────────────────────────
 -- AFP: `kronecker_product (kronecker_product A B) C = kronecker_product A (kronecker_product B C)`
 -- Note: the index types differ (Fin m × Fin p) × Fin r vs Fin m × (Fin p × Fin r);
 -- phase-1 axiom with reindexing.
-axiom kronecker_assoc {m n p q r s : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ)
-    (B : Matrix (Fin p) (Fin q) ℝ)
-    (C : Matrix (Fin r) (Fin s) ℝ) :
-    True  -- phase-1: (A ⊗k B) ⊗k C ≅ A ⊗k (B ⊗k C) up to index reordering
+theorem kronecker_assoc {m n p q r s : ℕ}
+    (_A : Matrix (Fin m) (Fin n) ℝ)
+    (_B : Matrix (Fin p) (Fin q) ℝ)
+    (_C : Matrix (Fin r) (Fin s) ℝ) :
+    True := trivial
 
 -- ── Trace of Kronecker product ────────────────────────────────────────────────
 -- AFP: `trace (kronecker_product A B) = trace A * trace B`
-private axiom kronecker_trace_law {n m : ℕ}
+private theorem kronecker_trace_law {n m : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (B : Matrix (Fin m) (Fin m) ℝ) :
-    Matrix.trace (Matrix.kronecker A B) = Matrix.trace A * Matrix.trace B
+    Matrix.trace (Matrix.kronecker A B) = Matrix.trace A * Matrix.trace B :=
+  Matrix.trace_kronecker A B
 
 theorem kronecker_trace {n m : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (B : Matrix (Fin m) (Fin m) ℝ) :
