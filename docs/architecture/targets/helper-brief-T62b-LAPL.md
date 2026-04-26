@@ -44,7 +44,12 @@ External consumers (will keep working through the shims):
 ### Step 1 — Create + push the sibling repo
 
 ```bash
-gh repo create jagg-ix/catept-domain-lapl --public --license MIT \
+# NEW SIBLINGS ARE PRIVATE (maintainer policy 2026-04-25). Existing public
+# siblings (catept-plugin-* up through #17) remain public; everything from
+# catept-plugin-afp-framework / catept-domain-* onward is private. catept-main
+# CI must have a `GH_TOKEN` (or PAT) with read access to jagg-ix/* for the
+# `lake update` step to fetch private siblings.
+gh repo create jagg-ix/catept-domain-lapl --private --license MIT \
   --description "LAPL (Laplace transform) domain bundle (5 files, 378 LoC) extracted from catept-main."
 
 cd ~/lab/tau/tau-information-dynamics
