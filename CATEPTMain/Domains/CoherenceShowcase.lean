@@ -1,5 +1,6 @@
 import CATEPTMain.Domains.CoherenceSpine
 import CATEPTMain.Domains.UnifiedValidator
+import CATEPTMain.Domains.Adapters.HarmonicOscillator
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -111,3 +112,14 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.minkowski_validates
 #print axioms CATEPTMain.Temporal.em_validates
 #print axioms CATEPTMain.Temporal.vml_validates
+
+-- HarmonicOscillator adapter (T68 — full-stack live demo):
+--   FIRST adapter to claim a non-vacuum QuantumCorrespondence
+--   (curvature = expectationValue = H, G = 1/(8π) so 8πG = 1).
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_conservation
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_reduction
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_symmetry
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_validates
+#print axioms CATEPTMain.Temporal.Adapter.harmonic_dynamics_nontrivial
