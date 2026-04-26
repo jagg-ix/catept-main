@@ -126,16 +126,14 @@ require «catept-plugin-afp-framework» from git
   "https://github.com/jagg-ix/catept-plugin-afp-framework.git" @ "27c58a8337eca6cf2ec684602c0cd6cc37d2dc52"
 
 -- catept-domain-quantum: Class B domain umbrella for CATEPTMain.Quantum.*.
--- v0.2.0 restructured to sub-namespace layout matching catept-domain-geometry:
--- each Quantum/<BUNDLE>/ from catept-main lives at
--- CATEPTPluginDomainQuantum/<BUNDLE>/ with namespace
--- CATEPTPluginDomainQuantum.<BUNDLE>.*. Currently shipped:
---   QUANTUM (10 files / 1931 LoC), SCHTZ (2 files / 385 LoC).
--- Planned: PM, HSTP, CBO, IMD.
--- 2 pre-existing sorrys in QFIMeasurements carry over verbatim.
+-- ALL six Quantum/* sub-bundles consolidated as of v0.4.0:
+--   QUANTUM (10 files / 1931 LoC), SCHTZ (2 / 385), IMD (15 / 2510),
+--   PM (5 / 753), CBO (22 / 2053), HSTP (17 / 1428).
+-- Total 71 files / 9,060 LoC under one private umbrella repo.
+-- 2 pre-existing sorrys in QUANTUM/QFIMeasurements carry over verbatim.
 -- **Private** per maintainer policy 2026-04-25.
 require «catept-domain-quantum» from git
-  "https://github.com/jagg-ix/catept-domain-quantum.git" @ "739f2ea0d56a2ec7fe8a38257e56d450d6373879"
+  "https://github.com/jagg-ix/catept-domain-quantum.git" @ "497848e180aadbce4ab2f89309d64eab6fbfaaf0"
 
 -- catept-domain-geometry: Class B domain umbrella for CATEPTMain.Geometry.*.
 -- Sub-bundles live at CATEPTPluginDomainGeometry.<BUNDLE>.* — one subdirectory

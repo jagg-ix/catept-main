@@ -1,70 +1,19 @@
 import CATEPTMain.Quantum.CBO.Complex_Vector_Spaces
+import CATEPTPluginDomainQuantum.CBO.Complex_Inner_Product0
+
 /-!
-# Complex_Inner_Product0 — AFP Complex_Bounded_Operators → Lean 4 (Phase 1)
-
-Source: `Complex_Bounded_Operators/Complex_Inner_Product0.thy` (Dominique Unruh — 2022)
-Dependencies: Complex_Vector_Spaces
-
-Content: Foundational complex inner product space theory:
-  - Cauchy-Schwarz inequality
-  - Polarization identity
-  - Orthogonality and projections
-  - Closed subspaces and orthogonal complement
-
-Phase: 1 (all proofs `sorry`; statements faithfully typed)
+# Complex_Inner_Product0 — re-export shim (sub-bundle `CBO`)
 -/
 
 set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.CBO.Complex_Inner_Product0
 
-open CATEPTMain.Quantum.CBO
-
--- ── Polarization identity ─────────────────────────────────────────────────────
--- ⟨u, v⟩ = (1/4)(‖u+v‖² - ‖u-v‖² + i‖u+iv‖² - i‖u-iv‖²)
-private axiom polarization_identity_law {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (u v : E) :
-    inner (𝕜 := ℂ) u v =
-    (1/4 : ℂ) * (((‖u + v‖^2 - ‖u - v‖^2 : ℝ) : ℂ) +
-      Complex.I * ((‖u + Complex.I • v‖^2 - ‖u - Complex.I • v‖^2 : ℝ) : ℂ))
-
-theorem polarization_identity {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (u v : E) :
-    inner (𝕜 := ℂ) u v =
-    (1/4 : ℂ) * (((‖u + v‖^2 - ‖u - v‖^2 : ℝ) : ℂ) +
-      Complex.I * ((‖u + Complex.I • v‖^2 - ‖u - Complex.I • v‖^2 : ℝ) : ℂ)) :=
-  polarization_identity_law u v
-
--- ── Cauchy-Schwarz ────────────────────────────────────────────────────────────
--- Direct application of Mathlib's `norm_inner_le_norm`
-theorem cauchy_schwarz {E : Type*} [SeminormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (u v : E) : ‖@inner ℂ E _ u v‖ ≤ ‖u‖ * ‖v‖ := norm_inner_le_norm u v
-
--- ── Orthogonal complement ─────────────────────────────────────────────────────
--- (U^⊥)^⊥ = closure U  for a closed subspace U.
--- Phase-1 bridge theorem (full orthogonal-closure identity deferred to phase-2)
-private axiom ortho_ortho_eq_closure_law
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (U : Submodule ℂ E) :
-    ∃ V : Submodule ℂ E, V = U
-
-theorem ortho_ortho_eq_closure
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (U : Submodule ℂ E) :
-    ∃ V : Submodule ℂ E, V = U :=
-  ortho_ortho_eq_closure_law U
-
--- ── Orthogonal projection ─────────────────────────────────────────────────────
--- Every closed subspace U ⊆ H has an orthogonal projection.
-private axiom ortho_projection_exists_law
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (U : Submodule ℂ E) :
-  Nonempty (E →L[ℂ] E)
-
-theorem ortho_projection_exists
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    (U : Submodule ℂ E) :
-  Nonempty (E →L[ℂ] E) :=
-  ortho_projection_exists_law U
+export CATEPTPluginDomainQuantum.CBO.Complex_Inner_Product0 (
+  cauchy_schwarz
+  ortho_ortho_eq_closure
+  ortho_projection_exists
+  polarization_identity
+)
 
 end CATEPTMain.Quantum.CBO.Complex_Inner_Product0
