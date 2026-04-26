@@ -1,5 +1,5 @@
 import CATEPTMain.Core.MTN.MTNPrelude
-import CATEPTPluginDomainMtn.Kronecker_Product
+import CATEPTPluginDomainCore.MTN.Kronecker_Product
 
 /-!
 # Kronecker_Product — re-export shim
@@ -9,7 +9,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Core.MTN.Kronecker_Product
 
-export CATEPTPluginDomainMtn.Kronecker_Product (
+export CATEPTPluginDomainCore.MTN.Kronecker_Product (
   kronecker_add_left
   kronecker_add_right
   kronecker_diagonal

@@ -137,24 +137,22 @@ require «catept-plugin-afp-framework» from git
 require «catept-domain-quantum» from git
   "https://github.com/jagg-ix/catept-domain-quantum.git" @ "deebbbed5cee29259475477782e36805c094a4f4"
 
--- catept-domain-quat: extracted CATEPTMain.Geometry.QUAT.* (3 files / 264 LoC).
--- 20th sibling, T62a — second domain-bundle extraction. Quaternion type aliases
--- + unit-quaternion content under namespace `CATEPTPluginDomainQuat`. Built on
--- Mathlib's `Quaternion` types (Mathlib.Algebra.Quaternion + Mathlib.Analysis.Quaternion).
--- In-tree shims under CATEPTMain/Geometry/QUAT/*.lean re-export back into the
--- original `CATEPTMain.Geometry.QUAT.*` namespace.
-require «catept-domain-quat» from git
-  "https://github.com/jagg-ix/catept-domain-quat.git" @ "54c0f04c01b336163f72e370aa4cc225bd097c01"
+-- catept-domain-geometry: Class B domain umbrella for CATEPTMain.Geometry.*.
+-- Sub-bundles live at CATEPTPluginDomainGeometry.<BUNDLE>.* — one subdirectory
+-- per source bundle (QUAT shipped; MINK / OCT / SM / GYR / NoFTL planned).
+-- Replaces the deprecated thin sibling jagg-ix/catept-domain-quat (consolidation
+-- per docs/architecture/sibling-repo-inventory.md).
+-- **Private** per maintainer policy 2026-04-25.
+require «catept-domain-geometry» from git
+  "https://github.com/jagg-ix/catept-domain-geometry.git" @ "a6480b0c16ad5bee059fe01b3a3b96deb591f09c"
 
--- catept-domain-mtn: extracted CATEPTMain.Core.MTN.* (5 files / 383 LoC).
--- 21st sibling, T62c — third domain-bundle extraction. Matrix tensor / Kronecker
--- product content under namespace `CATEPTPluginDomainMtn`. Built on
--- Mathlib.LinearAlgebra.Matrix.{Kronecker, Trace}. In-tree shims under
--- CATEPTMain/Core/MTN/*.lean re-export back into `CATEPTMain.Core.MTN.*`.
--- **Private** per maintainer policy 2026-04-25 (catept-plugin-* through 17th
--- remain public; everything from afp-framework + catept-domain-* onward is private).
-require «catept-domain-mtn» from git
-  "https://github.com/jagg-ix/catept-domain-mtn.git" @ "7b6ee4caee68578b38b4e7e28f7052076c874eed"
+-- catept-domain-core: Class B domain umbrella for CATEPTMain.Core.* (excluding
+-- Framework, which is the standalone Class A plugin catept-plugin-afp-framework).
+-- Sub-bundles live at CATEPTPluginDomainCore.<BUNDLE>.* (MTN shipped; PDC, PHQ planned).
+-- Replaces the deprecated thin sibling jagg-ix/catept-domain-mtn.
+-- **Private** per maintainer policy 2026-04-25.
+require «catept-domain-core» from git
+  "https://github.com/jagg-ix/catept-domain-core.git" @ "9fbba431cb49a6ee05d509538e6c8263047403ad"
 
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"

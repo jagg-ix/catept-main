@@ -1,20 +1,16 @@
-import CATEPTPluginDomainMtn.MTNPrelude
+import CATEPTPluginDomainCore.MTN.MTNPrelude
 
 /-!
 # MTNPrelude — re-export shim
-
-Extracted to sibling repo `jagg-ix/catept-domain-mtn` (T62c, third
-domain-bundle extraction). Authoritative source lives at
-`CATEPTPluginDomainMtn.MTNPrelude`. This shim re-exports every public
-declaration under the original namespace `CATEPTMain.Core.MTN` so existing
-imports of `CATEPTMain.Core.MTN.MTNPrelude` continue to compile.
+Authoritative source: `CATEPTPluginDomainCore.MTN.MTNPrelude` in sibling repo
+[`jagg-ix/catept-domain-core`](https://github.com/jagg-ix/catept-domain-core).
 -/
 
 set_option autoImplicit false
 
 namespace CATEPTMain.Core.MTN
 
-export CATEPTPluginDomainMtn (
+export CATEPTPluginDomainCore.MTN (
   kronecker_assoc
   kronecker_det
   kronecker_one_left

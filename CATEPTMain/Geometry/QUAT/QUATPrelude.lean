@@ -1,20 +1,21 @@
-import CATEPTPluginDomainQuat.QUATPrelude
+import CATEPTPluginDomainGeometry.QUAT.QUATPrelude
 
 /-!
 # QUATPrelude — re-export shim
 
-Extracted to sibling repo `jagg-ix/catept-domain-quat` (T62a, second
-domain-bundle extraction). Authoritative source lives at
-`CATEPTPluginDomainQuat.QUATPrelude`. This shim re-exports every public
-declaration under the original namespace `CATEPTMain.Geometry.QUAT` so
-existing imports of `CATEPTMain.Geometry.QUAT.QUATPrelude` continue to compile.
+Authoritative source: `CATEPTPluginDomainGeometry.QUAT.QUATPrelude` in
+sibling repo [`jagg-ix/catept-domain-geometry`](https://github.com/jagg-ix/catept-domain-geometry).
+
+This shim re-exports under the original `CATEPTMain.Geometry.QUAT` namespace
+so existing imports compile unchanged after the QUAT bundle moved into the
+geometry domain umbrella.
 -/
 
 set_option autoImplicit false
 
 namespace CATEPTMain.Geometry.QUAT
 
-export CATEPTPluginDomainQuat (
+export CATEPTPluginDomainGeometry.QUAT (
   IsUnitQuat
   isUnitQuat_iff_normSq
   quatI
