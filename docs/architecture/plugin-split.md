@@ -150,4 +150,5 @@ and shim path.
 
 - [`plugin-split-playbook.md`](plugin-split-playbook.md) — operational manual
 - [`targets/target-4-plan.md`](targets/target-4-plan.md) — six middle-targets with measurable DONE criteria
+- [`targets/target-6-followup-resurvey.md`](targets/target-6-followup-resurvey.md) — post-T6 extraction-surface re-survey (T62)
 - [`targets/target-4-sibling-ci-axiom-gate.yml`](targets/target-4-sibling-ci-axiom-gate.yml) — workflow file pending application by maintainer with `gh auth refresh -s workflow`

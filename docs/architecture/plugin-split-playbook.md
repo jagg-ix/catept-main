@@ -410,3 +410,22 @@ Further extraction falls into one of three buckets, none session-sized:
    (`feat/copilot-claude/target6-orphan-tree-removal`, already −150K LoC)
    may reveal what's actually needed in catept-main after pruning.
    Re-survey after that lands.
+
+### Post-T6 re-survey (T62, 2026-04-26)
+
+Target 6 is now landed on `origin/main` (`d017aa7cd`, including the
+`f094b96d8` orphan-tree deletion). The follow-up extraction-surface re-survey
+is documented at:
+
+- [`targets/target-6-followup-resurvey.md`](targets/target-6-followup-resurvey.md)
+
+Key deltas from the re-survey:
+
+- Integration modules scanned: **98**
+- Internal fan-in distribution: `0:30`, `1:27`, `2:20`, `3-5:14`, `6-10:2`, `11+:5`
+- Already-split plugin shims (`CATEPTPlugin*`, fan-in 0): **16**
+- Plugin-slot-coupled files (import `TheoryPluginArchitecture`): **11**
+- `CATEPTSpaceTime` direct dependents: **21** (clear bundle surface)
+
+Conclusion: no new Wave-1 leaf wrappers emerged; next viable lanes remain
+plugin-slot decoupling (T60 option (b)) or bundle-first extraction.
