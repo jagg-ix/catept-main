@@ -66,14 +66,16 @@ Current status:
 * DSF-only import surface (`DSFOptInSurface`) builds successfully
 * Global external opt-in surface (`OptInSurface`) builds successfully
 
-## Target 5: Leverage Lean-QuantumInfo for Thermodynamic & Holographic Distances
-* **Source:** `/Users/macbookpro/lab/tau/tau-information-dynamics/Lean-QuantumInfo`
+## Target 5: Leverage Physlib QuantumInfo for Thermodynamic & Holographic Distances
+* **Source:** `/Users/macbookpro/lab/tau/tau-information-dynamics/physlib`
 * **Goal:** Directly connect the thermodynamic metric and emergent time variables to foundational quantum information structures (Entropy, Entanglement, and Channels).
 * **Integration Nodes:**
    1. **`ArakiRelativeEntropyBridge.lean`:** Import `QuantumInfo.Finite.Entropy.Relative` and `QuantumInfo.Finite.Entropy.DPI` (Data Processing Inequality). Replace axiomatic Araki relative entropy with exact algebraic forms of $S(\rho || \sigma) = \text{Tr}(\rho(\log\rho - \log\sigma))$. This closes the entropy generation bounds exactly.
    2. **`DSFThermoMetric.lean` (Target 1 further rigor):** Map the fluid element distance to the Bures / Trace Distance via `QuantumInfo.Finite.Distance.TraceDistance`.
    3. **`DSFOrbitRGFlow.lean` (Target 4 further rigor):** Model viscous enstrophy dissipation as a Completely Positive Trace-Preserving Map (`QuantumInfo.Finite.CPTPMap`). Dissipation formally reduces to contractivity under CPTP mapping, yielding topological zero-viscosity bounds via Strong Subadditivity (`QuantumInfo.Finite.Entropy.SSA`).
    4. **`DSFWeylTime.lean` (Target 3 further rigor):** Represent the entanglement entropy responsible for "emergent physical time" via structural Von Neumann formulations in `QuantumInfo.Finite.Entropy.VonNeumann`.
+* **Operational support:** see `docs/architecture/targets/target-63-physlib-leverage-inclusion.md`
+  and run `scripts/physlib_leverage_scan.sh` against the local Physlib checkout.
 ## Target 6: Spinor Path Integral & Eigenstate Thermalization Hypothesis (ETH) Bridge
 * **Source:** `$HOME/Downloads/eth2.md`
 * **Goal:** Map the proposed relativistic spinor path integral $K_R = \hat R \sum e^{i S_R/\hbar}$ into the CAT/EPT framework's entropy-damped path integral $\sum e^{i S_R/\hbar - S_I/\hbar}$. Formalize the Eigenstate Thermalization Hypothesis (ETH) within CAT/EPT.
@@ -232,4 +234,3 @@ In Lean 4, this translates into two distinct but synergistic paradigms:
 **Phase 4: Formal Proofs (Lean-Specific Advantage)**
 - Unlike Julia, Lean allows us to *prove* that `normal_form(e) = e` over the quotient algebra.
 - State and prove that `heisenberg_eom` forms a valid derivation (obeys Leibniz rule).
-

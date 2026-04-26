@@ -37,12 +37,26 @@ def physlibRelevantSubmodules : List PhyslibModulePath :=
   , "Physlib.SpaceAndTime.Space.Derivatives.Curl"
   , "Physlib.Relativity.Tensors.Basic"
   , "Physlib.Relativity.LorentzGroup.Basic"
+  , "Physlib.Relativity.Special.ProperTime"
+  , "Physlib.Relativity.LorentzGroup.Boosts.Basic"
   , "Physlib.Electromagnetism.Basic"
   , "Physlib.ClassicalMechanics.DampedHarmonicOscillator.Basic"
+  , "Physlib.QuantumMechanics.FiniteTarget.Basic"
   , "Physlib.QuantumMechanics.OneDimension.HarmonicOscillator.Basic"
+  , "Physlib.QuantumMechanics.OneDimension.HarmonicOscillator.TISE"
   , "Physlib.QFT.PerturbationTheory.FieldSpecification.Basic"
+  , "Physlib.StringTheory.Basic"
+  , "Physlib.StringTheory.FTheory.SU5.Charges.AnomalyFree"
   , "Physlib.Thermodynamics.Basic"
+  , "Physlib.Thermodynamics.IdealGas.Basic"
   , "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic"
+  , "Physlib.StatisticalMechanics.CanonicalEnsemble.Finite"
+  , "QuantumInfo.Finite.Entropy.VonNeumann"
+  , "QuantumInfo.Finite.Entropy.Relative"
+  , "QuantumInfo.Finite.Entropy.SSA"
+  , "QuantumInfo.Finite.Entropy.DPI"
+  , "QuantumInfo.Finite.Distance.TraceDistance"
+  , "QuantumInfo.Finite.CPTPMap"
   , "Physlib.Cosmology.Basic"
   , "Physlib.Units.Basic"
   ]
@@ -71,14 +85,38 @@ while staying compile-safe under the current upstream import collision. -/
 structure PhyslibSubmoduleCoverageContract : Prop where
   hasSpaceTime : "Physlib.SpaceAndTime.SpaceTime.Basic" ∈ physlibRelevantSubmodules
   hasRelativity : "Physlib.Relativity.Tensors.Basic" ∈ physlibRelevantSubmodules
+  hasRelativityProperTime : "Physlib.Relativity.Special.ProperTime" ∈ physlibRelevantSubmodules
+  hasRelativityBoosts : "Physlib.Relativity.LorentzGroup.Boosts.Basic" ∈ physlibRelevantSubmodules
   hasElectromagnetism : "Physlib.Electromagnetism.Basic" ∈ physlibRelevantSubmodules
   hasClassicalMechanics :
     "Physlib.ClassicalMechanics.DampedHarmonicOscillator.Basic" ∈ physlibRelevantSubmodules
+  hasQuantumMechanicsFinite :
+    "Physlib.QuantumMechanics.FiniteTarget.Basic" ∈ physlibRelevantSubmodules
   hasQuantumMechanics :
     "Physlib.QuantumMechanics.OneDimension.HarmonicOscillator.Basic" ∈ physlibRelevantSubmodules
+  hasQuantumMechanicsTISE :
+    "Physlib.QuantumMechanics.OneDimension.HarmonicOscillator.TISE" ∈ physlibRelevantSubmodules
   hasQFT : "Physlib.QFT.PerturbationTheory.FieldSpecification.Basic" ∈ physlibRelevantSubmodules
+  hasStringTheory : "Physlib.StringTheory.Basic" ∈ physlibRelevantSubmodules
+  hasStringTheoryAnomaly :
+    "Physlib.StringTheory.FTheory.SU5.Charges.AnomalyFree" ∈ physlibRelevantSubmodules
   hasThermodynamics : "Physlib.Thermodynamics.Basic" ∈ physlibRelevantSubmodules
+  hasIdealGas : "Physlib.Thermodynamics.IdealGas.Basic" ∈ physlibRelevantSubmodules
   hasStatMech : "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic" ∈ physlibRelevantSubmodules
+  hasStatMechFinite :
+    "Physlib.StatisticalMechanics.CanonicalEnsemble.Finite" ∈ physlibRelevantSubmodules
+  hasQuantumEntropy :
+    "QuantumInfo.Finite.Entropy.VonNeumann" ∈ physlibRelevantSubmodules
+  hasQuantumRelativeEntropy :
+    "QuantumInfo.Finite.Entropy.Relative" ∈ physlibRelevantSubmodules
+  hasQuantumEntropySSA :
+    "QuantumInfo.Finite.Entropy.SSA" ∈ physlibRelevantSubmodules
+  hasQuantumEntropyDPI :
+    "QuantumInfo.Finite.Entropy.DPI" ∈ physlibRelevantSubmodules
+  hasQuantumTraceDistance :
+    "QuantumInfo.Finite.Distance.TraceDistance" ∈ physlibRelevantSubmodules
+  hasQuantumCPTP :
+    "QuantumInfo.Finite.CPTPMap" ∈ physlibRelevantSubmodules
   hasCosmology : "Physlib.Cosmology.Basic" ∈ physlibRelevantSubmodules
   hasUnits : "Physlib.Units.Basic" ∈ physlibRelevantSubmodules
 
@@ -87,12 +125,26 @@ theorem physlibRelevantSubmodules_coverage :
     PhyslibSubmoduleCoverageContract where
   hasSpaceTime := by simp [physlibRelevantSubmodules]
   hasRelativity := by simp [physlibRelevantSubmodules]
+  hasRelativityProperTime := by simp [physlibRelevantSubmodules]
+  hasRelativityBoosts := by simp [physlibRelevantSubmodules]
   hasElectromagnetism := by simp [physlibRelevantSubmodules]
   hasClassicalMechanics := by simp [physlibRelevantSubmodules]
+  hasQuantumMechanicsFinite := by simp [physlibRelevantSubmodules]
   hasQuantumMechanics := by simp [physlibRelevantSubmodules]
+  hasQuantumMechanicsTISE := by simp [physlibRelevantSubmodules]
   hasQFT := by simp [physlibRelevantSubmodules]
+  hasStringTheory := by simp [physlibRelevantSubmodules]
+  hasStringTheoryAnomaly := by simp [physlibRelevantSubmodules]
   hasThermodynamics := by simp [physlibRelevantSubmodules]
+  hasIdealGas := by simp [physlibRelevantSubmodules]
   hasStatMech := by simp [physlibRelevantSubmodules]
+  hasStatMechFinite := by simp [physlibRelevantSubmodules]
+  hasQuantumEntropy := by simp [physlibRelevantSubmodules]
+  hasQuantumRelativeEntropy := by simp [physlibRelevantSubmodules]
+  hasQuantumEntropySSA := by simp [physlibRelevantSubmodules]
+  hasQuantumEntropyDPI := by simp [physlibRelevantSubmodules]
+  hasQuantumTraceDistance := by simp [physlibRelevantSubmodules]
+  hasQuantumCPTP := by simp [physlibRelevantSubmodules]
   hasCosmology := by simp [physlibRelevantSubmodules]
   hasUnits := by simp [physlibRelevantSubmodules]
 
