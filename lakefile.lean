@@ -140,10 +140,11 @@ require «catept-domain-quantum» from git
 -- catept-domain-geometry: Class B domain umbrella for CATEPTMain.Geometry.*.
 -- Sub-bundles live at CATEPTPluginDomainGeometry.<BUNDLE>.* — one subdirectory
 -- per source bundle. Currently shipped: QUAT (v0.1.0), MINK (v0.2.0), OCT (v0.3.0),
--- GYR (v0.4.0). Planned: SM / NoFTL. Replaces the deprecated thin sibling
--- jagg-ix/catept-domain-quat. **Private** per maintainer policy 2026-04-25.
+-- GYR (v0.4.0), SM (v0.5.0). Only NoFTL still planned (the largest, 5K LoC).
+-- Replaces the deprecated thin sibling jagg-ix/catept-domain-quat.
+-- **Private** per maintainer policy 2026-04-25.
 require «catept-domain-geometry» from git
-  "https://github.com/jagg-ix/catept-domain-geometry.git" @ "d85f8fa3b52d5b121573e3d1bee1055090a93ea4"
+  "https://github.com/jagg-ix/catept-domain-geometry.git" @ "6f87aa7d73a20298b02e54ee31ee0b7cf9aa0529"
 
 -- catept-domain-core: Class B domain umbrella for CATEPTMain.Core.* (excluding
 -- Framework, which is the standalone Class A plugin catept-plugin-afp-framework).
