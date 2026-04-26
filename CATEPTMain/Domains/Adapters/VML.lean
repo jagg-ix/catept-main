@@ -1,5 +1,8 @@
 import CATEPTMain.Domains.TemporalFramework
 import CATEPTMain.Domains.VML.Domain
+import CATEPTMain.Domains.Invariants.Conservation
+import CATEPTMain.Domains.Invariants.Reduction
+import CATEPTMain.Domains.Invariants.Symmetry
 
 /-!
 # VML Adapter — `LiveTemporalFramework` instance
@@ -47,5 +50,45 @@ theorem vml_satisfies_spine :
 /-- VML's dynamics are non-trivial. -/
 theorem vml_dynamics_nontrivial : ∃ x : VMLConfig, 0 < x.lyapunovAction :=
   vmlLive.dynamics_nontrivial
+
+-- ═════════════════════════════════════════════════════════════════════
+-- Per-invariant claims (T66e)
+-- ═════════════════════════════════════════════════════════════════════
+
+/-- VML conservation: vacuum stress-energy. (Phase-1 placeholder; phase-2
+    refines to the kinetic stress tensor + Maxwell stress tensor + BGK
+    relaxation residue once the smooth-section infrastructure lands.) -/
+noncomputable def vml_conservation : ConservationInvariant vml :=
+  vml.vacuumConservation
+
+/-- VML reduction: the Lyapunov action IS the documented kinetic-Maxwell
+    + EM-rigidity classical form. Pointwise reflexivity. -/
+noncomputable def vml_reduction : ReductionInvariant vml where
+  classicalProjection := vml.clock
+  target := vml.clock
+  reduces_classically := fun _ => rfl
+
+/-- Helper: `normSq3` is invariant under componentwise negation. -/
+private theorem normSq3_neg (u : Fin 3 → ℝ) :
+    VMLConfig.normSq3 (fun i => -(u i)) = VMLConfig.normSq3 u := by
+  unfold VMLConfig.normSq3
+  apply Finset.sum_congr rfl
+  intro i _
+  ring
+
+/-- VML symmetry: velocity reflection `v ↦ -v` (combined with `E ↦ -E`,
+    `∇B ↦ -∇B`) leaves the Lyapunov action invariant since each summand is
+    a sum of squares. Concrete non-identity witness. -/
+noncomputable def vml_symmetry : SymmetryInvariant vml where
+  sigma := fun c =>
+    { v := fun i => -(c.v i)
+      E := fun i => -(c.E i)
+      gradB := fun i => -(c.gradB i)
+      T := c.T
+      T_pos := c.T_pos }
+  clock_invariant := fun c => by
+    show VMLConfig.lyapunovAction _ = VMLConfig.lyapunovAction c
+    unfold VMLConfig.lyapunovAction
+    rw [normSq3_neg c.v, normSq3_neg c.E, normSq3_neg c.gradB]
 
 end CATEPTMain.Temporal.Adapter

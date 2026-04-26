@@ -161,6 +161,24 @@ def canonicalCommutation     : String := "qm.canonical_commutation"
     `‖v‖²/(2T) + ‖E‖² + ‖∇B‖²` whose unique zero is exactly that steady state. -/
 def vmlTheorem42Rigidity     : String := "vml.theorem42_rigidity"
 
+-- ── Universal CATEPT-spine invariants (T66, contract-first) ──────────────────
+
+/-- Conservation invariant: a divergence-free stress-energy-like quantity
+    associated with the framework. -/
+def conservationStressEnergy : String := "catept.conservation_stress_energy"
+
+/-- Reduction invariant: classical-limit projection equals a documented
+    classical target (e.g. GR + Maxwell). -/
+def reductionToClassical     : String := "catept.reduction_to_classical"
+
+/-- Symmetry invariant: clock invariance under a non-trivial symmetry
+    transformation (gauge / diffeo / Lorentz / kinetic isotropy). -/
+def symmetryClockInvariance  : String := "catept.symmetry_clock_invariance"
+
+/-- Quantum-correspondence invariant: classical curvature-like quantity is
+    sourced by quantum expectation value (`R = 8πG⟨O⟩` skeleton). -/
+def quantumCorrespondenceBridge : String := "catept.quantum_correspondence_bridge"
+
 end AssumptionId
 
 end CATEPTMain
