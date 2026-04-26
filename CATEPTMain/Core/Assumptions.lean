@@ -152,6 +152,15 @@ def bornRule                 : String := "qm.born_rule"
 /-- Canonical commutation [x, p] = iℏ. -/
 def canonicalCommutation     : String := "qm.canonical_commutation"
 
+-- ── Vlasov–Maxwell–Landau (kinetic theory) ──────────────────────────────────
+
+/-- Vlasov–Maxwell–Landau Theorem 42 rigidity (Aristotle/Clawristotle):
+    on a flat 3-torus, the only smooth steady state is the global Maxwellian
+    with `E = 0` and `B = const`. The CATEPT spine slot
+    `vmlRigiditySuperiorSlot` uses the Lyapunov action
+    `‖v‖²/(2T) + ‖E‖² + ‖∇B‖²` whose unique zero is exactly that steady state. -/
+def vmlTheorem42Rigidity     : String := "vml.theorem42_rigidity"
+
 end AssumptionId
 
 end CATEPTMain
