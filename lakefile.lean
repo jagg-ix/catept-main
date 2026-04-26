@@ -146,6 +146,16 @@ require «catept-domain-quantum» from git
 require «catept-domain-quat» from git
   "https://github.com/jagg-ix/catept-domain-quat.git" @ "54c0f04c01b336163f72e370aa4cc225bd097c01"
 
+-- catept-domain-mtn: extracted CATEPTMain.Core.MTN.* (5 files / 383 LoC).
+-- 21st sibling, T62c — third domain-bundle extraction. Matrix tensor / Kronecker
+-- product content under namespace `CATEPTPluginDomainMtn`. Built on
+-- Mathlib.LinearAlgebra.Matrix.{Kronecker, Trace}. In-tree shims under
+-- CATEPTMain/Core/MTN/*.lean re-export back into `CATEPTMain.Core.MTN.*`.
+-- **Private** per maintainer policy 2026-04-25 (catept-plugin-* through 17th
+-- remain public; everything from afp-framework + catept-domain-* onward is private).
+require «catept-domain-mtn» from git
+  "https://github.com/jagg-ix/catept-domain-mtn.git" @ "7b6ee4caee68578b38b4e7e28f7052076c874eed"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
