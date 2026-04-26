@@ -95,17 +95,18 @@ upstream wrappers. **Final Class A count: 18 — 21.**
 
 | # | Name | Status | LoC | Sub-bundles |
 |---|---|---|---:|---|
-| 19 | `catept-domain-quantum` | partial (QUANTUM done) | 9,060 | QUANTUM ✓, IMD, CBO, HSTP, PM, SCHTZ |
-| 20 | `catept-domain-geometry` | partial (QUAT done as standalone) | 7,907 | GYR, MINK, NoFTL, OCT, QUAT ✓, SM |
-| 21 | `catept-domain-gauge` | not started | 7,977 | ELECTROWEAK, EQFTRTFT, FBD, FEYNCALC, LDO, QCD |
+| 19 | `catept-domain-quantum` | ✓ COMPLETE (6/6, v0.4.0 @ 497848e1) | 9,060 | QUANTUM ✓, IMD ✓, CBO ✓, HSTP ✓, PM ✓, SCHTZ ✓ |
+| 20 | `catept-domain-geometry` | ✓ COMPLETE (6/6, v0.6.0 @ d1a588a9) | 7,907 | GYR ✓, MINK ✓, NoFTL ✓, OCT ✓, QUAT ✓, SM ✓ |
+| 21 | `catept-domain-gauge` | ✓ COMPLETE (6/6, v0.7.1 @ 61d6204f) | 7,977 | ELECTROWEAK ✓, EQFTRTFT ✓, FBD ✓, FEYNCALC ✓, LDO ✓, QCD ✓ |
 | 22 | `catept-domain-analysis` | not started | 3,959 | CPM, FOU, LAPL, LSI, MODE, ODE |
-| 23 | `catept-domain-core` | partial (MTN done as standalone) | 1,162 | MTN ✓, PDC, PHQ |
+| 23 | `catept-domain-core` | ✓ COMPLETE (3/3, v0.2.0 @ 2a551615) | 1,162 | MTN ✓, PDC ✓, PHQ ✓ |
 
-**Class B total: 5 umbrellas.** Currently we have 3 *thin* siblings
-(`catept-domain-quantum`, `catept-domain-quat`, `catept-domain-mtn`) —
-two of those (`-quat` and `-mtn`) are misnamed under the fat scheme and
-should be folded into `catept-domain-geometry` and `catept-domain-core`
-respectively. See *Consolidation note* below.
+**Class B status: 4 of 5 umbrellas complete as of 2026-04-26**
+(geometry, quantum, gauge, core). Only `catept-domain-analysis` remains
+unstarted. The two stranded thin siblings (`catept-domain-quat`,
+`catept-domain-mtn`) were folded into the geometry and core umbrellas
+respectively (T62-consolidation pass on 2026-04-26) and the originals
+archived.
 
 ### Class C — Standalone physics-port siblings
 Each is too large or too distinct from the catept-domain-* category cuts
