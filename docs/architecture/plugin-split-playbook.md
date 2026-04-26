@@ -437,7 +437,10 @@ use:
 
 - [`targets/target-60-plugin-slot-decoupling-preflight.md`](targets/target-60-plugin-slot-decoupling-preflight.md)
 - `scripts/t60_plugin_slot_preflight_scan.sh`
+- [`targets/target-60-plugin-slot-importer-migration-map.md`](targets/target-60-plugin-slot-importer-migration-map.md)
+- `scripts/t60_plugin_slot_importer_map.sh`
 
 The preflight package provides a measured cut map for
 `CATEPTPort` / `Integration.TheoryPluginArchitecture`, an importer blast-radius
-table, and a gated sequence aligned with active helper lanes (T60s2/T61).
+table, a deterministic importer-rewrite map, and a gated sequence aligned with
+active helper lanes (T60s2/T61).

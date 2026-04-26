@@ -30,6 +30,11 @@ This scanner reports:
 - the `CATEPTPort` barrel-import set
 - LoC sizing for the architecture boundary files
 
+Importer migration companion:
+
+- [`target-60-plugin-slot-importer-migration-map.md`](target-60-plugin-slot-importer-migration-map.md)
+- `scripts/t60_plugin_slot_importer_map.sh`
+
 ---
 
 ## Measured Cut Map (2026-04-26)
