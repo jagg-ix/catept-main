@@ -113,6 +113,30 @@ require «catept-plugin-thermodynamics-lean» from git
 require «catept-plugin-bt-compat» from git
   "https://github.com/jagg-ix/catept-plugin-bt-compat.git" @ "02918aecb838a9993af0a43374afca60f3595750"
 
+-- catept-plugin-afp-framework: extracted CATEPTMain.Core.Framework.AFPBridgeFramework.
+-- 18th plugin (T61 step 0 — prerequisite for the catept-domain-quantum bundle).
+-- Generic AFP carriers (AFPObj/AFPSet/AFPMat/AFPVec) + ~25 axioms for matrix/vector ops
+-- + 15 TacticStubs scoped macros. Imported by 30+ Prelude files across CATEPTMain/
+-- (Quantum/QUANTUM, GaugeTheory/{LDO,QCD,FEYNCALC,EQFTRTFT}, Geometry/{MINK,SM,GYR,OCT,QUAT},
+-- Analysis/{MODE,LAPL,CPM,ODE,FOU,LSI}, Core/{MTN,PHQ,PDC}, CATEPT/{QFT,EPT,CATEPT}, …).
+-- Sibling module path: `CATEPTPluginAFPFramework.IntegrationBridge` (avoids the
+-- Lake lib-name collision with catept-main's local `lean_lib CATEPTMain`).
+-- Phase-1 abstract scaffold; phase-2 swap to concrete Mathlib types is per-Prelude.
+require «catept-plugin-afp-framework» from git
+  "https://github.com/jagg-ix/catept-plugin-afp-framework.git" @ "27c58a8337eca6cf2ec684602c0cd6cc37d2dc52"
+
+-- catept-domain-quantum: extracted CATEPTMain.Quantum.QUANTUM.* (10 files / 1931 LoC).
+-- 19th sibling, T61 — first **domain bundle** extraction (distinct from
+-- catept-plugin-* integration plugins and catept-core publication-bridge core).
+-- Provides QuantumPrelude / QuantumGates / DensityMatrix / QFIScaffold /
+-- JordanWigner / QFIToolbox / PhysicsHamiltonians / QFIMeasurements / QuantumPort
+-- under namespace `CATEPTPluginDomainQuantum`. In-tree shims under
+-- CATEPTMain/Quantum/QUANTUM/*.lean re-export every public symbol back into
+-- `CATEPTMain.Quantum.QUANTUM.*` so existing consumers compile unchanged.
+-- 2 pre-existing sorrys in QFIMeasurements (lines 161, 234) carry over verbatim.
+require «catept-domain-quantum» from git
+  "https://github.com/jagg-ix/catept-domain-quantum.git" @ "deebbbed5cee29259475477782e36805c094a4f4"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
