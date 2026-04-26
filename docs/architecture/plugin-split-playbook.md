@@ -429,3 +429,15 @@ Key deltas from the re-survey:
 
 Conclusion: no new Wave-1 leaf wrappers emerged; next viable lanes remain
 plugin-slot decoupling (T60 option (b)) or bundle-first extraction.
+
+### T60 option (b) preflight package (2026-04-26)
+
+To convert the plugin-slot decoupling lane into an executable split sequence,
+use:
+
+- [`targets/target-60-plugin-slot-decoupling-preflight.md`](targets/target-60-plugin-slot-decoupling-preflight.md)
+- `scripts/t60_plugin_slot_preflight_scan.sh`
+
+The preflight package provides a measured cut map for
+`CATEPTPort` / `Integration.TheoryPluginArchitecture`, an importer blast-radius
+table, and a gated sequence aligned with active helper lanes (T60s2/T61).
