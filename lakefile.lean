@@ -137,6 +137,15 @@ require «catept-plugin-afp-framework» from git
 require «catept-domain-quantum» from git
   "https://github.com/jagg-ix/catept-domain-quantum.git" @ "deebbbed5cee29259475477782e36805c094a4f4"
 
+-- catept-domain-quat: extracted CATEPTMain.Geometry.QUAT.* (3 files / 264 LoC).
+-- 20th sibling, T62a — second domain-bundle extraction. Quaternion type aliases
+-- + unit-quaternion content under namespace `CATEPTPluginDomainQuat`. Built on
+-- Mathlib's `Quaternion` types (Mathlib.Algebra.Quaternion + Mathlib.Analysis.Quaternion).
+-- In-tree shims under CATEPTMain/Geometry/QUAT/*.lean re-export back into the
+-- original `CATEPTMain.Geometry.QUAT.*` namespace.
+require «catept-domain-quat» from git
+  "https://github.com/jagg-ix/catept-domain-quat.git" @ "54c0f04c01b336163f72e370aa4cc225bd097c01"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
