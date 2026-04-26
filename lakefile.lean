@@ -159,6 +159,14 @@ require «catept-domain-core» from git
 require «catept-domain-gauge» from git
   "https://github.com/jagg-ix/catept-domain-gauge.git" @ "61d6204fdd16bd49ffa1b0dbc6063aab5c71d3fa"
 
+-- catept-domain-analysis: Class B Analysis umbrella sibling — last of 5/5.
+-- Sub-bundles at CATEPTPluginDomainAnalysis.<BUNDLE>.* (CPM, FOU, LAPL, LSI,
+-- MODE, ODE). Two ODE files (AFPODEBridge, MatricesForODEsBridge) stay
+-- in-tree as cross-NavierStokesClean bridge glue. **Private** per
+-- maintainer policy 2026-04-25.
+require «catept-domain-analysis» from git
+  "https://github.com/jagg-ix/catept-domain-analysis.git" @ "14dedcdeae7b2a16789f983df2f136c72ecbbf5c"
+
 -- catept-gravitas-port: Class C standalone physics-port sibling.
 -- Lean 4 port of the Wolfram Mathematica Gravitas symbolic-GR package.
 -- 25 files / 4032 LoC under bare namespaces (ADMDecomposition, EinsteinTensor,
