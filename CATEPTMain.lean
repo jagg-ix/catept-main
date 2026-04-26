@@ -48,6 +48,7 @@ import CATEPTMain.Integration.TheoryPluginDimCore
 import CATEPTMain.Integration.TheoryPluginDimCategory
 import CATEPTMain.Integration.TheoryPluginDimFundamental
 import CATEPTMain.Integration.TheoryPluginQTMBridge
+import CATEPTMain.Integration.PhyslibCrossDomainBridge
 import CATEPTMain.Integration.QuantumMpembaUnificationBridge
 import CATEPTMain.Integration.TheoryPluginKolmogorovLadder
 import CATEPTMain.Integration.TheoryPluginOriginBridge

@@ -36,13 +36,16 @@ def physlibRelevantSubmodules : List PhyslibModulePath :=
   , "Physlib.SpaceAndTime.Space.Basic"
   , "Physlib.SpaceAndTime.Space.Derivatives.Curl"
   , "Physlib.Relativity.Tensors.Basic"
+  , "Physlib.Relativity.Special.ProperTime"
   , "Physlib.Relativity.LorentzGroup.Basic"
   , "Physlib.Electromagnetism.Basic"
   , "Physlib.ClassicalMechanics.DampedHarmonicOscillator.Basic"
   , "Physlib.QuantumMechanics.OneDimension.HarmonicOscillator.Basic"
   , "Physlib.QFT.PerturbationTheory.FieldSpecification.Basic"
   , "Physlib.Thermodynamics.Basic"
+  , "Physlib.Thermodynamics.IdealGas.Basic"
   , "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic"
+  , "Physlib.StringTheory.FTheory.SU5.Fluxes.NoExotics.Elems"
   , "Physlib.Cosmology.Basic"
   , "Physlib.Units.Basic"
   ]
@@ -71,6 +74,7 @@ while staying compile-safe under the current upstream import collision. -/
 structure PhyslibSubmoduleCoverageContract : Prop where
   hasSpaceTime : "Physlib.SpaceAndTime.SpaceTime.Basic" ∈ physlibRelevantSubmodules
   hasRelativity : "Physlib.Relativity.Tensors.Basic" ∈ physlibRelevantSubmodules
+  hasRelativityProperTime : "Physlib.Relativity.Special.ProperTime" ∈ physlibRelevantSubmodules
   hasElectromagnetism : "Physlib.Electromagnetism.Basic" ∈ physlibRelevantSubmodules
   hasClassicalMechanics :
     "Physlib.ClassicalMechanics.DampedHarmonicOscillator.Basic" ∈ physlibRelevantSubmodules
@@ -78,7 +82,10 @@ structure PhyslibSubmoduleCoverageContract : Prop where
     "Physlib.QuantumMechanics.OneDimension.HarmonicOscillator.Basic" ∈ physlibRelevantSubmodules
   hasQFT : "Physlib.QFT.PerturbationTheory.FieldSpecification.Basic" ∈ physlibRelevantSubmodules
   hasThermodynamics : "Physlib.Thermodynamics.Basic" ∈ physlibRelevantSubmodules
+  hasIdealGas : "Physlib.Thermodynamics.IdealGas.Basic" ∈ physlibRelevantSubmodules
   hasStatMech : "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic" ∈ physlibRelevantSubmodules
+  hasStringNoExotics :
+    "Physlib.StringTheory.FTheory.SU5.Fluxes.NoExotics.Elems" ∈ physlibRelevantSubmodules
   hasCosmology : "Physlib.Cosmology.Basic" ∈ physlibRelevantSubmodules
   hasUnits : "Physlib.Units.Basic" ∈ physlibRelevantSubmodules
 
@@ -87,12 +94,15 @@ theorem physlibRelevantSubmodules_coverage :
     PhyslibSubmoduleCoverageContract where
   hasSpaceTime := by simp [physlibRelevantSubmodules]
   hasRelativity := by simp [physlibRelevantSubmodules]
+  hasRelativityProperTime := by simp [physlibRelevantSubmodules]
   hasElectromagnetism := by simp [physlibRelevantSubmodules]
   hasClassicalMechanics := by simp [physlibRelevantSubmodules]
   hasQuantumMechanics := by simp [physlibRelevantSubmodules]
   hasQFT := by simp [physlibRelevantSubmodules]
   hasThermodynamics := by simp [physlibRelevantSubmodules]
+  hasIdealGas := by simp [physlibRelevantSubmodules]
   hasStatMech := by simp [physlibRelevantSubmodules]
+  hasStringNoExotics := by simp [physlibRelevantSubmodules]
   hasCosmology := by simp [physlibRelevantSubmodules]
   hasUnits := by simp [physlibRelevantSubmodules]
 
