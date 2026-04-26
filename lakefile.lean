@@ -129,7 +129,7 @@ require «catept-core» from git
 -- catept-domain-gauge: GaugeTheory umbrella sibling.
 -- T63a (Electromagnetic-first): ELECTROWEAK + FEYNCALC core support modules.
 require «catept-domain-gauge» from git
-  "https://github.com/jagg-ix/catept-domain-gauge.git" @ "c7b2ee66f5d512e6d7002ecbbf5072ef2be11edc"
+  "https://github.com/jagg-ix/catept-domain-gauge.git" @ "94bfa9adb9f28306e4421b5aa70f9596a14463c8"
 
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
