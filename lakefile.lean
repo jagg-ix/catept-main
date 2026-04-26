@@ -146,11 +146,13 @@ require «catept-domain-geometry» from git
 
 -- catept-domain-core: Class B domain umbrella for CATEPTMain.Core.* (excluding
 -- Framework, which is the standalone Class A plugin catept-plugin-afp-framework).
--- Sub-bundles live at CATEPTPluginDomainCore.<BUNDLE>.* (MTN shipped; PDC, PHQ planned).
+-- ALL three Core/* sub-bundles consolidated as of v0.2.0:
+--   MTN (5 files / 383 LoC), PDC (2 files / 358 LoC), PHQ (2 files / 421 LoC).
+-- Total 9 source files / 1,162 LoC.
 -- Replaces the deprecated thin sibling jagg-ix/catept-domain-mtn.
 -- **Private** per maintainer policy 2026-04-25.
 require «catept-domain-core» from git
-  "https://github.com/jagg-ix/catept-domain-core.git" @ "9fbba431cb49a6ee05d509538e6c8263047403ad"
+  "https://github.com/jagg-ix/catept-domain-core.git" @ "2a551615db755816b2e467f7de09d8bb36da2e05"
 
 -- catept-domain-gauge: GaugeTheory umbrella sibling.
 -- T63a (Electromagnetic-first): ELECTROWEAK + FEYNCALC core support modules.
