@@ -61,6 +61,24 @@ def physlibRelevantSubmodules : List PhyslibModulePath :=
   , "Physlib.Units.Basic"
   ]
 
+/-- Root-safe subset used by integration bridges imported in `CATEPTMain.lean`.
+
+This list intentionally excludes known collision-prone lanes (notably direct
+`QuantumInfo.*` imports) and keeps only currently verified root-safe paths. -/
+def physlibSafeCoreSubmodules : List PhyslibModulePath :=
+  [ "Physlib.Relativity.LorentzGroup.Basic"
+  , "Physlib.Relativity.LorentzGroup.Boosts.Basic"
+  , "Physlib.SpaceAndTime.Time.Derivatives"
+  , "Physlib.Electromagnetism.Kinematics.EMPotential"
+  , "Physlib.Electromagnetism.Kinematics.FieldStrength"
+  , "Physlib.Electromagnetism.Dynamics.Basic"
+  , "Physlib.Thermodynamics.IdealGas.Basic"
+  , "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas"
+  , "Physlib.StringTheory.FTheory.SU5.Fluxes.NoExotics.Elems"
+  , "Physlib.Units.FDeriv"
+  , "Physlib.Units.Integral"
+  ]
+
 /-- Physlib-backed construct contract for the unified plugin validator.
 
 This bundles the slots that are relevant to CAT/EPT + spacetime +
@@ -120,6 +138,22 @@ structure PhyslibSubmoduleCoverageContract : Prop where
   hasCosmology : "Physlib.Cosmology.Basic" ∈ physlibRelevantSubmodules
   hasUnits : "Physlib.Units.Basic" ∈ physlibRelevantSubmodules
 
+/-- Coverage contract for the root-safe Physlib core lane. -/
+structure PhyslibSafeCoreCoverageContract : Prop where
+  hasLorentzGroup : "Physlib.Relativity.LorentzGroup.Basic" ∈ physlibSafeCoreSubmodules
+  hasLorentzBoosts : "Physlib.Relativity.LorentzGroup.Boosts.Basic" ∈ physlibSafeCoreSubmodules
+  hasTimeDerivatives : "Physlib.SpaceAndTime.Time.Derivatives" ∈ physlibSafeCoreSubmodules
+  hasEMPotential : "Physlib.Electromagnetism.Kinematics.EMPotential" ∈ physlibSafeCoreSubmodules
+  hasFieldStrength : "Physlib.Electromagnetism.Kinematics.FieldStrength" ∈ physlibSafeCoreSubmodules
+  hasEMDynamics : "Physlib.Electromagnetism.Dynamics.Basic" ∈ physlibSafeCoreSubmodules
+  hasIdealGas : "Physlib.Thermodynamics.IdealGas.Basic" ∈ physlibSafeCoreSubmodules
+  hasCanonicalLemmas :
+    "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas" ∈ physlibSafeCoreSubmodules
+  hasSU5NoExotics :
+    "Physlib.StringTheory.FTheory.SU5.Fluxes.NoExotics.Elems" ∈ physlibSafeCoreSubmodules
+  hasUnitsFDeriv : "Physlib.Units.FDeriv" ∈ physlibSafeCoreSubmodules
+  hasUnitsIntegral : "Physlib.Units.Integral" ∈ physlibSafeCoreSubmodules
+
 /-- The default Physlib registry satisfies the coverage contract. -/
 theorem physlibRelevantSubmodules_coverage :
     PhyslibSubmoduleCoverageContract where
@@ -148,10 +182,30 @@ theorem physlibRelevantSubmodules_coverage :
   hasCosmology := by simp [physlibRelevantSubmodules]
   hasUnits := by simp [physlibRelevantSubmodules]
 
+/-- The root-safe Physlib core registry satisfies the safe-coverage contract. -/
+theorem physlibSafeCoreSubmodules_coverage :
+    PhyslibSafeCoreCoverageContract where
+  hasLorentzGroup := by simp [physlibSafeCoreSubmodules]
+  hasLorentzBoosts := by simp [physlibSafeCoreSubmodules]
+  hasTimeDerivatives := by simp [physlibSafeCoreSubmodules]
+  hasEMPotential := by simp [physlibSafeCoreSubmodules]
+  hasFieldStrength := by simp [physlibSafeCoreSubmodules]
+  hasEMDynamics := by simp [physlibSafeCoreSubmodules]
+  hasIdealGas := by simp [physlibSafeCoreSubmodules]
+  hasCanonicalLemmas := by simp [physlibSafeCoreSubmodules]
+  hasSU5NoExotics := by simp [physlibSafeCoreSubmodules]
+  hasUnitsFDeriv := by simp [physlibSafeCoreSubmodules]
+  hasUnitsIntegral := by simp [physlibSafeCoreSubmodules]
+
 /-- Combined construct: plugin consistency plus Physlib lane coverage. -/
 structure PhyslibConstructWithCoverageContract (plugin : TheoryPlugin) : Prop where
   pluginConsistency : PhyslibConstructContract plugin
   moduleCoverage : PhyslibSubmoduleCoverageContract
+
+/-- Combined construct: plugin consistency plus root-safe Physlib core coverage. -/
+structure PhyslibConstructWithSafeCoreCoverageContract (plugin : TheoryPlugin) : Prop where
+  pluginConsistency : PhyslibConstructContract plugin
+  safeCoreCoverage : PhyslibSafeCoreCoverageContract
 
 /-- Any fully validated plugin satisfies the Physlib construct contract. -/
 theorem validatePlugin_implies_physlibConstructContract
@@ -178,6 +232,14 @@ theorem validatePlugin_implies_physlibConstructWithCoverageContract
   pluginConsistency := validatePlugin_implies_physlibConstructContract plugin h
   moduleCoverage := physlibRelevantSubmodules_coverage
 
+/-- Any validated plugin satisfies the root-safe consistency + coverage contract. -/
+theorem validatePlugin_implies_physlibConstructWithSafeCoreCoverageContract
+    (plugin : TheoryPlugin)
+    (h : validatePlugin plugin) :
+    PhyslibConstructWithSafeCoreCoverageContract plugin where
+  pluginConsistency := validatePlugin_implies_physlibConstructContract plugin h
+  safeCoreCoverage := physlibSafeCoreSubmodules_coverage
+
 /-- Concrete consistency witness for the existing adapter plugin. -/
 theorem gravitasPphi2AdapterPlugin_physlibConstruct_consistent :
     PhyslibConstructContract gravitasPphi2AdapterPlugin :=
@@ -189,6 +251,13 @@ theorem gravitasPphi2AdapterPlugin_physlibConstruct_consistent :
 theorem gravitasPphi2AdapterPlugin_physlibConstruct_with_coverage_consistent :
     PhyslibConstructWithCoverageContract gravitasPphi2AdapterPlugin :=
   validatePlugin_implies_physlibConstructWithCoverageContract
+    gravitasPphi2AdapterPlugin
+    gravitasPphi2AdapterPlugin_valid
+
+/-- Concrete root-safe combined witness for the existing adapter plugin. -/
+theorem gravitasPphi2AdapterPlugin_physlibConstruct_with_safe_core_consistent :
+    PhyslibConstructWithSafeCoreCoverageContract gravitasPphi2AdapterPlugin :=
+  validatePlugin_implies_physlibConstructWithSafeCoreCoverageContract
     gravitasPphi2AdapterPlugin
     gravitasPphi2AdapterPlugin_valid
 

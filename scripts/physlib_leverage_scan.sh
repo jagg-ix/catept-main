@@ -20,9 +20,10 @@ if [[ ! -d "$PHYSLIB_ROOT" ]]; then
   exit 1
 fi
 
-extract_modules() {
-  awk '
-    /def physlibRelevantSubmodules/ {in_list=1; next}
+extract_modules_from_def() {
+  local def_name="$1"
+  awk -v def_name="$def_name" '
+    $0 ~ ("def " def_name) {in_list=1; next}
     in_list && /^[[:space:]]*\]/ {in_list=0}
     in_list {print}
   ' "$LEAN_REGISTRY_FILE" | rg -o '"[^"]+"' | tr -d '"'
@@ -37,10 +38,15 @@ count_tree_modules() {
   fi
 }
 
-mapfile -t modules < <(extract_modules)
+mapfile -t modules < <(extract_modules_from_def "physlibRelevantSubmodules")
+mapfile -t safe_modules < <(extract_modules_from_def "physlibSafeCoreSubmodules")
 
 if [[ "${#modules[@]}" -eq 0 ]]; then
   echo "error: no modules extracted from registry" >&2
+  exit 1
+fi
+if [[ "${#safe_modules[@]}" -eq 0 ]]; then
+  echo "error: no modules extracted from safe-core registry" >&2
   exit 1
 fi
 
@@ -50,6 +56,7 @@ echo "repo_root: $REPO_ROOT"
 echo "physlib_root: $PHYSLIB_ROOT"
 echo "registry_file: ${LEAN_REGISTRY_FILE#$REPO_ROOT/}"
 echo "registry_modules: ${#modules[@]}"
+echo "safe_core_modules: ${#safe_modules[@]}"
 echo
 
 echo "## Physlib Surface Counts"
@@ -63,6 +70,7 @@ printf '%-46s %6s\n' "QuantumInfo" "$(count_tree_modules 'QuantumInfo')"
 echo
 
 missing=0
+safe_missing=0
 qm=0
 rel=0
 str=0
@@ -103,6 +111,19 @@ for m in "${modules[@]}"; do
 done
 
 echo
+echo "## Safe-Core Resolution"
+for m in "${safe_modules[@]}"; do
+  path="${m//./\/}.lean"
+  full="$PHYSLIB_ROOT/$path"
+  status="OK"
+  if [[ ! -f "$full" ]]; then
+    status="MISSING"
+    safe_missing=$((safe_missing + 1))
+  fi
+  printf -- '- [%s] %s -> %s\n' "$status" "$m" "$path"
+done
+
+echo
 echo "## Domain Coverage (from registry)"
 printf '%-46s %6d\n' "Quantum mechanics lane modules" "$qm"
 printf '%-46s %6d\n' "Relativity lane modules" "$rel"
@@ -110,9 +131,9 @@ printf '%-46s %6d\n' "String-theory lane modules" "$str"
 printf '%-46s %6d\n' "Entropy/thermo lane modules" "$ent"
 echo
 
-if [[ "$missing" -eq 0 ]]; then
-  echo "result: PASS (all registry module paths resolve under physlib root)"
+if [[ "$missing" -eq 0 && "$safe_missing" -eq 0 ]]; then
+  echo "result: PASS (all registry + safe-core module paths resolve under physlib root)"
 else
-  echo "result: FAIL ($missing registry module paths missing under physlib root)"
+  echo "result: FAIL ($missing registry missing, $safe_missing safe-core missing)"
   exit 2
 fi
