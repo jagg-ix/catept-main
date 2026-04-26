@@ -1,5 +1,5 @@
 import CATEPTMain.Quantum.QUANTUM.QuantumPrelude
-import CATEPTPluginDomainQuantum.JordanWigner
+import CATEPTPluginDomainQuantum.QUANTUM.JordanWigner
 
 /-!
 # JordanWigner — re-export shim
@@ -15,7 +15,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   jw_annihilation_nilpotent
   jw_car_different
   jw_car_same

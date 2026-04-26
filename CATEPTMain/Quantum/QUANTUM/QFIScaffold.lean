@@ -1,5 +1,5 @@
 import CATEPTMain.Quantum.QUANTUM.DensityMatrix
-import CATEPTPluginDomainQuantum.QFIScaffold
+import CATEPTPluginDomainQuantum.QUANTUM.QFIScaffold
 
 /-!
 # QFIScaffold — re-export shim
@@ -15,7 +15,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   cramer_rao_scalar
   qfi
   qfi_family

@@ -1,6 +1,6 @@
 import CATEPTMain.Quantum.QUANTUM.DensityMatrix
 import CATEPTMain.Quantum.QUANTUM.QFIScaffold
-import CATEPTPluginDomainQuantum.QFIToolbox
+import CATEPTPluginDomainQuantum.QUANTUM.QFIToolbox
 
 /-!
 # QFIToolbox — re-export shim
@@ -16,7 +16,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   bipartiteEntanglementEntropy
   bipartiteEntanglementEntropy_nonneg
   boundQFI

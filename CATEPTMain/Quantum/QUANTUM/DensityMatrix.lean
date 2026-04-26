@@ -1,5 +1,5 @@
 import CATEPTMain.Quantum.QUANTUM.QuantumPrelude
-import CATEPTPluginDomainQuantum.DensityMatrix
+import CATEPTPluginDomainQuantum.QUANTUM.DensityMatrix
 
 /-!
 # DensityMatrix — re-export shim
@@ -15,7 +15,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   DensityMatrix
   LiouvilleKet
   LiouvilleTrajectory

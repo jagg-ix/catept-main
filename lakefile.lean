@@ -125,17 +125,17 @@ require «catept-plugin-bt-compat» from git
 require «catept-plugin-afp-framework» from git
   "https://github.com/jagg-ix/catept-plugin-afp-framework.git" @ "27c58a8337eca6cf2ec684602c0cd6cc37d2dc52"
 
--- catept-domain-quantum: extracted CATEPTMain.Quantum.QUANTUM.* (10 files / 1931 LoC).
--- 19th sibling, T61 — first **domain bundle** extraction (distinct from
--- catept-plugin-* integration plugins and catept-core publication-bridge core).
--- Provides QuantumPrelude / QuantumGates / DensityMatrix / QFIScaffold /
--- JordanWigner / QFIToolbox / PhysicsHamiltonians / QFIMeasurements / QuantumPort
--- under namespace `CATEPTPluginDomainQuantum`. In-tree shims under
--- CATEPTMain/Quantum/QUANTUM/*.lean re-export every public symbol back into
--- `CATEPTMain.Quantum.QUANTUM.*` so existing consumers compile unchanged.
--- 2 pre-existing sorrys in QFIMeasurements (lines 161, 234) carry over verbatim.
+-- catept-domain-quantum: Class B domain umbrella for CATEPTMain.Quantum.*.
+-- v0.2.0 restructured to sub-namespace layout matching catept-domain-geometry:
+-- each Quantum/<BUNDLE>/ from catept-main lives at
+-- CATEPTPluginDomainQuantum/<BUNDLE>/ with namespace
+-- CATEPTPluginDomainQuantum.<BUNDLE>.*. Currently shipped:
+--   QUANTUM (10 files / 1931 LoC), SCHTZ (2 files / 385 LoC).
+-- Planned: PM, HSTP, CBO, IMD.
+-- 2 pre-existing sorrys in QFIMeasurements carry over verbatim.
+-- **Private** per maintainer policy 2026-04-25.
 require «catept-domain-quantum» from git
-  "https://github.com/jagg-ix/catept-domain-quantum.git" @ "deebbbed5cee29259475477782e36805c094a4f4"
+  "https://github.com/jagg-ix/catept-domain-quantum.git" @ "739f2ea0d56a2ec7fe8a38257e56d450d6373879"
 
 -- catept-domain-geometry: Class B domain umbrella for CATEPTMain.Geometry.*.
 -- Sub-bundles live at CATEPTPluginDomainGeometry.<BUNDLE>.* — one subdirectory

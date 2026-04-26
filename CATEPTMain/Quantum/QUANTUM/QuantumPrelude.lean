@@ -1,4 +1,4 @@
-import CATEPTPluginDomainQuantum.QuantumPrelude
+import CATEPTPluginDomainQuantum.QUANTUM.QuantumPrelude
 
 /-!
 # QuantumPrelude — re-export shim
@@ -14,7 +14,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   PureState
   QMat
   QSquare

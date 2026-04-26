@@ -1,6 +1,6 @@
 import CATEPTMain.Quantum.QUANTUM.QFIToolbox
 import CATEPTMain.Quantum.QUANTUM.PhysicsHamiltonians
-import CATEPTPluginDomainQuantum.QFIMeasurements
+import CATEPTPluginDomainQuantum.QUANTUM.QFIMeasurements
 
 /-!
 # QFIMeasurements — re-export shim
@@ -16,7 +16,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   averageMagnetization
   localMagnetization
   localMagnetization_real

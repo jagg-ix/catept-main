@@ -1,6 +1,6 @@
 import CATEPTMain.Quantum.QUANTUM.JordanWigner
 import CATEPTMain.Quantum.QUANTUM.DensityMatrix
-import CATEPTPluginDomainQuantum.PhysicsHamiltonians
+import CATEPTPluginDomainQuantum.QUANTUM.PhysicsHamiltonians
 
 /-!
 # PhysicsHamiltonians — re-export shim
@@ -16,7 +16,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Quantum.QUANTUM
 
-export CATEPTPluginDomainQuantum (
+export CATEPTPluginDomainQuantum.QUANTUM (
   evolveState
   evolveState_norm_preserved
   heisenbergXX
