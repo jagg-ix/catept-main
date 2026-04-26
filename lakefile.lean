@@ -61,7 +61,7 @@ require «catept-plugin-degiorgi» from git
 -- Ninth plugin (T5.8). Interface-level Maxwell-curved-space ↔ pphi2 OS-reconstruction contract.
 -- Distinct from the parallel VML / Vlasov-Maxwell-Landau extraction (different physics, different upstream).
 require «catept-plugin-maxwell-curvespace-pphi2» from git
-  "https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2.git" @ "be3d80bd7946461bb0a8c3e3f737b29bd2f69efa"
+  "https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2.git" @ "630999098ec4b101d32223ad7acd84d0e4135b67"
 
 -- catept-plugin-vml-landau: extracted CATEPTMain.Integration.VMLLandauBridge.
 -- Tenth plugin (T5 follow-on). Wraps Aristotle/Clawristotle's VML.CoulombConcreteTheorem42
@@ -159,6 +159,15 @@ require «catept-domain-core» from git
 require «catept-domain-gauge» from git
   "https://github.com/jagg-ix/catept-domain-gauge.git" @ "61d6204fdd16bd49ffa1b0dbc6063aab5c71d3fa"
 
+-- catept-gravitas-port: Class C standalone physics-port sibling.
+-- Lean 4 port of the Wolfram Mathematica Gravitas symbolic-GR package.
+-- 25 files / 4032 LoC under bare namespaces (ADMDecomposition, EinsteinTensor,
+-- RicciTensor, …). In-tree shims under CATEPTMain/Gravitas/*.lean re-export
+-- via `import CATEPTGravitasPort.X` (no `export` clause needed — bare
+-- namespaces propagate transparently). **Private** per maintainer policy.
+require «catept-gravitas-port» from git
+  "https://github.com/jagg-ix/catept-gravitas-port.git" @ "cb0e7dbd3e99f67f1ce73d7406661f97ea39cb66"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
@@ -193,9 +202,10 @@ require «lean-inf» from git
   "https://github.com/jagg-ix/lean-inf.git" @ "2b1ce9a448fb9360c4b960809dec4ed42144da08"
 
 -- VML: Formal verification of the Vlasov-Maxwell-Landau steady-state theorem.
--- Pinned at the v4.29.0 port branch (jagg-ix fork, feat/copilot-claude/aristotle-v429-port).
+-- Pinned at jagg-ix/aristotle main HEAD (post-v4.29.0 port + Maxwell molecules
+-- theorem additions). Bumped from 08faff16 -> 5150aee6 on 2026-04-26.
 require aristotle from git
-  "https://github.com/jagg-ix/aristotle.git" @ "08faff16c3b3ff476f59d82356c4aac0c0bdb01e"
+  "https://github.com/jagg-ix/aristotle.git" @ "5150aee67b9ac385730b0404bd9fbd72289fb686"
 
 -- UnifiedTheory: Bell theorem, causal foundation, Einstein equation from causal set.
 -- Zero sorry, zero axioms. Provides proved CHSH violation + classical bound.
