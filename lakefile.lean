@@ -113,6 +113,19 @@ require «catept-plugin-thermodynamics-lean» from git
 require «catept-plugin-bt-compat» from git
   "https://github.com/jagg-ix/catept-plugin-bt-compat.git" @ "02918aecb838a9993af0a43374afca60f3595750"
 
+-- catept-core: namespace-preserving home for the CAT/EPT publication-bridge core.
+-- T60 step 2 — extracts CATEPTMain.Core.Assumptions and
+-- CATEPTMain.CATEPT.CATEPT.{Foundations, PathIntegrals, MeasurePathIntegral}
+-- into a sibling repo. Lean *namespaces* inside those files are preserved
+-- verbatim (`CATEPTMain.*`), so the 36 internal importers see no change to any
+-- in-namespace symbol. The four in-tree files at CATEPTMain/{Core,CATEPT/CATEPT}/
+-- are reduced to one-line re-export shims that `import CATEPTMainExtracted.<...>`.
+-- Module paths in the dep are `CATEPTMainExtracted.*` to avoid the Lake lib-name
+-- collision with catept-main's local `lean_lib CATEPTMain`.
+-- Cascade-unblocks 4 of 6 remaining CATEPTPort sub-modules (Wave-2 leverage).
+require «catept-core» from git
+  "https://github.com/jagg-ix/catept-core.git" @ "fbd2cbe6120b7c24d6b4ed029b97fe57a23fcda6"
+
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
