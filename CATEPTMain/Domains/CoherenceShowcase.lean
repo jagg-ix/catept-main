@@ -14,6 +14,7 @@ import CATEPTMain.Domains.UnifiedConstraints
 import CATEPTMain.Domains.UnifiedConstraintsSubstrate
 import CATEPTMain.Integration.SubstrateBellBridge
 import CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms
+import CATEPTMain.Integration.SubstrateAssumptionTags
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -259,3 +260,11 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms.ept_causal_arrow_strict_at_pair
 #print axioms CATEPTMain.Integration.CATEPTSpaceTime.SubstrateSpacetimeProjection.substrateBackedAxioms
 #print axioms CATEPTMain.Integration.CATEPTSpaceTime.SubstrateSpacetimeProjection.substrateBackedAxioms_noFTL_pos
+
+-- Substrate-facing assumption tags (T86 — architecture note Target E).
+--   Three new substrate.* AssumptionIds + retrofit of entropicTimeDefinition.
+#print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substrate_tauEnt_def
+#print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substrateCausalIsMinkowskiFuture_tag
+#print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substratePhaseIsQuantumPhase_tag
+#print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substrateNotificationIsQuantumChannel_tag
+#print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substrate_assumption_tags_discharge

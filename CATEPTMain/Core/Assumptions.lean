@@ -179,6 +179,29 @@ def symmetryClockInvariance  : String := "catept.symmetry_clock_invariance"
     sourced by quantum expectation value (`R = 8πG⟨O⟩` skeleton). -/
 def quantumCorrespondenceBridge : String := "catept.quantum_correspondence_bridge"
 
+-- ── Relational-information substrate cross-layer identifications (T86) ───────
+
+/-- Substrate-to-causal-geometry: a "Minkowski-type substrate" is one
+    whose `causalPrecedes` notification relation aligns with the
+    Minkowski causal future cone. Phase-1 placeholder; Phase-2 plan:
+    construct the witness via the GR Minkowski adapter
+    (`Domains.GR.minkowskiSuperiorSlot` paired with a notification
+    carrier indexed by Minkowski 4-vectors). -/
+def substrateCausalIsMinkowskiFuture : String := "substrate.causal_is_minkowski_future"
+
+/-- Substrate-to-quantum (phase): the substrate's `phase` observable
+    on entities corresponds to quantum-mechanical phase (de Broglie /
+    Hamilton-Jacobi phase) under any quantum bridge. Phase-1
+    placeholder; Phase-2 plan: discharge through the QM density-matrix
+    adapter and the modular-flow bridge. -/
+def substratePhaseIsQuantumPhase : String := "substrate.phase_is_quantum_phase"
+
+/-- Substrate-to-quantum (notifications): the substrate's `Notification`
+    carrier corresponds to a quantum measurement event / channel
+    application. Phase-1 placeholder; Phase-2 plan: discharge through
+    the quantum-information bridge (Kraus operator picture). -/
+def substrateNotificationIsQuantumChannel : String := "substrate.notification_is_quantum_channel"
+
 end AssumptionId
 
 end CATEPTMain
