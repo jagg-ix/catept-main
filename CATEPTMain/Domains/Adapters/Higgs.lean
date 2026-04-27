@@ -98,4 +98,31 @@ theorem higgs_validates (v lam : ℝ) (hlam : 0 < lam) :
    (higgs_symmetry v lam hlam).clock_invariant,
    trivial⟩
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for Higgs (T91) ★
+
+    The Mexican-hat potential `V(φ) = (λ/4)(φ² − v²)²` plays both the
+    "curvature" and "expectation value" roles in the QC bridge
+    `R = 8πG·⟨O⟩` with `G = 1/(8π)`. At the VEV minima `φ = ±v` both
+    sides vanish (no SSB-induced curvature); off-VEV both sides equal
+    the same Mexican-hat density. Same algebraic shape as T68
+    HarmonicOscillator and T91 EM above. -/
+noncomputable def higgs_quantum_correspondence (v lam : ℝ) (hlam : 0 < lam) :
+    QuantumCorrespondenceInvariant (higgs v lam hlam) where
+  curvature := (higgs v lam hlam).clock
+  expectationValue := (higgs v lam hlam).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro φ
+    show (higgs v lam hlam).clock φ
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (higgs v lam hlam).clock φ
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter

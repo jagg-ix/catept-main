@@ -174,6 +174,12 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.higgs_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.higgs_validates
 
+-- Non-vacuum QuantumCorrespondence for EM and Higgs (T91 — Group A1+A2).
+--   Same algebraic shape as T68 HarmonicOscillator: curvature =
+--   expectationValue = clock, G = 1/(8π) so 8πG = 1.
+#print axioms CATEPTMain.Temporal.Adapter.em_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.higgs_quantum_correspondence
+
 -- Herglotz adapter (T69 kernel + T70 live tier — damped classical oscillator):
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_validates

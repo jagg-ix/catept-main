@@ -3,6 +3,7 @@ import CATEPTMain.Domains.GR.Domain
 import CATEPTMain.Domains.Invariants.Conservation
 import CATEPTMain.Domains.Invariants.Reduction
 import CATEPTMain.Domains.Invariants.Symmetry
+import CATEPTMain.Domains.Invariants.QuantumCorrespondence
 
 /-!
 # EM Adapter — `LiveTemporalFramework` instance for QFT-on-curved-spacetime
@@ -82,5 +83,32 @@ noncomputable def em_symmetry (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
     apply Finset.sum_congr rfl
     intro μ _
     ring
+
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for EM (T91) ★
+
+    Bridges classical curvature (Maxwell action density `‖A‖²/(2μ₀)`)
+    and quantum expectation value via `R = 8πG·⟨O⟩` with
+    `G = 1/(8π)`. Both sides of the bridge are pointwise equal to the
+    EM clock; the QC framework collapses to the arithmetic identity
+    `8πG = 1`. Same algebraic shape as T68 (HarmonicOscillator), now
+    instantiated with the EM gauge-potential clock. -/
+noncomputable def em_quantum_correspondence (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
+    QuantumCorrespondenceInvariant (em μ₀ hμ₀) where
+  curvature := (em μ₀ hμ₀).clock
+  expectationValue := (em μ₀ hμ₀).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro A
+    show (em μ₀ hμ₀).clock A
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (em μ₀ hμ₀).clock A
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
 
 end CATEPTMain.Temporal.Adapter
