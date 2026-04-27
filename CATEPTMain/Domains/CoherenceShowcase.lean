@@ -180,6 +180,13 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.em_quantum_correspondence
 #print axioms CATEPTMain.Temporal.Adapter.higgs_quantum_correspondence
 
+-- SR + MaxwellCurveSpace live tiers (T92 — Group A4 + A5).
+--   Caller-supplied live-witness pattern (Higgs/Herglotz precedent).
+#print axioms CATEPTMain.Temporal.Adapter.srLive
+#print axioms CATEPTMain.Temporal.Adapter.sr_dynamics_nontrivial
+#print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpaceLive
+#print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpace_dynamics_nontrivial
+
 -- Herglotz adapter (T69 kernel + T70 live tier — damped classical oscillator):
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_validates

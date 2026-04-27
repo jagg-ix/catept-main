@@ -80,4 +80,28 @@ theorem sr_validates (d : ℕ) :
    (sr_symmetry d).clock_invariant,
    trivial⟩
 
+/-- **SR live tier** (T92, Group A4). Caller-supplied witness pattern:
+    given a SpaceTime pair `(q, p)` with time-like separation, the
+    SR adapter upgrades to `LiveTemporalFramework` with positive clock.
+
+    The live witness uses Physlib's `properTime_pos_ofTimeLike`
+    (re-exposed in T77 as `srSuperiorSlot_clock_pos_of_timeLike`) —
+    no construction of concrete time-like vectors via the
+    Lorentz.Vector API needed; the existence of such a pair is what
+    the caller asserts. Same caller-supplied-witness pattern as
+    Higgs (T69) and Herglotz (T70 herglotzLive). -/
+noncomputable def srLive (d : ℕ) (q p : SpaceTime d)
+    (hTL : Lorentz.Vector.causalCharacter (p - q) = .timeLike) :
+    LiveTemporalFramework where
+  toTemporalFramework := sr d
+  live_witness := by
+    refine ⟨(q, p), ?_⟩
+    show 0 < SpaceTime.properTime q p
+    exact SpaceTime.properTime_pos_ofTimeLike q p hTL
+
+theorem sr_dynamics_nontrivial (d : ℕ) (q p : SpaceTime d)
+    (hTL : Lorentz.Vector.causalCharacter (p - q) = .timeLike) :
+    ∃ x : (sr d).Config, 0 < (sr d).clock x :=
+  (srLive d q p hTL).dynamics_nontrivial
+
 end CATEPTMain.Temporal.Adapter

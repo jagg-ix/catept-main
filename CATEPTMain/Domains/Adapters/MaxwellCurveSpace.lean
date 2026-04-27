@@ -146,4 +146,41 @@ theorem maxwellCurveSpace_validates
    (maxwellCurveSpace_symmetry m hCE hMA hCo w).clock_invariant,
    trivial⟩
 
+/-- **MaxwellCurveSpace live tier** (T92, Group A5). Caller-supplied
+    live-witness pattern: any pair `(x, a)` for which at least one of
+    `m.curvatureEnergy x`, `m.maxwellAction a`, `m.couplingEnergy x a`
+    is strictly positive yields a live-tier witness, since the joint
+    clock is the sum of three non-negatives. -/
+noncomputable def maxwellCurveSpaceLive
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m)
+    (live : MaxwellCurveSpaceConfig m)
+    (hPos : 0 < m.curvatureEnergy live.1
+            + m.maxwellAction live.2
+            + m.couplingEnergy live.1 live.2) :
+    LiveTemporalFramework where
+  toTemporalFramework := maxwellCurveSpace m hCE hMA hCo witness₀
+  live_witness := by
+    refine ⟨live, ?_⟩
+    show 0 < maxwellCurveSpaceClock m live
+    unfold maxwellCurveSpaceClock
+    exact hPos
+
+theorem maxwellCurveSpace_dynamics_nontrivial
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m)
+    (live : MaxwellCurveSpaceConfig m)
+    (hPos : 0 < m.curvatureEnergy live.1
+            + m.maxwellAction live.2
+            + m.couplingEnergy live.1 live.2) :
+    ∃ x : (maxwellCurveSpace m hCE hMA hCo witness₀).Config,
+      0 < (maxwellCurveSpace m hCE hMA hCo witness₀).clock x :=
+  (maxwellCurveSpaceLive m hCE hMA hCo witness₀ live hPos).dynamics_nontrivial
+
 end CATEPTMain.Temporal.Adapter
