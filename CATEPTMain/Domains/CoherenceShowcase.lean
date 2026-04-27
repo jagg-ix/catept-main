@@ -15,6 +15,9 @@ import CATEPTMain.Domains.UnifiedConstraintsSubstrate
 import CATEPTMain.Integration.SubstrateBellBridge
 import CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms
 import CATEPTMain.Integration.SubstrateAssumptionTags
+import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
+import CATEPTMain.Domains.Adapters.MaxwellCurveSpace
+import CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
@@ -278,3 +281,20 @@ end CATEPTMain.Temporal
 --   preserved unchanged for back-compat.
 #print axioms CATEPTMain.Integration.EntropicProperTimeCore.entropicProperTimeCore_model_compatible_strong
 #print axioms CATEPTMain.Integration.EntropicProperTimeCore.entropicProperTimeCore_spacetime_compatible_substrate
+
+-- Maxwell-CurveSpace-Pphi2 plugin (T88 — first curved-spacetime adapter).
+--   Source: catept-plugin-maxwell-curvespace-pphi2 sibling repo.
+--   Provides Osterwalder-Schrader reconstruction interface for
+--   curved-space Maxwell QFT — the QFT hook in the spine surface.
+#print axioms CATEPTMain.Integration.catEpt_maxwell_curveSpace_pphi2_bridge
+
+-- Maxwell-CurveSpace TemporalFramework adapter (T88 — 11th adapter).
+--   First curved-spacetime adapter; clock = curvature + maxwell + coupling.
+#print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpace_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpace_validates
+
+-- AssumptionId retrofits via the plugin's Pphi2IntegrationWitness fields
+-- (T88 — moves 3 dead OS-reconstruction ids to referenced).
+#print axioms CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags.os0_analyticity_tag
+#print axioms CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags.reflection_positivity_tag
+#print axioms CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags.has_reconstruction_tag
