@@ -6,6 +6,7 @@ import CATEPTMain.Domains.Adapters.Higgs
 import CATEPTMain.Domains.Adapters.Herglotz
 import CATEPTMain.Domains.Adapters.QM
 import CATEPTMain.Domains.Adapters.BohmianEM
+import CATEPTMain.Domains.Adapters.SR
 import CATEPTMain.Bridges.CrossDomainCompat
 
 /-!
@@ -155,6 +156,13 @@ end CATEPTMain.Temporal
 --   `TemporalFramework`. Phase-1 entropy returns 0 so live tier deferred.
 #print axioms CATEPTMain.Temporal.Adapter.qm_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.qm_validates
+
+-- SR adapter (T77 — first Physlib-backed slot, kernel tier).
+--   Clock = SpaceTime.properTime q p  (Physlib.Relativity.Special.ProperTime).
+--   Non-negativity by Real.sqrt_nonneg.
+#print axioms CATEPTMain.Temporal.Adapter.sr_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.sr_validates
+#print axioms CATEPTMain.Domains.SR.srSuperiorSlot_clock_pos_of_timeLike
 
 -- Cross-domain Logos-style "compiler-is-the-comparator" bridges
 -- (T71 — rework proposal step 2, the highest-payoff piece).
