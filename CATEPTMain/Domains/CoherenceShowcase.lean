@@ -39,6 +39,7 @@ import CATEPTMain.Integration.OscillatorKernel
 import CATEPTMain.Integration.RenormalizationGroup
 import CATEPTMain.Integration.InstantonTunneling
 import CATEPTMain.Integration.FeynmanDiagrams
+import CATEPTMain.Integration.GaussianCompletion
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -488,3 +489,14 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.FeynmanDiagrams.treeAmplitude_closed_form
 #print axioms CATEPTMain.Integration.FeynmanDiagrams.treeAmplitude_residue_at_pole
 #print axioms CATEPTMain.Integration.FeynmanDiagrams.treeAmplitude_coupling_rescale
+
+-- T-F Phase 1 (Gaussian completion-of-the-square, algebraic engine of
+-- every Gaussian path integral). Honest algebraic identities:
+--   * gaussianCompletion                    a·x² - b·x = a·(x - b/(2a))² - b²/(4a)
+--   * gaussianCompletion_zero_source         b = 0 reduction
+--   * gaussianCompletion_shift_eliminates_linear  shift law x ↦ y + b/(2a)
+-- Closed-form Gaussian integral √(π/a)·exp(b²/(4a)) and matrix-version
+-- ½·Jᵀ·A⁻¹·J + ½·log det(2π A⁻¹) deferred to Phase 2.
+#print axioms CATEPTMain.Integration.GaussianCompletion.gaussianCompletion
+#print axioms CATEPTMain.Integration.GaussianCompletion.gaussianCompletion_zero_source
+#print axioms CATEPTMain.Integration.GaussianCompletion.gaussianCompletion_shift_eliminates_linear
