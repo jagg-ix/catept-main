@@ -34,7 +34,8 @@ jobs:
       run: |
         lake build NavierStokes.Galerkin.GalerkinDescentTower NavierStokes.Popkov.PopkovZenoBridge \
           CATEPT.Bridges.Pphi2N CATEPT.Bridges.QFT CATEPT.Bridges.GR \
-          CATEPT.Bridges.Gravitas CATEPT.Bridges.OSReconstruction
+          CATEPT.Bridges.Gravitas CATEPT.Bridges.OSReconstruction \
+          CATEPTMain.Domains.CoherenceShowcase
 
     - name: Check axiom surface — Route 6 (NS strategy)
       run: |
@@ -97,6 +98,22 @@ jobs:
           exit 1
         fi
         echo "Publication bridge surface OK (17 theorems, kernel-only axioms)"
+
+    - name: Check axiom surface — Domains/ umbrella (T65-T73)
+      run: |
+        # Re-build CoherenceShowcase and inspect its `#print axioms` info
+        # output. The showcase intentionally lives outside the @[default_target]
+        # umbrella; if the build above already succeeded the rebuild is a noop.
+        lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 | tee /tmp/domains_output.txt
+        # Same allow-list as the publication-bridge gate: only the three
+        # standard Lean kernel axioms may appear in any `depends on axioms` line.
+        if grep -v -E "propext|Classical\.choice|Quot\.sound|^#print|depends on axioms:|^$" /tmp/domains_output.txt | grep -qE "axiom|sorryAx"; then
+          echo "REGRESSION: non-kernel axiom or sorry in Domains/ umbrella surface"
+          cat /tmp/domains_output.txt
+          exit 1
+        fi
+        AUDIT_COUNT=$(grep -c "depends on axioms" /tmp/domains_output.txt || true)
+        echo "Domains/ umbrella surface OK (${AUDIT_COUNT} #print axioms info lines, kernel-only)"
 
     - name: Check assumption-registry consistency (CATEPTAssumption ids)
       run: |
