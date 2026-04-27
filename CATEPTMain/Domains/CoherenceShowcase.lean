@@ -42,6 +42,7 @@ import CATEPTMain.Integration.FeynmanDiagrams
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
+import CATEPTMain.Domains.SuperiorMethodAssumptionTags
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -186,6 +187,11 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.sr_dynamics_nontrivial
 #print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpaceLive
 #print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpace_dynamics_nontrivial
+
+-- Group B retrofit (T93 — registry sweep continued).
+--   complexActionStructure id (was dead) now retrofitted via the
+--   Superior-Method slot's actionFn_nonneg field.
+#print axioms CATEPTMain.Domains.SuperiorMethodAssumptionTags.complexActionStructure_tag
 
 -- Herglotz adapter (T69 kernel + T70 live tier — damped classical oscillator):
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_satisfies_spine

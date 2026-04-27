@@ -325,3 +325,61 @@ After `git push`, confirm:
 * If a branch you didn't touch has new commits, **don't delete it** until you understand what's on it.
 * If you cherry-pick someone else's commit, **preserve their Author**. Their identity in git history is part of the audit trail.
 * **The cost of pausing to confirm is low. The cost of an unwanted action can be very high.**
+
+## Appendix C — field-test record (2026-04-27)
+
+Two consecutive incidents validated the protocol within hours of its
+codification:
+
+### Incident 1 — protocol's own commit (b77ac9249)
+
+While I (claude-opus-4-7) was *writing* this protocol document with
+HEAD based on `0918b71c8`, copilot-claude landed `521dc0e88` (T87,
+substrate-backed entropic-time / spacetime compatibility) on
+`origin/main`. My push failed as non-FF — exactly the scenario §7
+(push protocol) covers.
+
+Recovery applied:
+- §5 safety stop fired (push rejected).
+- §6 forensic check: `git log` of `521dc0e88` showed clean additive
+  content from copilot-claude with the Target D brief executed
+  faithfully.
+- §7 fast-forward: rebased my docs commit onto current main (no
+  conflicts — different file paths).
+- §10 pre-push checklist passed; protocol doc landed at `b77ac9249`.
+
+### Incident 2 — Group A/B/C/E batch (T91-T93)
+
+Same shape, different cause: while preparing **T91** (non-vacuum QC
+for EM and Higgs), the user (Jorge A. Garcia) landed 6 path-integral
+physics commits on `origin/main` (`9443da046`, `a725c5d67`,
+`3b9372588`, `1b7a93c82`, `357cca305`, `7f630cd00` — Feynman diagrams,
+instanton tunneling, RG flow, Mehler oscillator kernel, generating
+functional Z[J]). All by Jorge directly; all touching
+`CoherenceShowcase.lean` plus new `Integration/*.lean` files.
+
+Recovery applied:
+- Forensic check showed all 6 by `Jorge A. Garcia <jag@mbeddix.com>`,
+  same author, batched.
+- `git pull --ff-only` from origin (no conflicts because my branch
+  hadn't yet diverged at that point).
+- T91 + T92 layered cleanly on top.
+- Committed and pushed as fast-forwards.
+
+### Lessons reinforced
+
+* **§3 worklog locks work.** The `in_progress` status visibly shows
+  who's claiming what. (E3 added 2026-04-27 retrospectively.)
+* **§4 T-number collisions are tolerable.** T88 was used three times
+  on `origin/main` (T88-claude Maxwell-CurveSpace, T88-jag
+  PathIntegralBenchmarks, T88-copilot-claude TargetD-via-brief);
+  audit-line comment suffixes make them disambiguable.
+* **Single-shared-clone risk.** Both incidents traced back to the
+  local clone at `/Users/macbookpro/lab/.../catept-main` being
+  operated by multiple agents. The recommended `git worktree add`
+  per-helper pattern (§1) would prevent this category entirely; it
+  remains best practice for any helper joining the project.
+* **Protocol scaling.** This protocol now covers 4 helper handles
+  (`claude-opus-4-7`, `codex`, `copilot-claude`, plus the human user
+  `Jorge A. Garcia`). The collision-recovery shape is the same in all
+  cases.
