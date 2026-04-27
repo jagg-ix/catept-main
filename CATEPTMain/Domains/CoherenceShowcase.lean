@@ -36,6 +36,7 @@ import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.PathIntegralBenchmarksBridge
 import CATEPTMain.Integration.GeneratingFunctionalCalculus
 import CATEPTMain.Integration.OscillatorKernel
+import CATEPTMain.Integration.RenormalizationGroup
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -417,3 +418,15 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.OscillatorKernel.mehlerExponent_symm
 #print axioms CATEPTMain.Integration.OscillatorKernel.mehlerExponent_at_diagonal
 #print axioms CATEPTMain.Integration.OscillatorKernel.mehlerPrefactorSq_pos
+
+-- T-E Phase 1 (renormalization-group apparatus, fifth rung of the path-integral
+-- leverage ladder). Honest algebraic identities on the one-loop running
+-- coupling g(t) = g₀ / (1 + b·g₀·t):
+--   * initial condition  g(0) = g₀,
+--   * RG-invariant linear law  1/g(t) = 1/g₀ + b·t,
+--   * RG semigroup  g_t ∘ g_s = g_{s+t}  (Wilson-flow composition).
+-- Underlying ODE  dg/dt = -b·g²  and multi-coupling matrix RGEs
+-- deferred (require ODE-uniqueness / matrix-flow infrastructure).
+#print axioms CATEPTMain.Integration.RenormalizationGroup.oneLoopRunning_at_zero
+#print axioms CATEPTMain.Integration.RenormalizationGroup.oneLoopRunning_inverse_linear
+#print axioms CATEPTMain.Integration.RenormalizationGroup.oneLoopRunning_semigroup
