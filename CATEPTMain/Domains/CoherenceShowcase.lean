@@ -11,6 +11,7 @@ import CATEPTMain.Bridges.CrossDomainCompat
 import CATEPTMain.Domains.SubstrateProjections
 import CATEPTMain.Domains.JointAdapter
 import CATEPTMain.Domains.UnifiedConstraints
+import CATEPTMain.Domains.UnifiedConstraintsSubstrate
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -205,3 +206,8 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Domains.UnifiedConstraints.symmetry_discharged_of_S
 #print axioms CATEPTMain.Domains.UnifiedConstraints.qc_discharged_of_Q
 #print axioms CATEPTMain.Domains.UnifiedConstraints.catept_discharges_seven_of_eleven
+
+-- Substrate-backed discharges (T81 — lifts T80 placeholders 1, 3 to honest theorems).
+#print axioms CATEPTMain.Domains.UnifiedConstraints.waveParticleDualityAtSubstrate_holds
+#print axioms CATEPTMain.Domains.UnifiedConstraints.localGlobalDualityAtSubstrate_holds
+#print axioms CATEPTMain.Domains.UnifiedConstraints.catept_substrate_discharges_two_more
