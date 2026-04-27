@@ -211,3 +211,16 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Domains.UnifiedConstraints.waveParticleDualityAtSubstrate_holds
 #print axioms CATEPTMain.Domains.UnifiedConstraints.localGlobalDualityAtSubstrate_holds
 #print axioms CATEPTMain.Domains.UnifiedConstraints.catept_substrate_discharges_two_more
+
+-- Extended substrate projections (T82 — generic constructor + 9 named witnesses).
+--   Single ofTemporalFramework_projects_to_self proves all per-adapter cases via div_one.
+#print axioms CATEPTMain.Domains.SubstrateProjections.ofTemporalFramework_projects_to_self
+#print axioms CATEPTMain.Domains.SubstrateProjections.minkowski_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.em_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.vml_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.kinetic_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.higgs_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.herglotz_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.bohmianEM_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.qm_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.sr_is_substrate_projection
