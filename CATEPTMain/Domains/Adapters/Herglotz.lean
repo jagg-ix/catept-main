@@ -124,4 +124,30 @@ theorem herglotz_validates
    (herglotz_symmetry p hbar hbar_pos hγ hk).clock_invariant,
    trivial⟩
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for Herglotz (T94) ★
+
+    Damped-oscillator action `(γ/m)·E_mech / ℏ` plays both
+    "curvature" and "expectation value" roles in `R = 8πG·⟨O⟩` with
+    `G = 1/(8π)`. Same algebraic shape as T68 / T91. -/
+noncomputable def herglotz_quantum_correspondence
+    (p : DampedOscillatorParams) (hbar : ℝ) (hbar_pos : 0 < hbar)
+    (hγ : 0 ≤ p.gamma) (hk : 0 ≤ p.k) :
+    QuantumCorrespondenceInvariant (herglotz p hbar hbar_pos hγ hk) where
+  curvature := (herglotz p hbar hbar_pos hγ hk).clock
+  expectationValue := (herglotz p hbar hbar_pos hγ hk).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro J
+    show (herglotz p hbar hbar_pos hγ hk).clock J
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (herglotz p hbar hbar_pos hγ hk).clock J
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter

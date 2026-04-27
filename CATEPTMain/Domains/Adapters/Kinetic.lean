@@ -92,4 +92,28 @@ theorem kinetic_dynamics_nontrivial (T : ℝ) (hT : 0 < T) :
     ∃ v : Fin 3 → ℝ, 0 < (kinetic T hT).clock v :=
   (kineticLive T hT).dynamics_nontrivial
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for Kinetic (T94) ★
+
+    Maxwell-Boltzmann velocity-space clock `‖v‖²/(2T)` plays both
+    "curvature" and "expectation value" roles in `R = 8πG·⟨O⟩` with
+    `G = 1/(8π)`. Same algebraic shape as T68 / T91. -/
+noncomputable def kinetic_quantum_correspondence (T : ℝ) (hT : 0 < T) :
+    QuantumCorrespondenceInvariant (kinetic T hT) where
+  curvature := (kinetic T hT).clock
+  expectationValue := (kinetic T hT).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro v
+    show (kinetic T hT).clock v
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (kinetic T hT).clock v
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter

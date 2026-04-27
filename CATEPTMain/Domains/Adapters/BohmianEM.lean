@@ -140,4 +140,28 @@ theorem bohmianEM_dynamics_nontrivial (A_bg : BohmianEMConfig) :
     ∃ v : BohmianEMConfig, 0 < bohmianEMAction A_bg v :=
   (bohmianEMLive A_bg).dynamics_nontrivial
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for BohmianEM (T94) ★
+
+    Displaced-Gaussian action `Σ(v − A_bg)²/2` plays both "curvature"
+    and "expectation value" roles in `R = 8πG·⟨O⟩` with `G = 1/(8π)`.
+    Same algebraic shape as T68 / T91. -/
+noncomputable def bohmianEM_quantum_correspondence (A_bg : BohmianEMConfig) :
+    QuantumCorrespondenceInvariant (bohmianEM A_bg) where
+  curvature := (bohmianEM A_bg).clock
+  expectationValue := (bohmianEM A_bg).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro v
+    show (bohmianEM A_bg).clock v
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (bohmianEM A_bg).clock v
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter

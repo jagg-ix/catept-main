@@ -181,6 +181,12 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.em_quantum_correspondence
 #print axioms CATEPTMain.Temporal.Adapter.higgs_quantum_correspondence
 
+-- Non-vacuum QuantumCorrespondence sweep continued (T94 — same pattern).
+--   Brings non-vacuum QC count from 3 to 6 of 11 adapters.
+#print axioms CATEPTMain.Temporal.Adapter.kinetic_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.herglotz_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.bohmianEM_quantum_correspondence
+
 -- SR + MaxwellCurveSpace live tiers (T92 — Group A4 + A5).
 --   Caller-supplied live-witness pattern (Higgs/Herglotz precedent).
 #print axioms CATEPTMain.Temporal.Adapter.srLive
