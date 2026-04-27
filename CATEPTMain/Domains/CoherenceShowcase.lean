@@ -13,6 +13,7 @@ import CATEPTMain.Domains.JointAdapter
 import CATEPTMain.Domains.UnifiedConstraints
 import CATEPTMain.Domains.UnifiedConstraintsSubstrate
 import CATEPTMain.Integration.SubstrateBellBridge
+import CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -248,3 +249,13 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Domains.UnifiedConstraints.emDualityInvolution_nontrivial
 #print axioms CATEPTMain.Domains.UnifiedConstraints.emDualityInvolution_involutive
 #print axioms CATEPTMain.Domains.UnifiedConstraints.couplingConstraintAtBohmianEM_holds
+
+-- Substrate-backed spacetime axioms (T85 — architecture note Target B).
+--   Replaces CATEPTSpacetimeModel's `True` placeholders with substantive
+--   substrate-derived ∀-statements. Original placeholders preserved for
+--   backward compat; this is the principled upgrade path.
+#print axioms CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms.fromSubstrate
+#print axioms CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms.noFTL_propagation_bound_pos
+#print axioms CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms.ept_causal_arrow_strict_at_pair
+#print axioms CATEPTMain.Integration.CATEPTSpaceTime.SubstrateSpacetimeProjection.substrateBackedAxioms
+#print axioms CATEPTMain.Integration.CATEPTSpaceTime.SubstrateSpacetimeProjection.substrateBackedAxioms_noFTL_pos
