@@ -4,6 +4,7 @@ import CATEPTMain.Domains.Adapters.HarmonicOscillator
 import CATEPTMain.Domains.Adapters.Kinetic
 import CATEPTMain.Domains.Adapters.Higgs
 import CATEPTMain.Domains.Adapters.Herglotz
+import CATEPTMain.Domains.Adapters.QM
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -136,6 +137,13 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.higgs_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.higgs_validates
 
--- Herglotz adapter (T69 — damped classical oscillator, kernel tier only):
+-- Herglotz adapter (T69 kernel + T70 live tier — damped classical oscillator):
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_validates
+#print axioms CATEPTMain.Temporal.Adapter.herglotzLive
+
+-- QM density-matrix adapter (T70 — von Neumann entropy clock, kernel tier):
+--   Wraps `qmSuperiorSlot n` (catept-domain-quantum sibling) as a
+--   `TemporalFramework`. Phase-1 entropy returns 0 so live tier deferred.
+#print axioms CATEPTMain.Temporal.Adapter.qm_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.qm_validates

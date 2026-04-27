@@ -46,6 +46,36 @@ noncomputable def herglotz
     div_nonneg (herglotzActionIm_nonneg p hγ hk J) (le_of_lt hbar_pos)
   witness := { x := 0, v := 0, a := 0 }  -- the static-rest jet
 
+/-- Herglotz upgraded to `LiveTemporalFramework` when the damping `γ > 0`.
+    Witness: `{ x := 0, v := 1, a := 0 }` (rest with unit velocity) gives
+    `mechanicalEnergy = m/2 > 0`, `herglotzContactRate = γ/m > 0`, and
+    therefore `herglotzActionIm = (γ/m)·(m/2) = γ/2 > 0`. Dividing by
+    `hbar > 0` keeps the clock positive.
+
+    Proof technique adapted from the parallel codex T69 follow-up
+    (branch feat/codex-t69-followup, commit bafcc427f) — credit
+    preserved per multi-helper sync protocol. -/
+noncomputable def herglotzLive
+    (p : DampedOscillatorParams) (hbar : ℝ) (hbar_pos : 0 < hbar)
+    (hγ : 0 ≤ p.gamma) (hk : 0 ≤ p.k) (hγpos : 0 < p.gamma) :
+    LiveTemporalFramework where
+  toTemporalFramework := herglotz p hbar hbar_pos hγ hk
+  live_witness := by
+    refine ⟨{ x := 0, v := 1, a := 0 }, ?_⟩
+    show 0 < herglotzActionIm p { x := 0, v := 1, a := 0 } / hbar
+    have hE : 0 < CATEPT.mechanicalEnergy p 0 1 := by
+      unfold CATEPT.mechanicalEnergy
+      have htwo : (0 : ℝ) < 2 := by norm_num
+      have hm2 : 0 < p.m / 2 := div_pos p.m_pos htwo
+      nlinarith
+    have hrate : 0 < CATEPT.herglotzContactRate p := by
+      unfold CATEPT.herglotzContactRate
+      exact div_pos hγpos p.m_pos
+    have hnum : 0 < herglotzActionIm p { x := 0, v := 1, a := 0 } := by
+      unfold herglotzActionIm
+      exact mul_pos hrate hE
+    exact div_pos hnum hbar_pos
+
 theorem herglotz_satisfies_spine
     (p : DampedOscillatorParams) (hbar : ℝ) (hbar_pos : 0 < hbar)
     (hγ : 0 ≤ p.gamma) (hk : 0 ≤ p.k) :
