@@ -31,8 +31,11 @@ ID_DEF_RE = re.compile(r'^def\s+(\w+)\s*:\s*String\s*:=\s*"([^"]+)"', re.MULTILI
 CALL_RE = re.compile(r'CATEPTAssumption\s+(?:AssumptionId\.)?(\w+)\b')
 
 # Match preceding docstring lines (the /-- ... -/ block before each def).
+# The body cannot cross another `/--` opener — without that guard, the
+# lazy `.*?` (with re.DOTALL) backtracks across multiple unrelated
+# docstring/def pairs and pollutes the first entry's description.
 DOC_AND_DEF_RE = re.compile(
-    r'/--\s*(.*?)\s*-/\s*\n\s*def\s+(\w+)\s*:\s*String\s*:=\s*"([^"]+)"',
+    r'/--\s*((?:(?!/--).)*?)\s*-/\s*\n\s*def\s+(\w+)\s*:\s*String\s*:=\s*"([^"]+)"',
     re.DOTALL,
 )
 
