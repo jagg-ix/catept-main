@@ -8,6 +8,7 @@ import CATEPTMain.Domains.QM.Domain
 import CATEPTMain.Domains.GR.Domain
 import CATEPTMain.Domains.ETH.Domain
 import CATEPTMain.Bridges.SuperiorMethodBridges
+import CATEPTMain.Bridges.CrossDomainCompat
 import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.Pphi2CATEPTEPTBridge

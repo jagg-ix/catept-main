@@ -5,6 +5,7 @@ import CATEPTMain.Domains.Adapters.Kinetic
 import CATEPTMain.Domains.Adapters.Higgs
 import CATEPTMain.Domains.Adapters.Herglotz
 import CATEPTMain.Domains.Adapters.QM
+import CATEPTMain.Bridges.CrossDomainCompat
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -147,3 +148,13 @@ end CATEPTMain.Temporal
 --   `TemporalFramework`. Phase-1 entropy returns 0 so live tier deferred.
 #print axioms CATEPTMain.Temporal.Adapter.qm_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.qm_validates
+
+-- Cross-domain Logos-style "compiler-is-the-comparator" bridges
+-- (T71 — rework proposal step 2, the highest-payoff piece).
+-- Every theorem here proved by `rfl` on both sides — no domain-specific
+-- tactic, no unfolding, no `simp`. The bridge cost is the cost of `rfl`.
+#print axioms CATEPTMain.Bridges.CrossDomain.superiorSlot_actionIm_eq_eptClock
+#print axioms CATEPTMain.Bridges.CrossDomain.qm_herglotz_clock_compat
+#print axioms CATEPTMain.Bridges.CrossDomain.qm_higgs_clock_compat
+#print axioms CATEPTMain.Bridges.CrossDomain.kinetic_higgs_clock_compat
+#print axioms CATEPTMain.Bridges.CrossDomain.any_finite_collection_of_slots_compatible
