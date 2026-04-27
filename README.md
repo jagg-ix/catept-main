@@ -59,6 +59,112 @@ Any other axiom appearing in the list is a regression. A CI gate at
 [`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml)
 enforces this check on every push and pull request.
 
+## Axiom-free theorems (no kernel axioms required)
+
+A subset of the audited surface clears an even stronger bar than
+"kernel-only": **10 theorems** in `CATEPTMain/Domains/CoherenceShowcase.lean`
+print
+
+```
+'…' does not depend on any axioms
+```
+
+— meaning the proof reduces to definitional equality and does not
+invoke `propext`, `Classical.choice`, or `Quot.sound` at all. These
+are the *most rigorously certified* statements in the spine surface:
+purely computable, no classical reasoning, no quotient lifting. Each
+one is the integration-contract theorem of a sibling plugin whose
+proof is `⟨…⟩` (anonymous constructor, term-mode) over Prop fields,
+and Lean recognises it as axiom-free at the kernel level.
+
+| # | Theorem (fully qualified) | Sibling plugin | What it asserts |
+|--:|---|---|---|
+| 1 | `CATEPTPluginQuantumInfo.quantumInfo_integration_contract` | `catept-plugin-quantum-info` | CPTP / Braket / von Neumann / Rényi / Shannon / capacity contract package |
+| 2 | `CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract` | `catept-plugin-bochner-minlos` | Bochner-Minlos PD / Sazonov / Schur / abstract Minlos contract |
+| 3 | `CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract` | `catept-plugin-gibbs-measure` | Kolmogorov extension / Gibbs-DLR / Giry monad witness |
+| 4 | `CATEPTPluginHopfLean.hopfLean_integration_contract` | `catept-plugin-hopf-lean` | coalgebra / bialgebra / Hopf / Yang-Baxter / BMod-monoidal witness |
+| 5 | `CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract` | `catept-plugin-kolmogorov-complexity` | AIT invariance / Chaitin Ω / incompressibility / Gödel-2 via K |
+| 6 | `CATEPTPluginCarleson.carleson_integration_contract` | `catept-plugin-carleson` | abstract Carleson / a.e. Fourier convergence contract |
+| 7 | `CATEPTPluginCarleson.concrete_witness_contract` | `catept-plugin-carleson` | concrete Carleson witness (Dirichlet / Jackson / antichain) |
+| 8 | `CATEPTPluginCslib.cslib_integration_contract` | `catept-plugin-cslib` | computability / automata / Ramsey integration |
+| 9 | `CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract` | `catept-plugin-thermodynamics-lean` | Lieb-Yngvason axioms / entropy existence-uniqueness-continuity / Kelvin-Planck |
+| 10 | `CATEPTPluginVMLLandau.vml_landau_content_available` | `catept-plugin-vml-landau` | VML-Landau collision-content marker (Aristotle/Clawristotle Theorem 4.2 surface) |
+
+### How to test the axiom-free claim
+
+Single command, copy-paste from this README:
+
+```bash
+cat > /tmp/catept_axiom_free.lean <<'EOF'
+import CATEPTMain.Domains.CoherenceShowcase
+
+#print axioms CATEPTPluginQuantumInfo.quantumInfo_integration_contract
+#print axioms CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract
+#print axioms CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract
+#print axioms CATEPTPluginHopfLean.hopfLean_integration_contract
+#print axioms CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract
+#print axioms CATEPTPluginCarleson.carleson_integration_contract
+#print axioms CATEPTPluginCarleson.concrete_witness_contract
+#print axioms CATEPTPluginCslib.cslib_integration_contract
+#print axioms CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract
+#print axioms CATEPTPluginVMLLandau.vml_landau_content_available
+EOF
+
+lake env lean /tmp/catept_axiom_free.lean
+```
+
+Expected output — **10 lines**, each ending in
+`does not depend on any axioms`:
+
+```
+'CATEPTPluginQuantumInfo.quantumInfo_integration_contract' does not depend on any axioms
+'CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract' does not depend on any axioms
+'CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract' does not depend on any axioms
+'CATEPTPluginHopfLean.hopfLean_integration_contract' does not depend on any axioms
+'CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract' does not depend on any axioms
+'CATEPTPluginCarleson.carleson_integration_contract' does not depend on any axioms
+'CATEPTPluginCarleson.concrete_witness_contract' does not depend on any axioms
+'CATEPTPluginCslib.cslib_integration_contract' does not depend on any axioms
+'CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract' does not depend on any axioms
+'CATEPTPluginVMLLandau.vml_landau_content_available' does not depend on any axioms
+```
+
+If any line instead reads `depends on axioms: [...]`, that theorem
+has slipped from axiom-free to axiom-using and should be investigated
+(usually because a Prop field changed shape and now requires
+`propext` / `Classical.choice` to discharge).
+
+A scripted sanity check, equivalent to the above, that exits non-zero
+if any of the 10 fails the axiom-free test:
+
+```bash
+EXPECTED=10
+GOT=$(lake env lean /tmp/catept_axiom_free.lean 2>&1 \
+  | grep -c "does not depend on any axioms")
+echo "axiom-free theorems found: $GOT / $EXPECTED"
+[ "$GOT" -eq "$EXPECTED" ] || { echo "REGRESSION"; exit 1; }
+echo "OK"
+```
+
+### Why "axiom-free" is meaningfully different from "kernel-only"
+
+The repo's broader audit gate guarantees that 133 spine-surface
+theorems depend on at most `propext`, `Classical.choice`, `Quot.sound` —
+the three Lean 4 kernel axioms that ship with Lean and Mathlib. The
+10 theorems above clear a strictly higher bar: **zero axioms**. Their
+proof terms reduce to identity-like constructions over `Prop` fields,
+so even the standard kernel axioms aren't reached when computing the
+proof's axiom dependencies. This is the same level of certification
+as e.g. `theorem one_plus_one : 1 + 1 = 2 := rfl` in pure Lean.
+
+In practical terms: every plugin whose integration contract is in
+this list has its full structural-package theorem reducible to
+`⟨h1, h2, …⟩` over user-supplied premises, with no classical
+reasoning, no quotient soundness, no propositional extensionality
+required. The premises themselves may eventually require those
+axioms (e.g. when actual analytic theorems are substituted in) but
+the contract framing does not.
+
 ## Dependencies
 
 Mathlib v4.29.0 and a set of pinned public Lean 4 packages; see
