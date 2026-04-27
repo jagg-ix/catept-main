@@ -37,6 +37,7 @@ import CATEPTMain.Integration.PathIntegralBenchmarksBridge
 import CATEPTMain.Integration.GeneratingFunctionalCalculus
 import CATEPTMain.Integration.OscillatorKernel
 import CATEPTMain.Integration.RenormalizationGroup
+import CATEPTMain.Integration.InstantonTunneling
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -430,3 +431,15 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.RenormalizationGroup.oneLoopRunning_at_zero
 #print axioms CATEPTMain.Integration.RenormalizationGroup.oneLoopRunning_inverse_linear
 #print axioms CATEPTMain.Integration.RenormalizationGroup.oneLoopRunning_semigroup
+
+-- T-D Phase 1 (instanton / tunneling amplitude algebra, sixth rung of the
+-- path-integral leverage ladder). Honest algebraic identities on the BPST
+-- instanton action S_inst(g) = 8·π²/g² and tunneling amplitude A(S) = exp(-S):
+--   * trivial sector  A(0) = 1,
+--   * dilute-gas composition  A(S₁+S₂) = A(S₁)·A(S₂)  (n-instanton product),
+--   * BPST-action positivity  S_inst(g) > 0  for g ≠ 0.
+-- Gel'fand-Yaglom det' / Coleman-Callan bounce / topological-charge
+-- integrality deferred (require spectral theory and 4-form integration).
+#print axioms CATEPTMain.Integration.InstantonTunneling.tunnelAmplitude_at_zero
+#print axioms CATEPTMain.Integration.InstantonTunneling.tunnelAmplitude_compose
+#print axioms CATEPTMain.Integration.InstantonTunneling.instantonBPSTAction_pos
