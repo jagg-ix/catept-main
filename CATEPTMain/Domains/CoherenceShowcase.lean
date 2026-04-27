@@ -12,6 +12,7 @@ import CATEPTMain.Domains.SubstrateProjections
 import CATEPTMain.Domains.JointAdapter
 import CATEPTMain.Domains.UnifiedConstraints
 import CATEPTMain.Domains.UnifiedConstraintsSubstrate
+import CATEPTMain.Integration.SubstrateBellBridge
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -224,3 +225,11 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Domains.SubstrateProjections.bohmianEM_is_substrate_projection
 #print axioms CATEPTMain.Domains.SubstrateProjections.qm_is_substrate_projection
 #print axioms CATEPTMain.Domains.SubstrateProjections.sr_is_substrate_projection
+
+-- Substrate-to-Bell adapter (T83 — architecture note Target C).
+--   Substrate-side no-signaling discharge; Bell math stays in NoFTLBellBridge.
+#print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.substrate_alice_bob_no_signaling
+#print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.substrate_pair_delay_bounded
+#print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.substrate_local_frame_measurement
+#print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.alice_frame_owner
+#print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.bob_frame_owner
