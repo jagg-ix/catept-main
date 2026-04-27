@@ -18,6 +18,20 @@ import CATEPTMain.Integration.SubstrateAssumptionTags
 import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
 import CATEPTMain.Domains.Adapters.MaxwellCurveSpace
 import CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags
+-- T90 plugin batch (13 sibling plugins, audit-gate inclusion):
+import CATEPTMain.Integration.QuantumInfoBridge
+import CATEPTMain.Integration.SpectralPhysicsBridge
+import CATEPTMain.Integration.BochnerMinlosBridge
+import CATEPTMain.Integration.GibbsMeasureBridge
+import CATEPTMain.Integration.HopfLeanBridge
+import CATEPTMain.Integration.KolmogorovComplexityBridge
+import CATEPTMain.Integration.CarlesonBridge
+import CATEPTMain.Integration.CslibBridge
+import CATEPTMain.Integration.GaussianFieldLogSobolevBridge
+import CATEPTMain.Integration.DeGiorgiBridge
+import CATEPTMain.Integration.ThermodynamicsLeanBridge
+import CATEPTMain.Integration.VMLLandauBridge
+import CATEPTPluginBTCompat.IntegrationBridge
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.PathIntegralBenchmarksBridge
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
@@ -307,15 +321,73 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_clock_decomposition
 
--- Path-integral benchmark ladder (T88 — Stages 1+3 and Stage 4 of
--- REPLYID:20260427-PI-NORM-RENORM-01). Honest algebraic identities for
--- the FK-damping composition law (free-particle / oscillator composition
--- at the weight level) and the Euclidean harmonic-oscillator partition
--- closed form Z(β) = 1/(2 sinh(βℏω/2)) via finite geometric sum + sinh
--- identity. Stages 2/5/6/7/8 deferred (require new infrastructure).
+-- Path-integral benchmark ladder (T88-jag — Stages 1+3 and Stage 4 of
+-- REPLYID:20260427-PI-NORM-RENORM-01, author Jorge A. Garcia). Honest
+-- algebraic identities for the FK-damping composition law (free-
+-- particle / oscillator composition at the weight level) and the
+-- Euclidean harmonic-oscillator partition closed form
+-- Z(β) = 1/(2 sinh(βℏω/2)) via finite geometric sum + sinh identity.
+-- Stages 2/5/6/7/8 deferred (require new infrastructure).
 #print axioms CATEPTMain.Integration.PathIntegralBenchmarks.fk_damping_composition
 #print axioms CATEPTMain.Integration.PathIntegralBenchmarks.fk_damping_at_zero
 #print axioms CATEPTMain.Integration.PathIntegralBenchmarks.fk_damping_semigroup
 #print axioms CATEPTMain.Integration.PathIntegralBenchmarks.harmonicOscillator_partition_sinh_form
 #print axioms CATEPTMain.Integration.PathIntegralBenchmarks.harmonicOscillator_partition_finite
 #print axioms CATEPTMain.Integration.PathIntegralBenchmarks.harmonicOscillator_partition_matches_sinh_finite
+
+-- ═══════════════════════════════════════════════════════════════════════
+-- T90 plugin batch — audit-gate inclusion for 13 sibling plugins
+-- ═══════════════════════════════════════════════════════════════════════
+-- Methodology equivalent to T88-claude (Maxwell-CurveSpace-Pphi2): bring
+-- each plugin's representative theorem(s) under CI protection.
+-- AFP-framework intentionally skipped (its content is axiom-style
+-- opaque-symbol infrastructure, not theorems with kernel proofs).
+
+-- catept-plugin-quantum-info — quantum-information integration contract.
+#print axioms CATEPTPluginQuantumInfo.quantumInfo_integration_contract
+
+-- catept-plugin-spectral-physics — spectral gap, Laplacian self-adjoint, PSD.
+#print axioms CATEPTPluginSpectralPhysics.proved_spectral_gap_pos
+#print axioms CATEPTPluginSpectralPhysics.proved_laplacian_self_adjoint
+#print axioms CATEPTPluginSpectralPhysics.proved_laplacian_pos_semidef
+
+-- catept-plugin-bochner-minlos — Bochner-Minlos cylindrical-measure bridge.
+#print axioms CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract
+
+-- catept-plugin-gibbs-measure — Gibbs ensemble integration contract.
+#print axioms CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract
+
+-- catept-plugin-hopf-lean — Hopf-algebra/Lean integration contract.
+#print axioms CATEPTPluginHopfLean.hopfLean_integration_contract
+
+-- catept-plugin-kolmogorov-complexity — algorithmic-information bridge.
+#print axioms CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract
+
+-- catept-plugin-carleson — abstract Carleson + concrete witness contracts.
+#print axioms CATEPTPluginCarleson.carleson_integration_contract
+#print axioms CATEPTPluginCarleson.concrete_witness_contract
+
+-- catept-plugin-cslib — Cslib (concurrency / shared logic) integration.
+#print axioms CATEPTPluginCslib.cslib_integration_contract
+
+-- catept-plugin-gaussian-field-lsi — log-Sobolev / Poincaré inequalities.
+#print axioms CATEPTPluginGaussianFieldLSI.proved_gross_log_sobolev
+#print axioms CATEPTPluginGaussianFieldLSI.proved_log_sobolev_1d
+#print axioms CATEPTPluginGaussianFieldLSI.discrete_poincare_from_spectral_gap
+
+-- catept-plugin-degiorgi — De Giorgi nascent smoothness + approximation.
+#print axioms CATEPTPluginDeGiorgi.proved_gns_smooth
+#print axioms CATEPTPluginDeGiorgi.proved_gns_approx
+#print axioms CATEPTPluginDeGiorgi.proved_poincare_unitBall
+
+-- catept-plugin-thermodynamics-lean — thermodynamic identities bridge.
+#print axioms CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract
+
+-- catept-plugin-bt-compat — relativistic Brillet–Tisserand kinematics
+-- (no shim file in catept-main; imported directly from the plugin namespace).
+#print axioms CATEPTPluginBTCompat.btInvariantEnergySq_at_rest
+#print axioms CATEPTPluginBTCompat.btDopplerFactor_at_rest
+#print axioms CATEPTPluginBTCompat.btObservedFrequency_at_rest
+
+-- catept-plugin-vml-landau — VML Landau collision content marker.
+#print axioms CATEPTPluginVMLLandau.vml_landau_content_available
