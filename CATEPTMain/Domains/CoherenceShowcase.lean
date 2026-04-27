@@ -10,6 +10,7 @@ import CATEPTMain.Domains.Adapters.SR
 import CATEPTMain.Bridges.CrossDomainCompat
 import CATEPTMain.Domains.SubstrateProjections
 import CATEPTMain.Domains.JointAdapter
+import CATEPTMain.Domains.UnifiedConstraints
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -193,3 +194,14 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.joint_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_clock_decomposition
+
+-- Unified-Theory Constraints (T80 — discharges 7 of 11 Copilot-doc invariants).
+--   Source: /Users/macbookpro/Downloads/copilot-md-docs/Copilot-Copilot_Chat_TwyFkfsi.md
+--   Headline: catept_discharges_seven_of_eleven (CT, MG, R, C, S, QC + structural).
+#print axioms CATEPTMain.Domains.UnifiedConstraints.classicalQuantum_discharged
+#print axioms CATEPTMain.Domains.UnifiedConstraints.matterGeometry_discharged_of_qc
+#print axioms CATEPTMain.Domains.UnifiedConstraints.reduction_discharged_of_R
+#print axioms CATEPTMain.Domains.UnifiedConstraints.conservation_discharged_of_C
+#print axioms CATEPTMain.Domains.UnifiedConstraints.symmetry_discharged_of_S
+#print axioms CATEPTMain.Domains.UnifiedConstraints.qc_discharged_of_Q
+#print axioms CATEPTMain.Domains.UnifiedConstraints.catept_discharges_seven_of_eleven
