@@ -15,6 +15,7 @@ import CATEPTMain.Domains.UnifiedConstraintsSubstrate
 import CATEPTMain.Integration.SubstrateBellBridge
 import CATEPTMain.Integration.SubstrateBackedSpacetimeAxioms
 import CATEPTMain.Integration.SubstrateAssumptionTags
+import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -268,3 +269,12 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substratePhaseIsQuantumPhase_tag
 #print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substrateNotificationIsQuantumChannel_tag
 #print axioms CATEPTMain.Integration.SubstrateAssumptionTags.substrate_assumption_tags_discharge
+
+-- Substrate-backed entropic-time / spacetime compatibility (T87 — Target D).
+--   Discharges the Phase-2 comment on
+--   `entropicProperTimeCore_spacetime_compatible : True` with substantive
+--   content packaged from T78 (`tauEnt_nonneg`) + T85
+--   (`SubstrateBackedSpacetimeAxioms`). Original trivial theorem
+--   preserved unchanged for back-compat.
+#print axioms CATEPTMain.Integration.EntropicProperTimeCore.entropicProperTimeCore_model_compatible_strong
+#print axioms CATEPTMain.Integration.EntropicProperTimeCore.entropicProperTimeCore_spacetime_compatible_substrate
