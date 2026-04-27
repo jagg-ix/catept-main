@@ -195,6 +195,15 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.sr_quantum_correspondence
 #print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpace_quantum_correspondence
 
+-- Joint QC composition (T96 — Group A3, all-but-Minkowski now have non-vacuum QC).
+--   Generic `joint_quantum_correspondence` composes any two QCs with
+--   matching `G`; specialised to maxwellGRQM (3-way) and
+--   maxwellGRQMcurved (4-way) with G = 1/(8π) throughout.
+#print axioms CATEPTMain.Temporal.Adapter.joint_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.minkowski_quantum_correspondence_unitPrefactor
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_quantum_correspondence
+
 -- SR + MaxwellCurveSpace live tiers (T92 — Group A4 + A5).
 --   Caller-supplied live-witness pattern (Higgs/Herglotz precedent).
 #print axioms CATEPTMain.Temporal.Adapter.srLive

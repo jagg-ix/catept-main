@@ -4,6 +4,7 @@ import CATEPTMain.Domains.Adapters.EM
 import CATEPTMain.Domains.Adapters.QM
 import CATEPTMain.Domains.QM.Domain
 import CATEPTMain.Domains.Adapters.MaxwellCurveSpace
+import CATEPTMain.Domains.Invariants.QuantumCorrespondence
 
 /-!
 # Joint TemporalFramework — QM ⊕ GR ⊕ Maxwell unification
@@ -186,5 +187,90 @@ theorem maxwellGRQMcurved_clock_decomposition
       + (qm n ρ₀).clock ρ := by
   unfold maxwellGRQMcurved maxwellGRQM joint jointClock
   ring
+
+-- ─── Composing QuantumCorrespondence across joints (T96) ─────────────
+
+/-- **Generic joint QC composition.** Given two `TemporalFramework`s
+    `T₁` and `T₂` each with a `QuantumCorrespondenceInvariant` whose
+    `G` values agree, the joint `joint T₁ T₂` inherits a
+    `QuantumCorrespondenceInvariant` with the same `G`, where:
+
+      curvature        = qc₁.curvature x.1 + qc₂.curvature x.2
+      expectationValue = qc₁.expectationValue x.1 + qc₂.expectationValue x.2
+      bridges          = linear combination of qc₁.bridges and qc₂.bridges
+
+    The shared-`G` constraint is needed because the joint bridge is
+    `R = 8πG·⟨O⟩` with one common `G`. With T68/T91/T94/T95 all
+    using `G = 1/(8π)`, this composition lifts cleanly to all 10
+    non-vacuum-QC-claiming spine adapters. -/
+noncomputable def joint_quantum_correspondence
+    {T₁ T₂ : TemporalFramework}
+    (qc₁ : QuantumCorrespondenceInvariant T₁)
+    (qc₂ : QuantumCorrespondenceInvariant T₂)
+    (hG : qc₁.G = qc₂.G) :
+    QuantumCorrespondenceInvariant (joint T₁ T₂) where
+  curvature := fun x => qc₁.curvature x.1 + qc₂.curvature x.2
+  expectationValue := fun x => qc₁.expectationValue x.1 + qc₂.expectationValue x.2
+  G := qc₁.G
+  G_pos := qc₁.G_pos
+  bridges := by
+    intro x
+    show qc₁.curvature x.1 + qc₂.curvature x.2
+        = 8 * Real.pi * qc₁.G
+            * (qc₁.expectationValue x.1 + qc₂.expectationValue x.2)
+    have h1 := qc₁.bridges x.1
+    have h2 := qc₂.bridges x.2
+    rw [h1, h2, hG]
+    ring
+
+/-- **Minkowski non-vacuum-shape QC at G = 1/(8π).** Same vacuum data
+    (curvature = expectationValue ≡ 0) but uses the same `G` value as
+    the rest of the spine adapters (T68/T91/T94/T95 all use
+    `1/(8π)`), so it composes via `joint_quantum_correspondence`
+    without G-mismatch. The vacuum-default
+    `minkowski_quantum_correspondence` (T66) uses `G = 1` — kept as-is
+    for back-compat; this is the composition-friendly variant. -/
+noncomputable def minkowski_quantum_correspondence_unitPrefactor :
+    QuantumCorrespondenceInvariant minkowski where
+  curvature := fun _ => 0
+  expectationValue := fun _ => 0
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by intro _; ring
+
+/-- **`maxwellGRQM` non-vacuum QC.** All three components share
+    `G = 1/(8π)`: minkowski uses the unit-prefactor variant above;
+    T91 EM and T95 QM both fix `G = 1/(8π)`. The joint inherits via
+    two applications of `joint_quantum_correspondence`. -/
+noncomputable def maxwellGRQM_quantum_correspondence
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n) :
+    QuantumCorrespondenceInvariant (maxwellGRQM μ₀ hμ₀ n ρ₀) :=
+  joint_quantum_correspondence
+    minkowski_quantum_correspondence_unitPrefactor
+    (joint_quantum_correspondence
+      (em_quantum_correspondence μ₀ hμ₀)
+      (qm_quantum_correspondence n ρ₀)
+      rfl)
+    rfl
+
+/-- **`maxwellGRQMcurved` non-vacuum QC.** Four-way composition adding
+    the T88 curved-spacetime layer on top. All four components share
+    `G = 1/(8π)`. -/
+noncomputable def maxwellGRQMcurved_quantum_correspondence
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n)
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m) :
+    QuantumCorrespondenceInvariant
+      (maxwellGRQMcurved μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀) :=
+  joint_quantum_correspondence
+    (maxwellCurveSpace_quantum_correspondence m hCE hMA hCo witness₀)
+    (maxwellGRQM_quantum_correspondence μ₀ hμ₀ n ρ₀)
+    rfl
 
 end CATEPTMain.Temporal.Adapter
