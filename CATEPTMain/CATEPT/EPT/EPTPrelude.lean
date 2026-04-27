@@ -1,7 +1,11 @@
 import CATEPTMain.Core.Framework.AFPBridgeFramework
+import CATEPTMain.Core.Assumptions
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Order.Field.Basic
+
+open CATEPTMain (CATEPTAssumption)
+open CATEPTMain.AssumptionId
 /-!
 # EPT Port — Prelude
 
@@ -129,9 +133,10 @@ theorem eptCriticalTime_pos (hbar nu C : ℝ) (hh : 0 < hbar) (hn : 0 < nu) (hC 
 
 /-- Constantin-Iyer identification: ħ = 2ν.
     Axiom: the physical calibration of the EPT framework to Navier-Stokes.
-    Source: NSEPTCIBound.lean Stage 281, and the CAT/EPT paper §4. -/
+    Source: NSEPTCIBound.lean Stage 281, and the CAT/EPT paper §4.
+    Tagged with `AssumptionId.hbarIsTwoNu` for registry audit. -/
 axiom constantinIyer_identification (hbar nu : ℝ) (hh : 0 < hbar) (hn : 0 < nu) :
-    hbar = 2 * nu
+    CATEPTAssumption hbarIsTwoNu (hbar = 2 * nu)
 
 /-- Under CI (ħ = 2ν), the EPT decay rate σ = 1 (C = 1). -/
 theorem eptDecayRate_ci (hbar nu : ℝ) (hh : 0 < hbar) (hn : 0 < nu)
@@ -192,10 +197,11 @@ def bkmDegree4RHS (hbar nu Omega0 T B : ℝ) : ℝ :=
   B * (1 + (nu / hbar) * Omega0 * T)^3 * ((hbar / nu) * ((nu / hbar) * Omega0 * T))
 
 /-- BKM degree-4 polynomial bound via EPT (NS context).
-    Source: Stage 283 `bkm_ns_polynomial_bound`. -/
+    Source: Stage 283 `bkm_ns_polynomial_bound`.
+    Tagged with `AssumptionId.bkmCriterion` for registry audit. -/
 axiom bkm_degree4_bound (hbar nu Omega0 T B bkmT : ℝ)
   (hh : 0 < hbar) (hn : 0 < nu) (hO : 0 ≤ Omega0) (hT : 0 ≤ T) (hB : 0 ≤ B) :
-  bkmT ≤ bkmDegree4RHS hbar nu Omega0 T B
+  CATEPTAssumption bkmCriterion (bkmT ≤ bkmDegree4RHS hbar nu Omega0 T B)
 
 end
 
