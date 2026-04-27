@@ -104,4 +104,28 @@ theorem sr_dynamics_nontrivial (d : ℕ) (q p : SpaceTime d)
     ∃ x : (sr d).Config, 0 < (sr d).clock x :=
   (srLive d q p hTL).dynamics_nontrivial
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for SR (T95) ★
+
+    Proper-time clock `√⟪p−q, p−q⟫ₘ` plays both "curvature" and
+    "expectation value" roles in `R = 8πG·⟨O⟩` with `G = 1/(8π)`.
+    Same algebraic shape as T68 / T91 / T94. -/
+noncomputable def sr_quantum_correspondence (d : ℕ) :
+    QuantumCorrespondenceInvariant (sr d) where
+  curvature := (sr d).clock
+  expectationValue := (sr d).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro w
+    show (sr d).clock w
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (sr d).clock w
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter

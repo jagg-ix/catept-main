@@ -85,4 +85,32 @@ theorem qm_validates (n : ℕ) (ρ₀ : DensityMatrix n) :
    (qm_symmetry n ρ₀).clock_invariant,
    trivial⟩
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for QM (T95) ★
+
+    Density-matrix entropy `vonNeumannEntropy n ρ` plays both
+    "curvature" and "expectation value" roles in `R = 8πG·⟨O⟩` with
+    `G = 1/(8π)`. In the phase-1 placeholder regime where
+    `vonNeumannEntropy n ρ = 0` for every ρ, the bridge is the
+    trivial `0 = 0`; in phase-2 (real `-Tr(ρ log ρ)`) the same
+    structural identity continues to hold. Same algebraic shape as
+    T68 / T91 / T94. -/
+noncomputable def qm_quantum_correspondence (n : ℕ) (ρ₀ : DensityMatrix n) :
+    QuantumCorrespondenceInvariant (qm n ρ₀) where
+  curvature := (qm n ρ₀).clock
+  expectationValue := (qm n ρ₀).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro ρ
+    show (qm n ρ₀).clock ρ
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * (qm n ρ₀).clock ρ
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter

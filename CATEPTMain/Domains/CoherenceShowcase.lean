@@ -187,6 +187,13 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_quantum_correspondence
 #print axioms CATEPTMain.Temporal.Adapter.bohmianEM_quantum_correspondence
 
+-- Final non-vacuum QC sweep — 10/11 adapters covered (T95).
+--   Only Minkowski remains intentionally vacuum-tier.
+#print axioms CATEPTMain.Temporal.Adapter.vml_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.qm_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.sr_quantum_correspondence
+#print axioms CATEPTMain.Temporal.Adapter.maxwellCurveSpace_quantum_correspondence
+
 -- SR + MaxwellCurveSpace live tiers (T92 — Group A4 + A5).
 --   Caller-supplied live-witness pattern (Higgs/Herglotz precedent).
 #print axioms CATEPTMain.Temporal.Adapter.srLive

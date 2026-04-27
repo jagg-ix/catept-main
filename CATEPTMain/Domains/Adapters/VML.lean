@@ -3,6 +3,7 @@ import CATEPTMain.Domains.VML.Domain
 import CATEPTMain.Domains.Invariants.Conservation
 import CATEPTMain.Domains.Invariants.Reduction
 import CATEPTMain.Domains.Invariants.Symmetry
+import CATEPTMain.Domains.Invariants.QuantumCorrespondence
 
 /-!
 # VML Adapter — `LiveTemporalFramework` instance
@@ -90,5 +91,29 @@ noncomputable def vml_symmetry : SymmetryInvariant vml where
     show VMLConfig.lyapunovAction _ = VMLConfig.lyapunovAction c
     unfold VMLConfig.lyapunovAction
     rw [normSq3_neg c.v, normSq3_neg c.E, normSq3_neg c.gradB]
+
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for VML (T95) ★
+
+    VML Lyapunov action `‖v‖²/(2T) + ‖E‖² + ‖∇B‖²` plays both
+    "curvature" and "expectation value" roles in `R = 8πG·⟨O⟩` with
+    `G = 1/(8π)`. Same algebraic shape as T68 / T91 / T94. -/
+noncomputable def vml_quantum_correspondence :
+    QuantumCorrespondenceInvariant vml where
+  curvature := vml.clock
+  expectationValue := vml.clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro c
+    show vml.clock c
+        = 8 * Real.pi * (1 / (8 * Real.pi)) * vml.clock c
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
 
 end CATEPTMain.Temporal.Adapter

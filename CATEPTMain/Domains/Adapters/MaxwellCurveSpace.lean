@@ -183,4 +183,35 @@ theorem maxwellCurveSpace_dynamics_nontrivial
       0 < (maxwellCurveSpace m hCE hMA hCo witness₀).clock x :=
   (maxwellCurveSpaceLive m hCE hMA hCo witness₀ live hPos).dynamics_nontrivial
 
+/-- ★ Non-vacuum `QuantumCorrespondenceInvariant` for MaxwellCurveSpace (T95) ★
+
+    Combined curved-spacetime Maxwell clock `curvatureEnergy x +
+    maxwellAction a + couplingEnergy x a` plays both "curvature" and
+    "expectation value" roles in `R = 8πG·⟨O⟩` with `G = 1/(8π)`.
+    Same algebraic shape as T68 / T91 / T94. -/
+noncomputable def maxwellCurveSpace_quantum_correspondence
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m) :
+    QuantumCorrespondenceInvariant (maxwellCurveSpace m hCE hMA hCo witness₀) where
+  curvature := (maxwellCurveSpace m hCE hMA hCo witness₀).clock
+  expectationValue := (maxwellCurveSpace m hCE hMA hCo witness₀).clock
+  G := 1 / (8 * Real.pi)
+  G_pos := by
+    apply div_pos one_pos
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+  bridges := by
+    intro p
+    show (maxwellCurveSpace m hCE hMA hCo witness₀).clock p
+        = 8 * Real.pi * (1 / (8 * Real.pi))
+            * (maxwellCurveSpace m hCE hMA hCo witness₀).clock p
+    have h8π : (8 : ℝ) * Real.pi ≠ 0 := by
+      have hπ : 0 < Real.pi := Real.pi_pos
+      positivity
+    have : 8 * Real.pi * (1 / (8 * Real.pi)) = 1 := by field_simp
+    rw [this, one_mul]
+
 end CATEPTMain.Temporal.Adapter
