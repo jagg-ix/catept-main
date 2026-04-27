@@ -9,6 +9,7 @@ import CATEPTMain.Domains.Adapters.BohmianEM
 import CATEPTMain.Domains.Adapters.SR
 import CATEPTMain.Bridges.CrossDomainCompat
 import CATEPTMain.Domains.SubstrateProjections
+import CATEPTMain.Domains.JointAdapter
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -183,3 +184,12 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt_nonneg
 #print axioms CATEPTMain.Domains.SubstrateProjections.harmonic_is_substrate_projection
 #print axioms CATEPTMain.Domains.SubstrateProjections.harmonicSubstrate_satisfies_spine
+
+-- Joint adapter (T79 — QM ⊕ GR ⊕ Maxwell unification).
+--   The CATEPT spine is closed under arbitrary finite joins:
+--   any combination of TemporalFramework adapters is itself a
+--   TemporalFramework with the spine identification holding for free.
+--   The maxwellGRQM TF demonstrates the headline composition.
+#print axioms CATEPTMain.Temporal.Adapter.joint_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_clock_decomposition
