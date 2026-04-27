@@ -5,6 +5,10 @@ import CATEPTMain.Domains.Adapters.QM
 import CATEPTMain.Domains.QM.Domain
 import CATEPTMain.Domains.Adapters.MaxwellCurveSpace
 import CATEPTMain.Domains.Invariants.QuantumCorrespondence
+import CATEPTMain.Domains.Invariants.Conservation
+import CATEPTMain.Domains.Invariants.Reduction
+import CATEPTMain.Domains.Invariants.Symmetry
+import CATEPTMain.Domains.UnifiedValidator
 
 /-!
 # Joint TemporalFramework — QM ⊕ GR ⊕ Maxwell unification
@@ -272,5 +276,102 @@ noncomputable def maxwellGRQMcurved_quantum_correspondence
     (maxwellCurveSpace_quantum_correspondence m hCE hMA hCo witness₀)
     (maxwellGRQM_quantum_correspondence μ₀ hμ₀ n ρ₀)
     rfl
+
+-- ─── Joint Conservation, Reduction, Symmetry composition (T97) ───────
+
+/-- **Joint Conservation.** Vacuum-tier: stress-energy ≡ 0 on the
+    joint, divergence-free trivially. The joint TF inherits
+    Conservation directly via its own `vacuumConservation` default. -/
+noncomputable def joint_conservation (T₁ T₂ : TemporalFramework) :
+    ConservationInvariant (joint T₁ T₂) :=
+  (joint T₁ T₂).vacuumConservation
+
+/-- **Joint Reduction.** The joint clock IS its own classical-limit
+    target — same identity-reduction shape as every individual adapter. -/
+noncomputable def joint_reduction (T₁ T₂ : TemporalFramework) :
+    ReductionInvariant (joint T₁ T₂) where
+  classicalProjection := (joint T₁ T₂).clock
+  target := (joint T₁ T₂).clock
+  reduces_classically := fun _ => rfl
+
+/-- **Joint Symmetry composition.** Combine two component symmetries
+    `σ₁` and `σ₂` into the joint symmetry `(x₁, x₂) ↦ (σ₁ x₁, σ₂ x₂)`.
+    Clock-invariance follows componentwise from the two component
+    invariances plus additivity of the joint clock. -/
+noncomputable def joint_symmetry
+    {T₁ T₂ : TemporalFramework}
+    (s₁ : SymmetryInvariant T₁) (s₂ : SymmetryInvariant T₂) :
+    SymmetryInvariant (joint T₁ T₂) where
+  sigma := fun x => (s₁.sigma x.1, s₂.sigma x.2)
+  clock_invariant := by
+    intro x
+    show jointClock T₁ T₂ (s₁.sigma x.1, s₂.sigma x.2)
+        = jointClock T₁ T₂ x
+    unfold jointClock
+    rw [s₁.clock_invariant, s₂.clock_invariant]
+
+-- ─── Full UnifiedValidator on the joint TFs (T97 headline) ───────────
+
+/-- ★ **`maxwellGRQM` — full UnifiedValidator with all four invariants.** ★
+
+    The 3-way joint Minkowski ⊕ EM ⊕ QM satisfies:
+      - the spine identification (T79 maxwellGRQM_satisfies_spine)
+      - Conservation (joint_conservation, vacuum-tier)
+      - Reduction (joint_reduction, identity)
+      - Symmetry (composed from T66 minkowski_symmetry + T66 em_symmetry +
+                  T70 qm_symmetry — all identity at the slot level)
+      - QuantumCorrespondence (T96 maxwellGRQM_quantum_correspondence,
+                              non-vacuum, G = 1/(8π))
+
+    First fully-validated joint TF in the spine surface. -/
+theorem maxwellGRQM_validates
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n) :
+    UnifiedValidator (maxwellGRQM μ₀ hμ₀ n ρ₀)
+      (some <| joint_conservation minkowski (joint (em μ₀ hμ₀) (qm n ρ₀)))
+      (some <| joint_reduction minkowski (joint (em μ₀ hμ₀) (qm n ρ₀)))
+      (some <| joint_symmetry minkowski_symmetry
+                (joint_symmetry (em_symmetry μ₀ hμ₀) (qm_symmetry n ρ₀)))
+      (some <| maxwellGRQM_quantum_correspondence μ₀ hμ₀ n ρ₀) :=
+  ⟨(maxwellGRQM μ₀ hμ₀ n ρ₀).coherence_spine,
+   (joint_conservation minkowski (joint (em μ₀ hμ₀) (qm n ρ₀))).divergence_free,
+   (joint_reduction minkowski (joint (em μ₀ hμ₀) (qm n ρ₀))).reduces_classically,
+   (joint_symmetry minkowski_symmetry
+     (joint_symmetry (em_symmetry μ₀ hμ₀) (qm_symmetry n ρ₀))).clock_invariant,
+   (maxwellGRQM_quantum_correspondence μ₀ hμ₀ n ρ₀).bridges⟩
+
+/-- ★ **`maxwellGRQMcurved` — full UnifiedValidator on the 4-way joint.** ★
+
+    Headline of T96+T97: the unified QM ⊕ GR ⊕ Maxwell-flat ⊕
+    Maxwell-curved framework satisfies the spine plus all four
+    invariants in one theorem. -/
+theorem maxwellGRQMcurved_validates
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n)
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m) :
+    UnifiedValidator
+      (maxwellGRQMcurved μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀)
+      (some <| joint_conservation (maxwellCurveSpace m hCE hMA hCo witness₀)
+                (maxwellGRQM μ₀ hμ₀ n ρ₀))
+      (some <| joint_reduction (maxwellCurveSpace m hCE hMA hCo witness₀)
+                (maxwellGRQM μ₀ hμ₀ n ρ₀))
+      (some <| joint_symmetry
+                (maxwellCurveSpace_symmetry m hCE hMA hCo witness₀)
+                (joint_symmetry minkowski_symmetry
+                  (joint_symmetry (em_symmetry μ₀ hμ₀) (qm_symmetry n ρ₀))))
+      (some <| maxwellGRQMcurved_quantum_correspondence
+                μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀) :=
+  ⟨(maxwellGRQMcurved μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀).coherence_spine,
+   (joint_conservation (maxwellCurveSpace m hCE hMA hCo witness₀)
+     (maxwellGRQM μ₀ hμ₀ n ρ₀)).divergence_free,
+   (joint_reduction (maxwellCurveSpace m hCE hMA hCo witness₀)
+     (maxwellGRQM μ₀ hμ₀ n ρ₀)).reduces_classically,
+   (joint_symmetry (maxwellCurveSpace_symmetry m hCE hMA hCo witness₀)
+     (joint_symmetry minkowski_symmetry
+       (joint_symmetry (em_symmetry μ₀ hμ₀) (qm_symmetry n ρ₀)))).clock_invariant,
+   (maxwellGRQMcurved_quantum_correspondence
+     μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀).bridges⟩
 
 end CATEPTMain.Temporal.Adapter

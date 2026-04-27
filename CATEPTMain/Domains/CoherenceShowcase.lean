@@ -204,6 +204,18 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_quantum_correspondence
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_quantum_correspondence
 
+-- Joint composition of Conservation/Reduction/Symmetry (T97 — generic).
+#print axioms CATEPTMain.Temporal.Adapter.joint_conservation
+#print axioms CATEPTMain.Temporal.Adapter.joint_reduction
+#print axioms CATEPTMain.Temporal.Adapter.joint_symmetry
+
+-- ★ HEADLINE: full UnifiedValidator on the joint TFs (T97).
+--   Each claims spine + all 4 invariants in one theorem.
+--   maxwellGRQM   = Mink ⊕ EM ⊕ QM (3-way)
+--   maxwellGRQMcurved = MaxwellCurveSpace ⊕ Mink ⊕ EM ⊕ QM (4-way)
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQM_validates
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_validates
+
 -- SR + MaxwellCurveSpace live tiers (T92 — Group A4 + A5).
 --   Caller-supplied live-witness pattern (Higgs/Herglotz precedent).
 #print axioms CATEPTMain.Temporal.Adapter.srLive
