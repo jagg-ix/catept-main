@@ -35,6 +35,7 @@ import CATEPTPluginBTCompat.IntegrationBridge
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.PathIntegralBenchmarksBridge
 import CATEPTMain.Integration.GeneratingFunctionalCalculus
+import CATEPTMain.Integration.OscillatorKernel
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -404,3 +405,15 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.GeneratingFunctionalCalculus.gaussianCharFun_at_zero
 #print axioms CATEPTMain.Integration.GeneratingFunctionalCalculus.gaussianCharFun_centered
 #print axioms CATEPTMain.Integration.GeneratingFunctionalCalculus.gaussianCharFun_independence_semigroup
+
+-- Oscillator kernels / Mehler propagator (T-A Phase 1 / path-integral
+-- ladder). Honest algebraic identities on the Euclidean Mehler-kernel
+-- exponent S(x,y;t) and squared prefactor N²:
+--   * exponent symmetry  S(x,y;t) = S(y,x;t),
+--   * closed form at the spatial diagonal x = y,
+--   * prefactor positivity  N² > 0 for m,ω,t > 0.
+-- t→0 delta limit and Trotter composition K(t₁+t₂) = ∫ K(t₁) K(t₂)
+-- deferred (require Gaussian-integral infrastructure).
+#print axioms CATEPTMain.Integration.OscillatorKernel.mehlerExponent_symm
+#print axioms CATEPTMain.Integration.OscillatorKernel.mehlerExponent_at_diagonal
+#print axioms CATEPTMain.Integration.OscillatorKernel.mehlerPrefactorSq_pos
