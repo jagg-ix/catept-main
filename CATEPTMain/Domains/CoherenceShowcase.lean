@@ -34,6 +34,7 @@ import CATEPTMain.Integration.VMLLandauBridge
 import CATEPTPluginBTCompat.IntegrationBridge
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.PathIntegralBenchmarksBridge
+import CATEPTMain.Integration.GeneratingFunctionalCalculus
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -391,3 +392,15 @@ end CATEPTMain.Temporal
 
 -- catept-plugin-vml-landau — VML Landau collision content marker.
 #print axioms CATEPTPluginVMLLandau.vml_landau_content_available
+
+-- Generating-functional / source-term calculus (T-B Phase 1 / Stage 5 of
+-- REPLYID:20260427-PI-NORM-RENORM-01). Honest algebraic identities on the
+-- closed-form Gaussian charFun Z[J] = exp(iJμ - J²σ²/2): normalization
+-- Z[0]=1, centered form Z[J] = exp(-½J²σ²), and the independence
+-- semigroup Z₁[J]·Z₂[J] = Z₁₊₂[J] (W[J] = log Z[J] additivity for
+-- independent Gaussian contributions to the connected generating
+-- functional). Multi-point correlators (Wick / δⁿZ/δJⁿ) and the Minlos
+-- extension to nuclear-space white-noise field measures deferred.
+#print axioms CATEPTMain.Integration.GeneratingFunctionalCalculus.gaussianCharFun_at_zero
+#print axioms CATEPTMain.Integration.GeneratingFunctionalCalculus.gaussianCharFun_centered
+#print axioms CATEPTMain.Integration.GeneratingFunctionalCalculus.gaussianCharFun_independence_semigroup
