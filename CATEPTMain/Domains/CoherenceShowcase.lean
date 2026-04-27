@@ -8,6 +8,7 @@ import CATEPTMain.Domains.Adapters.QM
 import CATEPTMain.Domains.Adapters.BohmianEM
 import CATEPTMain.Domains.Adapters.SR
 import CATEPTMain.Bridges.CrossDomainCompat
+import CATEPTMain.Domains.SubstrateProjections
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -173,3 +174,12 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Bridges.CrossDomain.qm_higgs_clock_compat
 #print axioms CATEPTMain.Bridges.CrossDomain.kinetic_higgs_clock_compat
 #print axioms CATEPTMain.Bridges.CrossDomain.any_finite_collection_of_slots_compatible
+
+-- Relational-Information Substrate (T78 — ontological floor).
+--   Cherry-picked substrate kernel + leverage demo: every existing
+--   TemporalFramework adapter is a substrate projection.
+#print axioms CATEPTMain.Integration.RelationalInformationSubstrate.toTemporalFramework_coherence
+#print axioms CATEPTMain.Integration.RelationalInformationSubstrate.toLiveTemporalFramework_coherence
+#print axioms CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt_nonneg
+#print axioms CATEPTMain.Domains.SubstrateProjections.harmonic_is_substrate_projection
+#print axioms CATEPTMain.Domains.SubstrateProjections.harmonicSubstrate_satisfies_spine

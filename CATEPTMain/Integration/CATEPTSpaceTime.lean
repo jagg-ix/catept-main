@@ -1,4 +1,5 @@
 import CATEPTMain.Geometry.SM.SMPrelude
+import CATEPTMain.Integration.RelationalInformationSubstrate
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.MeasureTheory.Measure.MeasureSpace
@@ -205,6 +206,96 @@ theorem catept_satisfies_ept_axioms
   a3_arrow  := st.ept_causal_arrow
   a4_noftl  := st.noFTL
   a5_flat   := trivial
+
+-- ── Relational-substrate projection ──────────────────────────────────────────
+
+/-- A geometric projection of the relational-information substrate into the
+    abstract `CATEPTSpacetimeModel` interface.
+
+    This keeps the current spacetime API stable while recording a principled
+    source for the EPT scalar: `tau_ent = irreversibleCost / hbar`.
+
+    The causal-arrow and no-FTL fields of `CATEPTSpacetimeModel` remain
+    phase-1 placeholders (`True`) for compatibility with the existing bridge
+    stack, but the corresponding substrate laws are exposed as named theorems
+    below so later files can depend on the stronger facts directly. -/
+structure SubstrateSpacetimeProjection
+    (S : CATEPTMain.Integration.RelationalInformationSubstrate) where
+  /-- Lorentz-style bilinear form on substrate entities. -/
+  lorentzMetric : S.Entity → S.Entity → ℝ
+  /-- Positive scale used in the entropic-time projection. -/
+  clock :
+    CATEPTMain.Integration.RelationalInformationSubstrate.EntropicClock S
+
+namespace SubstrateSpacetimeProjection
+
+/-- Canonical projection from a relational substrate to the abstract CAT/EPT
+    spacetime interface. -/
+noncomputable def toCATEPTSpacetimeModel
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    CATEPTSpacetimeModel where
+  SpaceTime := S.Entity
+  lorentzMetric := P.lorentzMetric
+  ept := CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt S P.clock
+  ept_nonneg := CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt_nonneg S P.clock
+  ept_smooth := trivial
+  ept_causal_arrow := trivial
+  noFTL := trivial
+
+/-- Definitional form of the substrate EPT scalar inside the spacetime
+    projection. -/
+theorem toCATEPTSpacetimeModel_ept_eq
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) (e : S.Entity) :
+    P.toCATEPTSpacetimeModel.ept e =
+      CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt S P.clock e :=
+  rfl
+
+/-- The projected spacetime inherits the nonnegativity of the substrate's
+    entropic-time calibration. -/
+theorem toCATEPTSpacetimeModel_ept_nonneg
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    ∀ x : P.toCATEPTSpacetimeModel.SpaceTime, 0 ≤ P.toCATEPTSpacetimeModel.ept x :=
+  P.toCATEPTSpacetimeModel.ept_nonneg
+
+/-- The stronger substrate causal-order law remains available alongside the
+    weaker phase-1 spacetime placeholder. -/
+theorem temporalConsistent
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (_P : SubstrateSpacetimeProjection S) :
+    CATEPTMain.Integration.RelationalInformationSubstrate.TemporalConsistent S :=
+  CATEPTMain.Integration.RelationalInformationSubstrate.temporalConsistent S
+
+/-- The stronger substrate bounded-propagation law remains available alongside
+    the weaker phase-1 spacetime placeholder. -/
+theorem noFTLNotifications
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (_P : SubstrateSpacetimeProjection S) :
+    CATEPTMain.Integration.RelationalInformationSubstrate.NoFTLNotifications S :=
+  CATEPTMain.Integration.RelationalInformationSubstrate.noFTLNotifications S
+
+/-- The substrate projection automatically satisfies the abstract EPT axiom
+    package carried by `CATEPTSpacetimeModel`. -/
+theorem satisfies_ept_axioms
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    EPTAxiomPackage P.toCATEPTSpacetimeModel :=
+  catept_satisfies_ept_axioms P.toCATEPTSpacetimeModel
+
+/-- The same substrate clock still satisfies the universal CAT/EPT plugin
+    spine through `TemporalFramework`. -/
+theorem temporalFramework_coherence
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    CATEPTMain.Integration.cateptConsistencyConstraint
+      ((CATEPTMain.Integration.RelationalInformationSubstrate.toTemporalFramework
+          S P.clock).toCATEPTSlot) :=
+  CATEPTMain.Integration.RelationalInformationSubstrate.toTemporalFramework_coherence
+    S P.clock
+
+end SubstrateSpacetimeProjection
 
 -- ── Canonical construction: Minkowski spacetime ───────────────────────────────
 
