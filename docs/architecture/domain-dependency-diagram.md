@@ -232,3 +232,137 @@ The table in the previous section shows that no bridge other than
 `OSReconstruction` is currently core-free — meaning the "Superior
 Method" is so far only realised for the Lorentz-coincidence content.
 Expanding it to QM, GR, and QFT is Target 3's work.
+
+---
+
+## T65–T73: the `Domains/` umbrella (kernel-axiom-clean substrate)
+
+The seven publication bridges above are the *external-facing*
+surface. Below them lives the `CATEPTMain/Domains/` umbrella — a
+Superior-Method substrate built from scratch in commits T65 → T73.
+Every theorem in it depends only on
+`[propext, Classical.choice, Quot.sound]`, and the audit gate in
+`Domains/CoherenceShowcase.lean` re-prints `#print axioms` for **44**
+theorems on every build.
+
+### Layer map
+
+```mermaid
+flowchart TD
+  SM["Domains/SuperiorMethod.lean<br/>(SuperiorMethodSlot ↔ CATEPTPluginSlot)"]
+
+  subgraph slots["Domain superior slots (8)"]
+    QM["QM/Domain.lean<br/>qmSuperiorSlot"]
+    GR["GR/Domain.lean<br/>minkowski / em / bohmianEM"]
+    VML["VML/Domain.lean<br/>vmlRigidity"]
+    ETH["ETH/Domain.lean<br/>kinetic / higgs / herglotz"]
+  end
+
+  TF["Domains/TemporalFramework.lean<br/>(kernel + Live tier, coherence_spine)"]
+
+  subgraph inv["Domains/Invariants/ (4 opt-in slots)"]
+    I1["Conservation"]
+    I2["Reduction"]
+    I3["Symmetry"]
+    I4["QuantumCorrespondence"]
+  end
+
+  UV["Domains/UnifiedValidator.lean<br/>(Option-tagged 4-invariant aggregate)"]
+
+  subgraph adapters["Domains/Adapters/ (8 — full coverage)"]
+    A1["Minkowski (vacuum)"]
+    A2["EM (live, 3/4)"]
+    A3["VML (live, 3/4)"]
+    A4["HarmonicOscillator<br/>(live, 4/4 — first non-vacuum QC)"]
+    A5["Kinetic (live, 3/4)"]
+    A6["Higgs (live, 3/4)"]
+    A7["Herglotz (live, 3/4)<br/>kernel + herglotzLive"]
+    A8["BohmianEM (live, 3/4)<br/>reflection-through-A_bg σ"]
+    A9["QM (kernel, 3/4)<br/>phase-1 entropy=0"]
+  end
+
+  subgraph bridges2["Domains/Bridges/"]
+    SB["SuperiorMethodBridges.lean<br/>(7 per-slot CATEPT-consistency)"]
+    CDC["CrossDomainCompat.lean<br/>(rfl-only Logos-style bridges)"]
+  end
+
+  SM --> QM
+  SM --> GR
+  SM --> VML
+  SM --> ETH
+
+  QM --> SB
+  GR --> SB
+  VML --> SB
+  ETH --> SB
+
+  SB --> CDC
+
+  TF --> A1
+  TF --> A2
+  TF --> A3
+  TF --> A4
+  TF --> A5
+  TF --> A6
+  TF --> A7
+  TF --> A8
+  TF --> A9
+  QM --> A9
+
+  I1 --> UV
+  I2 --> UV
+  I3 --> UV
+  I4 --> UV
+  TF --> UV
+  UV --> A1
+  UV --> A2
+  UV --> A3
+  UV --> A4
+  UV --> A5
+  UV --> A6
+  UV --> A7
+  UV --> A8
+  UV --> A9
+```
+
+### Adapter coverage matrix
+
+| Adapter | Tier | Cons | Red | Sym | QC | Notes |
+|---|---|:---:|:---:|:---:|:---:|---|
+| Minkowski | vacuum | ✓ | ✓ | ✓ | ✓ | all four vacuum/identity claims |
+| EM | live | ✓ | ✓ | ✓ | – | μ₀-dependent action |
+| VML | live | ✓ | ✓ | ✓ | – | Lyapunov action ‖v‖²/(2T)+‖E‖²+‖∇B‖² |
+| HarmonicOscillator | live | ✓ | ✓ | ✓ | **★** | first non-vacuum QC, G = 1/(8π) |
+| Kinetic | live | ✓ | ✓ | ✓ | – | Maxwell-Boltzmann velocity space |
+| Higgs | live | ✓ | ✓ | ✓ | – | Mexican-hat, Z₂ symmetry |
+| Herglotz | live | ✓ | ✓ | ✓ | – | damped oscillator (T70 herglotzLive) |
+| BohmianEM | live | ✓ | ✓ | ✓ | – | first non-origin reflection σ (T73) |
+| QM | kernel | ✓ | ✓ | ✓ | – | phase-1 entropy=0 → live deferred |
+
+★ = non-vacuum claim; ✓ = vacuum/identity claim; – = not claimed.
+Total per-adapter audited theorems: **44**.
+
+### Cross-domain bridges (rework proposal § 2)
+
+`Domains/Bridges/CrossDomainCompat.lean` lands the Logos-style
+"compiler-is-the-comparator" pattern for the umbrella surface:
+
+- `superiorSlot_actionIm_eq_eptClock` — universal lemma (one `rfl`)
+- `qm_herglotz_clock_compat`, `qm_higgs_clock_compat`,
+  `kinetic_higgs_clock_compat` — concrete pairs `⟨fun _ => rfl, fun _ => rfl⟩`
+- `any_finite_collection_of_slots_compatible` — n-ary version
+
+Together with the publication surface's `OSReconstruction` (the only
+core-free bridge in the upper layer), the umbrella now realises the
+Superior Method on **every** Superior-Method slot — closing the
+question raised at the end of the previous section ("Expanding it to
+QM, GR, and QFT is Target 3's work").
+
+### Where this fits in the rework
+
+| Rework step | Status | Concrete artefact |
+|---|---|---|
+| 1. Tagged-assumption registry | in_progress | `Core/Assumptions.lean` (27 ids), `tools/docs/gen_assumptions_md.py` (T72 fix), `docs/architecture/ASSUMPTIONS.md` |
+| 2. Superior-Method bridges | in_progress | `Bridges/SuperiorMethodBridges.lean`, `Bridges/CrossDomainCompat.lean` (T71) |
+| 3. Cross-domain dependency diagram | done | this file |
+| 4. Sibling-repo split | todo | sibling-repo-inventory.md / plugin-split.md |
