@@ -5,6 +5,7 @@ import CATEPTMain.Domains.Adapters.Kinetic
 import CATEPTMain.Domains.Adapters.Higgs
 import CATEPTMain.Domains.Adapters.Herglotz
 import CATEPTMain.Domains.Adapters.QM
+import CATEPTMain.Domains.Adapters.BohmianEM
 import CATEPTMain.Bridges.CrossDomainCompat
 
 /-!
@@ -142,6 +143,12 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.herglotz_validates
 #print axioms CATEPTMain.Temporal.Adapter.herglotzLive
+
+-- BohmianEM adapter (T73 — minimally-coupled Bohmian, displaced Gaussian).
+--   First reflection-through-a-point symmetry witness `σ : v ↦ 2·A_bg − v`.
+#print axioms CATEPTMain.Temporal.Adapter.bohmianEM_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.bohmianEM_validates
+#print axioms CATEPTMain.Temporal.Adapter.bohmianEM_dynamics_nontrivial
 
 -- QM density-matrix adapter (T70 — von Neumann entropy clock, kernel tier):
 --   Wraps `qmSuperiorSlot n` (catept-domain-quantum sibling) as a
