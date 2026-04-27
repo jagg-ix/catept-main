@@ -38,6 +38,7 @@ import CATEPTMain.Integration.GeneratingFunctionalCalculus
 import CATEPTMain.Integration.OscillatorKernel
 import CATEPTMain.Integration.RenormalizationGroup
 import CATEPTMain.Integration.InstantonTunneling
+import CATEPTMain.Integration.FeynmanDiagrams
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -443,3 +444,15 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.InstantonTunneling.tunnelAmplitude_at_zero
 #print axioms CATEPTMain.Integration.InstantonTunneling.tunnelAmplitude_compose
 #print axioms CATEPTMain.Integration.InstantonTunneling.instantonBPSTAction_pos
+
+-- T-C Phase 1 (Feynman-diagram algebra, final rung of the path-integral
+-- leverage ladder). Honest algebraic identities on the tree-level s-channel
+-- exchange amplitude  M(g, s, m) = g² / (s - m²):
+--   * closed-form factorisation  M = g² · Δ(s, m),
+--   * pole-residue normalisation  (s - m²) · M = g²  (unitarity weight),
+--   * coupling-rescaling  M(k·g) = k² · M(g)        (universal tree weight).
+-- One-loop vacuum polarisation, Cutkosky rules, BPHZ subtraction, and
+-- on-shell renormalisation deferred to Phase 2.
+#print axioms CATEPTMain.Integration.FeynmanDiagrams.treeAmplitude_closed_form
+#print axioms CATEPTMain.Integration.FeynmanDiagrams.treeAmplitude_residue_at_pole
+#print axioms CATEPTMain.Integration.FeynmanDiagrams.treeAmplitude_coupling_rescale
