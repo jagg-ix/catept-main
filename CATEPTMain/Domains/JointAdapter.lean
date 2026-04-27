@@ -3,6 +3,7 @@ import CATEPTMain.Domains.Adapters.Minkowski
 import CATEPTMain.Domains.Adapters.EM
 import CATEPTMain.Domains.Adapters.QM
 import CATEPTMain.Domains.QM.Domain
+import CATEPTMain.Domains.Adapters.MaxwellCurveSpace
 
 /-!
 # Joint TemporalFramework — QM ⊕ GR ⊕ Maxwell unification
@@ -53,7 +54,7 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Temporal.Adapter
 
-open CATEPTMain.Integration (cateptConsistencyConstraint)
+open CATEPTMain.Integration (cateptConsistencyConstraint CatEptMaxwellCurveSpaceModel)
 open CATEPTMain.Quantum.QUANTUM (DensityMatrix)
 
 -- ─── Binary join ─────────────────────────────────────────────────────
@@ -118,6 +119,72 @@ theorem maxwellGRQM_clock_decomposition (μ₀ : ℝ) (hμ₀ : 0 < μ₀)
       minkowski.clock gx + (em μ₀ hμ₀).clock Ax + (qm n ρ₀).clock ρ := by
   -- jointClock unfolds to component sums by definition
   unfold maxwellGRQM joint jointClock
+  ring
+
+-- ─── 4-way join: QM ⊕ GR ⊕ Maxwell-flat ⊕ Maxwell-curved (T89) ──────
+
+/-- **Unified Maxwell-CurveSpace + GR + Maxwell-flat + QM `TemporalFramework`.**
+
+    Adds the T88 curved-spacetime Maxwell layer on top of T79's
+    `maxwellGRQM`. Configuration:
+
+      `MaxwellCurveSpaceConfig m × (Fin 4 → ℝ) × (Fin 4 → ℝ) × DensityMatrix n`
+
+    The joint clock decomposes pointwise into a 4-way sum (see
+    `maxwellGRQMcurved_clock_decomposition`). The spine identification
+    `actionIm/ℏ = eptClock` holds on the joint framework via two
+    applications of `coherence_spine` — no new theorem needed beyond
+    the structural one in T79.
+
+    Caller supplies the plugin model `m` plus its three non-negativity
+    proofs and a witness config inhabitant; the GR/EM/QM layers carry
+    their existing parameters. -/
+noncomputable def maxwellGRQMcurved
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n)
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m) :
+    TemporalFramework :=
+  joint (maxwellCurveSpace m hCE hMA hCo witness₀) (maxwellGRQM μ₀ hμ₀ n ρ₀)
+
+/-- The 4-way unified framework satisfies the CATEPT spine. Headline
+    corollary of `joint_satisfies_spine` applied three times — and
+    proved here in one line via the universal `coherence_spine`. -/
+theorem maxwellGRQMcurved_satisfies_spine
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n)
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m) :
+    cateptConsistencyConstraint
+      (maxwellGRQMcurved μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀).toCATEPTSlot :=
+  (maxwellGRQMcurved μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀).coherence_spine
+
+/-- The 4-way joint clock decomposes pointwise into the sum of its four
+    component clocks. Pointwise unfolding gives a transparent reading
+    of the unified entropic-time observable as
+
+      `τ_curved + τ_minkowski + τ_em + τ_qm` -/
+theorem maxwellGRQMcurved_clock_decomposition
+    (μ₀ : ℝ) (hμ₀ : 0 < μ₀) (n : ℕ) (ρ₀ : DensityMatrix n)
+    (m : CatEptMaxwellCurveSpaceModel)
+    (hCE : ∀ x, 0 ≤ m.curvatureEnergy x)
+    (hMA : ∀ a, 0 ≤ m.maxwellAction a)
+    (hCo : ∀ x a, 0 ≤ m.couplingEnergy x a)
+    (witness₀ : MaxwellCurveSpaceConfig m)
+    (cs : MaxwellCurveSpaceConfig m)
+    (gx : (Fin 4 → ℝ)) (Ax : (Fin 4 → ℝ))
+    (ρ : DensityMatrix n) :
+    (maxwellGRQMcurved μ₀ hμ₀ n ρ₀ m hCE hMA hCo witness₀).clock
+        (cs, gx, Ax, ρ) =
+      (maxwellCurveSpace m hCE hMA hCo witness₀).clock cs
+      + minkowski.clock gx
+      + (em μ₀ hμ₀).clock Ax
+      + (qm n ρ₀).clock ρ := by
+  unfold maxwellGRQMcurved maxwellGRQM joint jointClock
   ring
 
 end CATEPTMain.Temporal.Adapter

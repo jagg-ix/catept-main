@@ -298,3 +298,10 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags.os0_analyticity_tag
 #print axioms CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags.reflection_positivity_tag
 #print axioms CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags.has_reconstruction_tag
+
+-- 4-way joint TemporalFramework (T89 — QM ⊕ GR ⊕ Maxwell-flat ⊕ Maxwell-curved).
+--   Builds on T79 maxwellGRQM by adding the T88 curved-spacetime layer.
+--   Spine identification holds free via coherence_spine; clock decomposes
+--   pointwise into a 4-way sum.
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_clock_decomposition
