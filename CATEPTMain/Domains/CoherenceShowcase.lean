@@ -19,6 +19,7 @@ import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
 import CATEPTMain.Domains.Adapters.MaxwellCurveSpace
 import CATEPTMain.Integration.MaxwellCurveSpaceAssumptionTags
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
+import CATEPTMain.Integration.PathIntegralBenchmarksBridge
 import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
 import CATEPTMain.Domains.UnifiedConstraintsEMDuality
 import CATEPTMain.Domains.UnifiedConstraintsCoupling
@@ -305,3 +306,16 @@ end CATEPTMain.Temporal
 --   pointwise into a 4-way sum.
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_satisfies_spine
 #print axioms CATEPTMain.Temporal.Adapter.maxwellGRQMcurved_clock_decomposition
+
+-- Path-integral benchmark ladder (T88 — Stages 1+3 and Stage 4 of
+-- REPLYID:20260427-PI-NORM-RENORM-01). Honest algebraic identities for
+-- the FK-damping composition law (free-particle / oscillator composition
+-- at the weight level) and the Euclidean harmonic-oscillator partition
+-- closed form Z(β) = 1/(2 sinh(βℏω/2)) via finite geometric sum + sinh
+-- identity. Stages 2/5/6/7/8 deferred (require new infrastructure).
+#print axioms CATEPTMain.Integration.PathIntegralBenchmarks.fk_damping_composition
+#print axioms CATEPTMain.Integration.PathIntegralBenchmarks.fk_damping_at_zero
+#print axioms CATEPTMain.Integration.PathIntegralBenchmarks.fk_damping_semigroup
+#print axioms CATEPTMain.Integration.PathIntegralBenchmarks.harmonicOscillator_partition_sinh_form
+#print axioms CATEPTMain.Integration.PathIntegralBenchmarks.harmonicOscillator_partition_finite
+#print axioms CATEPTMain.Integration.PathIntegralBenchmarks.harmonicOscillator_partition_matches_sinh_finite
