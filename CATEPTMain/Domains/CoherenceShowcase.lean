@@ -1,6 +1,9 @@
 import CATEPTMain.Domains.CoherenceSpine
 import CATEPTMain.Domains.UnifiedValidator
 import CATEPTMain.Domains.Adapters.HarmonicOscillator
+import CATEPTMain.Domains.Adapters.Kinetic
+import CATEPTMain.Domains.Adapters.Higgs
+import CATEPTMain.Domains.Adapters.Herglotz
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -123,3 +126,16 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Temporal.Adapter.harmonic_quantum_correspondence
 #print axioms CATEPTMain.Temporal.Adapter.harmonic_validates
 #print axioms CATEPTMain.Temporal.Adapter.harmonic_dynamics_nontrivial
+
+-- Kinetic adapter (T69 — Maxwell-Boltzmann velocity space):
+#print axioms CATEPTMain.Temporal.Adapter.kinetic_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.kinetic_validates
+#print axioms CATEPTMain.Temporal.Adapter.kinetic_dynamics_nontrivial
+
+-- Higgs adapter (T69 — Mexican-hat vacuum, Z₂ symmetry, live tier):
+#print axioms CATEPTMain.Temporal.Adapter.higgs_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.higgs_validates
+
+-- Herglotz adapter (T69 — damped classical oscillator, kernel tier only):
+#print axioms CATEPTMain.Temporal.Adapter.herglotz_satisfies_spine
+#print axioms CATEPTMain.Temporal.Adapter.herglotz_validates
