@@ -13,6 +13,9 @@ import CATEPTMain.Domains.JointAdapter
 import CATEPTMain.Domains.UnifiedConstraints
 import CATEPTMain.Domains.UnifiedConstraintsSubstrate
 import CATEPTMain.Integration.SubstrateBellBridge
+import CATEPTMain.Domains.UnifiedConstraintsGaugeGeometry
+import CATEPTMain.Domains.UnifiedConstraintsEMDuality
+import CATEPTMain.Domains.UnifiedConstraintsCoupling
 
 /-!
 # Coherence Spine + UnifiedValidator — Kernel-Axiom Showcase
@@ -213,7 +216,7 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Domains.UnifiedConstraints.localGlobalDualityAtSubstrate_holds
 #print axioms CATEPTMain.Domains.UnifiedConstraints.catept_substrate_discharges_two_more
 
--- Extended substrate projections (T82 — generic constructor + 9 named witnesses).
+-- Extended substrate projections (T82-mine — generic constructor + 9 named witnesses).
 --   Single ofTemporalFramework_projects_to_self proves all per-adapter cases via div_one.
 #print axioms CATEPTMain.Domains.SubstrateProjections.ofTemporalFramework_projects_to_self
 #print axioms CATEPTMain.Domains.SubstrateProjections.minkowski_is_substrate_projection
@@ -226,10 +229,22 @@ end CATEPTMain.Temporal
 #print axioms CATEPTMain.Domains.SubstrateProjections.qm_is_substrate_projection
 #print axioms CATEPTMain.Domains.SubstrateProjections.sr_is_substrate_projection
 
--- Substrate-to-Bell adapter (T83 — architecture note Target C).
+-- Substrate-to-Bell adapter (T83-mine — architecture note Target C).
 --   Substrate-side no-signaling discharge; Bell math stays in NoFTLBellBridge.
 #print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.substrate_alice_bob_no_signaling
 #print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.substrate_pair_delay_bounded
 #print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.substrate_local_frame_measurement
 #print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.alice_frame_owner
 #print axioms CATEPTMain.Integration.SubstrateBell.SubstrateBellSource.bob_frame_owner
+
+-- Final 3 Copilot-doc invariants (T82-T84 from parallel helper b1d9296d8).
+--   Substrate-backed discharges of T80 placeholders #2, #5, #10.
+--   Author: GitHub Copilot (Claude Opus 4.7) <copilot-claude@anthropic.local>.
+--   Cherry-picked into integrated history; original branch
+--   feat/copilot-claude/t82-t84-invariants on origin until cleanup.
+#print axioms CATEPTMain.Domains.UnifiedConstraints.gaugeGeometryDualityAtJoint_holds
+#print axioms CATEPTMain.Domains.UnifiedConstraints.gaugeGeometryDuality_factor_decomposition
+#print axioms CATEPTMain.Domains.UnifiedConstraints.electricMagneticDualityAtEM_holds
+#print axioms CATEPTMain.Domains.UnifiedConstraints.emDualityInvolution_nontrivial
+#print axioms CATEPTMain.Domains.UnifiedConstraints.emDualityInvolution_involutive
+#print axioms CATEPTMain.Domains.UnifiedConstraints.couplingConstraintAtBohmianEM_holds
