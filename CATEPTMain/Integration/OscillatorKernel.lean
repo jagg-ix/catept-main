@@ -101,6 +101,74 @@ theorem mehlerPrefactorSq_pos
   have hnum : 0 < m * ω := mul_pos hm hω
   exact div_pos hnum hden
 
+/-! ## Phase 2 — Mehler half-angle decomposition (T-X)
+
+The **half-angle decomposition**
+
+  `(x² + y²) · cosh(2u) − 2xy
+     = cosh²(u) · (x − y)²  +  sinh²(u) · (x + y)²`
+
+is the canonical bridge identity for the two physical limits of the
+Mehler kernel that were deferred at Phase 1:
+
+* the **t → 0 delta-function limit** — the `(x − y)²` coefficient,
+  divided by `sinh(ωt) = 2 sinh(ωt/2) cosh(ωt/2)`, behaves as
+  `(x − y)² / (ωt) + O(t)`, recovering the free-particle Gaussian
+  heat-kernel exponent `−m·(x − y)² / (2t)`;
+
+* the **Hermite spectral expansion** — the `(x + y)²` envelope
+  multiplied by `tanh(ωt/2)` is the generating-function form of
+  `∑ₙ Hₙ(x) Hₙ(y) · e^{−(n + ½) ωt}` for the Hermite polynomials Hₙ.
+
+Both Phase-2 sub-targets reduce to this single algebraic identity in
+the hyperbolic-function ring; full distributional / functional-analytic
+convergence proofs are deferred (Phase 3+).
+
+The identity is provable by `linear_combination` once `cosh(2u)` is
+expanded via `Real.cosh_two_mul` and the Pythagorean
+`cosh² u − sinh² u = 1` is invoked. -/
+theorem mehler_bracket_half_angle (u x y : ℝ) :
+    (x ^ 2 + y ^ 2) * Real.cosh (2 * u) - 2 * x * y
+      = Real.cosh u ^ 2 * (x - y) ^ 2
+        + Real.sinh u ^ 2 * (x + y) ^ 2 := by
+  have h1 : Real.cosh (2 * u) = Real.cosh u ^ 2 + Real.sinh u ^ 2 :=
+    Real.cosh_two_mul u
+  have h2 : Real.cosh u ^ 2 - Real.sinh u ^ 2 = 1 :=
+    Real.cosh_sq_sub_sinh_sq u
+  linear_combination (x ^ 2 + y ^ 2) * h1 + (2 * x * y) * h2
+
+/-- The **Mehler exponent in half-angle form**:
+
+  `S(x, y; t)
+     =  − m·ω · [ cosh²(ωt/2)·(x − y)²  +  sinh²(ωt/2)·(x + y)² ]
+        / (2 · sinh(ωt))`.
+
+Combining `mehler_bracket_half_angle` with the definition of
+`mehlerExponent`. This is the algebraic precursor to the
+free-particle (t → 0) and Hermite (t → ∞) limits: the `(x − y)²`
+term is regular at the spatial diagonal and supplies the heat-kernel
+limit, while the `(x + y)²` term is suppressed by `sinh²(ωt/2)` and
+encodes the oscillator-mode envelope.
+
+Phase-2 bridge form, kernel-only algebraic identity. -/
+theorem mehlerExponent_half_angle (m ω t x y : ℝ) :
+    mehlerExponent m ω t x y
+      = - m * ω
+        * (Real.cosh (ω * t / 2) ^ 2 * (x - y) ^ 2
+           + Real.sinh (ω * t / 2) ^ 2 * (x + y) ^ 2)
+        / (2 * Real.sinh (ω * t)) := by
+  unfold mehlerExponent
+  have hωt : 2 * (ω * t / 2) = ω * t := by ring
+  have hbrk :
+      (x ^ 2 + y ^ 2) * Real.cosh (ω * t) - 2 * x * y
+        = Real.cosh (ω * t / 2) ^ 2 * (x - y) ^ 2
+          + Real.sinh (ω * t / 2) ^ 2 * (x + y) ^ 2 := by
+    have h := mehler_bracket_half_angle (ω * t / 2) x y
+    rw [hωt] at h
+    exact h
+  rw [hbrk]
+  ring
+
 end
 
 end CATEPTMain.Integration.OscillatorKernel

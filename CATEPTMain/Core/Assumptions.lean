@@ -114,6 +114,25 @@ def fourierPalinstrophy      : String := "ns.fourier_palinstrophy"
 /-- Leray–Hopf existence of weak NS solutions with energy inequality. -/
 def lerayHopfExistence       : String := "ns.leray_hopf_existence"
 
+-- ── Spectral physics (T104 retrofit) ─────────────────────────────────────────
+
+/-- Spectral gap of the Laplacian on a connected classical structure
+is strictly positive: `∃ gap, 0 < gap` with the kernel-only ground-state
+characterisation. Substantive consequence of (and weaker than) Weyl's
+law; bridged to the catept-plugin-spectral-physics theorem
+`proved_spectral_gap_pos` via `SpectralPhysicsAssumptionTags`. -/
+def spectralGapPositive       : String := "pde.spectral_gap_positive"
+
+/-- Spectral Laplacian is self-adjoint: `⟨f, Δg⟩ = ⟨Δf, g⟩`. Bridged
+to `proved_laplacian_self_adjoint` via `SpectralPhysicsAssumptionTags`. -/
+def laplacianSelfAdjoint      : String := "pde.laplacian_self_adjoint"
+
+/-- Spectral Laplacian is positive semi-definite: `⟨f, Δf⟩.re ≥ 0` on
+classical structures. Bridged to `proved_laplacian_pos_semidef` via
+`SpectralPhysicsAssumptionTags`. -/
+def laplacianPositiveSemidefinite : String :=
+  "pde.laplacian_pos_semidef"
+
 -- ── QFT / Osterwalder–Schrader ───────────────────────────────────────────────
 
 /-- OS0 analyticity axiom in n-point Schwinger functions. -/
@@ -201,6 +220,16 @@ def substratePhaseIsQuantumPhase : String := "substrate.phase_is_quantum_phase"
     application. Phase-1 placeholder; Phase-2 plan: discharge through
     the quantum-information bridge (Kraus operator picture). -/
 def substrateNotificationIsQuantumChannel : String := "substrate.notification_is_quantum_channel"
+
+/-- Noether invariant under entropic time: the dressed energy
+    `J_CAT(t) = E(t)·exp(γ t/ℏ)` is a constant of motion under the
+    CAT exponential-decay law `E' = -(γ/ℏ)E`, and the EPT-accumulated
+    form `J_EPT(t) = E(t)·exp(T_acc(t)/ℏ)` is constant under EPT decay
+    + accumulation. This is CAT/EPT's analog of Noether's theorem (the
+    physics 1918 theorem, not the algebra 1933 one): it identifies a
+    conserved quantity associated with the exponential-decay symmetry
+    that emerges from time-translation under damping. -/
+def noetherInvariantUnderEPT : String := "catept.noether_invariant_under_ept"
 
 end AssumptionId
 

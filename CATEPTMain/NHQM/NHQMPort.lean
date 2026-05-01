@@ -4,7 +4,7 @@
 AFP bridge for the Non-Hermitian Fermi-Dirac persistent current theory:
   Shen, Lu, Lado, Trif, PRL 133, 086301 (2024)
 
-Source: `~/Downloads/NonHermitianFermiDiracDistributionPersistentCurrent-main/`
+Source: `(private intake)`
 
 ## Files
 

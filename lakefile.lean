@@ -157,7 +157,7 @@ require «catept-domain-core» from git
 -- catept-domain-gauge: GaugeTheory umbrella sibling.
 -- T63a (Electromagnetic-first): ELECTROWEAK + FEYNCALC core support modules.
 require «catept-domain-gauge» from git
-  "https://github.com/jagg-ix/catept-domain-gauge.git" @ "61d6204fdd16bd49ffa1b0dbc6063aab5c71d3fa"
+  "https://github.com/jagg-ix/catept-domain-gauge.git" @ "93ee396aa8505bf336093f41e599f07de395c14d"
 
 -- catept-domain-analysis: Class B Analysis umbrella sibling — last of 5/5.
 -- Sub-bundles at CATEPTPluginDomainAnalysis.<BUNDLE>.* (CPM, FOU, LAPL, LSI,
@@ -175,6 +175,49 @@ require «catept-domain-analysis» from git
 -- namespaces propagate transparently). **Private** per maintainer policy.
 require «catept-gravitas-port» from git
   "https://github.com/jagg-ix/catept-gravitas-port.git" @ "cb0e7dbd3e99f67f1ce73d7406661f97ea39cb66"
+
+-- catept-core: namespace-preserving home for the CAT/EPT publication-bridge core.
+-- T60 step 2 — extracts CATEPTMain.Core.Assumptions and
+-- CATEPTMain.CATEPT.CATEPT.{Foundations, PathIntegrals, MeasurePathIntegral}
+-- into a sibling repo. Lean *namespaces* inside those files are preserved
+-- verbatim (`CATEPTMain.*`), so the 36 internal importers see no change to any
+-- in-namespace symbol. The four in-tree files at CATEPTMain/{Core,CATEPT/CATEPT}/
+-- are reduced to one-line re-export shims that `import CATEPTMainExtracted.<...>`.
+-- Module paths in the dep are `CATEPTMainExtracted.*` to avoid the Lake lib-name
+-- collision with catept-main's local `lean_lib CATEPTMain`.
+-- Cascade-unblocks 4 of 6 remaining CATEPTPort sub-modules (Wave-2 leverage).
+require «catept-core» from git
+  "https://github.com/jagg-ix/catept-core.git" @ "e3cd2440d0cba2cd2939520993a3ebd507eb6530"
+
+-- jagg-ix/lean-mwe: namespace-preserving home for MaxwellWave and
+-- PlasmaEquations (originally vendored as top-level `MaxwellWave/` and
+-- `PlasmaEquations/` subtrees in commit 884c11c62, now externalised).
+-- Routed through the maintainer's fork because catept-main needs the
+-- toolchain-bump commits (Lean v4.26 -> v4.28 -> v4.29) that upstream
+-- a-bekheet/lean-mwe hasn't picked up.  All proofs verified to close
+-- under Lean v4.29.0 + mathlib v4.29.0 at the pinned SHA below.
+-- Repinning discipline mirrors catept-core: pin to a permanent commit
+-- reachable from `main`, never to a PR-branch tip.
+require «MaxwellWave» from git
+  "https://github.com/jagg-ix/lean-mwe.git" @ "095175e42ba56563092aff973f5554bfdc4a065c"
+
+-- catept-plugin-architecture: namespace-preserving home for the CAT/EPT
+-- Integration-layer plugin-slot abstractions (T60 step 2). Extracts
+-- CATEPTMain.Integration.TheoryPluginArchitecture (370 lines, 10 in-tree
+-- consumer bridges including TheoryPluginAdapter, QuantumCATEPTBridge,
+-- VMLCATEPTBridge, ElectroweakCATEPTBridge, ComplexEinsteinPathIntegralBridge,
+-- TheoryPluginPhyslibConstructBridge, TheoryPluginClassicalETHBridge,
+-- TheoryPluginDimSlot, plus ActionIntegrationBridge / Domains/SuperiorMethod /
+-- UnifiedConstraintsCoupling). Lean *namespace* `CATEPTMain.Integration` is
+-- preserved verbatim inside the dep; module path is
+-- `CATEPTPluginArchitecture.Integration.TheoryPluginArchitecture` to avoid
+-- the Lake lib-name collision with catept-main's local `lean_lib CATEPTMain`.
+-- The in-tree CATEPTMain/Integration/TheoryPluginArchitecture.lean becomes
+-- a one-line re-export shim. Cascade-unblocks the heavy CATEPTPort barrel
+-- decoupling work (T60 follow-on) by removing the central plugin-slot
+-- coupling point.
+require «catept-plugin-architecture» from git
+  "https://github.com/jagg-ix/catept-plugin-architecture.git" @ "09b06d768e09d8172ebd8480f05cc39ed325b789"
 
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
@@ -291,6 +334,13 @@ require SGSuperRiemannSurfaces from git
   "https://github.com/jagg-ix/stringgeometry-super-riemann-surfaces.git" @ "617976775a894ff0c8638194f7891f561c269442"
 require SGSupermanifolds from git
   "https://github.com/jagg-ix/stringgeometry-supermanifolds.git" @ "1559c4f7bda935a85341ee6eb8ea90e4ff539a6b"
+
+-- Logos_Library — provides the operator-algebraic Tomita-Takesaki carrier
+-- (`LogosLibrary.QuantumMechanics.ModularTheory.TomitaTakesaki`) consumed by
+-- `CATEPTMain.Integration.TomitaTakesakiPhase3Bridge`. Pinned at the v4.29.0
+-- bump (jagg-ix/Logos_Library, branch bump-to-lean-v4.29.0).
+require «logos_library» from git
+  "https://github.com/jagg-ix/Logos_Library.git" @ "852151dfe6fe5907cf3bcf1291176061b4e205a1"
 
 -- Keep mathlib last so its transitive versions win during resolution.
 require mathlib from git

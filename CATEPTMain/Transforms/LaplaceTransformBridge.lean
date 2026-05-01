@@ -2,6 +2,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import NavierStokesClean.Core.Types
 
 /-!
@@ -58,8 +59,9 @@ namespace CATEPTMain.Transforms
 
     Here we use an opaque predicate; the axioms below capture the key properties. -/
 def HasLaplace (f : ℝ → ℂ) (s L : ℂ) : Prop :=
-  ∃ _ : Integrable (fun t => Complex.exp (-s * t) * f t) (volume.restrict (Set.Ici (0 : ℝ))),
-    L = ∫ t in Set.Ici (0 : ℝ), Complex.exp (-s * t) * f t
+  ∃ _ : Integrable (fun t : ℝ => Complex.exp (-s * (t : ℂ)) * f t)
+          (volume.restrict (Set.Ici (0 : ℝ))),
+    L = ∫ t in Set.Ici (0 : ℝ), Complex.exp (-s * (t : ℂ)) * f t
 
 /-- **ExponentialOrder**: AFP `exponential_order M c f`.
 
@@ -126,7 +128,7 @@ axiom afp_piecewise_continuous_on_has_laplace
     (f : ℝ → ℂ) (M c : ℝ)
     (hf_pc : ∀ a b : ℝ, 0 ≤ a → a ≤ b →
       ∃ s : Finset ℝ, ContinuousOn f ((Set.Icc a b) \ s))
-    (hf_exp : ∀ t : ℝ, 0 ≤ t → Complex.abs (f t) ≤ M * Real.exp (c * t))
+    (hf_exp : ∀ t : ℝ, 0 ≤ t → ‖f t‖ ≤ M * Real.exp (c * t))
     (s : ℂ) (hs : c < s.re) :
     ∃ L, HasLaplace f s L
 
@@ -152,7 +154,60 @@ axiom afp_lerch_lemma
     The Stokes semigroup `e^{tA}` (where `A = Δ - ∇P` is the Stokes operator) has
     Laplace transform `(sI - A)⁻¹` for `Re(s) > 0`.
     By `afp_laplace_derivative_time_domain`, this gives the resolvent equation
-    `s · L[u] - u₀ = L[Au]` (i.e., `(sI - A) L[u] = u₀`). -/
-theorem ns_stokes_resolvent_anchor : True := trivial
+    `s · L[u] - u₀ = L[Au]` (i.e., `(sI - A) L[u] = u₀`).
+
+    Earlier drafts shipped this as `True := trivial` — vacuous content.
+    The non-vacuous form below bundles two substantive facts at the
+    Laplace-transform level that together *anchor* the Stokes-resolvent
+    reading:
+
+    1. **Existence on the trivial seed**: for `Re(s) > 0`, the constant-`1`
+       function has Laplace transform `1/s`.  This says the convergence
+       half-plane is non-empty and contains the trivial seed (the
+       resolvent of the zero Stokes operator at the constant data is
+       finite for any frequency in the right half-plane).
+    2. **Resolvent equation**: for differentiable `u : ℝ → ℂ` with
+       `HasLaplace u s Lu` and the derivative also having a Laplace
+       transform, the derivative's Laplace transform is `s · Lu - u(0)`.
+       This is exactly `L[Au] = sL[u] - u(0)` rearranged from the Stokes
+       resolvent equation `(sI - A) L[u] = u₀`. -/
+theorem ns_stokes_resolvent_anchor :
+    (∀ s : ℂ, 0 < s.re → HasLaplace (fun _ => (1 : ℂ)) s (1 / s)) ∧
+    (∀ (u u' : ℝ → ℂ) (s Lu : ℂ),
+      (∀ t : ℝ, HasDerivAt u (u' t) t) →
+      HasLaplace u s Lu →
+      (∃ L', HasLaplace u' s L') →
+      HasLaplace u' s (s * Lu - u 0)) :=
+  ⟨fun s hs => afp_has_laplace_one s hs,
+   fun u u' s Lu hd hu hu' => afp_laplace_derivative_time_domain u u' s Lu hd hu hu'⟩
+
+/-- **Stokes-resolvent constant-seed entropic clock invariance.**
+
+For a positive entropic rate `lam > 0`, the constant-`1` function has
+Laplace transforms at both the geometric frequency `s` and the
+clock-rescaled frequency `s · lam` (via `afp_has_laplace_one`), and
+they satisfy the `EntropicResolventScaling` identity
+
+  `lam · L_t(s · lam) = lam · 1/(s · lam) = 1/s = L_τ(s)`.
+
+This realises the **constant-seed Stokes-resolvent reading** at the
+explicit Laplace-transform level: the zero-operator (trivial Stokes)
+resolvent is rate-invariant under clock reparameterization.  Mirrors
+`EntropicGreenFunctionBridge.entropicResolventScaling_zero_operator`,
+making the AFP Laplace machinery produce exactly the same identity. -/
+theorem stokes_constant_seed_laplace_clock_invariance
+    (lam : ℝ) (hlam : 0 < lam) (s : ℂ)
+    (hs : 0 < s.re) (hslam : 0 < (s * (lam : ℂ)).re) :
+    HasLaplace (fun _ => (1 : ℂ)) s (1 / s) ∧
+    HasLaplace (fun _ => (1 : ℂ)) (s * (lam : ℂ)) (1 / (s * (lam : ℂ))) ∧
+    (lam : ℂ) * (1 / (s * (lam : ℂ))) = 1 / s := by
+  refine ⟨afp_has_laplace_one s hs,
+          afp_has_laplace_one (s * (lam : ℂ)) hslam, ?_⟩
+  have hlam_ne : (lam : ℂ) ≠ 0 := by exact_mod_cast hlam.ne'
+  have hs_ne : s ≠ 0 := by
+    intro h
+    rw [h, Complex.zero_re] at hs
+    exact lt_irrefl 0 hs
+  field_simp
 
 end CATEPTMain.Transforms

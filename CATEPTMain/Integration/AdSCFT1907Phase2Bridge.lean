@@ -7,7 +7,7 @@ import Mathlib
 Phase-2 bridge for integrating additional reasoning from:
 
   Matthew Headrick, *Lectures on entanglement entropy in field theory and holography*
-  arXiv:1907.08126v1 (`~/Downloads/1907.08126v1.pdf`)
+  arXiv:1907.08126v1 (`(private intake)`)
 
 Equation anchors used here:
 

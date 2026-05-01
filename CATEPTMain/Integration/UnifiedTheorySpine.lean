@@ -1,5 +1,6 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.CATEPT.CATEPT.ModularFlowBridge
+import CATEPTMain.CATEPT.CATEPT.FeynmanKacBridge
 import CATEPTMain.Integration.AdSCFT1907Port
 import CATEPTMain.Integration.AdSCFT1907Phase2Bridge
 import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge

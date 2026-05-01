@@ -11,7 +11,7 @@ set_option autoImplicit false
 
 ## Source
 
-Section 5.3 of `cat_ept_paper1_FINAL_V2.pdf` (local: `~/Downloads/`):
+Section 5.3 of `cat_ept_paper1_FINAL_V2.pdf` (private intake):
 
 > Full form: λ(T, m, g, ρ, J(ω)) = (k_B T / ℏ) · (g² ρ / m) · h(J(ω))
 

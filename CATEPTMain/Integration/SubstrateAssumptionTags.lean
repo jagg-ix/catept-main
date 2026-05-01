@@ -1,5 +1,6 @@
 import CATEPTMain.Core.Assumptions
 import CATEPTMain.Integration.RelationalInformationSubstrate
+import CATEPTMain.Integration.ConstructorInformationSubstrate
 
 /-!
 # Substrate-Facing Assumption Tags — Architecture-Note Target E
@@ -47,6 +48,8 @@ namespace CATEPTMain.Integration.SubstrateAssumptionTags
 open CATEPTMain (CATEPTAssumption)
 open CATEPTMain.AssumptionId
 open CATEPTMain.Integration (RelationalInformationSubstrate)
+open CATEPTMain.Integration.ConstructorInformationSubstrate
+  (HasNontrivialNotifications)
 
 -- ─── Retrofit: substrate's tauEnt_def discharges entropicTimeDefinition ──
 
@@ -64,65 +67,101 @@ theorem substrate_tauEnt_def
 
 -- ─── Substrate-to-causal-geometry ────────────────────────────────────
 
-/-- A "Minkowski-type substrate" is one whose `causalPrecedes` aligns
-    with the Minkowski causal future relation. Phase-1: placeholder
-    `True`; Phase-2: refine to a concrete Minkowski-future predicate
-    on the substrate's `Notification` carrier. -/
-def IsMinkowskiSubstrate (_S : RelationalInformationSubstrate) : Prop := True
+/-- A "Minkowski-type substrate" is one whose `causalPrecedes` is the
+    structural shape of a Minkowski-future relation: it is irreflexive
+    AND transitive (a strict partial order on notifications), AND the
+    substrate's `Notification` carrier is nontrivial (so the property
+    is not satisfied vacuously by the empty substrate).
 
+    Earlier drafts shipped this as `:= True`, which any substrate —
+    including `Notification := Empty` — discharged for free.  The
+    upgraded definition encodes the *structural* shape of Minkowski
+    causal future without requiring the substrate to carry coordinates;
+    Phase-2 work can refine further to a coordinate-aware predicate. -/
+def IsMinkowskiSubstrate (S : RelationalInformationSubstrate) : Prop :=
+  HasNontrivialNotifications S ∧
+  (∀ n : S.Notification, ¬ S.causalPrecedes n n) ∧
+  (∀ n₁ n₂ n₃ : S.Notification,
+    S.causalPrecedes n₁ n₂ → S.causalPrecedes n₂ n₃ →
+      S.causalPrecedes n₁ n₃)
+
+/-- Tag-discharge for `substrateCausalIsMinkowskiFuture` from a
+    structural witness.  No longer `trivial`: requires the consumer to
+    supply nontrivial notifications + irreflexivity + transitivity. -/
 theorem substrateCausalIsMinkowskiFuture_tag
-    (S : RelationalInformationSubstrate) :
+    (S : RelationalInformationSubstrate) (h : IsMinkowskiSubstrate S) :
     CATEPTAssumption substrateCausalIsMinkowskiFuture
       (IsMinkowskiSubstrate S) :=
-  trivial
+  h
 
 -- ─── Substrate-to-quantum (phase) ────────────────────────────────────
 
 /-- Claim that the substrate's `phase` observable on entities matches
-    a quantum-mechanical phase (de Broglie / Hamilton-Jacobi). Phase-1
-    placeholder; Phase-2 plan: discharge through the QM density-matrix
-    adapter and the modular-flow bridge. -/
+    a quantum-mechanical phase (de Broglie / Hamilton-Jacobi).  The
+    minimal Phase-1 strengthening: there exist two distinct entities
+    whose phases differ.  Earlier drafts shipped this as `:= True`,
+    which the trivial substrate satisfied vacuously.  The upgraded
+    form requires a phase distinction — the structural seed of any
+    quantum-phase identification (a constant phase carries no
+    information).  Phase-2 plan: refine to discharge through the QM
+    density-matrix adapter and the modular-flow bridge. -/
 def SubstratePhaseIsQuantumPhaseClaim
-    (_S : RelationalInformationSubstrate) : Prop := True
+    (S : RelationalInformationSubstrate) : Prop :=
+  ∃ e₁ e₂ : S.Entity, S.phase e₁ ≠ S.phase e₂
 
 theorem substratePhaseIsQuantumPhase_tag
-    (S : RelationalInformationSubstrate) :
+    (S : RelationalInformationSubstrate)
+    (h : SubstratePhaseIsQuantumPhaseClaim S) :
     CATEPTAssumption substratePhaseIsQuantumPhase
       (SubstratePhaseIsQuantumPhaseClaim S) :=
-  trivial
+  h
 
 -- ─── Substrate-to-quantum (notifications/channels) ───────────────────
 
 /-- Claim that the substrate's `Notification` carrier corresponds to
     a quantum measurement event / channel application (Kraus picture).
-    Phase-1 placeholder; Phase-2 plan: discharge through the
+    The minimal Phase-1 strengthening: the substrate has nontrivial
+    notifications AND there exists a notification crossing distinct
+    entities (sender ≠ receiver) — the structural seed of any
+    Kraus-channel identification (a self-loop notification carries no
+    inter-entity quantum channel content).  Earlier drafts shipped
+    this as `:= True`.  Phase-2 plan: refine to discharge through the
     quantum-information bridge. -/
 def SubstrateNotificationIsQuantumChannelClaim
-    (_S : RelationalInformationSubstrate) : Prop := True
+    (S : RelationalInformationSubstrate) : Prop :=
+  HasNontrivialNotifications S ∧
+  ∃ n : S.Notification, S.sender n ≠ S.receiver n
 
 theorem substrateNotificationIsQuantumChannel_tag
-    (S : RelationalInformationSubstrate) :
+    (S : RelationalInformationSubstrate)
+    (h : SubstrateNotificationIsQuantumChannelClaim S) :
     CATEPTAssumption substrateNotificationIsQuantumChannel
       (SubstrateNotificationIsQuantumChannelClaim S) :=
-  trivial
+  h
 
 -- ─── Bundled Target-E discharge ──────────────────────────────────────
 
 /-- **Target-E discharge bundle.** For any substrate `S` with entropic
-    clock `E` and entity `e`, all four substrate-facing assumption ids
-    are trackable from a single conjoined statement:
+    clock `E`, entity `e`, and the three structural witnesses for the
+    Phase-1 placeholder claims, all four substrate-facing assumption
+    ids are trackable from a single conjoined statement:
 
       - `entropicTimeDefinition` (provable: substrate's `tauEnt_def`)
-      - `substrateCausalIsMinkowskiFuture` (Phase-1 placeholder)
-      - `substratePhaseIsQuantumPhase` (Phase-1 placeholder)
-      - `substrateNotificationIsQuantumChannel` (Phase-1 placeholder)
+      - `substrateCausalIsMinkowskiFuture` (from `hMink`)
+      - `substratePhaseIsQuantumPhase` (from `hPhase`)
+      - `substrateNotificationIsQuantumChannel` (from `hChan`)
 
-    The first is fully discharged; the latter three are tracking-only
-    until concrete bridges land. -/
+    Earlier drafts of this theorem produced the latter three by
+    `trivial`, dispatching `True := trivial` placeholders.  The
+    upgraded definitions of the placeholder Props now require concrete
+    structural witnesses; the bundle no longer falls out for free. -/
 theorem substrate_assumption_tags_discharge
     (S : RelationalInformationSubstrate)
     (E : RelationalInformationSubstrate.EntropicClock S)
-    (e : S.Entity) :
+    (e : S.Entity)
+    (hMink : IsMinkowskiSubstrate S)
+    (hPhase : SubstratePhaseIsQuantumPhaseClaim S)
+    (hChan : SubstrateNotificationIsQuantumChannelClaim S) :
     CATEPTAssumption entropicTimeDefinition
       (RelationalInformationSubstrate.tauEnt S E e =
         S.irreversibleCost e / E.hbar)
@@ -133,8 +172,8 @@ theorem substrate_assumption_tags_discharge
     ∧ CATEPTAssumption substrateNotificationIsQuantumChannel
         (SubstrateNotificationIsQuantumChannelClaim S) :=
   ⟨substrate_tauEnt_def S E e,
-   substrateCausalIsMinkowskiFuture_tag S,
-   substratePhaseIsQuantumPhase_tag S,
-   substrateNotificationIsQuantumChannel_tag S⟩
+   substrateCausalIsMinkowskiFuture_tag S hMink,
+   substratePhaseIsQuantumPhase_tag S hPhase,
+   substrateNotificationIsQuantumChannel_tag S hChan⟩
 
 end CATEPTMain.Integration.SubstrateAssumptionTags

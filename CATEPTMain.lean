@@ -96,6 +96,9 @@ import CATEPTMain.Integration.StringAlgebraBridge
 import CATEPTMain.Integration.StochasticPDENonstandardBridge
 import CATEPTMain.Integration.StochasticPDEItoCalculusBridge
 import CATEPTMain.Integration.StochasticPDEBridge
+-- Operator-algebraic foundations: Logos Tomita-Takesaki ↔ CAT/EPT
+-- modular flow / reduced channel layer (capstone aggregating five bridges).
+import CATEPTMain.Integration.OperatorAlgebraicFoundationsBundle
 -- Previously-orphaned bridges now wired into root:
 
 /-!

@@ -1,4 +1,5 @@
 import CATEPTMain.Integration.RelationalInformationSubstrate
+import CATEPTMain.Integration.ConstructorInformationSubstrate
 
 /-!
 # Substrate-to-Bell Adapter — Target C of relational-information-substrate.md
@@ -25,10 +26,13 @@ two layers don't have to re-derive Bell math.
 - `substrate_pair_delay_bounded` — sum of two notification delays is
   bounded by `2 * propagationBound`, an n-fold corollary that
   generalises to any finite collection.
-- `substrate_local_frame_measurement` — local measurements on Alice's
-  reference frame depend only on Alice's local order/phase/storage
-  observables, not on Bob's. Substrate-level reading of "local
-  marginals are signaling-safe" from the architecture note.
+- `substrate_alice_nonperturbing_measurement` /
+  `substrate_bob_nonperturbing_measurement` — non-vacuous local Bell
+  measurement consuming a `MeasurementTask` + `InformationMedium`
+  guard from `ConstructorInformationSubstrate`.  Substrate-level
+  reading of "local marginals are signaling-safe" from the architecture
+  note, with explicit anti-vacuity guards (`HasNontrivialNotifications`
+  + `nonPerturbing` Prop the consumer must establish).
 
 ## What this file does NOT prove
 
@@ -86,21 +90,6 @@ theorem substrate_pair_delay_bounded
   have h₂ := S.notificationDelay_le_bound n₂
   linarith
 
-/-- **Local marginals are signaling-safe (substrate level).** A local
-    measurement on Alice's reference frame depends only on Alice's
-    local observables (her `localOrder`, `phase`, `storedInfo`,
-    `irreversibleCost`) — not on Bob's. The substrate's localOrder
-    is a per-entity function `S.Entity → S.Notification → ℕ`, so
-    Alice's order is structurally separated from Bob's by
-    construction. -/
-theorem substrate_local_frame_measurement
-    {S : RelationalInformationSubstrate} (B : SubstrateBellSource S) :
-    ∀ n : S.Notification,
-      S.localOrder B.alice n = S.localOrder B.alice n
-      ∧ S.localOrder B.bob n = S.localOrder B.bob n := by
-  intro n
-  exact ⟨rfl, rfl⟩
-
 /-- The substrate's reference frame for Alice (canonical local
     perspective). -/
 noncomputable def aliceFrame
@@ -123,6 +112,64 @@ theorem alice_frame_owner
 theorem bob_frame_owner
     {S : RelationalInformationSubstrate} (B : SubstrateBellSource S) :
     (bobFrame B).owner = B.bob := rfl
+
+end SubstrateBellSource
+
+-- ═══════════════════════════════════════════════════════════════════════
+-- CTI-vocabulary upgrade: non-vacuous local Bell measurement
+-- ═══════════════════════════════════════════════════════════════════════
+
+open CATEPTMain.Integration.ConstructorInformationSubstrate
+  (MeasurementTask InformationMedium HasNontrivialNotifications)
+
+namespace SubstrateBellSource
+
+/-- **Non-vacuous local Bell measurement (CTI-vocabulary upgrade).**
+
+Given a substrate Bell source `B`, a measurement task `m` over the
+substrate, an information-medium witness `M` for the substrate, and a
+proof `hNP` that `m` is non-perturbing, the conjunction `m.task.possible
+∧ HasNontrivialNotifications S ∧ m.nonPerturbing` holds — packaging the
+three CTI-load-bearing facts about a Bell-style local measurement.
+
+This is the **non-vacuous statement** of substrate-level Alice-side local
+Bell measurement.  Earlier drafts of this file shipped a placeholder
+`substrate_local_frame_measurement` that discharged via `rfl` (`S.localOrder
+B.alice n = S.localOrder B.alice n` etc.) and fell out for free under
+`Notification := Empty`; that placeholder has been removed.  The theorem
+below cannot be discharged by the trivial substrate because:
+
+1. `M : InformationMedium S` requires `HasNontrivialNotifications S`
+   (anti-vacuity guard from `ConstructorInformationSubstrate`),
+2. `m.task_possible` is a definite possibility claim, not `True`,
+3. `hNP : m.nonPerturbing` is a hypothesis the consumer must provide;
+   we explicitly do *not* default `nonPerturbing` to `True`.
+
+Each conjunct is a substantive statement; the conjunction encodes
+"Alice's local Bell measurement is realisable, the substrate carries
+real notifications, and the measurement is non-perturbing." -/
+theorem substrate_alice_nonperturbing_measurement
+    {S : RelationalInformationSubstrate} (_B : SubstrateBellSource S)
+    (m : MeasurementTask S) (M : InformationMedium S)
+    (hNP : m.nonPerturbing) :
+    m.task.possible ∧
+      HasNontrivialNotifications S ∧
+      m.nonPerturbing :=
+  ⟨m.task_possible, M.notifications_nontrivial, hNP⟩
+
+/-- **Bob-side non-vacuous local Bell measurement.**  Symmetric companion
+to `substrate_alice_nonperturbing_measurement`; takes a separate
+measurement task `m'` for Bob's frame.  The `_B` argument carries Bob's
+identity but the measurement task is generic over the substrate
+(consumers can specialise `m'.measured` to Bob-localised attributes). -/
+theorem substrate_bob_nonperturbing_measurement
+    {S : RelationalInformationSubstrate} (_B : SubstrateBellSource S)
+    (m' : MeasurementTask S) (M : InformationMedium S)
+    (hNP : m'.nonPerturbing) :
+    m'.task.possible ∧
+      HasNontrivialNotifications S ∧
+      m'.nonPerturbing :=
+  ⟨m'.task_possible, M.notifications_nontrivial, hNP⟩
 
 end SubstrateBellSource
 

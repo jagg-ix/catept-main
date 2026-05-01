@@ -1,0 +1,99 @@
+# .github/workflows/private-content-watchdog.yml
+#
+# Layer 4 of the publish-protection scheme.  Runs on the PUBLIC catept-main
+# repo on every push to main and every pull request.  Fails CI loudly if a
+# private path or forbidden content slips through.  Does NOT undo the push,
+# but emails immediately and blocks subsequent merges until remediated.
+#
+# Skipped automatically on dev mirrors (positive-match gate below) so it
+# does not flag legitimate dev artefacts.
+name: Private content watchdog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    # Positive match: only run on the public release repo.  Avoids
+    # referencing any private-repo identifier in this workflow file
+    # (which itself is published to the public repo).
+    if: github.repository == 'jagg-ix/catept-main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Forbidden directory paths
+        run: |
+          set -euo pipefail
+          forbidden_dirs=(
+            docs notes private scratch intake
+            .t61_step0_patches .lake
+            personal experiments draft
+          )
+          fail=0
+          for d in "${forbidden_dirs[@]}"; do
+            if find . -path ./.git -prune -o -type d -name "$d" -print | grep -q .; then
+              echo "::error title=Private directory leaked::Forbidden top-level directory '$d' present on public main"
+              fail=1
+            fi
+          done
+          if (( fail )); then exit 1; fi
+          echo "OK — no forbidden directories present."
+
+      - name: Forbidden file glob patterns
+        run: |
+          set -euo pipefail
+          forbidden_globs=(
+            'build_*.txt' 'build_*.log'
+            'lean_*.txt' 'lean_run.txt' 'lean_axiom_log.txt' 'lean_output.txt'
+            'test_export.md' 'test_file.txt'
+            '*.private.*' '.env' '.env.local' '.envrc'
+            '**/.DS_Store'
+          )
+          fail=0
+          for g in "${forbidden_globs[@]}"; do
+            if compgen -G "$g" > /dev/null 2>&1; then
+              echo "::error title=Private file pattern leaked::File matching '$g' present on public main"
+              compgen -G "$g" || true
+              fail=1
+            fi
+          done
+          if (( fail )); then exit 1; fi
+          echo "OK — no forbidden file patterns matched."
+
+      - name: Forbidden content patterns
+        run: |
+          set -euo pipefail
+          # Patterns must be kept in sync with .publish/forbidden-content.txt
+          # (this is intentional duplication — the dev-side file is for the
+          # publish gate; this file is the public-side independent check).
+          # Patterns intentionally avoid embedding any private repo
+          # identifier directly; private-name detection lives in the
+          # dev-side scanner only.  Public-side patterns focus on PII,
+          # filesystem layout, AI-tool tags, ChatGPT artefact names, and
+          # secret-token formats.
+          forbidden_regex='(/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|\$HOME/Downloads/|@gmail\.com|@yahoo\.[A-Za-z]+|@icloud\.com|Co-Authored-By: (Claude|Copilot|GPT)|Generated with \[Claude Code\]|🤖 Generated with|ChatGPT-[A-Za-z0-9_]+|ghp_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{40,}|sk-proj-[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[A-Za-z0-9_-]{30,}|AKIA[A-Z0-9]{16})'
+          if grep -rEn --binary-files=without-match \
+               --exclude-dir=.git --exclude-dir=.github \
+               -- "$forbidden_regex" . ; then
+            echo "::error title=Forbidden content leaked::Private content matched on public main — see grep output above"
+            exit 1
+          fi
+          echo "OK — no forbidden content patterns matched."
+
+      - name: gitleaks (secret scan)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-path: ${{ github.workspace }}/.gitleaks.toml
+        continue-on-error: true
