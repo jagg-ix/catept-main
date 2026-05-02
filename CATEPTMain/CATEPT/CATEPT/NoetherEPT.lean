@@ -4,6 +4,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.Calculus.MeanValue
+import CATEPTMain.CATEPT.CATEPT.PhysicalConstantsCommon
 
 noncomputable section
 set_option autoImplicit false
@@ -14,10 +15,7 @@ open Real
 
 -- ── Core definitions ─────────────────────────────────────────────────────────
 
-/-- Physical constants used for CAT/EPT scaling. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
+-- `PhysicalConstants` is now provided by `PhysicalConstantsCommon` (T101).
 
 /-- Parameters for the 1D damped oscillator. -/
 structure DampedOscillatorParams where

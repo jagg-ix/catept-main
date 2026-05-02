@@ -9,6 +9,24 @@ Mechanics** and **General Relativity** via **entropic proper time**
 > [`feat/publication`](https://github.com/jagg-ix/catept-main/tree/feat/publication)
 > branch of this repository.
 
+## Interactive simulations (calculations) + proof lookup
+
+This repository is the **Lean4 proof spine** for CAT/EPT. For an interactive view that pairs:
+
+- equation statements + proof status, and
+- runnable calculations / simulations that compute the same quantities,
+
+use the companion dashboard site (deployed from the `entropic-time` repo):
+
+- `https://jagg-ix.github.io/entropic-time/#/equations`
+- `https://jagg-ix.github.io/entropic-time/#/simulations`
+
+How to use it with this repo:
+
+1. Open `#/simulations`, run a simulation, and note the equation IDs shown on the simulation card.
+2. Open `#/equations` for those same equation IDs to see the proof/contract status.
+3. Use the theorem/contract links (or the IDs) to jump into the corresponding Lean modules here.
+
 ## Quick Start
 
 ```bash
@@ -58,6 +76,23 @@ Expected output (one line per theorem):
 Any other axiom appearing in the list is a regression. A CI gate at
 [`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml)
 enforces this check on every push and pull request.
+
+## Significant solved artifacts (Lean4)
+
+Examples of “fundamental equations / significant problems” that are already formalized in this
+repo (with explicit, checkable theorem names):
+
+- **QM ↔ GR spine consistency** (entropic proper time identity across two instances):
+  `CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine`,
+  `CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine`
+- **Rigorous complex Feynman–Kac (entropically damped class)**:
+  `CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous`
+- **Counterterm-free / no-renormalization UV certificate**:
+  `CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed`
+
+These are designed to line up with the dashboard’s equation IDs and simulation cards so the
+numerical calculations can be used to sanity-check constants and margins while the Lean proof
+objects remain the ground truth for the statements.
 
 ## Axiom-free theorems (no kernel axioms required)
 
@@ -205,6 +240,54 @@ need to change.
 For the rationale, the playbook for adding a new sibling, and the
 pin-bump workflow, see
 [`docs/architecture/plugin-split.md`](docs/architecture/plugin-split.md).
+
+## Architectural reference docs
+
+For helpers and future agents, two docs in `docs/architecture/`
+encode the structural state of the spine:
+
+- [`catept-spine-to-ns-axiom-discharge.md`](docs/architecture/catept-spine-to-ns-axiom-discharge.md)
+  — maps the CAT/EPT spine to the Navier–Stokes Millennium axiom
+  `ns_periodic_smooth_solution_exists`. Distinguishes formal-equivalence
+  layers (machine-checked) from the open analytic content (still
+  Mathlib-gap-bound). Read before claiming any spine theorem
+  "discharges NS."
+- [`equation-spine-review-20260430.md`](docs/architecture/equation-spine-review-20260430.md)
+  — status table for advisor-extracted equations: which are
+  implemented, which are deferred (Mathlib gaps), which are
+  do-not-load-bear (speculative). Records the **canonical
+  layer-naming convention** that prevents drift between
+  *imaginary-action accumulation*, *entropic proper time*, and
+  *KMS / modular flow parameter* — three distinct named objects
+  that should never be conflated.
+
+## Bridge modules at the structural / no-renormalization seam
+
+`CATEPTMain/Integration/` contains the structural bridge stack that
+sits between the CAT/EPT spine and downstream domains. The current
+end-to-end chain at the multimode finite-cutoff level:
+
+```text
+heatMode (T-S Phase 1)
+  → ∫heat = entropicProperTime a       (EntropicGreenFromHeatSemigroup)
+  → exp(−τ) ∈ (0,1]                     (GreenDampingUVChain)
+  → ∏ exp(−τ_k) ∈ (0,1]                (GreenDampingUVChainMultimode)
+  → MeasurePathIntegralModel.damping
+  → complex_FK_rigorous                 (RigorousComplexFeynmanKac)
+  → no_counterterm_needed               (PhysicalUVConvergenceCertificate)
+```
+
+State-dependent τ + advisor-extracted physics layers:
+- `EntropicTimeIntegralStateDependent` — τ(t) = ∫₀ᵗ rate(σ) dσ with full clock-property suite (init, constant-rate ↔ CFLClock, non-negativity, monotonicity, linearity).
+- `ImaginaryActionDissipationDictionary` — `β̃_I = ℏ · γ_I` with three distinct named layers (no "information time").
+- `FisherLawvereEventCostBridge` — Lawvere event cost + Fisher rate carrier + KL local quadratic contract.
+- `TolmanDissipationRedshiftBridge` — `γ_I^∞ = N · γ_I^loc` under entropic lapse.
+- `KMSModularParameterBridge` — `Δs_KMS = 1/γ_I` rigorously separate from entropic proper time.
+- `RelativeEntropyProductionBridge` — `S_rel` monotone-decreasing carrier.
+- `GKSLInformationExchangeBridge` — Lindblad scalar carrier `H_eff = H_R − iℏγ_I V`, `L_V = √(2γ_I V)`.
+
+NS-side specialisation:
+- `NavierStokesClean.CATEPT.ArakiRelativeEntropyBridge` — relative-entropy analog `Ω/(2ν)`, defect form `D_I = νP − VS`, monotonicity criterion `dS_rel/dt ≤ 0 ↔ VS ≤ νP`.
 
 ## Acknowledgments
 

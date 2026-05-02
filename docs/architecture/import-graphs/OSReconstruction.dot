@@ -1,3 +1,0 @@
-digraph "import_graph" {
-  "CATEPT.Bridges.OSReconstruction" [shape=house];
-}

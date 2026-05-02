@@ -14,8 +14,8 @@ discrete time quantization from the original 2024 development transcripts.
 
 **Origin**: "Tau Time Theory" (TTT) was the user's 2024 name for CATEPT.
 The equations here come from:
-  `~/Downloads/tau/Claude-Tau time 11-09-2024-part2.md`
-  (equations L104–L1534, extracted via `~/Downloads/chat_artifact_query (8).csv`)
+  `(private intake) time 11-09-2024-part2.md`
+  (equations L104–L1534, extracted via `(private intake) (8).csv`)
 
 ## Physical setup
 

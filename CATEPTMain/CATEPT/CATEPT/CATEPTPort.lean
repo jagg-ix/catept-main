@@ -77,7 +77,12 @@ This barrel file aggregates all CATEPT submodules in dependency order.
 ## Axiom surface (pending Phase 2)
 
   FeynmanKacBridge:
-    • `complex_FK_bridge` — open problem (Glimm-Jaffe 1987, complex FK)
+    • `complex_FK_bridge` — REMOVED (was vacuous True placeholder).
+      Rigorous content for the catept-physics class is now shipped in
+      `CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous`
+      (Bochner-integrable complex FK expectation + norm bound for the
+      entropically-damped class).  The fully general Glimm-Jaffe
+      oscillatory-measure problem remains open in the literature.
 
   ModularFlowBridge:
     • `kms_condition`         — KMS from modular flow theory (Type III₁)
@@ -90,6 +95,9 @@ This barrel file aggregates all CATEPT submodules in dependency order.
 
   HIGH: `kms_condition` — derive from modular Hamiltonian K = −ln ρ = τ_ent
   HIGH: `cameron_martin_girsanov` — Radon-Nikodym dμ/dμ_W = exp(−τ_ent)
-  MED:  `complex_FK_bridge` — Itô diffusion on α + complex parabolic PDE
+  MED:  `complex_FK_bridge` — DONE (rigorous version landed in
+        `RigorousComplexFeynmanKac` for entropically-damped class;
+        full Itô-diffusion / oscillatory-measure version remains open
+        in the literature).
   MED:  Heat kernel `heatKernelModel` port from NS-clean MeasurePathIntegral.lean
 -/

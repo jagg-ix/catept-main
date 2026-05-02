@@ -23,7 +23,7 @@ manually threading multiple modules.
 
 ## Phase-2 extension (artifact-anchored)
 
-CSV source leveraged: `~/Downloads/chat_artifact_query (15).csv`
+CSV source leveraged: `(private intake) (15).csv`
 
 - `equation_hash = 24d6394fc76278e93523374d950b3f491757e87aada9a860e13f675bde8a4c76`
 - extracted equation: `χ = E + i S_I`
@@ -227,13 +227,13 @@ theorem adscft_fourier_entropic_clock_bundle
     integratedEnstrophy_eq_hbar_tau traj T⟩
 
 /-- Artifact metadata: equation hash extracted from
-`~/Downloads/chat_artifact_query (15).csv`. -/
+`(private intake) (15).csv`. -/
 def phase2_chat_artifact_eq_hash : String :=
   "24d6394fc76278e93523374d950b3f491757e87aada9a860e13f675bde8a4c76"
 
 /-- Local Carleson repository path leveraged for Phase-2 integration notes. -/
 def phase2_carleson_repo_path : String :=
-  "/Users/macbookpro/lab/tau/tau-information-dynamics/carleson"
+  "(private path)/tau/tau-information-dynamics/carleson"
 
 /-- Toolchain tag detected in the leveraged local Carleson repository. -/
 def phase2_carleson_toolchain : String :=

@@ -2,7 +2,7 @@
 # CALCULUS Bridge — lean4-mlir VJP Framework Port Worklog
 
 Source:  `lean4-mlir` (local repo at
-           `/Users/macbookpro/lab/tau/tau-information-dynamics/lean4-mlir`)
+           `(private path)/tau/tau-information-dynamics/lean4-mlir`)
          `LeanMlir/Proofs/Tensor.lean`   (1072 lines, 8 axioms, 0 sorry)
          `LeanMlir/Proofs/BatchNorm.lean` (446 lines, 3 axioms, 0 sorry)
          `LeanMlir/Proofs/Attention.lean` (1145 lines, 3 axioms, 0 sorry)
@@ -399,7 +399,7 @@ for CAT/EPT and NS bridge formalization.
 
 ### Source snapshot
   Local repo:
-    `/Users/macbookpro/lab/tau/tau-information-dynamics/lean4-mlir`
+    `(private path)/tau/tau-information-dynamics/lean4-mlir`
 
 ### Leverage map
 

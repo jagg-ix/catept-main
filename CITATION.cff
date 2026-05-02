@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Garcia"
     given-names: "Jorge A."
-    email: "jorge.garcia.gonzalez@gmail.com"
+    alias: "jagg-ix"
 repository-code: "https://github.com/jagg-ix/catept-main"
 license: Apache-2.0
 keywords:

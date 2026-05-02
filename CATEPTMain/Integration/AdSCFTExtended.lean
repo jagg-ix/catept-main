@@ -5,7 +5,7 @@ import CATEPTMain.Integration.AdSCFTBridge
 Extends `AdSCFTBridge.lean` with the content of:
   V. Hubeny, "The AdS/CFT Correspondence", arXiv:1501.00007v2 (2015)
 
-Source: `~/Downloads/arXiv-1501.00007v2/AdSCFT_v2.tex`
+Source: `(private intake)`
 
 ## New content (by paper section)
 

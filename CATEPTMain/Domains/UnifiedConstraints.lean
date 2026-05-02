@@ -9,7 +9,7 @@ import CATEPTMain.Domains.SuperiorMethod
 # Unified-Theory Constraints — the 11 invariants in CATEPT terms
 
 The reference document
-`/Users/macbookpro/Downloads/copilot-md-docs/Copilot-Copilot_Chat_TwyFkfsi.md`
+`(private intake doc)`
 enumerated 11 invariants any unified theory must satisfy. The reference's
 Lean 4 skeletons mostly ended in `sorry`. This file discharges the seven
 that map directly onto existing CATEPT machinery (T65-T78), and records
