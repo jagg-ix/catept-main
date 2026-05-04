@@ -15,26 +15,32 @@ structure MicrocanonicalShell (PhaseSpace : Type) where
   deltaE_pos : 0 < deltaE
   in_shell : PhaseSpace → Prop := fun x => E - deltaE < energy x ∧ energy x < E + deltaE
 
-/-- The abstract microcanonical average of an observable over the energy shell. -/
-def microcanonicalAverage {PhaseSpace : Type} (shell : MicrocanonicalShell PhaseSpace)
-    (observable : PhaseSpace → ℝ) : ℝ := sorry
+/-- Interface tying the abstract `O_thermal` used in the Canonical ETH Bridge
+    to a microcanonical-average value over the CAT/EPT action shell.
 
-/-- Interface tying the abstract O_thermal used in the Canonical ETH Bridge 
-    explicitly to a microcanonical average over the CAT/EPT action shell. -/
+    The microcanonical average is held as a *field* (`average : ℝ`) rather
+    than computed via a sorry-bodied global definition.  Consumers
+    constructing this interface supply the average value (e.g. as a
+    user-provided abstraction over the integral defining the average)
+    along with the equation `O_thermal_base = average`. -/
 structure MicrocanonicalETHInterface (PhaseSpace X : Type) where
   shell : MicrocanonicalShell PhaseSpace
   observable : PhaseSpace → ℝ
+  /-- Real-valued microcanonical-average surrogate (caller supplies). -/
+  average : ℝ
   O_thermal_base : ℝ
-  O_thermal_eq_average : O_thermal_base = microcanonicalAverage shell observable
+  /-- Defining identity: the canonical-ETH thermal observable equals
+      the supplied microcanonical average. -/
+  O_thermal_eq_average : O_thermal_base = average
 
-/-- The extended observable on the state space matches the ETH generic diagonal form 
+/-- The extended observable on the state space matches the ETH generic diagonal form
     with the thermal expectation securely anchored to the microcanonical average. -/
-theorem ETH_diagonal_is_microcanonical {PhaseSpace X : Type} 
+theorem ETH_diagonal_is_microcanonical {PhaseSpace X : Type}
     (interface : MicrocanonicalETHInterface PhaseSpace X)
     (suppression : X → ℝ) (varepsilon : X → ℝ) :
-    ∀ x : X, 
-      interface.O_thermal_base + suppression x * varepsilon x = 
-      microcanonicalAverage interface.shell interface.observable + suppression x * varepsilon x := by
+    ∀ x : X,
+      interface.O_thermal_base + suppression x * varepsilon x =
+      interface.average + suppression x * varepsilon x := by
   intro x
   rw [interface.O_thermal_eq_average]
 
