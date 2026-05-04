@@ -44,7 +44,6 @@ See RS-MASTER-001 before making any file moves.
 | FBD         | FermionBosonDuality_QFT (Mathematica)        | Phase 1 (FBDPrelude + OmegaMatrices + QEDProcesses + WeakProcesses) |
 | CATEPT      | Complex Action / Entropic Time framework     | Phase 1 (CATEPTPrelude + FeynmanKacBridge + ModularFlowBridge)       |
 | EPT         | Entropic Proper Time — NS/BKM bounds         | Phase 1 (EPTPrelude: decay rate, CI, τ_bound, BKM axioms)            |
-| CALCULUS    | lean4-mlir Tensor/VJP framework              | Phase 1 (Differentiation + Normalization + Attention)                  |
 | NHQM        | Non-Hermitian Fermi-Dirac (Shen et al. 2024) | Phase 1 (NHQMPrelude + NHQMCATEPTBridge)                               |
 
 See `CATEPTMain/*/WORKLOG.lean` for per-subsystem status and
@@ -57,11 +56,6 @@ import CATEPTMain.Core.Framework.AFPBridgeFramework
 
 -- ── L2 time integral ──────────────────────────────────────────────────────────
 import CATEPTMain.L2TimeIntegral
-
--- ── CALCULUS: lean4-mlir Tensor/VJP framework port ───────────────────────────
-import CATEPTMain.CALCULUS.Differentiation
-import CATEPTMain.CALCULUS.Normalization
-import CATEPTMain.CALCULUS.Attention
 
 -- ── CBO: Complex Bounded Operators ───────────────────────────────────────────
 import CATEPTMain.Quantum.CBO.Cblinfun_Code
