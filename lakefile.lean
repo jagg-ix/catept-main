@@ -21,10 +21,6 @@ require HilleYosida from git
 require «catept-plugin-hille-yosida» from git
   "https://github.com/jagg-ix/catept-plugin-hille-yosida.git" @ "a25792615fe64d7a551dc32a940d60c219fa3d06"
 
--- catept-plugin-brownian-motion: extracted CATEPTMain.Integration.BrownianMotionBridge.
--- Second plugin under Target 4 sibling-split pattern (T4.5).
-require «catept-plugin-brownian-motion» from git
-  "https://github.com/jagg-ix/catept-plugin-brownian-motion.git" @ "318d4d750a09f5fde73c0c62cd790c57bb8e1bdf"
 
 -- catept-plugin-dimensional-analysis: extracted CATEPTMain.Integration.LeanDimensionalAnalysisBridge.
 -- Third plugin under Target 4 sibling-split pattern (Target 4 follow-up beyond the >=2 minimum).
@@ -36,10 +32,6 @@ require «catept-plugin-dimensional-analysis» from git
 require «catept-plugin-cslib» from git
   "https://github.com/jagg-ix/catept-plugin-cslib.git" @ "b71b95fc5859ef6277c994212979e009c79c1b76"
 
--- catept-plugin-quantum-info: extracted CATEPTMain.Integration.QuantumInfoBridge.
--- Fifth plugin under Target 5 (T5.3).
-require «catept-plugin-quantum-info» from git
-  "https://github.com/jagg-ix/catept-plugin-quantum-info.git" @ "ad9eada1f4449bdc7d5a25704a1c555b7bbc989f"
 
 -- catept-plugin-gaussian-field-lsi: extracted CATEPTMain.Integration.GaussianFieldLogSobolevBridge.
 -- Sixth plugin under Target 5 (T5.4). Wraps GaussianField's Gross LSI + spectral-gap machinery.
@@ -57,11 +49,6 @@ require «catept-plugin-spectral-physics» from git
 require «catept-plugin-degiorgi» from git
   "https://github.com/jagg-ix/catept-plugin-degiorgi.git" @ "5b06dc824b0dfb6c12cba57c1a364d142c678c93"
 
--- catept-plugin-maxwell-curvespace-pphi2: extracted CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge.
--- Ninth plugin (T5.8). Interface-level Maxwell-curved-space ↔ pphi2 OS-reconstruction contract.
--- Distinct from the parallel VML / Vlasov-Maxwell-Landau extraction (different physics, different upstream).
-require «catept-plugin-maxwell-curvespace-pphi2» from git
-  "https://github.com/jagg-ix/catept-plugin-maxwell-curvespace-pphi2.git" @ "630999098ec4b101d32223ad7acd84d0e4135b67"
 
 -- catept-plugin-vml-landau: extracted CATEPTMain.Integration.VMLLandauBridge.
 -- Tenth plugin (T5 follow-on). Wraps Aristotle/Clawristotle's VML.CoulombConcreteTheorem42
@@ -75,43 +62,11 @@ require «catept-plugin-vml-landau» from git
 require «catept-plugin-bochner-minlos» from git
   "https://github.com/jagg-ix/catept-plugin-bochner-minlos.git" @ "dae9f683e724970f7d335cf4223b24bac8f4fa65"
 
--- catept-plugin-carleson: extracted CATEPTMain.Integration.CarlesonBridge.
--- Twelfth plugin (T5 follow-on). Abstract Carleson integration witness (a.e. Fourier convergence,
--- maximal-operator bound, Dirichlet kernel, Jackson, antichain) — upstream carleson @ v4.28.0
--- not yet pinned in catept-main; witness is toolchain-independent.
-require «catept-plugin-carleson» from git
-  "https://github.com/jagg-ix/catept-plugin-carleson.git" @ "684eeb46e364a0fca7709bb0c6c8ea6063538c57"
 
--- catept-plugin-gibbs-measure: extracted CATEPTMain.Integration.GibbsMeasureBridge.
--- 13th plugin (T5 follow-on). Abstract Gibbs-measure witness (Kolmogorov extension,
--- conditional expectations, Giry monad, Gibbs-DLR, existence). Upstream targets v4.22.0;
--- witness is toolchain-independent.
-require «catept-plugin-gibbs-measure» from git
-  "https://github.com/jagg-ix/catept-plugin-gibbs-measure.git" @ "6b0c701baddadfecf454b9319ab9071ecec0dd49"
 
--- catept-plugin-hopf-lean: extracted CATEPTMain.Integration.HopfLeanBridge.
--- 14th plugin (T5 follow-on). Abstract Hopf-algebra witness (coalgebra, bialgebra, Hopf,
--- Yang-Baxter, BMod-monoidal). Upstream targets v4.26.0; witness is toolchain-independent.
-require «catept-plugin-hopf-lean» from git
-  "https://github.com/jagg-ix/catept-plugin-hopf-lean.git" @ "6236741efbba64355b24ca699482c2acd3d67ac0"
 
--- catept-plugin-kolmogorov-complexity: extracted CATEPTMain.Integration.KolmogorovComplexityBridge.
--- 15th plugin (T5 follow-on). Abstract Kolmogorov-complexity witness (AIT invariance,
--- Chaitin Ω, incompressibility, Gödel-2 via K). Upstream targets v4.29.0-rc8.
-require «catept-plugin-kolmogorov-complexity» from git
-  "https://github.com/jagg-ix/catept-plugin-kolmogorov-complexity.git" @ "b29f32d938dd6db0287ec6c6298934ffeda423e9"
 
--- catept-plugin-thermodynamics-lean: extracted CATEPTMain.Integration.ThermodynamicsLeanBridge.
--- 16th plugin (T5 follow-on). Abstract Lieb-Yngvason thermodynamics witness (LY axioms,
--- entropy existence/uniqueness/continuity, Kelvin-Planck, entropy-increase). Upstream targets v4.24.0-rc1.
-require «catept-plugin-thermodynamics-lean» from git
-  "https://github.com/jagg-ix/catept-plugin-thermodynamics-lean.git" @ "9a97fce70dd7e179c3219103df1f4a4053668aac"
 
--- catept-plugin-bt-compat: extracted CATEPTMain.CATEPT.CATEPT.BridgeTheoryCompatibility.
--- 17th plugin (T60 step 1 — first extraction from the CAT/EPT *core* tree, not Integration/).
--- Auci EM↔Relativity bridge: 11 scalar BT-equation defs + 10 sanity/invariance theorems.
-require «catept-plugin-bt-compat» from git
-  "https://github.com/jagg-ix/catept-plugin-bt-compat.git" @ "02918aecb838a9993af0a43374afca60f3595750"
 
 -- catept-plugin-afp-framework: extracted CATEPTMain.Core.Framework.AFPBridgeFramework.
 -- 18th plugin (T61 step 0 — prerequisite for the catept-domain-quantum bundle).

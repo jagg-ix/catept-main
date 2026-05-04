@@ -1,5 +1,4 @@
-import CATEPTPluginQuantumInfo.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.QuantumInfo
 /-!
 # Quantum Information Integration Bridge — re-export shim
 

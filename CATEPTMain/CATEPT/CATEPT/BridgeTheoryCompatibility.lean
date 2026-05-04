@@ -1,5 +1,4 @@
-import CATEPTPluginBTCompat.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.BTCompat
 /-!
 # Bridge Theory Compatibility — re-export shim
 

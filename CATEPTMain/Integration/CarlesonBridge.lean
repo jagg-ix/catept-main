@@ -1,5 +1,4 @@
-import CATEPTPluginCarleson.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.Carleson
 /-!
 # Carleson Integration Bridge — re-export shim
 

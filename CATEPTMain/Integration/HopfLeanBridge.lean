@@ -1,5 +1,4 @@
-import CATEPTPluginHopfLean.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.HopfLean
 /-!
 # Hopf-Algebra Integration Bridge — re-export shim
 

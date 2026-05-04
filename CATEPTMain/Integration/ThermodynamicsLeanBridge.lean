@@ -1,5 +1,4 @@
-import CATEPTPluginThermodynamicsLean.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.ThermodynamicsLean
 /-!
 # Thermodynamics (Lieb-Yngvason) Integration Bridge — re-export shim
 

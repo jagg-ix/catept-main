@@ -1,5 +1,4 @@
-import CATEPTPluginMaxwellCurveSpacePphi2.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.MaxwellCurveSpacePphi2
 /-!
 # Maxwell-CurveSpace ↔ pphi2 Bridge — re-export shim
 

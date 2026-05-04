@@ -1,5 +1,4 @@
-import CATEPTPluginBrownianMotion.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.BrownianMotion
 /-!
 # Brownian Motion Integration Bridge — re-export shim
 
