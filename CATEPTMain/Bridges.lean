@@ -211,8 +211,11 @@ import CATEPTMain.Quantum.PM.CHSH_Inequality
 import CATEPTMain.Quantum.PM.Linear_Algebra_Complements
 import CATEPTMain.Quantum.PM.Projective_Measurements
 
--- ── QFT: QFT / Ising Model ───────────────────────────────────────────────────
-import CATEPTMain.CATEPT.QFT.QFT
+-- ── QFT: QFT / Ising Model — QFTPrelude carrier surface ────────────────────
+-- The standalone scaffolding file `CATEPTMain.CATEPT.QFT.QFT` was retired in
+-- the no-axiom sweep (its 18 axioms had no live consumers and the higher-
+-- level identifications now run through `QFTPrimitivesCarrier`).
+import CATEPTMain.CATEPT.QFT.QFTPrelude
 
 -- ── QUAT: Unit Quaternions ────────────────────────────────────────────────────
 import CATEPTMain.Geometry.QUAT.Unit_Quaternions

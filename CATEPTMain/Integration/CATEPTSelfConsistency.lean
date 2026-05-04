@@ -318,21 +318,22 @@ section QFTConsistency
 open CATEPTMain.CATEPT.QFT
 open CATEPTMain.Quantum.IMD
 
-/-- QFT consistency: for every n the QFT circuit `qftCircuit n` is a unitary
-    on the space of n-qubit states, well-typed with respect to the EPT
-    background.
+/-- QFT consistency: for every `n` the QFT circuit `Q.qftCircuit n` is a
+    unitary on the space of n-qubit states, well-typed with respect to
+    the EPT background.
 
     The EPT labelling assigns a temporal stamp to each gate application;
-    unitarity (`qftCircuit_unitary n`) is independent of the time coordinate.
+    unitarity is independent of the time coordinate.
 
-    Phase-2: `qftCircuit_unitary n` (from QFTPrelude) has no EPT dependency;
-    the consistency claim is that time-stamped circuits compose unitarily,
-    proven by induction using `qftCircuit_step`. -/
+    The QFT primitives — `qftCircuit` and its `unitary` witness — were
+    formerly global axioms in `QFTPrelude.lean`.  After the no-axiom
+    sweep they are bundled into the `QFTPrimitivesCarrier` structure;
+    consumers supply the carrier and read the unitarity off the
+    `qftCircuit_unitary` field directly. -/
 theorem catept_qft_circuit_consistent
-    (n : ℕ) :
-    unitaryMat (qftCircuit n) :=
-  qftCircuit_unitary n
--- Already proved: qftCircuit_unitary is an axiom in QFTPrelude (no sorry needed)
+    (Q : QFTPrimitivesCarrier) (n : ℕ) :
+    unitaryMat (Q.qftCircuit n) :=
+  Q.qftCircuit_unitary n
 
 end QFTConsistency
 
