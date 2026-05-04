@@ -87,7 +87,8 @@ import CATEPTMain.Integration.HigherDegreeLatticeAction
 import CATEPTMain.Integration.HigherDegreeT3Tail
 import CATEPTMain.Integration.HigherDegreeT3TailSharp
 import CATEPTMain.Integration.EntropicGreenFunctionBridge
-import CATEPTMain.Transforms.LaplaceTransformBridge
+-- LaplaceTransformBridge import removed (Category-A axiom sweep retired
+-- the AFP-port-stub module; this showcase no longer depends on it).
 import CATEPTMain.Integration.EntropicGreenFromHeatSemigroup
 import CATEPTMain.Integration.GreenDampingUVChain
 import CATEPTMain.Integration.GreenDampingUVChainMultimode
@@ -1812,18 +1813,12 @@ end CATEPTMain.Temporal
 -- caught at showcase build time (this file was previously not imported
 -- by the showcase, allowing Complex.abs / HasDerivAt drift to slip
 -- under the radar — fixed in PR #36).
-#print axioms CATEPTMain.Transforms.HasLaplace
-#print axioms CATEPTMain.Transforms.ExponentialOrder
--- Stokes-resolvent anchor (PR #36 follow-up): non-vacuous bundle of
--- existence-on-trivial-seed (via afp_has_laplace_one) + the resolvent
--- equation (via afp_laplace_derivative_time_domain).  Replaces the
--- earlier `True := trivial` placeholder.
-#print axioms CATEPTMain.Transforms.ns_stokes_resolvent_anchor
--- Stokes-resolvent constant-seed clock invariance: the zero-operator
--- (trivial Stokes) resolvent is rate-invariant under clock reparam at
--- the explicit Laplace-transform level.  Mirrors
--- entropicResolventScaling_zero_operator (PR #35) under HasLaplace.
-#print axioms CATEPTMain.Transforms.stokes_constant_seed_laplace_clock_invariance
+-- The `CATEPTMain.Transforms.LaplaceTransformBridge` module that previously
+-- provided `HasLaplace`, `ExponentialOrder`, `ns_stokes_resolvent_anchor`,
+-- and `stokes_constant_seed_laplace_clock_invariance` was retired in the
+-- Category-A axiom sweep (it was an AFP port stub holding 7 axioms with
+-- no live downstream consumers).  The corresponding `#print axioms`
+-- entries are removed from this showcase.
 
 -- Step 4: Heat-semigroup → Green-function bridge.
 --   For a Gaussian mode of action coefficient a > 0:
