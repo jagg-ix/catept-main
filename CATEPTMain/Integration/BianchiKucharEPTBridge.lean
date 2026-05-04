@@ -6,7 +6,7 @@ import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.Complex.Basic
 import CATEPTMain.Analysis.LSI.Lebesgue_Stieltjes_Integral
-import NavierStokes.Fourier.NSFourierAgmonObsBridge
+import NavierStokes.NSFourierAgmonObsBridge
 
 set_option autoImplicit false
 
