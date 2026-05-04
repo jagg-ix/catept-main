@@ -2,7 +2,12 @@ import CATEPTMain.Domains.TemporalFramework
 import CATEPTMain.Domains.CoherenceSpine
 import CATEPTMain.Domains.JointAdapter
 import CATEPTMain.Integration.UnificationSpine
-import CATEPTMain.Integration.Paper2FoundationsSpine
+import CATEPTMain.Integration.Paper2TierAUnifiedBundleBridge
+-- Pre-existing orphan-recovery wiring: bring PR #12/#13/#14 capstones
+-- onto the spine (previously imported nowhere from the root barrel).
+import CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge
+import CATEPTMain.Integration.TwinParadoxEntropicProperTimeBridge
+import CATEPTMain.Integration.TwinParadoxAccelerationBoundsBridge
 
 /-!
 # RepoSpine — canonical “single import” for the CAT/EPT unification surface
@@ -21,7 +26,14 @@ should become reachable from one of the repo’s explicit spine entrypoints.
    `Integration.UnificationSpine`.
 4. Exposes the **Paper 2 foundations spine** (Tiers A/B/C: 9 carrier-
    level bridges, 55 theorems) via
-   `Integration.Paper2FoundationsSpine`.
+   `Integration.Paper2TierAUnifiedBundleBridge` (which doubles as
+   the Tier B unified-bundle and as the Paper 2 spine aggregator,
+   following the `UnificationSpine.CATEPTUnificationBundle` pattern).
+5. Exposes pre-existing capstones from PRs #12/#13/#14 that were
+   shipped without root-barrel wiring:
+   `TomitaMatsubaraAQFTSpineBridge`,
+   `TwinParadoxEntropicProperTimeBridge`,
+   `TwinParadoxAccelerationBoundsBridge`.
 
 Practical rule:
 
@@ -60,27 +72,32 @@ export CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle (
 
 -- Paper 2 foundations spine (Tiers A/B/C: 9 carrier-level bridges
 -- formalising `Paper2_CAT_EPT_Foundations (6).pdf` §3.2/§3.3/§4.2/§4.3/§5
--- and Appendices A/B/C).
-export CATEPTMain.Integration.Paper2FoundationsSpine (
-  paper2_foundations_bundle)
-export CATEPTMain.Integration.ThermalHamiltonianEntropicTimeBridge (
-  thermal_hamiltonian_entropic_time_bundle)
-export CATEPTMain.Integration.PageWoottersDissipativeExtensionBridge (
-  page_wootters_dissipative_extension_bundle)
-export CATEPTMain.Integration.UVCoercivityAbsoluteDampingBridge (
-  uv_coercivity_absolute_damping_bundle)
+-- and Appendices A/B/C).  Single-source export from
+-- `Paper2TierAUnifiedBundleBridge` (which re-exports each Tier
+-- module's named capstone), matching the `UnificationSpine` pattern.
 export CATEPTMain.Integration.Paper2TierAUnifiedBundleBridge (
-  paper2_tier_a_unified_bundle)
-export CATEPTMain.Integration.EntropicPropagatorEnvelopeBridge (
-  entropic_propagator_envelope_bundle)
-export CATEPTMain.Integration.EverettBranchSuppressionBridge (
-  everett_branch_suppression_bundle)
-export CATEPTMain.Integration.ZeroDimQuadraticActionConcreteBridge (
-  zero_dim_quadratic_action_concrete_bundle)
-export CATEPTMain.Integration.DBBQuantumPotentialBridge (
-  dbb_quantum_potential_bundle)
-export CATEPTMain.Integration.EntropyIncreaseAlongWorldlineBridge (
+  paper2_foundations_bundle
+  paper2_tier_a_unified_bundle
+  thermal_hamiltonian_entropic_time_bundle
+  page_wootters_dissipative_extension_bundle
+  uv_coercivity_absolute_damping_bundle
+  entropic_propagator_envelope_bundle
+  everett_branch_suppression_bundle
+  zero_dim_quadratic_action_concrete_bundle
+  dbb_quantum_potential_bundle
   entropy_increase_along_worldline_bundle)
+
+-- Pre-existing orphan-recovery: capstones from PRs #12/#13/#14
+-- (Tomita-Matsubara AQFT spine; SR/entropic proper-time
+-- identification; acceleration-bounded twin-paradox minima).  These
+-- shipped without being imported from the root barrel and were
+-- effectively orphans.
+export CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge (
+  tomita_matsubara_aqft_spine_bundle)
+export CATEPTMain.Integration.TwinParadoxEntropicProperTimeBridge (
+  sr_proper_time_separate_from_entropic_proper_time)
+export CATEPTMain.Integration.TwinParadoxAccelerationBoundsBridge (
+  twin_paradox_acceleration_bounds_bundle)
 
 end CATEPTMain.RepoSpine
 
