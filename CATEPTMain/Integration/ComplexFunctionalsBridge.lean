@@ -4,7 +4,7 @@ import Mathlib.Data.Complex.Basic
 import CATEPTMain.Gravitas.Basic
 import CATEPTMain.Gravitas.MetricTensor
 import CATEPTMain.Gravitas.EinsteinTensor
-import NavierStokes.Fourier.NSFourierAgmonObsBridge
+import NavierStokes.NSFourierAgmonObsBridge
 
 set_option autoImplicit false
 

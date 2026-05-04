@@ -177,8 +177,23 @@ require «catept-plugin-architecture» from git
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
 
--- QuantumAlgebra: absorbed into catept-main (2026-04-22). Original lived at ../QuantumAlgebra.
--- See lean_lib QuantumAlgebra below.
+-- QuantumAlgebra: now a public sibling repo (was previously declared as
+-- in-tree `lean_lib QuantumAlgebra` with srcDir := "." but the source
+-- code lived only in catept-main-private; flipped to public 2026-05-04).
+require QuantumAlgebra from git
+  "https://github.com/jagg-ix/QuantumAlgebra.git" @ "ae6352712537d2b58c934384bdb7381f96b30d01"
+
+-- jagg-ix/navier-stokes-project-clean: now a public sibling repo (was
+-- previously `lean_lib NavierStokes` / `lean_lib NavierStokesClean` with
+-- srcDir := "." but the source lived only in the navier-stokes-project-clean
+-- private repo; privacy-scrubbed and flipped to public 2026-05-04).
+-- Brings in `lean_lib NavierStokes`, `lean_lib NavierStokesClean`,
+-- `lean_lib CATEPT` (top-level CATEPT/), and others that 60+ catept-main
+-- bridges import from (NavierStokesClean.CATEPT.*, NavierStokes.*,
+-- CATEPT.{ArrowMpemba,ClassicalCore,ClassicalETHIntegration,ClassicalHerglotz,
+-- ClassicalHerglotzETHBridge,CATEPT.WeylYukawaContracts}).
+require NavierStokesClean from git
+  "https://github.com/jagg-ix/navier-stokes-project-clean.git" @ "45b3ac6a58106f35493c0b8c82b7500262d74ddd"
 
 require pphi2 from git
   "https://github.com/jagg-ix/pphi2.git" @ "b0cbac4703cfa6c6bb859a10687915472ad88fca"
@@ -250,14 +265,12 @@ lean_lib ClassicalInfo where
 lean_lib StatMech where
   srcDir := "."
 
-lean_lib NavierStokes where
-  srcDir := "."
-
-lean_lib NavierStokesClean where
-  srcDir := "."
-
-lean_lib QuantumAlgebra where
-  srcDir := "."
+-- The former in-tree `lean_lib NavierStokes`, `lean_lib NavierStokesClean`,
+-- and `lean_lib QuantumAlgebra` declarations were retired on 2026-05-04:
+-- their source code never lived in catept-main proper (these were stub
+-- declarations that resolved to empty libs).  The corresponding
+-- `require` entries above now pull in the actual sources from the
+-- public sibling repos.
 
 -- External String / PDE / Stochastic-PDE sibling repositories.
 -- Converted from relative-path requires to git pins on 2026-04-24 so

@@ -12,7 +12,7 @@ import CATEPTMain.Gravitas.SolveEinsteinEquations
 import CATEPTMain.Gravitas.SolveElectrovacuumEinsteinEquations
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Geometry.Manifold.Instances.Real
-import NavierStokes.Core.NSFieldFourier
+import NavierStokes.NSFieldFourier
 
 /-!
 # TheoryPlugin Adapter (WP01 scaffold)

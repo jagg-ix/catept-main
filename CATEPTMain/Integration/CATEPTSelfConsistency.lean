@@ -30,7 +30,7 @@ import CATEPTMain.Integration.CATEPTNSGNEmbedding
 -- It must also be imported BEFORE NoFTL for real tactic support.
 import CATEPTMain.Integration.CATEPTNSDivCurl
 -- Fourier-Agmon observable bridge provides non-vacuous P3 gap statements.
-import NavierStokes.Fourier.NSFourierAgmonObsBridge
+import NavierStokes.NSFourierAgmonObsBridge
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
 import CATEPTMain.Geometry.NoFTL.NoFTLPrelude

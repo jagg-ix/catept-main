@@ -6,7 +6,7 @@ import CATEPTMain.Integration.NSEPTNoetherInvariantBridge
 import CATEPTMain.Integration.WDWVolumeComplexityArtifactBridge
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G016_RelationalTimeProtocol0068
 import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G189_WheelerDeWittProtocol0107
-import NavierStokes.Fourier.NSFourierFreqBoundBridge
+import NavierStokes.NSFourierFreqBoundBridge
 
 /-!
 # AdS/CFT - Fourier - CATEPTSpace Bridge
