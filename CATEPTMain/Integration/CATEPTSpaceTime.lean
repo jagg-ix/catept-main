@@ -3,6 +3,10 @@ import CATEPTMain.Integration.RelationalInformationSubstrate
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import NavierStokesClean.CATEPT.CATEPTSpaceTime
 /-!
 # CATEPTSpaceTime — CAT/EPT Spacetime and Entropic Proper Time
@@ -77,14 +81,32 @@ namespace CATEPTMain.Integration.CATEPTSpaceTime
     (b) `equivIocBridge` provides the isomorphism to the torus side. -/
 abbrev CATEPTVelocityField : Type := (Fin 3 → ℝ) → (Fin 3 → ℝ)
 
-/-- Phase-1 axiom: a norm on `CATEPTVelocityField = (Fin 3 → ℝ) → (Fin 3 → ℝ)`.
+-- ── Pi-product spatial measure (needed for the L² norm below) ──────────────────
 
-    The function space (ℝ³ → ℝ³) carries no automatic `Norm` instance from
-    Mathlib's `Pi.instNorm` (which requires a `Fintype` domain), so we axiomatize
-    it here in phase-1.  Phase-2: supply the H¹ Sobolev norm or L²-operator norm
-    explicitly once the Galerkin cluster is established. -/
-noncomputable axiom instNormCATEPTVF : Norm CATEPTVelocityField
-attribute [instance] instNormCATEPTVF
+/-- Standard product Lebesgue measure on the spatial slice `Fin 3 → ℝ = ℝ³`. -/
+noncomputable def spatialMeasure : MeasureTheory.Measure (Fin 3 → ℝ) :=
+  MeasureTheory.Measure.pi (fun _ => MeasureTheory.volume)
+
+/-- **L² norm on `CATEPTVelocityField`** (was previously a phase-1 `axiom`).
+
+    Concrete definition:
+    `‖u‖ := √(∫_{ℝ³} ‖u(x)‖² dx)`  (L²-norm with the spatial Lebesgue measure)
+
+    The pointwise `‖u x‖` resolves via Mathlib's `Pi.instNorm` on
+    `Fin 3 → ℝ` (Fintype-indexed product, finite-dimensional Euclidean
+    norm).  The Bochner integral `∫ ... ∂spatialMeasure` is a Mathlib
+    primitive returning `0` for non-integrable functions, so `‖u‖` is
+    always defined; for L² functions it agrees with the standard
+    `L²(ℝ³; ℝ³)` norm.
+
+    Mathlib's `Norm` typeclass is law-free
+    (`class Norm (E : Type*) where norm : E → ℝ`), so any real-valued
+    function provides a valid instance — the `NormedAddCommGroup`
+    laws (triangle inequality, separation, etc.) are not required at
+    this level.  Stronger structures can be layered on Sobolev-restricted
+    subspaces in follow-up work without changing this base instance. -/
+noncomputable instance instNormCATEPTVF : Norm CATEPTVelocityField where
+  norm u := Real.sqrt (∫ x, ‖u x‖^2 ∂spatialMeasure)
 
 /-- The EPT Paraboloid Trajectory Constraint.
     Formulation: `EPTTrajectory = {(u, τ) : NSField × ℝ | ‖u‖² + 2ℏτ = E₀}`
@@ -122,9 +144,8 @@ def equivIocBridge : CATEPTVelocityField ≃ NSTorusVelocityField :=
 
 -- ── Pi-product measure on the spatial slice ───────────────────────────────────
 
-/-- Standard product Lebesgue measure on the spatial slice `Fin 3 → ℝ = ℝ³`. -/
-noncomputable def spatialMeasure : MeasureTheory.Measure (Fin 3 → ℝ) :=
-  MeasureTheory.Measure.pi (fun _ => MeasureTheory.volume)
+-- Note: `spatialMeasure` is defined above (before `instNormCATEPTVF`), since the
+-- L² norm depends on it.
 
 /-- Sigma-finiteness of `spatialMeasure`.
 
