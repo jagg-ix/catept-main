@@ -211,8 +211,8 @@ theorem paper2_tier_a_unified_bundle :
   Tier B unified bundle above already composes Tier A; here we extend
   the aggregation to cover Tier B Modules 2/3 and all of Tier C, plus
   ship a joint-existence capstone over the nine bridges so any
-  downstream spine (`CATEPTMain.RepoSpine`) only needs to know this
-  one namespace. -/
+  downstream consumer (e.g. the root barrel `CATEPTMain.lean`) only
+  needs to import this one module. -/
 
 -- Re-exports of the nine Tier A/B/C capstones into the
 -- `Paper2TierAUnifiedBundleBridge` namespace.

@@ -2,8 +2,19 @@ import Bochner
 import HilleYosida
 import Cslib
 import CATEPTMain.External.Registry
--- Canonical small “single import” spine entrypoint (prevents proof islands).
-import CATEPTMain.RepoSpine
+-- Capstone spine modules (formerly re-exported through CATEPTMain.RepoSpine,
+-- which was retired as duplicate infrastructure — every symbol is reachable
+-- from its own canonical home).  Keeping these imports here so the
+-- corresponding modules remain root-reachable transitively from the barrel.
+import CATEPTMain.Domains.TemporalFramework
+import CATEPTMain.Domains.CoherenceSpine
+import CATEPTMain.Domains.JointAdapter
+import CATEPTMain.Integration.Paper2TierAUnifiedBundleBridge
+-- Pre-existing capstones from PRs #12/#13/#14 — were proof islands until
+-- they were threaded onto the spine; keep here so they stay reachable.
+import CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge
+import CATEPTMain.Integration.TwinParadoxEntropicProperTimeBridge
+import CATEPTMain.Integration.TwinParadoxAccelerationBoundsBridge
 -- Superior-Method plugin architecture (Target 3)
 import CATEPTMain.Domains.SuperiorMethod
 import CATEPTMain.Domains.QM.Domain
