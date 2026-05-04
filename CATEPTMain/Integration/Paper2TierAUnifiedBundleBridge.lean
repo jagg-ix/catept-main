@@ -1,6 +1,14 @@
+-- Tier A (paper §3.2, §4.3, App. A)
 import CATEPTMain.Integration.ThermalHamiltonianEntropicTimeBridge
 import CATEPTMain.Integration.PageWoottersDissipativeExtensionBridge
 import CATEPTMain.Integration.UVCoercivityAbsoluteDampingBridge
+-- Tier B Modules 2/3 (paper §3.3, App. B); this file IS Tier B Module 1.
+import CATEPTMain.Integration.EntropicPropagatorEnvelopeBridge
+import CATEPTMain.Integration.EverettBranchSuppressionBridge
+-- Tier C (paper §3.3, §4.2, §5, App. C)
+import CATEPTMain.Integration.ZeroDimQuadraticActionConcreteBridge
+import CATEPTMain.Integration.DBBQuantumPotentialBridge
+import CATEPTMain.Integration.EntropyIncreaseAlongWorldlineBridge
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 
@@ -194,6 +202,59 @@ theorem exists_trivial : ∃ _ : Paper2TierAUnifiedCarrier, True := by
 theorem paper2_tier_a_unified_bundle :
     ∃ _ : Paper2TierAUnifiedCarrier, True :=
   exists_trivial
+
+/-! ## Paper 2 spine aggregation
+
+  Following the `UnificationSpine.CATEPTUnificationBundle` pattern,
+  this file is also the **single-source aggregator** for the full Paper
+  2 foundations spine (Tiers A/B/C: 9 carrier-level bridges).  The
+  Tier B unified bundle above already composes Tier A; here we extend
+  the aggregation to cover Tier B Modules 2/3 and all of Tier C, plus
+  ship a joint-existence capstone over the nine bridges so any
+  downstream spine (`CATEPTMain.RepoSpine`) only needs to know this
+  one namespace. -/
+
+-- Re-exports of the nine Tier A/B/C capstones into the
+-- `Paper2TierAUnifiedBundleBridge` namespace.
+export CATEPTMain.Integration.ThermalHamiltonianEntropicTimeBridge (
+  thermal_hamiltonian_entropic_time_bundle)
+export CATEPTMain.Integration.PageWoottersDissipativeExtensionBridge (
+  page_wootters_dissipative_extension_bundle)
+export CATEPTMain.Integration.UVCoercivityAbsoluteDampingBridge (
+  uv_coercivity_absolute_damping_bundle)
+export CATEPTMain.Integration.EntropicPropagatorEnvelopeBridge (
+  entropic_propagator_envelope_bundle)
+export CATEPTMain.Integration.EverettBranchSuppressionBridge (
+  everett_branch_suppression_bundle)
+export CATEPTMain.Integration.ZeroDimQuadraticActionConcreteBridge (
+  zero_dim_quadratic_action_concrete_bundle)
+export CATEPTMain.Integration.DBBQuantumPotentialBridge (
+  dbb_quantum_potential_bundle)
+export CATEPTMain.Integration.EntropyIncreaseAlongWorldlineBridge (
+  entropy_increase_along_worldline_bundle)
+
+/-- **★ Paper 2 foundations capstone**: the nine carrier-level bridges
+of Tiers A/B/C are simultaneously inhabited.  Existence-statement
+form of the Paper 2 foundational spine. -/
+theorem paper2_foundations_bundle :
+    (∃ _ : CATEPTMain.Integration.ThermalHamiltonianEntropicTimeBridge.ThermalHamiltonianFromDensityMatrix, True) ∧
+    (∃ _ : CATEPTMain.Integration.PageWoottersDissipativeExtensionBridge.PageWoottersDissipativeCarrier, True) ∧
+    (∃ _ : CATEPTMain.Integration.UVCoercivityAbsoluteDampingBridge.UVCoercivityCarrier ℝ, True) ∧
+    (∃ _ : Paper2TierAUnifiedCarrier, True) ∧
+    (∃ _ : CATEPTMain.Integration.EntropicPropagatorEnvelopeBridge.EntropicPropagatorEnvelopeCarrier ℝ, True) ∧
+    (∃ _ : CATEPTMain.Integration.EverettBranchSuppressionBridge.EverettBranchPairCarrier, True) ∧
+    (∃ _ : CATEPTMain.Integration.ZeroDimQuadraticActionConcreteBridge.ZeroDimQuadraticActionCarrier, True) ∧
+    (∃ _ : CATEPTMain.Integration.DBBQuantumPotentialBridge.DBBQuantumPotentialCarrier ℝ, True) ∧
+    (∃ _ : CATEPTMain.Integration.EntropyIncreaseAlongWorldlineBridge.EntropyIncreaseWorldlineCarrier, True) :=
+  ⟨ CATEPTMain.Integration.ThermalHamiltonianEntropicTimeBridge.exists_trivial
+  , CATEPTMain.Integration.PageWoottersDissipativeExtensionBridge.exists_trivial
+  , CATEPTMain.Integration.UVCoercivityAbsoluteDampingBridge.exists_trivial
+  , exists_trivial
+  , CATEPTMain.Integration.EntropicPropagatorEnvelopeBridge.exists_trivial
+  , CATEPTMain.Integration.EverettBranchSuppressionBridge.exists_trivial
+  , CATEPTMain.Integration.ZeroDimQuadraticActionConcreteBridge.exists_trivial
+  , CATEPTMain.Integration.DBBQuantumPotentialBridge.exists_trivial
+  , CATEPTMain.Integration.EntropyIncreaseAlongWorldlineBridge.exists_trivial ⟩
 
 end CATEPTMain.Integration.Paper2TierAUnifiedBundleBridge
 
