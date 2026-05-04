@@ -2,6 +2,8 @@ import Bochner
 import HilleYosida
 import Cslib
 import CATEPTMain.External.Registry
+-- Canonical small “single import” spine entrypoint (prevents proof islands).
+import CATEPTMain.RepoSpine
 -- Superior-Method plugin architecture (Target 3)
 import CATEPTMain.Domains.SuperiorMethod
 import CATEPTMain.Domains.QM.Domain
@@ -99,6 +101,31 @@ import CATEPTMain.Integration.StochasticPDEBridge
 -- Operator-algebraic foundations: Logos Tomita-Takesaki ↔ CAT/EPT
 -- modular flow / reduced channel layer (capstone aggregating five bridges).
 import CATEPTMain.Integration.OperatorAlgebraicFoundationsBundle
+-- Matsubara / Luttinger-Ward thermal-action carrier and AQFT modular-flow
+-- equivalence (PR #127, #128).
+import CATEPTMain.Integration.MatsubaraLuttingerWardCarrier
+import CATEPTMain.Integration.MatsubaraAQFTModularFlowEquivalenceBridge
+-- Page-Wootters quantum-time carrier (clock-conditional emergent time)
+-- and PW <-> Matsubara equivalence at the imaginary-time evaluation point.
+-- Page & Wootters PRD 27 (1983) 2885; Hoehn-Smith-Lock Front. Phys. 9 (2021) 587083.
+import CATEPTMain.Integration.PageWoottersQuantumTimeCarrier
+import CATEPTMain.Integration.PageWoottersMatsubaraEquivalenceBridge
+-- Spine theorem: WDW <-> path integral <-> modular flow with Schrodinger
+-- reduction under no entropic-clock evolution.  Connes-Rovelli thermal-time
+-- hypothesis CQG 11 (1994) 2899.
+import CATEPTMain.Integration.PageWoottersWDWPathIntegralModularFlowSpine
+-- Concrete discrete-path-integral instantiation of the spine: Mathlib
+-- gaussianReal product measure + discrete harmonic Euclidean action with
+-- coercivity bridge into catept-core's eq054/eq057/eq058 damping ladder.
+import CATEPTMain.Integration.DiscreteGaussianPathMeasure
+import CATEPTMain.Integration.EuclideanActionHarmonicDiscrete
+import CATEPTMain.Integration.DiscreteHarmonicSpineInstance
+-- Bundled five-fold proven realizations of S_I via Matsubara/Luttinger-Ward
+-- AND Tomita-Takesaki modular flow (Connes-Rovelli thermal-time hypothesis
+-- imprint).  S_I is multiply realized at the carrier level; not contractual.
+import CATEPTMain.Integration.SIRealizationsBundle
+-- Capstone: single entropic-time parameter wiring QM + Thermodynamics + EM + GR.
+import CATEPTMain.Integration.UnificationSpine
 -- Previously-orphaned bridges now wired into root:
 
 /-!
