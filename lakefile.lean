@@ -193,7 +193,7 @@ require QuantumAlgebra from git
 -- CATEPT.{ArrowMpemba,ClassicalCore,ClassicalETHIntegration,ClassicalHerglotz,
 -- ClassicalHerglotzETHBridge,CATEPT.WeylYukawaContracts}).
 require NavierStokesClean from git
-  "https://github.com/jagg-ix/navier-stokes-project-clean.git" @ "45b3ac6a58106f35493c0b8c82b7500262d74ddd"
+  "https://github.com/jagg-ix/navier-stokes-project-clean.git" @ "5212e5033d0480810878024bbb3c3e3c720871dd"
 
 require pphi2 from git
   "https://github.com/jagg-ix/pphi2.git" @ "b0cbac4703cfa6c6bb859a10687915472ad88fca"

@@ -186,7 +186,8 @@ structure EinsteinViscosityMpembaBundle where
 theorem three_lane_unification
     (b : EinsteinViscosityMpembaBundle)
     (hΩ_pos : ∀ t, 0 < b.noetherData.Omega t)
-    (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords) :
+    (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords)
+    (h_flat : coords.EinsteinFlat) :
     -- (1) Noether conservation
     (∀ t, deriv (fun τ => CATEPTMain.Integration.NSEPTNoether.NSEPTNoetherInvariant
       b.noetherData.constants b.noetherData.Tacc b.noetherData.Omega τ) t = 0)
@@ -211,8 +212,8 @@ theorem three_lane_unification
   · exact (mpemba_both_monotone b.mpembaData).2
   -- (3) Mpemba rate dominance
   · exact fun t hΩ => mpemba_rate_dominance b.mpembaData t hΩ
-  -- (4) Einstein locality
-  · exact CATEPTMain.Integration.CATEPTSpaceTime.ept_entropic_einstein_locality coords
+  -- (4) Einstein locality (consumer supplies the einstein_flat witness)
+  · exact CATEPTMain.Integration.CATEPTSpaceTime.ept_entropic_einstein_locality coords h_flat
 
 /-- **Noether-bounded Mpemba**: if J_NS is conserved and Tacc ≥ 0,
     then enstrophy is bounded, which bounds the damped enstrophy
@@ -275,9 +276,12 @@ theorem einstein_viscosity_mpemba_bridge_available :
     -- (3) Damped enstrophy bounded
     (∀ (Ω τ : ℝ), 0 ≤ Ω → 0 ≤ τ → dampedEnstrophy Ω τ ≤ Ω)
     ∧
-    -- (4) Einstein locality available
-    (∀ (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords),
-       coords.EinsteinFlat) :=
+    -- (4) Einstein locality available — soundly conditional on a consumer-
+    --     supplied einstein_flat proof for that specific coords (was
+    --     previously unsoundly universal via the retired
+    --     `ept_entropic_einstein_locality_core` axiom).
+    (∀ (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords)
+       (_ : coords.EinsteinFlat), coords.EinsteinFlat) :=
   ⟨fun c hCI => ci_einstein_coupling_one c hCI,
    fun _ _ h => cameron_suppression_ordering h,
    fun Ω _ hΩ hτ => dampedEnstrophy_le Ω hΩ hτ,

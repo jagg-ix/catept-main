@@ -36,13 +36,18 @@ structure AdSCFTEntropicEinsteinLocalityWitness where
   entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants
   coords : CATEPTSpacetime4DCoords
   bulk_model_matches : coords.model = adscftRecord.bulkSpacetime
+  /-- Einstein-flatness witness for the bundled coords.  Was previously
+      derived from the unsound `ept_entropic_einstein_locality_core` axiom;
+      now required as a structure field, so consumers supply (e.g.) the
+      Minkowski/AdS-bulk einstein_flat proof from their own model. -/
+  einstein_flat : coords.EinsteinFlat
 
 /-- Entropic Einstein locality yields Einstein flatness on the bundled
 coordinate model, using the witness model's causal/no-FTL fields. -/
 theorem adscft_einstein_flat_of_locality
     (w : AdSCFTEntropicEinsteinLocalityWitness) :
     w.coords.EinsteinFlat :=
-  ept_entropic_einstein_locality w.coords
+  ept_entropic_einstein_locality w.coords w.einstein_flat
 
 /-- Typed assumptions wrapping the locality lane so downstream theorems do not
 take raw `True` placeholders directly.  This is a phase-2 interface hardening
@@ -109,7 +114,8 @@ theorem adscft_locality_and_rt_ssa_bundle_typed
   exact adscft_rt_ssa_from_area w G_N aAB aBC aB aABC hG hAreaSSA
 
 /-- Concrete phase-1 unification witness anchored on existing phase-1 AdS/CFT
-record and Minkowski Einstein-locality instance. -/
+record and Minkowski Einstein-locality instance.  The `einstein_flat`
+field is filled by `minkowskiCATEPT4D_einstein_flat` (proved). -/
 noncomputable def phase1AdSCFTEntropicEinsteinLocalityWitness
   (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
   (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
@@ -122,6 +128,7 @@ noncomputable def phase1AdSCFTEntropicEinsteinLocalityWitness
   entropicEEP := entropicEEP
   coords := minkowskiCATEPT4D
   bulk_model_matches := rfl
+  einstein_flat := minkowskiCATEPT4D_einstein_flat
 
 /-- In the concrete phase-1 witness, locality is already discharged by the
 proved Minkowski Einstein-flat theorem (no extra axiom invocation needed). -/

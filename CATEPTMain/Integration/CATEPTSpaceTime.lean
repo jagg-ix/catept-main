@@ -506,32 +506,46 @@ def modelEntropicEinsteinLocalityWitness
   { causal_arrow := c.model.ept_causal_arrow
     no_ftl := c.model.noFTL }
 
-/-- **EPT Entropic Einstein Locality** core axiom (Phase 5E-γ; discharge via Jacobson–Verlinde):
+/-- **EPT Entropic Einstein Locality** core theorem (Phase 5E-γ).
 
-    For any 4D CATEPT model whose EPT satisfies the thermodynamic causal conditions
-    (A3: strictly-increasing along worldlines) and the speed bound (A4: no FTL),
-    the spacetime is Einstein-flat: G_μν = 0 everywhere.
+    Carrier-hypothesis form: was previously an `axiom` declaration but the
+    universally-quantified version was unsound — `c.EinsteinFlat` only holds
+    for vacuum-class spacetimes (e.g. Minkowski via
+    `minkowskiCATEPT4D_einstein_flat`), not arbitrary `CATEPTSpacetime4DCoords`.
+    Now requires the einstein-flatness witness as an explicit hypothesis;
+    the `EntropicEinsteinLocalityWitness` field-set is preserved for
+    causal_arrow + no-FTL anchoring.
+
+    **Discharge of the underlying claim**: the theoretical chain backing
+    "thermodynamic equilibrium ⇒ G_μν = 0" is operationalised via the
+    UnifiedTheory Lovelock + CausalFoundation infrastructure (see
+    `Integration/ConditionalEinsteinBridge.lean` —
+    `conditional_einstein_consistent_with_locality`).  At a 4D coords-level
+    the consumer supplies the einstein_flat witness from their own model
+    (e.g. `minkowskiCATEPT4D_einstein_flat` for the Minkowski case).
 
     Physical interpretation (Jacobson 1995 / Verlinde 2011):
     - The EPT time arrow encodes non-decreasing coarse-grained entropy.
-    - In thermodynamic equilibrium (zero net entropy production), T_μν = 0 (vacuum).
+    - In thermodynamic equilibrium (zero net entropy production), T_μν = 0.
     - Einstein's equations then demand G_μν = 0.
 
-    **Phase-2 discharge path**:
-    1. Replace `model.ept_causal_arrow : True` with `StrictMonoOn model.ept causalCurves`.
-    2. Replace `model.noFTL : True` with `∀ v, sNorm2 v < 1`.
-    3. Prove thermodynamic equilibrium → T_μν = 0 via VML steady-state.
-    4. Apply Einstein's equations: T_μν = 0 → G_μν = Λg_μν; set Λ = 0 for vacuum. -/
-axiom ept_entropic_einstein_locality_core
+    The chain is operationalised at the consumer site (where the model
+    permits the equilibrium assumption); this theorem is the trivial
+    extraction of that proof. -/
+theorem ept_entropic_einstein_locality_core
     (c : CATEPTSpacetime4DCoords)
     (_ : EntropicEinsteinLocalityWitness c)
-    : c.EinsteinFlat
+    (h_flat : c.EinsteinFlat)
+    : c.EinsteinFlat :=
+  h_flat
 
-/-- Public locality theorem with no raw `True` assumptions in its interface. -/
+/-- Public locality theorem.  Was previously `(c) : c.EinsteinFlat` (unsound
+    universal claim); now requires the einstein-flatness witness as a
+    hypothesis. -/
 theorem ept_entropic_einstein_locality
-    (c : CATEPTSpacetime4DCoords) :
+    (c : CATEPTSpacetime4DCoords) (h_flat : c.EinsteinFlat) :
     c.EinsteinFlat :=
-  ept_entropic_einstein_locality_core c (modelEntropicEinsteinLocalityWitness c)
+  h_flat
 
 /-- The Minkowski model satisfies EPT Entropic Einstein Locality.
     Direct proof via GRTensorKernel (no axiom invocation needed for this instance),
