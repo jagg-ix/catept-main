@@ -9,6 +9,9 @@ import CATEPTMain.Domains.SuperiorMethod
 import CATEPTMain.Domains.QM.Domain
 import CATEPTMain.Domains.GR.Domain
 import CATEPTMain.Domains.ETH.Domain
+-- Seven-way spine: Page-Wootters ⊕ MaxwellWave ⊕ VML ⊕ Pphi2 ⊕ Pphi2N
+-- ⊕ Gravitas ⊕ Jacobson satisfy CAT/EPT spine consistency simultaneously.
+import CATEPTMain.Domains.SevenWaySpine
 import CATEPTMain.Bridges.SuperiorMethodBridges
 import CATEPTMain.Bridges.CrossDomainCompat
 import CATEPTMain.Integration.MaxwellCurveSpacePphi2Bridge
