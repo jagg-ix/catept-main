@@ -1,5 +1,4 @@
-import CATEPTPluginGibbsMeasure.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.GibbsMeasure
 /-!
 # Gibbs Measure Integration Bridge — re-export shim
 

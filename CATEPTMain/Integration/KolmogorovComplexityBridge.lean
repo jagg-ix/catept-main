@@ -1,5 +1,4 @@
-import CATEPTPluginKolmogorovComplexity.IntegrationBridge
-
+import CATEPTMain.Integration.AbstractWitnessContracts.KolmogorovComplexity
 /-!
 # Kolmogorov-Complexity Integration Bridge — re-export shim
 

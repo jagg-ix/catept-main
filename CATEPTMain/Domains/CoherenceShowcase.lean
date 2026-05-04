@@ -34,7 +34,7 @@ import CATEPTMain.Integration.GaussianFieldLogSobolevBridge
 import CATEPTMain.Integration.DeGiorgiBridge
 import CATEPTMain.Integration.ThermodynamicsLeanBridge
 import CATEPTMain.Integration.VMLLandauBridge
-import CATEPTPluginBTCompat.IntegrationBridge
+import CATEPTMain.Integration.AbstractWitnessContracts.BTCompat
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
 import CATEPTMain.Integration.PathIntegralBenchmarksBridge
 import CATEPTMain.Integration.GeneratingFunctionalCalculus
