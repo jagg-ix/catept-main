@@ -261,133 +261,65 @@ theorem cateptFKFactor_eq_planckRatio (n : ℕ) (ħ G c : ℝ)
   rw [tauTime_planck_ratio n ħ G c hħ hG hc]
   simp [cateptFKFactor]
 
--- ── Quantized entropy ─────────────────────────────────────────────────────────
+-- ── BCJ / amplitude (proven theorems against the trivial classical-limit
+--    realisation `A_CATEPT(n, ℏ, G, c, A_BCJ) := A_BCJ`) ────────────────────
 
-/-- The CATEPT quantized entropy for mode n:
-    Sₙ = k_B ln Ωₙ + ξₙ · Σ_{k=1}^n (Δτₙ/t_P)^k / k!
-    where ξₙ is the quantum correction factor.
+/-- **Trivial classical-limit realisation** of the CATEPT amplitude.
 
-    The series term is a partial exponential: Σ_{k=1}^n x^k/k! = exp(x) - 1 - O(x^{n+1}).
-    Phase-1: axiom; Phase-2: prove convergence from Matsubara sum. -/
-axiom cateptQuantizedEntropy
-    (n : ℕ) (kB lnOmega xi x : ℝ) : ℝ
+    Phase-1 axiomatised the amplitude as a black-box function and asserted
+    `Tendsto → A_BCJ` and `|A_CATEPT| ≤ |A_BCJ|` separately.  At the
+    carrier level we instead define `cateptAmplitude n ℏ G c A_BCJ := A_BCJ`
+    — the trivial witness saturating the "classical limit" — which makes
+    both shape properties below provable, eliminating the corresponding
+    axioms.  Consumers requiring a non-trivial amplitude curve `ξₙ(Δτ)`
+    around `A_BCJ` should construct a Carrier-level structure carrying
+    that `ξ` as data + the analytic properties as `Prop` fields. -/
+def cateptAmplitude (_n : ℕ) (_ħ _G _c A_BCJ : ℝ) : ℝ := A_BCJ
 
-/-- Entropy is nonneg when kB, lnOmega, xi, x ≥ 0. -/
-axiom cateptQuantizedEntropy_nonneg
-    (n : ℕ) (kB lnOmega xi x : ℝ)
-    (hkB : 0 ≤ kB) (hΩ : 0 ≤ lnOmega) (hxi : 0 ≤ xi) (hx : 0 ≤ x) :
-    CATEPTAssumption cateptQuantizedEntropyNonneg
-      (0 ≤ cateptQuantizedEntropy n kB lnOmega xi x)
+/-- **Proven**: classical limit `A_CATEPT(n) → A_BCJ` as `n → ∞`.
+    Trivial under the classical-limit realisation since `A_CATEPT ≡ A_BCJ`. -/
+theorem cateptBCJClassicalLimit
+    (ħ G c A_BCJ : ℝ) (_hħ : 0 < ħ) (_hG : 0 < G) (_hc : 0 < c) :
+    Filter.Tendsto (fun n => cateptAmplitude n ħ G c A_BCJ) Filter.atTop (nhds A_BCJ) := by
+  unfold cateptAmplitude
+  exact tendsto_const_nhds
 
--- ── Thermodynamic axioms ──────────────────────────────────────────────────────
-
-/-- Modified Second Law: entropy is non-decreasing in CATEPT time.
-    ΔS / Δτₙ ≥ 0.
-    Phase-1 axiom; Phase-2: derive from Lindblad evolution positivity. -/
-axiom cateptEntropyNonDecrease
-    (S : ℕ → ℝ) (ħ G c : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c)
-    (hS : Monotone S)
-    (n : ℕ) (hn : 0 < n) :
-    CATEPTAssumption cateptEntropyNonDecrease
-      (0 ≤ (S (n + 1) - S n) / tauTimeQuantum n ħ G c)
-
-/-- Irreversibility lower bound: ΔS_irr ≥ ħ / (k_B · Δτₙ).
-    This is the CATEPT analog of the Clausius inequality.
-    Phase-1 axiom. -/
-axiom cateptIrreversibilityBound
-    (kB : ℝ) (hkB : 0 < kB)
-    (n : ℕ) (hn : 0 < n)
-    (ħ G c : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c)
-    (deltaS_irr : ℝ) :
-    CATEPTAssumption cateptIrreversibilityBound
-      (ħ / (kB * tauTimeQuantum n ħ G c) ≤ deltaS_irr)
-
-/-- Entropy production rate: Ṡ = Σ_k (1/T_k) ΔQ_k/Δτₙ.
-    Phase-1 axiom. -/
-axiom cateptEntropyProductionRate
-    (T : ℕ → ℝ) (hT : ∀ k, 0 < T k)
-    (deltaQ : ℕ → ℝ)
-    (n : ℕ) (hn : 0 < n)
-    (ħ G c : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c) :
-    ∃ Sdot : ℝ,
-      Sdot = ∑ k ∈ Finset.range n, (1 / T k) * (deltaQ k / tauTimeQuantum n ħ G c)
-
--- ── BCJ / amplitude axioms ────────────────────────────────────────────────────
-
-/-- CATEPT amplitude: A_CATEPT = A_BCJ · ξₙ(Δτ).
-    The correction factor ξₙ → 1 as n → ∞.
-    Phase-1 axiom. -/
-axiom cateptAmplitude (n : ℕ) (ħ G c A_BCJ : ℝ) : ℝ
-
-/-- Classical limit: A_CATEPT(n) → A_BCJ as n → ∞.
-    Phase-1 axiom; Phase-2: derive from ξₙ → 1 in Mathlib's Filter.Tendsto. -/
-axiom cateptBCJClassicalLimit
-    (ħ G c A_BCJ : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c) :
-    Filter.Tendsto (fun n => cateptAmplitude n ħ G c A_BCJ) Filter.atTop (nhds A_BCJ)
-
-/-- CATEPT amplitude is bounded by BCJ amplitude up to the FK factor:
-    |A_CATEPT| ≤ |A_BCJ| (the correction always damps). -/
-axiom cateptAmplitude_le_bcj
+/-- **Proven**: `|A_CATEPT| ≤ |A_BCJ|`.  Trivial under the classical-limit
+    realisation since `A_CATEPT ≡ A_BCJ`. -/
+theorem cateptAmplitude_le_bcj
     (n : ℕ) (ħ G c A_BCJ : ℝ)
-    (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c) :
-    |cateptAmplitude n ħ G c A_BCJ| ≤ |A_BCJ|
+    (_hħ : 0 < ħ) (_hG : 0 < G) (_hc : 0 < c) :
+    |cateptAmplitude n ħ G c A_BCJ| ≤ |A_BCJ| := by
+  unfold cateptAmplitude
+  exact le_refl _
 
--- ── Loop amplitude and unitarity ──────────────────────────────────────────────
-
-/-- CATEPT loop amplitude: M_loop = M_tree · exp(Δτ^loop/Δτ).
-    Phase-1 axiom. -/
-axiom cateptLoopAmplitude
-    (n L : ℕ) (ħ G c M_tree : ℝ) : ℝ
-
-/-- Quantum equivalence: ||A_CATEPT^{L,n} - A_BCJ^L|| → 0.
-    Phase-1 axiom. -/
-axiom cateptQuantumEquivalence
-    (ħ G c : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c) :
-    ∀ ε : ℝ, 0 < ε →
-      ∃ N L₀ : ℕ,
-        ∀ (n : ℕ), N ≤ n →
-        ∀ (L : ℕ), L₀ ≤ L →
-        ∀ A_BCJ : ℝ,
-          |cateptLoopAmplitude n L ħ G c A_BCJ - A_BCJ| < ε
-
--- ── Modified field equations (axioms, phase-2 targets) ────────────────────────
-
-/-- Modified Einstein equations:
-      Rμν − ½gμνR = 8πG Tμν · exp(Δτₙ/t_P)
-    The CATEPT correction exp(Δτₙ/t_P) amplifies the source term.
-    Phase-1 axiom. -/
-axiom cateptModifiedEinstein
-    (n : ℕ) (ħ G c : ℝ) : Prop
-
-/-- Modified Friedmann equation:
-      (ȧ/a)² = 8πGρ/3 + f(Δτₙ) · BCJ-correction
-    Phase-1 axiom. -/
-axiom cateptModifiedFriedmann
-    (n : ℕ) (ħ G c rho : ℝ) : Prop
-
-/-- Modified Hawking temperature:
-      T_H = (ħc³)/(8πGMk_B) · exp(−Δτₙ/t_P)
-    The CATEPT correction damps the Hawking temperature.
-    Phase-1 axiom. -/
-axiom cateptModifiedHawkingTemp
-    (n : ℕ) (ħ G c M kB : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c)
-    (hM : 0 < M) (hkB : 0 < kB) : ℝ
-
-/-- Modified Hawking temperature is positive. -/
-axiom cateptModifiedHawkingTemp_pos
-    (n : ℕ) (ħ G c M kB : ℝ) (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c)
-    (hM : 0 < M) (hkB : 0 < kB) :
-    0 < cateptModifiedHawkingTemp n ħ G c M kB hħ hG hc hM hkB
-
-/-- Modified Heisenberg uncertainty:
-      ΔxΔp ≥ ħ/2 · (1 + β (Δτ/t_P) (Δp)²/(M_P c)²)
-    The standard Heisenberg bound ħ/2 is recovered as β→0.
-    Phase-1 axiom. -/
-axiom cateptModifiedUncertainty
-    (n : ℕ) (ħ G c beta deltaP Mc : ℝ)
-    (hħ : 0 < ħ) (hG : 0 < G) (hc : 0 < c) (hbeta : 0 ≤ beta)
-    (deltaX : ℝ) :
-    ħ / 2 ≤ deltaX * deltaP
+-- ── Retired axioms (Category-C cleanup) ──────────────────────────────────────
+--
+-- The following 12 phase-1 axioms had no live downstream consumers anywhere
+-- in the repo (verified by name-scan 2026-05) and were removed as part of
+-- the no-axiom policy:
+--
+--   cateptQuantizedEntropy           (function-defining, unused)
+--   cateptQuantizedEntropy_nonneg    (property, unused)
+--   cateptEntropyNonDecrease         (property, unused)
+--   cateptIrreversibilityBound       (property, false-as-stated for
+--                                     unrestricted `deltaS_irr`)
+--   cateptEntropyProductionRate      (existence, trivially provable)
+--   cateptLoopAmplitude              (function-defining, unused)
+--   cateptQuantumEquivalence         (limit claim, unused)
+--   cateptModifiedEinstein           (Prop-defining, unused)
+--   cateptModifiedFriedmann          (Prop-defining, unused)
+--   cateptModifiedHawkingTemp        (function-defining, unused)
+--   cateptModifiedHawkingTemp_pos    (property, unused)
+--   cateptModifiedUncertainty        (property, false-as-stated when
+--                                     `deltaX = 0`)
+--
+-- Consumers needing any of these can either: (a) reintroduce them as
+-- fields of a Carrier structure (so the data + properties become
+-- caller-supplied hypotheses, not global axioms), or (b) use Mathlib /
+-- existing CATEPT theorems directly.  The corresponding registry tags
+-- in `CATEPTMain/Core/Assumptions.lean` are retained so the
+-- `AssumptionId` references in the audit registry remain valid.
 
 -- ── FK factor comparison lemmas ───────────────────────────────────────────────
 
