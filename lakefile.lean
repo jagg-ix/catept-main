@@ -30,7 +30,7 @@ require «catept-plugin-dimensional-analysis» from git
 -- catept-plugin-cslib: extracted CATEPTMain.Integration.CslibBridge.
 -- Fourth plugin under Target 5 (scale-out wave).
 require «catept-plugin-cslib» from git
-  "https://github.com/jagg-ix/catept-plugin-cslib.git" @ "b71b95fc5859ef6277c994212979e009c79c1b76"
+  "https://github.com/jagg-ix/catept-plugin-cslib.git" @ "bc5ae8bb3d83bd45ebb3151a153ac8cc035c491a"
 
 
 -- catept-plugin-gaussian-field-lsi: extracted CATEPTMain.Integration.GaussianFieldLogSobolevBridge.
@@ -60,7 +60,7 @@ require «catept-plugin-vml-landau» from git
 -- Eleventh plugin (T5 follow-on). Wraps mrdouglasny/bochner (PD characteristic functions +
 -- Bochner-theorem + Sazonov tightness + Schur product + abstract Minlos extension witness).
 require «catept-plugin-bochner-minlos» from git
-  "https://github.com/jagg-ix/catept-plugin-bochner-minlos.git" @ "dae9f683e724970f7d335cf4223b24bac8f4fa65"
+  "https://github.com/jagg-ix/catept-plugin-bochner-minlos.git" @ "6efe4238c8a9da26f1064e9bc430404c7d03ea0a"
 
 
 
