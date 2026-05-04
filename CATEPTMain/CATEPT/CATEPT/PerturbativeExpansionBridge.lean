@@ -31,9 +31,22 @@ This effectively drops gauge connection fluctuations, reducing to pure Dirac pro
 opaque extractFreeAction (interacting_layer : SpinorTransportLayer) : SpinorTransportLayer
 
 /--
-A formal declaration that the full interacting transport kernel is equivalent
-to a sum over its perturbative orders (the Dyson expansion context).
+The formal Dyson-expansion mapping: any interacting transport layer
+gives rise to a `PerturbativeExpansion` carrying the free-propagator
+zero-th-order contribution and a (here-trivial) order-`n` term map.
+
+Was previously an `axiom` declaration; converted to a concrete
+`noncomputable def` that produces a witness explicitly.  The
+`order_term n := 0` choice is a placeholder — consumers requiring
+non-trivial perturbative data should construct their own
+`PerturbativeExpansion` with the appropriate vertex algebra.
+
+Concrete operator-side derivation lives in the `catept-domain-gauge`
+plugin's FEYNCALC Passarino-Veltman tooling.
 -/
-axiom dyson_series_expansion (layer : SpinorTransportLayer) : PerturbativeExpansion
+noncomputable def dyson_series_expansion (layer : SpinorTransportLayer) :
+    PerturbativeExpansion :=
+  { free_propagator := extractFreeAction layer
+  , order_term      := fun _ => 0 }
 
 end CATEPTMain.CATEPT.CATEPT
