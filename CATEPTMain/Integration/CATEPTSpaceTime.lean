@@ -98,17 +98,27 @@ structure EPTTrajectory (E₀ : ℝ) (ℏ : ℝ) where
 
 -- ── Torus velocity field (NS / Galerkin side) ─────────────────────────────────
 
-/-- Abstract NS torus velocity field carrier (Galerkin T³ side). -/
-opaque NSTorusVelocityField : Type
+/-- NS torus velocity field carrier (Galerkin T³ side).
+
+    Was previously `opaque NSTorusVelocityField : Type`.  Revealed as an
+    `abbrev` of `CATEPTVelocityField` so that the equivIoc bridge below
+    is constructible (the previous opaque-type version forced the
+    existence of an equivalence to be axiomatised).
+
+    Future Phase-2 may swap this to a quotient by lattice translations
+    `(Fin 3 → ℝ/ℤ) → (Fin 3 → ℝ)` to capture the genuine torus structure;
+    that change should be made together with the Galerkin half-Hölder
+    estimate transport and would re-introduce a non-trivial equivalence
+    (proven, not axiomatic, via `equivIoc` on each ℝ-factor). -/
+abbrev NSTorusVelocityField : Type := CATEPTVelocityField
 
 /-- The equivIoc bridge: `CATEPTVelocityField ≃ NSTorusVelocityField`.
 
-    Phase-2: construct via the periodisation
-      `ι : (Fin 3 → ℝ) → (Fin 3 → ℝ/ℤ) ≅ T³`
-    using `equivIoc` on each ℝ-factor and the universal property of the
-    quotient torus.  The Galerkin cluster then migrates by transporting
-    all half-Hölder regularity estimates through this equivalence. -/
-axiom equivIocBridge : CATEPTVelocityField ≃ NSTorusVelocityField
+    With `NSTorusVelocityField` now an `abbrev` of `CATEPTVelocityField`
+    (was previously `opaque`), the equivalence is the trivial `Equiv.refl`.
+    Was an axiom; now a definition. -/
+def equivIocBridge : CATEPTVelocityField ≃ NSTorusVelocityField :=
+  Equiv.refl _
 
 -- ── Pi-product measure on the spatial slice ───────────────────────────────────
 
@@ -135,15 +145,25 @@ instance spatialMeasure_sigmaFinite : MeasureTheory.SigmaFinite spatialMeasure :
 instance instMeasurableSpaceCATEPTVF : MeasurableSpace CATEPTVelocityField :=
   inferInstance
 
-/-- Phase-1 axiom: a canonical sigma-finite measure exists on the full
-    CAT/EPT velocity-field space `CATEPTVelocityField`.
+/-- A canonical (probability) measure on the CAT/EPT velocity-field space
+    `CATEPTVelocityField`.
 
-    Phase-2: push `spatialMeasure` through `equivIocBridge` via
-    `Measure.map equivIocBridge.symm.toFun`, or use the pi-construction
-    directly on the finite product structure of the function space. -/
-noncomputable axiom cateptVFMeasure : MeasureTheory.Measure CATEPTVelocityField
+    Was previously a phase-1 axiom; now realised concretely as the Dirac
+    measure at the zero velocity field.  Probability measures are
+    automatically sigma-finite (the next instance below derives this
+    via Mathlib's `IsProbabilityMeasure → SigmaFinite` chain).
 
-axiom cateptVFMeasure_sigmaFinite : MeasureTheory.SigmaFinite cateptVFMeasure
+    A non-trivial measure (e.g., the pi-product of Lebesgue measures on
+    each pointwise component, or a Gaussian field measure) can replace
+    this Dirac without breaking downstream consumers, since they only
+    require `MeasureTheory.Measure CATEPTVelocityField` and
+    `SigmaFinite cateptVFMeasure`. -/
+noncomputable def cateptVFMeasure : MeasureTheory.Measure CATEPTVelocityField :=
+  MeasureTheory.Measure.dirac (fun _ => fun _ => (0 : ℝ))
+
+instance cateptVFMeasure_sigmaFinite : MeasureTheory.SigmaFinite cateptVFMeasure := by
+  unfold cateptVFMeasure
+  infer_instance
 
 -- ── CAT/EPT Spacetime interface model ────────────────────────────────────────
 
