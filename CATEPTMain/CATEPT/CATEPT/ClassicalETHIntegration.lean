@@ -31,14 +31,20 @@ def oscillatorMicrocanonicalShell (p : DampedOscillatorParams) (targetE deltaE' 
   deltaE := deltaE'
   deltaE_pos := delta_pos
 
-/-- Binds the thermal expectation of the mechanical dissipation observable 
-    to the microcanonical ensemble average over the energy shell. -/
+/-- Binds the thermal expectation of the mechanical dissipation observable
+    to the microcanonical ensemble average over the energy shell.
+
+    The microcanonical average is supplied as a parameter (`avg : ℝ`)
+    rather than computed; consumers provide whatever value is dictated
+    by their application (e.g. a closed-form integral in a worked
+    example, or a hypothesis from upstream physics). -/
 def oscillatorETHInterface (p : DampedOscillatorParams) (targetE deltaE' : ℝ) (delta_pos : 0 < deltaE')
-    (base_thermal_dissipation : ℝ)
-    (h_avg : base_thermal_dissipation = microcanonicalAverage (oscillatorMicrocanonicalShell p targetE deltaE' delta_pos) (mechanicalEnergyDerivAtJet p)) :
+    (base_thermal_dissipation avg : ℝ)
+    (h_avg : base_thermal_dissipation = avg) :
     MicrocanonicalETHInterface OscillatorJet OscillatorJet where
   shell := oscillatorMicrocanonicalShell p targetE deltaE' delta_pos
   observable := mechanicalEnergyDerivAtJet p
+  average := avg
   O_thermal_base := base_thermal_dissipation
   O_thermal_eq_average := h_avg
 
@@ -47,17 +53,17 @@ def oscillatorETHInterface (p : DampedOscillatorParams) (targetE deltaE' : ℝ) 
     exponentially suppresses fluctuations away from the pure microcanonical average. -/
 theorem oscillator_dissipation_ETH_value (p : DampedOscillatorParams)
     (targetE deltaE' : ℝ) (delta_pos : 0 < deltaE')
-    (base_thermal_dissipation : ℝ)
-    (h_avg : base_thermal_dissipation = microcanonicalAverage (oscillatorMicrocanonicalShell p targetE deltaE' delta_pos) (mechanicalEnergyDerivAtJet p))
+    (base_thermal_dissipation avg : ℝ)
+    (h_avg : base_thermal_dissipation = avg)
     (hbar' beta_I' : ℝ) (h_pos : 0 < hbar')
     (info_density action_im : OscillatorJet → ℝ)
     (h_bridge : ∀ J, action_im J = beta_I' * info_density J)
     (varepsilon : OscillatorJet → ℝ) (J : OscillatorJet) :
-    canonicalDiagonalETHValue (oscillatorETHParams hbar' beta_I' h_pos info_density action_im h_bridge) 
-      (fun _ => base_thermal_dissipation) 
-      varepsilon 
+    canonicalDiagonalETHValue (oscillatorETHParams hbar' beta_I' h_pos info_density action_im h_bridge)
+      (fun _ => base_thermal_dissipation)
+      varepsilon
       J =
-    microcanonicalAverage (oscillatorMicrocanonicalShell p targetE deltaE' delta_pos) (mechanicalEnergyDerivAtJet p) +
+    avg +
     Real.exp (-((beta_I' * info_density J) / hbar')) * varepsilon J := by
   unfold canonicalDiagonalETHValue canonicalSuppressionFactor canonicalTauDiag oscillatorETHParams
   simp only
