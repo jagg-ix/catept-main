@@ -13,6 +13,7 @@ import CATEPTMain.Integration.PhysicalUVConvergenceCertificate
 import CATEPTMain.Integration.TomitaMatsubaraEquivBridge
 import CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge
 import CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge
+import CATEPTMain.Integration.GravitasBridge
 
 /-!
 # UnificationSpine — capstone unifying QM, Thermodynamics, EM, and GR
@@ -423,3 +424,9 @@ Each line below is emitted as a Lean `info:` diagnostic during
 #print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero
 #print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.S_I_eq_hbar_logDelta_eq_hbar_channel
 #print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.matsubara_tauEnt_eq_one_over_gammaI
+
+-- §6.6 EM stress-energy substance (explicit S_I closed form, nonneg, vacuum)
+#print axioms CATEPTMain.Integration.GravitasBridge.bohmianEM_action_expansion
+#print axioms CATEPTMain.Integration.GravitasBridge.bohmianEM_nonneg
+#print axioms CATEPTMain.Integration.GravitasBridge.vml_vacuum_em_action_zero
+#print axioms CATEPTMain.Integration.GravitasBridge.gravitasEMCATEPTSlot_consistent

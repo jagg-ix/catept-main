@@ -18,6 +18,7 @@ scripts=(
   "07_unification_spine.sh"
   "08_substance_proofs.sh"
   "09_matsubara_substance.sh"
+  "10_em_substance.sh"
 )
 
 declare -a results=()

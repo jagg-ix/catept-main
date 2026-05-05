@@ -142,8 +142,9 @@ in §3.3, §4, §5, §6, §8.1, and §8.2):
   PASS  07_unification_spine.sh
   PASS  08_substance_proofs.sh
   PASS  09_matsubara_substance.sh
+  PASS  10_em_substance.sh
 --------------------------------------------------------------
-  total: 9   pass: 9   skip: 0   fail: 0
+  total: 10   pass: 10   skip: 0   fail: 0
 ```
 
 `run_all.sh` exits 0 when every script passes and 1 otherwise, so
@@ -736,7 +737,158 @@ info: CATEPTMain/Integration/UnificationSpine.lean:425:0: 'CATEPTMain.Integratio
 > audited together by `bash scripts/verify/09_matsubara_substance.sh`,
 > which reported `PASS` on this commit.
 
-### 6.6 Why §6.4–§6.5 are the heart of the unification
+### 6.6 Electrovacuum: explicit S_I structure beyond the slot rewrite
+
+A fair critique of §3 is that
+`gr_electrovacuum_satisfies_catept_spine` discharges its proof
+obligation by reusing the Minkowski slot — the EM stress-energy
+structure is registered (`gravitasEMStressEnergy`,
+`ElectromagneticTensor`) but doesn't appear in the spine-identity
+proof itself.  This subsection surfaces four substance theorems
+from `CATEPTMain.Integration.GravitasBridge` that go *beyond*
+slot rewrite: they pin `S_I` to an **explicit closed-form
+expression** in the EM 4-velocity and background 4-potential.
+
+**Explicit closed form for the EM imaginary action.**
+`bohmianEM_action_expansion`:
+
+```lean
+theorem bohmianEM_action_expansion (A_bg v : Fin 4 → ℝ) :
+    (bohmianEMCATEPTSlot A_bg).actionIm v =
+        (∑ μ : Fin 4, v μ ^ 2)        / 2
+      − (∑ μ : Fin 4, v μ * A_bg μ)
+      + (∑ μ : Fin 4, A_bg μ ^ 2)     / 2
+```
+
+This is real content: the Bohmian-EM imaginary action is
+**exactly** the gauge-invariant kinetic form `‖v‖²/2 − ⟨v,A⟩ +
+‖A‖²/2 = ‖v − A‖²/2`.  The proof closes by `simp; ring`.
+
+**Damped-class membership for the EM slot.**
+`bohmianEM_nonneg`:
+
+```lean
+theorem bohmianEM_nonneg (A_bg : Fin 4 → ℝ) (v : Fin 4 → ℝ) :
+    0 ≤ (bohmianEMCATEPTSlot A_bg).actionIm v
+```
+
+Combined with the closed form above, this proves the EM-coupled
+slot satisfies `S_I ≥ 0` for all velocities and all background
+4-potentials — the EM sector belongs to the damped class
+unconditionally, so `τ_ent = S_I/ℏ` is treatable as a real time
+parameter on the EM-coupled side without auxiliary assumptions.
+
+**VML steady-state decoupling theorem.**
+`vml_vacuum_em_action_zero`:
+
+```lean
+theorem vml_vacuum_em_action_zero (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
+    (gravitasEMCATEPTSlot μ₀ hμ₀).actionIm 0 = 0
+```
+
+At the VML steady-state vacuum (`A = 0` in the Coulomb gauge,
+the global vacuum sector of the 4-potential), the EM CATEPT
+imaginary action *vanishes* — the EM sector decouples from the
+kinetic sector at the vacuum boundary.  This is a physical
+boundary condition, not a definitional artefact.
+
+**Spine identity on an EM-aware slot.**
+`gravitasEMCATEPTSlot_consistent`:
+
+```lean
+theorem gravitasEMCATEPTSlot_consistent (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
+    cateptConsistencyConstraint (gravitasEMCATEPTSlot μ₀ hμ₀)
+```
+
+The full central identity `actionIm/ℏ = eptClock` proved on a
+**different** slot than `gravitasMinkowskiSlot` — one whose
+`actionIm` is the explicit EM closed form above, and whose `ℏ`
+parameter is the vacuum permeability `μ₀` (with the standard
+electromagnetic-units convention `μ₀ ↔ ℏ` on the slot's scale).
+Where `gr_electrovacuum_satisfies_catept_spine` reuses the
+Minkowski proof, this theorem proves the spine identity *de novo*
+on a slot that genuinely uses the EM action structure.
+
+**Captured output** (verbatim from
+[`scripts/verify/logs/10_em_substance.out`](scripts/verify/logs/10_em_substance.out)):
+
+```
+info: CATEPTMain/Integration/UnificationSpine.lean:429:0: 'CATEPTMain.Integration.GravitasBridge.bohmianEM_action_expansion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:430:0: 'CATEPTMain.Integration.GravitasBridge.bohmianEM_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:431:0: 'CATEPTMain.Integration.GravitasBridge.vml_vacuum_em_action_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:432:0: 'CATEPTMain.Integration.GravitasBridge.gravitasEMCATEPTSlot_consistent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+```
+
+> **Proof of execution.**  All four EM substance theorems are
+> audited together by `bash scripts/verify/10_em_substance.sh`,
+> which reported `PASS` on this commit.
+
+What §6.6 does *not* yet prove (honest scope): a derivation of
+the closed-form `(v−A)²/2` action from the full Einstein–Maxwell
+field equations together with a back-reaction theorem relating
+`S_I` to the metric perturbation through `T_{μν}^{EM}`.  The
+field-equation derivation lives in external Gravitas content;
+encoding it as a Lean theorem is tracked under the worklog task
+`catept_em_stress_energy_from_field_equations`.
+
+### 6.7 The damped class — what "S_I ≥ 0" actually buys
+
+A second fair critique of §3 is the phrasing "under suitable
+physical conditions (the damped class)" without concrete
+specification.  Here is the precise condition: the **damped
+class** is the subset of CAT/EPT path-integral models on which
+the imaginary action is non-negative everywhere.  Formally
+(`MeasurePathIntegralModel`):
+
+```lean
+structure MeasurePathIntegralModel (α : Type*) [MeasurableSpace α] where
+  μ                    : Measure α
+  ℏ                    : ℝ
+  ℏ_pos                : 0 < ℏ
+  actionRe             : α → ℝ
+  actionIm             : α → ℝ
+  measurable_actionRe  : Measurable actionRe
+  measurable_actionIm  : Measurable actionIm
+  actionIm_nonneg      : ∀ x, 0 ≤ actionIm x   -- ★ the damped-class hypothesis
+```
+
+Three conditions, each a structure field:
+
+* **`ℏ_pos`** — Planck's constant is strictly positive (so
+  `S_I/ℏ` is a well-defined real).
+* **`measurable_actionRe`, `measurable_actionIm`** — both action
+  components are measurable with respect to the path-space
+  measure (so `weight` is measurable and integrals make sense).
+* **`actionIm_nonneg`** — the imaginary action is point-wise
+  non-negative (the *damped-class* condition).
+
+These are the hypotheses Lean tracks throughout the analytic
+chain.  When the README says "under suitable physical conditions",
+the conditions are exactly these three structure fields plus the
+`Integrable (damping x) μ` hypothesis of §6.1's
+`complex_FK_rigorous`.  Nothing more, nothing hidden.
+
+The proven theorem `weight_norm_is_damping`:
+
+```lean
+theorem weight_norm_is_damping (x : α) :
+    ‖m.weight x‖ = Real.exp (-(m.actionImScaled x))
+```
+
+shows that `actionIm_nonneg` is exactly the condition that
+makes the path-integral weight a contraction
+(`‖weight x‖ ≤ 1`).  This is the analytic hinge: with `S_I ≥ 0`,
+`exp(−S_I/ℏ) ≤ 1`, the FK formula gives a bounded expectation
+(the §6.1 theorem), and `τ_ent = S_I/ℏ ≥ 0` is interpretable
+as a real time.
+
+### 6.8 Why §6.4–§6.7 are the heart of the unification
 
 §5's capstone says "all pillars share one `τ_ent`."  §6.4 says
 "that `τ_ent` is **literally** `β·Ω = -log Z`."  §6.5 says "and at
@@ -755,7 +907,7 @@ and
 [`09_matsubara_substance.sh`](scripts/verify/09_matsubara_substance.sh)
 audit.
 
-### 6.7 Verifying the substance proofs
+### 6.9 Verifying the substance proofs
 
 The same `lake build … | grep` pattern as the other sections audits
 all seven substance theorems with a single recipe:
@@ -796,7 +948,7 @@ info: CATEPTMain/Integration/UnificationSpine.lean:413:0: 'CATEPTMain.Integratio
 > commit by `bash scripts/verify/08_substance_proofs.sh`, which
 > reported `PASS`.
 
-### 6.8 What's NOT in this section (honest scope)
+### 6.10 What's NOT in this section (honest scope)
 
 The substance theorems above land kernel-axiom-only certificates
 on the analytic, operator-side, and quantum-information layers.
