@@ -8,6 +8,10 @@ import CATEPTMain.Integration.MatsubaraLuttingerWardCarrier
 import CATEPTMain.Integration.KMSModularParameterBridge
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
+import CATEPTMain.Integration.RigorousComplexFeynmanKac
+import CATEPTMain.Integration.PhysicalUVConvergenceCertificate
+import CATEPTMain.Integration.TomitaMatsubaraEquivBridge
+import CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge
 
 /-!
 # UnificationSpine — capstone unifying QM, Thermodynamics, EM, and GR
@@ -379,3 +383,31 @@ output.  Each must report `[propext, Classical.choice, Quot.sound]`
 #print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_EM_pillar
 #print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_GR_pillar
 #print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_Matsubara
+
+/-!
+## Substance proofs — additional kernel-axiom-only theorems
+
+The capstone above states that one real `τ_ent` plays each pillar's
+role.  The directives below are the kernel-axiom audit on the
+**substance** that backs each pillar's contribution: the rigorous
+analytic Feynman–Kac bound, the UV convergence theorem, the
+operator-side Tomita modular-flow identifications, the KMS carrier
+separation lemma, and the quantum-info Shannon/Rényi reductions.
+
+Each line below is emitted as a Lean `info:` diagnostic during
+`lake build` and reports `[propext, Classical.choice, Quot.sound]`
+— the standard kernel triple, no others.
+-/
+
+-- §6.1 Analytic backbone
+#print axioms CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous
+#print axioms CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed
+
+-- §6.2 Operator-side identifications (Tomita modular flow ↔ τ_ent)
+#print axioms CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero
+#print axioms CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.tauEnt_zero_iff_logDelta_zero
+#print axioms CATEPTMain.Integration.KMSModularParameterBridge.kms_strip_separate_from_entropicProperTime
+
+-- §6.3 Substantive quantum-info content (Shannon/Rényi via plugin)
+#print axioms CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.shannon_entropy_zero_via_plugin
+#print axioms CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.renyi_at_one_eq_shannon_via_plugin

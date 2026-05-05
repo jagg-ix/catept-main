@@ -127,7 +127,7 @@ full description.
 
 The recipe above was actually run on this commit.  Verbatim summary
 from the last run (matches the machine-checked outputs quoted later
-in §3.3, §4, §5, §7.1, and §7.2):
+in §3.3, §4, §5, §6, §8.1, and §8.2):
 
 ```
 ==============================================================
@@ -140,8 +140,9 @@ in §3.3, §4, §5, §7.1, and §7.2):
   PASS  05_axiom_free_all_10.sh
   PASS  06_axiom_free_individual.sh
   PASS  07_unification_spine.sh
+  PASS  08_substance_proofs.sh
 --------------------------------------------------------------
-  total: 7   pass: 7   skip: 0   fail: 0
+  total: 8   pass: 8   skip: 0   fail: 0
 ```
 
 `run_all.sh` exits 0 when every script passes and 1 otherwise, so
@@ -423,7 +424,7 @@ inside the modular-flow / Kuchař core.
 
 ### 5.1 Verifying the capstone
 
-The same `lake build … | grep` pattern as §3.3 / §4 / §6 / §7 audits
+The same `lake build … | grep` pattern as §3.3 / §4 / §6 / §8 audits
 the capstone alongside its five companion pillar-agreement
 theorems:
 
@@ -486,7 +487,219 @@ info: CATEPTMain/Integration/UnificationSpine.lean:381:0: 'CATEPTMain.Integratio
 
 ---
 
-## 6. Analytic Machinery (giving the central identity physical substance)
+## 6. Substance Proofs Behind the Unification Claim
+
+§3–§5 establish *consistency* — the same `τ_ent` parameter is
+recognised by every pillar and the kernel-axiom-only audit confirms
+the bundling.  But consistency alone is shallow: a reader could ask
+whether anything *substantive* happens beneath the bundle.
+
+This section answers that.  Every theorem quoted here ships in the
+repo, has a non-trivial proof term, and clears the same kernel-
+axiom-only bar (`propext`, `Classical.choice`, `Quot.sound`).  The
+list isn't exhaustive — it's the spine substance: one theorem per
+mathematical layer the framework rests on.
+
+### 6.1 Analytic backbone — rigorous Feynman–Kac, UV without counterterms
+
+Two theorems supply the analytic substance behind treating `τ_ent
+= S_I/ℏ` as a real time parameter rather than a formal symbol.
+
+**Rigorous complex Feynman–Kac (entropically damped class).**
+`CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous`:
+
+```lean
+theorem complex_FK_rigorous
+    (m : MeasurePathIntegralModel α)
+    (hL1 : Integrable (fun x => m.damping x) m.mu)
+    (obs : α → ℂ) (hMeas : Measurable obs)
+    (C : ℝ) (hC : 0 ≤ C)
+    (hBound : ∀ᵐ x ∂m.mu, ‖obs x‖ ≤ C) :
+    Integrable (fun x => obs x * m.weight x) m.mu ∧
+      ‖complexFKExpectation m obs‖ ≤ C * partitionFunction m
+```
+
+Two real conclusions: (a) `obs · weight` is `μ`-integrable; (b) the
+complex-valued path-integral expectation is bounded by `C · Z`
+(the partition function, in operator-norm).  Inputs: the observable
+is `μ`-essentially bounded by `C` and the damping factor is `L¹`.
+This is what makes the `S_I ≥ 0` damped class an analytic
+contraction rather than a formal symbol.
+
+**Counterterm-free UV convergence.**
+`CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed`:
+
+```lean
+theorem physical_uv_certificate_no_counterterm_needed
+    (m : PhysicalEntropicModel) :
+    Tendsto
+        (ofUVConvergenceCertificate
+            (physical_uv_convergence_certificate m)).cutoffPartition
+        atTop
+        (𝓝 (ofUVConvergenceCertificate
+            (physical_uv_convergence_certificate m)).continuumPartition) ∧
+      (ofUVConvergenceCertificate
+          (physical_uv_convergence_certificate m)).counterterm = 0
+```
+
+A genuine analytic limit (`Tendsto … atTop (𝓝 …)`) of the
+cutoff-regulated partition to the continuum partition, with the
+explicit pinning `counterterm = 0`.  This pre-empts the standard
+"path integrals need renormalization at high energies" objection
+on the damped class.
+
+### 6.2 Operator-side identifications — Tomita modular flow ↔ τ_ent
+
+§5's capstone is carrier-level.  The operator-side machinery — where
+modular flow is genuinely a one-parameter automorphism group — is
+reachable through the Tomita ↔ Matsubara bridge.
+
+**`S_I = ℏ · log Δ(0)`.**
+`CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero`:
+
+```lean
+theorem matsubara_S_I_eq_hbar_logDelta_zero :
+    B.matsubara.S_I
+      = B.matsubara.ℏ * B.obligation.tomita.modularSpectralLogScale 0
+```
+
+The Matsubara imaginary action equals Planck's constant times the
+operator-side modular Hamiltonian's image at the spectral origin.
+This is the strongest operator-side identification in the repo:
+the "S_I" in `τ_ent = S_I/ℏ` is *not* an extra physical postulate
+— it's `ℏ` times the Tomita modular Hamiltonian evaluated at 0.
+
+**Dichotomy at the modular-flow origin.**
+`...tauEnt_zero_iff_logDelta_zero`:
+
+```lean
+theorem tauEnt_zero_iff_logDelta_zero :
+    B.matsubara.τ_ent = 0
+      ↔ B.obligation.tomita.modularSpectralLogScale 0 = 0
+```
+
+Iff (not just implies).  `τ_ent` vanishes exactly when the modular
+Hamiltonian's spectral origin is zero — physical agreement between
+the `τ_ent = 0` line and the operator-side fixed point.
+
+**KMS strip carrier is non-trivial.**
+`CATEPTMain.Integration.KMSModularParameterBridge.kms_strip_separate_from_entropicProperTime`:
+
+```lean
+theorem kms_strip_separate_from_entropicProperTime :
+    ∃ (gammaI tauEnt : ℝ → ℝ) (t : ℝ),
+      tauEnt t ≠ kmsStripWidth gammaI t
+```
+
+A *separation* lemma: without an explicit identification carrier,
+`kmsStripWidth γ_I` and `τ_ent` are *not* the same function.  The
+bundle's identification is therefore content, not tautology.  Proof
+exhibits an explicit counterexample (`γ_I ≡ 1`, `τ_ent t := t`,
+evaluated at `t = 2`).
+
+### 6.3 Quantum-information substance — Shannon and Rényi reductions
+
+§5.4 / §8.1 contract #1 binds the quantum-information lane to the
+spine.  The substance is in two reductions both proven inside
+`CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge`:
+
+**Rényi at α = 1 reduces to Shannon.**
+`renyi_at_one_eq_shannon_via_plugin`:
+
+```lean
+theorem renyi_at_one_eq_shannon_via_plugin {n : ℕ} (p : Fin n → ℝ) :
+    renyiEntropy 1 p = shannonEntropy p
+```
+
+The classical limit identity `H_α(p) → H(p)` as `α → 1`, on the
+nose at `α = 1`.  Not bundling: actual function-equality.
+
+**Shannon entropy of the zero distribution is zero.**
+`shannon_entropy_zero_via_plugin`:
+
+```lean
+theorem shannon_entropy_zero_via_plugin {n : ℕ} :
+    shannonEntropy (fun _ : Fin n => (0 : ℝ)) = 0
+```
+
+The simplest case-analysis check: vanishing distribution → vanishing
+entropy.  Together with `shannon_entropy_dirac_via_plugin` and
+`renyi_zero_eq_log_n_via_plugin` (also kernel-axiom-only), these
+exercise the entropy functional on its boundary inputs.
+
+### 6.4 Verifying the substance proofs
+
+The same `lake build … | grep` pattern as the other sections audits
+all seven substance theorems with a single recipe:
+
+```bash
+lake build CATEPTMain.Integration.UnificationSpine 2>&1 \
+  | grep -E "'CATEPTMain\.Integration\.(RigorousComplexFeynmanKac\.complex_FK_rigorous|PhysicalUVConvergenceCertificate\.physical_uv_certificate_no_counterterm_needed|TomitaMatsubaraEquivBridge\.TomitaMatsubaraEquivBridge\.(matsubara_S_I_eq_hbar_logDelta_zero|tauEnt_zero_iff_logDelta_zero)|KMSModularParameterBridge\.kms_strip_separate_from_entropicProperTime|QuantumInfoEntropyConsistencyBridge\.(shannon_entropy_zero_via_plugin|renyi_at_one_eq_shannon_via_plugin))' depends on axioms"
+```
+
+**Captured output** (verbatim from
+[`scripts/verify/logs/08_substance_proofs.out`](scripts/verify/logs/08_substance_proofs.out)):
+
+```
+info: CATEPTMain/Integration/UnificationSpine.lean:403:0: 'CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:404:0: 'CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:407:0: 'CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:408:0: 'CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.tauEnt_zero_iff_logDelta_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:409:0: 'CATEPTMain.Integration.KMSModularParameterBridge.kms_strip_separate_from_entropicProperTime' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:412:0: 'CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.shannon_entropy_zero_via_plugin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:413:0: 'CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.renyi_at_one_eq_shannon_via_plugin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+```
+
+> **Proof of execution.** The recipe above was actually run on this
+> commit by `bash scripts/verify/08_substance_proofs.sh`, which
+> reported `PASS`.
+
+### 6.5 What's NOT in this section (honest scope)
+
+The substance theorems above land kernel-axiom-only certificates
+on the analytic, operator-side, and quantum-information layers.
+Other claims a reader might want — and which the framework does
+*not* yet prove from first principles in Lean — include:
+
+* A general **`τ_ent = τ_geom`** equivalence proof for arbitrary
+  worldlines.  The Minkowski and electrovacuum spine theorems
+  (§3) discharge the equation on those backgrounds; a "general
+  contraction" identity for arbitrary pseudo-Riemannian
+  worldlines is currently external mathematical content.
+
+* A **Carleson a.e. convergence** theorem under entropic
+  damping.  §8.1 contract #6 binds the abstract Carleson
+  statement to the spine; the *concrete* a.e. theorem under
+  entropic damping is treated as a user-supplied hypothesis,
+  not a derivation.
+
+* A **Kelvin–Planck second-law derivation** for `τ_ent`.  §7.1
+  contract #9 ties `S_I` to Lieb–Yngvason entropy; the second
+  law itself is a hypothesis on the carrier, not a theorem.
+
+These remaining external obligations are tracked in the worklog
+under `catept_substance_proof_*` tasks; each item reduces to
+either an external mathematical reference or a Lean
+formalisation in flight.  Marking them as *not* yet proven is
+itself part of the framework's honesty discipline.
+
+---
+
+## 7. Analytic Machinery (giving the central identity physical substance)
 
 Without rigorous analytic backing, the QM/GR consistency theorems
 would be a formal shell. The following theorems supply the missing
@@ -521,7 +734,7 @@ CATEPT** at this commit.
 
 ---
 
-## 7. Axiom-Free Compatibility Theorems
+## 8. Axiom-Free Compatibility Theorems
 
 While the two consistency theorems clear the kernel-axiom bar, the
 framework's modularity rests on **10 short compatibility theorems**
@@ -552,7 +765,7 @@ CATEPT's modularity: the central identity makes no commitments about
 the heavy mathematics in any specific area, and each external theory
 makes commitments only about its own area.
 
-### 7.1 Verify all 10 compatibility theorems at once
+### 8.1 Verify all 10 compatibility theorems at once
 
 ```bash
 lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 | grep -E "\
@@ -597,7 +810,7 @@ testable promise of the framework.
 > depends on axioms: [...]` — so the recipe above doubles as a
 > regression check.
 
-### 7.2 The 10 compatibility theorems, individually
+### 8.2 The 10 compatibility theorems, individually
 
 Each can be verified on its own using a single `grep` against the same
 build output. The expected outputs were captured directly from this
@@ -846,7 +1059,7 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:662:0: 'CATEPTPluginVMLLandau.vm
 
 ---
 
-### 7.3 Why "axiom-free" is strictly stronger than "kernel axioms only"
+### 8.3 Why "axiom-free" is strictly stronger than "kernel axioms only"
 
 The two consistency theorems
 (`qm_satisfies_catept_spine`, `gr_minkowski_satisfies_catept_spine`)
@@ -873,7 +1086,7 @@ repositories), but the linking theorem itself does not.
 
 ---
 
-## 8. Dependencies and Acknowledgments
+## 9. Dependencies and Acknowledgments
 
 Every dependency below supplies one specific piece of the proof.
 Mathlib v4.29.0 provides the kernel-level foundation; the named
@@ -882,7 +1095,7 @@ hypotheses of the compatibility theorems of Section 6 and the
 analytic machinery of Section 5. Pinned revisions live in
 [`lakefile.lean`](lakefile.lean).
 
-### 8.1 Intellectual foundations
+### 9.1 Intellectual foundations
 
 This framework builds on the entropic-dynamics research programme of
 **Prof. Ariel Caticha** (University at Albany, SUNY) —
@@ -892,7 +1105,7 @@ damping interpretation of $S_I$ originate directly from his work;
 this repository gives those physical concepts a machine-checked,
 formal expression in Lean.
 
-### 8.2 Core ported libraries
+### 9.2 Core ported libraries
 
 * **Gravitas** ([`CATEPTMain/Gravitas/`](CATEPTMain/Gravitas/)) —
   Lean 4 port of the Gravitas symbolic general-relativity package
@@ -906,7 +1119,7 @@ formal expression in Lean.
   quantum-information primitives (Hadamard gate, CNOT, Deutsch's
   algorithm) used in the QM-side instance.
 
-### 8.3 Mathematical-physics dependencies (Michael R. Douglas)
+### 9.3 Mathematical-physics dependencies (Michael R. Douglas)
 
 The analytic-functional pillars of this repository are made practical
 by the formalization work of **Michael R. Douglas**
@@ -927,7 +1140,7 @@ by the formalization work of **Michael R. Douglas**
   interacting example on which the rigorous complex Feynman–Kac
   result of Section 5 is exercised.*
 
-### 8.4 Other external Lean 4 dependencies
+### 9.4 Other external Lean 4 dependencies
 
 Each of the following supplies the heavy mathematical content that
 fills the hypotheses of one of the 10 compatibility theorems
