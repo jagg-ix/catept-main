@@ -80,6 +80,8 @@ import CATEPTMain.Integration.BrownianMotionBridge
 -- will be re-wired once their proofs / placeholder types are filled in.
 import CATEPTMain.Integration.EuclideanFeynmanKacAdmissibility
 import CATEPTMain.Integration.LorentzianTrotterKatoBridge
+-- ADM / gravitational CAT-EPT entropy insertion (Reply 17).
+import CATEPTMain.Integration.ADMEntropyPathIntegralBridge
 -- Quarantined (draft layer — will be re-wired after fix-ups):
 -- * OperatorPathIntegralFoundation: `congr 1` leaves unsolved goal at L39.
 -- * LorentzianRateKernelBridge: `lorentzianKernel_from_rate_exp` is false
