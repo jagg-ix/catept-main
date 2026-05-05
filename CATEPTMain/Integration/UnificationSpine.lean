@@ -12,6 +12,7 @@ import CATEPTMain.Integration.RigorousComplexFeynmanKac
 import CATEPTMain.Integration.PhysicalUVConvergenceCertificate
 import CATEPTMain.Integration.TomitaMatsubaraEquivBridge
 import CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge
+import CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge
 
 /-!
 # UnificationSpine — capstone unifying QM, Thermodynamics, EM, and GR
@@ -411,3 +412,14 @@ Each line below is emitted as a Lean `info:` diagnostic during
 -- §6.3 Substantive quantum-info content (Shannon/Rényi via plugin)
 #print axioms CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.shannon_entropy_zero_via_plugin
 #print axioms CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.renyi_at_one_eq_shannon_via_plugin
+
+-- §6.4 Closed-form Matsubara algebra (β·Ω, log Z, S_I/ℏ identities)
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.tauEnt_eq_beta_Omega
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.S_I_eq_hbar_tauEnt
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.tauEnt_eq_neg_log_Z
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.S_I_eq_hbar_neg_log_Z
+
+-- §6.5 Four-way equivalence at modular-flow origin (Tomita ↔ Matsubara ↔ KMS ↔ channel)
+#print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero
+#print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.S_I_eq_hbar_logDelta_eq_hbar_channel
+#print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.matsubara_tauEnt_eq_one_over_gammaI

@@ -141,8 +141,9 @@ in §3.3, §4, §5, §6, §8.1, and §8.2):
   PASS  06_axiom_free_individual.sh
   PASS  07_unification_spine.sh
   PASS  08_substance_proofs.sh
+  PASS  09_matsubara_substance.sh
 --------------------------------------------------------------
-  total: 8   pass: 8   skip: 0   fail: 0
+  total: 9   pass: 9   skip: 0   fail: 0
 ```
 
 `run_all.sh` exits 0 when every script passes and 1 otherwise, so
@@ -627,7 +628,134 @@ entropy.  Together with `shannon_entropy_dirac_via_plugin` and
 `renyi_zero_eq_log_n_via_plugin` (also kernel-axiom-only), these
 exercise the entropy functional on its boundary inputs.
 
-### 6.4 Verifying the substance proofs
+### 6.4 Closed-form Matsubara algebra: τ_ent = β·Ω = -log Z
+
+The Matsubara/Luttinger–Ward carrier
+(`CATEPTMain.Integration.MatsubaraLuttingerWardCarrier`) is the
+strongest analytic backbone in the spine.  Four short theorems
+nail down the exact algebraic identities — the same closed-form
+expressions a textbook would write for the relationship between
+the imaginary action `S_I`, the entropic time `τ_ent`, the inverse
+temperature `β`, the Luttinger–Ward functional `Ω`, and the
+partition function `Z`:
+
+```lean
+theorem tauEnt_eq_beta_Omega    : M.τ_ent = M.β * M.Ω
+theorem S_I_eq_hbar_tauEnt      : M.S_I   = M.ℏ * M.τ_ent
+theorem tauEnt_eq_neg_log_Z     : M.τ_ent = - Real.log M.Z
+theorem S_I_eq_hbar_neg_log_Z   : M.S_I   = -(M.ℏ * Real.log M.Z)
+```
+
+These are **definitional equalities propagated through Mathlib's
+real-arithmetic / Real.log_exp identities** — not bundling, not
+hypotheses.  Together they pin down the spine's
+`τ_ent = S_I/ℏ` as the same scalar as the textbook Matsubara
+expression `−ℏ ln Z`.
+
+**Captured output** (verbatim from
+[`scripts/verify/logs/09_matsubara_substance.out`](scripts/verify/logs/09_matsubara_substance.out),
+first four entries):
+
+```
+info: CATEPTMain/Integration/UnificationSpine.lean:417:0: 'CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.tauEnt_eq_beta_Omega' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:418:0: 'CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.S_I_eq_hbar_tauEnt' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:419:0: 'CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.tauEnt_eq_neg_log_Z' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:420:0: 'CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.S_I_eq_hbar_neg_log_Z' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+```
+
+### 6.5 Four-way equivalence at modular-flow origin
+
+The strongest single statement in the Matsubara/Tomita layer is the
+four-way equivalence at the modular-flow spectral origin.  Inside
+`CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge`:
+
+```lean
+theorem four_way_equivalence_at_zero :
+    B.tomitaMatsubara.matsubara.τ_ent = B.tauEntKMS 0
+    ∧ B.tauEntKMS 0 = B.tauEntChannel 0
+    ∧ B.tauEntChannel 0
+        = B.tomitaMatsubara.obligation.tomita.modularSpectralLogScale 0
+```
+
+**Four scalars coincide at one point.**  The Matsubara `τ_ent` =
+the KMS strip width at 0 = the reduced-channel `τ_ent` at 0 = the
+Tomita modular Hamiltonian's spectral image at 0.  This is the
+unification of operator-side modular flow, KMS-strip thermal time,
+quantum-channel coarse graining, and the closed-form Matsubara
+formula at a single distinguished point.
+
+The composite `S_I` identity:
+
+```lean
+theorem S_I_eq_hbar_logDelta_eq_hbar_channel :
+    B.tomitaMatsubara.matsubara.S_I
+      = B.tomitaMatsubara.matsubara.ℏ
+          * B.tomitaMatsubara.obligation.tomita.modularSpectralLogScale 0
+    ∧ B.tomitaMatsubara.matsubara.S_I
+      = B.tomitaMatsubara.matsubara.ℏ * B.tauEntChannel 0
+```
+
+`S_I` equals **both** `ℏ · log Δ(0)` (Tomita modular Hamiltonian)
+**and** `ℏ · τ_ent_chan(0)` (reduced-channel) simultaneously.
+
+Plus the explicit KMS-strip closed form:
+
+```lean
+theorem matsubara_tauEnt_eq_one_over_gammaI :
+    B.tomitaMatsubara.matsubara.τ_ent = 1 / B.gammaI 0
+```
+
+The Matsubara entropic time at the bridge's evaluation point is
+literally the reciprocal of the imaginary-rate `γ_I` at zero.
+
+**Captured output** (verbatim from
+[`scripts/verify/logs/09_matsubara_substance.out`](scripts/verify/logs/09_matsubara_substance.out),
+last three entries):
+
+```
+info: CATEPTMain/Integration/UnificationSpine.lean:423:0: 'CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:424:0: 'CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.S_I_eq_hbar_logDelta_eq_hbar_channel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:425:0: 'CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.matsubara_tauEnt_eq_one_over_gammaI' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+```
+
+> **Proof of execution.**  All seven theorems in §6.4 + §6.5 are
+> audited together by `bash scripts/verify/09_matsubara_substance.sh`,
+> which reported `PASS` on this commit.
+
+### 6.6 Why §6.4–§6.5 are the heart of the unification
+
+§5's capstone says "all pillars share one `τ_ent`."  §6.4 says
+"that `τ_ent` is **literally** `β·Ω = -log Z`."  §6.5 says "and at
+modular-flow origin **four** different operator-side and channel-
+side realisations also collapse to that same scalar."  Together
+the seven theorems give the unification claim its analytic teeth:
+the spine identity is not a label glued to four loosely-related
+quantities but the closed-form Matsubara formula
+`τ_ent = -log Z`, identified pointwise with the Tomita modular
+Hamiltonian and the KMS strip width.
+
+This is the claim a careful reader would test first before
+trusting §3-§5 — and it is what scripts
+[`08_substance_proofs.sh`](scripts/verify/08_substance_proofs.sh)
+and
+[`09_matsubara_substance.sh`](scripts/verify/09_matsubara_substance.sh)
+audit.
+
+### 6.7 Verifying the substance proofs
 
 The same `lake build … | grep` pattern as the other sections audits
 all seven substance theorems with a single recipe:
@@ -668,7 +796,7 @@ info: CATEPTMain/Integration/UnificationSpine.lean:413:0: 'CATEPTMain.Integratio
 > commit by `bash scripts/verify/08_substance_proofs.sh`, which
 > reported `PASS`.
 
-### 6.5 What's NOT in this section (honest scope)
+### 6.8 What's NOT in this section (honest scope)
 
 The substance theorems above land kernel-axiom-only certificates
 on the analytic, operator-side, and quantum-information layers.

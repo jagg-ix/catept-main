@@ -17,6 +17,7 @@ scripts=(
   "06_axiom_free_individual.sh"
   "07_unification_spine.sh"
   "08_substance_proofs.sh"
+  "09_matsubara_substance.sh"
 )
 
 declare -a results=()
