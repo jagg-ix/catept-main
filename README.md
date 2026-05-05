@@ -35,112 +35,113 @@ this repository contributes to one of these interconnected layers:
 
 ```text
                 ┌──────────────────────────────────────────────┐
-                │ 1. The Spine Constraint (Central Claim)      │
+                │ 1. The Central Identity (the main claim)     │
                 │      ∀ x, actionIm(x) / ℏ  =  eptClock(x)    │
                 └──────────────────────────────────────────────┘
                                     │
                 ┌───────────────────┼────────────────────┐
                 │                   │                    │
         ┌───────▼────────┐  ┌───────▼────────┐  ┌────────▼────────┐
-        │ 2. Target      │  │ 2. Target      │  │ 3. Analytic     │
-        │    Instance:   │  │    Instance:   │  │    Machinery    │
-        │    Quantum     │  │    General     │  │    (FK, UV, …)  │
-        │    Mechanics   │  │    Relativity  │  │                 │
+        │ 2. Concrete    │  │ 2. Concrete    │  │ 3. Analytic     │
+        │    instance:   │  │    instance:   │  │    machinery    │
+        │    Quantum     │  │    General     │  │    (Feynman–Kac,│
+        │    Mechanics   │  │    Relativity  │  │     UV bound, …)│
         └────────────────┘  └────────────────┘  └────────┬────────┘
                                                          │
                                             ┌────────────▼─────────────┐
-                                            │ 4. Boundary Contracts    │
+                                            │ 4. Compatibility theorems│
                                             │    (10 axiom-free links  │
                                             │     to external math)    │
                                             └────────────┬─────────────┘
                                                          │
                                             ┌────────────▼─────────────┐
                                             │ Foundation: Mathlib v4.29│
-                                            │ & Public Lean 4 Packages │
+                                            │ & public Lean 4 packages │
                                             └──────────────────────────┘
 ```
 
-* **Layer 1 — The Spine Constraint.** The unifying mathematical claim,
-  formulated as a proposition binding the imaginary part of the
-  complex action, Planck's constant, and the entropic clock.
-* **Layer 2 — Concrete Instances.** To prove the spine is not
-  logically vacuous, the constraint is independently discharged in
-  both a QM setting and a GR setting.
-* **Layer 3 — Analytic Machinery.** Gives the framework physical
-  substance: a rigorous complex Feynman–Kac integration for the
-  damped class, plus a counterterm-free UV convergence certificate.
-* **Layer 4 — Axiom-Free Contracts.** Ten specific interfaces linking
-  the central spine to external mathematical domains (quantum
-  information, Carleson Fourier analysis, thermodynamics, …). Their
-  axiom-free nature guarantees that connecting these external
-  theories introduces no hidden logical commitments.
+* **Layer 1 — The central identity.** The unifying claim, stated as a
+  single equation relating the imaginary part of the complex action,
+  Planck's constant, and the entropic clock.
+* **Layer 2 — Concrete instances.** To show the central identity is
+  not trivially empty, it is proved separately in a QM setting and a
+  GR setting — two genuinely different physical theories, both
+  satisfying the same equation.
+* **Layer 3 — Analytic machinery.** Gives the framework physical
+  substance: a rigorous complex Feynman–Kac formula for the damped
+  class, plus a counterterm-free ultraviolet (UV) convergence
+  result.
+* **Layer 4 — Axiom-free compatibility theorems.** Ten short
+  theorems that connect the central identity to external
+  mathematical areas (quantum information, Carleson Fourier
+  analysis, thermodynamics, …). Their axiom-free status guarantees
+  that linking these external theories introduces no hidden logical
+  assumptions.
 
-The entire architecture is held together by a strict computational
-audit gate: every theorem named in this README depends *only* on the
-standard Lean kernel axioms (or on no axioms at all), enforced
-automatically on every commit by
-[`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml).
+The whole architecture is held together by an automated verification
+check: every theorem named in this README depends *only* on the
+standard Lean kernel axioms (or on no axioms at all), and the CI
+workflow at [`.github/workflows/axiom-gate.yml`](.github/workflows/axiom-gate.yml)
+re-runs the check on every commit.
 
 ---
 
 ## 2. Quick Start
 
-To locally build the framework and verify the core spine consistency
+To build the framework locally and verify the two main consistency
 theorems:
 
 ```bash
 git clone https://github.com/jagg-ix/catept-main.git
 cd catept-main
 git checkout feat/publication
-lake exe cache get                    # warm Mathlib olean cache (first run only)
+lake exe cache get                    # download Mathlib oleans (first run only)
 lake build CATEPT.Showcase.QMGRUnification
 ```
 
-If the final command completes without errors, the central
-unification claim has been verified at the type level on this commit.
-The next two sections show how to verify it at the axiom level as
-well.
+If the final command finishes without errors, the unification claim
+has been verified at the type level on this commit. The next two
+sections show how to verify it at the axiom level as well.
 
 ---
 
-## 3. The Unification Mechanism: QM ↔ GR
+## 3. The Unification: QM ↔ GR
 
-The framework implements a single "plugin slot" that carries the
+The framework defines a single common interface that carries the
 variables `actionIm`, `ℏ`, and `eptClock`. The unification is achieved
-by proving the **spine constraint**
+by proving the **central identity**
 
 $$
-\forall\, x,\; \mathrm{actionIm}(x) / \hbar \;=\; \mathrm{eptClock}(x)
+\forall\, x,\; \mathrm{actionIm}(x) / \hbar \;=\; \mathrm{eptClock}(x).
 $$
 
-For $\tau_{ent}$ to function as a genuinely unified parameter, this
-constraint must be satisfied across different physical regimes. We
-prove it against two concrete target theories:
+For $\tau_{ent}$ to function as a genuinely unified time parameter,
+this identity must hold across genuinely different physical regimes.
+We prove it in two concrete instances:
 
-| Theory Domain | Lean Instance | Consistency Theorem |
+| Theory | Lean instance | Consistency theorem |
 | :--- | :--- | :--- |
 | **Quantum Mechanics** (n-level density matrices) | `quantumCATEPTSlot n` | `qm_satisfies_catept_spine` |
 | **General Relativity** (Minkowski background) | `gravitasMinkowskiSlot` | `gr_minkowski_satisfies_catept_spine` |
 
-These two theorems are the framework's only "headline claims".
-Everything else in this repository either (a) supplies the analytic
-machinery that gives them substance (Section 5), (b) binds an external
-mathematical area into the slot in a kernel-clean way (Section 6), or
-(c) provides the package substrate (Section 7). All three feed back
-into the two theorems above.
+These two theorems are the framework's only main claims. Everything
+else in this repository either (a) supplies the analytic machinery
+that gives them physical substance (Section 5), (b) connects the two
+instances to an external mathematical area in a way that adds no
+hidden axioms (Section 6), or (c) provides the underlying packages
+(Section 7). All three feed back into the two theorems above.
 
 Both proofs depend strictly on the standard Lean kernel axioms
-(`propext`, `Classical.choice`, `Quot.sound`). The next section is how
-to verify that statement.
+(`propext`, `Classical.choice`, `Quot.sound`). The next section is
+how to verify that statement on your own machine.
 
 ---
 
-## 4. The Falsifiable Contract (Command-Line Audit)
+## 4. The Testable Guarantee (command-line verification)
 
-CATEPT operates under a strict falsifiable contract: the consistency
-theorems must *never* rely on unverified or custom axioms. You can
-verify this machine-checked guarantee yourself by running the
-following audit script:
+CATEPT operates under a strict, testable guarantee: the consistency
+theorems must *never* rely on extra or custom axioms. You can verify
+this yourself by running the following script:
 
 ```bash
 cat > /tmp/catept_audit.lean <<'EOF'
@@ -158,77 +159,80 @@ lake env lean /tmp/catept_audit.lean
 '…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-The presence of any additional axiom in either list is a logical
-regression. Section 6 below tightens this discipline further: the 10
-boundary contracts must clear an even stricter bar (zero axioms).
+The presence of any additional axiom in either list means something
+has broken. Section 6 below tightens this further: the 10
+compatibility theorems must clear an even stricter bar — they must
+depend on *no axioms at all*.
 
 ---
 
-## 5. Analytic Machinery (Giving the Spine Substance)
+## 5. Analytic Machinery (giving the central identity physical substance)
 
 Without rigorous analytic backing, the QM/GR consistency theorems
-would just be an empty formal shell. The following artifacts discharge
-critical proof obligations to ensure the physics being modelled is
-mathematically sound:
+would be a formal shell. The following theorems supply the missing
+physical substance:
 
-* **Rigorous complex Feynman–Kac (entropically damped class)**
+* **Rigorous complex Feynman–Kac formula (entropically damped class)**
 
   *Theorem*: `CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous`
 
-  *Significance*: provides the QM-side instance with an honest
-  path-integral interpretation. Because the complex action $S$ has
-  $S_I \ge 0$ on the damped class, the expression
+  *Why it matters*: gives the QM-side instance an honest path-integral
+  interpretation. Because the complex action $S$ has $S_I \ge 0$ on
+  the damped class, the expression
   $\exp(-S_I/\hbar)\cdot\exp(i\,S_R/\hbar)$ becomes an analytic
-  contraction, allowing $\tau_{ent} = S_I/\hbar$ to be treated as a
-  real time parameter rather than just a formal symbol.
+  contraction. This is what allows $\tau_{ent} = S_I/\hbar$ to be
+  treated as a real time parameter rather than just a formal
+  symbol.
 
-* **Counterterm-free UV convergence certificate**
+* **Counterterm-free UV convergence theorem**
 
   *Theorem*: `CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed`
 
-  *Significance*: pre-empts the standard objection that path
-  integrals require renormalization at high energies. The certificate
-  mathematically exhibits a UV regime where the damped class
-  converges without counterterms — so the spine claim survives the
-  UV limit.
+  *Why it matters*: addresses the standard objection that path
+  integrals require renormalization at high energies. The theorem
+  exhibits a UV regime in which the damped class converges *without*
+  counterterms, so the central identity continues to make sense in
+  the UV limit.
 
-The audit recipe in Section 4 confirms both supporting theorems clear
-the kernel-only bar. Together with the two spine consistency theorems,
-they constitute the **minimal machine-checked proof of CATEPT** at
-this commit.
+The verification recipe in Section 4 confirms that both supporting
+theorems clear the kernel-axiom bar. Together with the two consistency
+theorems, they constitute the **minimum machine-checked proof of
+CATEPT** at this commit.
 
 ---
 
-## 6. Axiom-Free Boundary Contracts
+## 6. Axiom-Free Compatibility Theorems
 
-While the spine consistency theorems clear the kernel-only bar, the
-framework's modularity relies on **10 boundary contracts** that sit at
-an even stricter layer: *zero axioms*.
+While the two consistency theorems clear the kernel-axiom bar, the
+framework's modularity rests on **10 short compatibility theorems**
+that clear a stricter bar: they depend on *zero axioms*.
 
-These contracts bind external mathematical areas (quantum information,
-Carleson Fourier analysis, Hopf algebras, Gibbs measures, Kolmogorov
-complexity, computability, thermodynamics, VML–Landau collisions) to
-the central spine. Because each contract's proof reduces to
-definitional equality over Prop fields (`⟨h₁, h₂, …⟩` — anonymous
-constructor, term-mode), the kernel sees pure definitional rewriting
+These theorems link the central identity to external mathematical
+areas (quantum information, Carleson Fourier analysis, Hopf algebras,
+Gibbs measures, Kolmogorov complexity, computability, thermodynamics,
+Vlasov–Maxwell–Landau collisions). Each one has a proof that reduces
+to a simple bundling of its hypotheses (`⟨h₁, h₂, …⟩` — supply the
+pieces, and the result follows by definition). Lean recognizes this
 and reports
 
 ```
 '…' does not depend on any axioms
 ```
 
-This is the machine-checked statement that **the binding interface
-itself adds no logical commitments**. The heavy mathematical content
-(Carleson's a.e. convergence theorem, Lieb–Yngvason existence, the
-Bochner–Minlos extension, …) lives in the user-supplied premises that
-fill the contract; the contract framing reduces to nothing.
+This is the machine-checked statement that **the linking step itself
+adds no logical assumptions**. The hard mathematical content
+(Carleson's almost-everywhere convergence theorem, Lieb–Yngvason
+existence, the Bochner–Minlos extension theorem, …) lives in the
+hypotheses that the user supplies; the linking theorem itself reduces
+to nothing.
 
-This two-tier discipline (kernel-only at the spine, axiom-free at the
-boundary) is the formal expression of CATEPT's modularity: the spine
-commits to nothing about the heavy mathematics of any lane; each
-lane's sibling commits to its own heavy mathematics and nothing else.
+This two-layer discipline — kernel axioms only at the central
+identity, *no* axioms at the link — is the formal expression of
+CATEPT's modularity: the central identity makes no commitments about
+the heavy mathematics in any specific area, and each external theory
+makes commitments only about its own area.
 
-### 6.1 Verify all 10 contracts at once
+### 6.1 Verify all 10 compatibility theorems at once
 
 ```bash
 lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 | grep -E "\
@@ -260,36 +264,37 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:662:0: 'CATEPTPluginVMLLandau.vm
 ```
 
 Seeing all 10 lines exactly as above is the machine-checked statement
-that **all ten boundary contracts of the CATEPT spine are kernel-clean
-simultaneously on this commit**. Combined with the kernel-only audit
-on the two spine consistency theorems (Section 4), this is the
-complete falsifiable promise of the framework.
+that **all ten compatibility theorems hold simultaneously and depend
+on no axioms** on this commit. Combined with the kernel-axiom check on
+the two consistency theorems (Section 4), this is the complete
+testable promise of the framework.
 
 > **Reading the output**: Lean prints `'<theorem>' does not depend on
-> any axioms` exactly when the theorem's proof term reduces to
-> definitional equality without invoking `propext`,
-> `Classical.choice`, or `Quot.sound`. If a contract ever drifts away
-> from axiom-free, Lean will instead print `'<theorem>' depends on
-> axioms: [...]` — so the recipe above doubles as a regression check.
+> any axioms` exactly when the theorem's proof reduces to simple
+> definitional unfolding without invoking `propext`,
+> `Classical.choice`, or `Quot.sound`. If a compatibility theorem ever
+> drifts away from axiom-free, Lean will instead print `'<theorem>'
+> depends on axioms: [...]` — so the recipe above doubles as a
+> regression check.
 
-### 6.2 The 10 contract domains, individually
+### 6.2 The 10 compatibility theorems, individually
 
-Each of the 10 contracts can be verified independently using a one-
-line `grep` against the same `lake build` output. All expected outputs
-were captured verbatim against this commit; CI re-runs them on every
-push.
+Each can be verified on its own using a single `grep` against the same
+build output. The expected outputs were captured directly from this
+commit; CI re-runs them on every push.
 
 ---
 
 #### 1. `CATEPTPluginQuantumInfo.quantumInfo_integration_contract`
 
-**Asserts**: structural-package contract for the quantum-information
-lane (CPTP / Braket / von Neumann / Rényi / Shannon / channel-capacity).
+**What it states**: a packaged statement for the quantum-information
+area (CPTP maps, bra-ket notation, von Neumann entropy, Rényi
+entropies, Shannon entropy, channel capacity).
 
-**Role in the proof**: the QM-side spine instance is stated on
-n-level density matrices; this contract is what makes the von
-Neumann entropy and the CPTP-channel structure usable inside the
-slot without smuggling new axioms.
+**Role in the proof**: the QM-side instance is stated on n-level
+density matrices; this theorem is what makes von Neumann entropy and
+the CPTP-channel structure usable inside the central identity without
+introducing extra axioms.
 
 **Run**:
 ```bash
@@ -306,13 +311,14 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:616:0: 'CATEPTPluginQuantumInfo.
 
 #### 2. `CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract`
 
-**Asserts**: Bochner–Minlos / Sazonov / Schur / abstract-Minlos
-positive-definite-functional contract on nuclear spaces.
+**What it states**: a packaged statement for the Bochner–Minlos /
+Sazonov / Schur theorems on positive-definite functionals over
+nuclear spaces.
 
 **Role in the proof**: provides the measure-theoretic foundation
-necessary to treat the path integral as a rigorous measure on a
-function space. The complex Feynman–Kac result (Section 5) sits on
-top of this contract.
+needed to treat the path integral as a genuine probability measure on
+a function space. The complex Feynman–Kac result of Section 5 sits on
+top of this.
 
 **Run**:
 ```bash
@@ -329,11 +335,12 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:624:0: 'CATEPTPluginBochnerMinlo
 
 #### 3. `CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract`
 
-**Asserts**: Kolmogorov extension / Gibbs–DLR equation / Giry-monad
-measure-witness contract.
+**What it states**: a packaged statement for the Kolmogorov extension
+theorem, the Gibbs–DLR equation, and the construction of measures
+through the Giry monad.
 
 **Role in the proof**: gives the entropic side of $\tau_{ent} =
-S_I/\hbar$ its statistical-mechanical interpretation (KMS / DLR
+S_I/\hbar$ its statistical-mechanical meaning (the KMS / DLR
 formalism behind the imaginary-time damping flow).
 
 **Run**:
@@ -351,12 +358,13 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:627:0: 'CATEPTPluginGibbsMeasure
 
 #### 4. `CATEPTPluginHopfLean.hopfLean_integration_contract`
 
-**Asserts**: coalgebra / bialgebra / Hopf-algebra / Yang–Baxter /
-BMod-monoidal contract package.
+**What it states**: a packaged statement covering coalgebras,
+bialgebras, Hopf algebras, the Yang–Baxter equation, and bimodule
+monoidal structure.
 
-**Role in the proof**: registers the quantum-group symmetries that
-the spine inherits when the QM instance is enriched with
-renormalization-group flow, without adding axioms to the binding.
+**Role in the proof**: connects the central identity to the
+quantum-group symmetries that appear when the QM instance is enriched
+with renormalization-group flow. The connection adds no new axioms.
 
 **Run**:
 ```bash
@@ -373,14 +381,16 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:630:0: 'CATEPTPluginHopfLean.hop
 
 #### 5. `CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract`
 
-**Asserts**: algorithmic-information-theory contract — invariance
-theorem / Chaitin Ω existence / incompressibility / Gödel-2-via-K.
+**What it states**: a packaged statement for algorithmic information
+theory — the invariance theorem, existence of Chaitin's $\Omega$,
+incompressibility, Gödel's second incompleteness theorem reformulated
+through Kolmogorov complexity.
 
-**Role in the proof**: the entropic side of CATEPT is interpreted as
-an *informational* entropy in the algorithmic-information sense; this
-contract is the bridge to that semantics. Without it, "informational"
-in $S_I$ is a name; with it, the lane has a kernel-clean reduction
-to invariance / Chaitin Ω.
+**Role in the proof**: the entropic side of CATEPT can be read as an
+*informational* entropy in the sense of algorithmic information
+theory; this theorem is the bridge to that interpretation. Without
+it, "informational" in $S_I$ is just a name; with it, it has a
+precise meaning.
 
 **Run**:
 ```bash
@@ -397,13 +407,13 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:633:0: 'CATEPTPluginKolmogorovCo
 
 #### 6. `CATEPTPluginCarleson.carleson_integration_contract`
 
-**Asserts**: abstract Carleson / almost-everywhere Fourier-convergence
-contract.
+**What it states**: a packaged statement for abstract Carleson-type
+results on almost-everywhere convergence of Fourier series.
 
-**Role in the proof**: the spine identity is stated *pointwise*
-(`∀ x, …`), but most analytic instantiations require the constraint
-to hold "almost everywhere" with respect to a path-space measure.
-Carleson-style a.e. convergence is the bridge between the two.
+**Role in the proof**: the central identity is stated *pointwise*
+(`∀ x, …`), but most analytic instantiations only require it to hold
+*almost everywhere* with respect to a path-space measure. Carleson-
+type a.e. convergence is the bridge between the two formulations.
 
 **Run**:
 ```bash
@@ -420,13 +430,15 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:636:0: 'CATEPTPluginCarleson.car
 
 #### 7. `CATEPTPluginCarleson.concrete_witness_contract`
 
-**Asserts**: concrete Carleson witness — Dirichlet kernel / Jackson
-density / antichain decomposition.
+**What it states**: an explicit example for the Carleson statement
+above — Dirichlet kernel, Jackson's density theorem, antichain
+decomposition.
 
-**Role in the proof**: complements contract #6 with an *explicit*
-witness so the abstract Carleson statement is not vacuous. Together
-with #6, this lane delivers both the abstract and the concrete
-machinery needed for the a.e. interpretation of the spine.
+**Role in the proof**: complements the abstract Carleson theorem
+(#6) with a concrete example, so the abstract statement is not
+empty. Together with #6 this area supplies both the abstract and
+the concrete machinery for the almost-everywhere reading of the
+central identity.
 
 **Run**:
 ```bash
@@ -443,13 +455,14 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:637:0: 'CATEPTPluginCarleson.con
 
 #### 8. `CATEPTPluginCslib.cslib_integration_contract`
 
-**Asserts**: computability / automata / Ramsey-theory integration
-contract from the `cslib` plugin.
+**What it states**: a packaged statement covering computability
+theory, finite automata, and Ramsey-theoretic results from the
+`cslib` package.
 
-**Role in the proof**: pairs with the Kolmogorov-complexity lane (#5)
-to give the entropic side a *constructive* semantics. Where #5
-measures information, #8 supplies the computational substrate
-(automata / decidability) on which that measurement is well-defined.
+**Role in the proof**: pairs with the Kolmogorov-complexity area
+(#5) to give the entropic side a *constructive* semantics. Where
+#5 measures information, #8 supplies the computational substrate
+(automata, decidability) on which that measurement is well-defined.
 
 **Run**:
 ```bash
@@ -466,14 +479,15 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:640:0: 'CATEPTPluginCslib.cslib_
 
 #### 9. `CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract`
 
-**Asserts**: Lieb–Yngvason axioms / entropy existence-uniqueness-
-continuity / Kelvin–Planck second-law contract.
+**What it states**: a packaged statement for the Lieb–Yngvason
+axiomatisation of thermodynamics — entropy existence, uniqueness,
+and continuity, together with the Kelvin–Planck second law.
 
 **Role in the proof**: ties the $S_I$ of CATEPT to *thermodynamic*
 entropy in the Lieb–Yngvason sense, so $\tau_{ent} = S_I/\hbar$ is
-consistent with the Kelvin–Planck second law. Without this contract
-the entropic interpretation would be formal; with it, the second law
-becomes a kernel-clean consequence.
+consistent with the second law of thermodynamics. Without this
+theorem the entropic interpretation would be purely formal; with
+it, the second law follows directly without any extra axioms.
 
 **Run**:
 ```bash
@@ -490,13 +504,14 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:653:0: 'CATEPTPluginThermodynami
 
 #### 10. `CATEPTPluginVMLLandau.vml_landau_content_available`
 
-**Asserts**: VML–Landau collision-content marker (Aristotle /
-Clawristotle Theorem 4.2 surface).
+**What it states**: a marker theorem confirming that the
+Vlasov–Maxwell–Landau collision content (the kinetic-theory surface
+of Aristotle / Clawristotle Theorem 4.2) is available.
 
-**Role in the proof**: the GR-side instance of the spine eventually
-needs a kinetic / transport interpretation (Vlasov–Maxwell–Landau);
-this contract registers that the relevant collision-operator content
-is available to the spine without new axioms.
+**Role in the proof**: the GR-side instance eventually requires a
+kinetic / transport interpretation; this theorem confirms the
+relevant collision-operator content is available without
+introducing new axioms.
 
 **Run**:
 ```bash
@@ -511,108 +526,112 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:662:0: 'CATEPTPluginVMLLandau.vm
 
 ---
 
-### 6.3 Why "axiom-free" is meaningfully different from "kernel-only"
+### 6.3 Why "axiom-free" is strictly stronger than "kernel axioms only"
 
-The two spine consistency theorems
+The two consistency theorems
 (`qm_satisfies_catept_spine`, `gr_minkowski_satisfies_catept_spine`)
-clear the **kernel-only** bar — they depend on `propext`,
-`Classical.choice`, `Quot.sound`, the three Lean 4 kernel axioms that
-ship with Lean and Mathlib. The repo's broader audit gate guarantees
-this for 133 spine-surface theorems.
+depend on the three standard Lean kernel axioms — `propext`,
+`Classical.choice`, `Quot.sound` — that ship with Lean and Mathlib.
+The repository's broader verification check guarantees this for 133
+theorems in the central surface.
 
-The 10 contracts above clear a **strictly higher** bar: zero axioms.
-Their proof terms reduce to identity-like constructions over Prop
-fields, so even the standard kernel axioms aren't reached when
-computing the proof's axiom dependencies. This is the same level of
+The 10 compatibility theorems above clear a strictly higher bar:
+**zero axioms**. Their proofs reduce to identity-like constructions
+over logical statements, so even the standard kernel axioms are not
+reached when computing axiom dependencies. This is the same level of
 certification as `theorem one_plus_one : 1 + 1 = 2 := rfl` in pure
 Lean.
 
-In practical proof-engineering terms: every contract above has its
-full structural-package theorem reducible to `⟨h₁, h₂, …⟩` over
-user-supplied premises, with no classical reasoning, no quotient
-soundness, no propositional extensionality required. The premises
-themselves may eventually require those axioms (when actual analytic
-theorems — Carleson's theorem, Lieb–Yngvason existence, the
-Bochner–Minlos extension — are substituted in by the corresponding
-sibling repos), but the **contract framing** does not.
+In practical proof-engineering terms: every compatibility theorem
+above can be written as `⟨h₁, h₂, …⟩` over user-supplied hypotheses,
+with no classical reasoning, no quotient soundness, and no
+propositional extensionality required. The hypotheses themselves may
+eventually require those axioms (when actual analytic theorems —
+Carleson's theorem, Lieb–Yngvason existence, the Bochner–Minlos
+extension — are substituted in by the corresponding companion
+repositories), but the linking theorem itself does not.
 
 ---
 
 ## 7. Dependencies and Acknowledgments
 
-Every dependency below supplies one specific lane of the proof.
-Mathlib v4.29.0 provides the kernel substrate; the named packages
-provide the heavy mathematical content that fills the boundary
-contracts of Section 6 and the analytic machinery of Section 5.
-Pinned revisions live in [`lakefile.lean`](lakefile.lean).
+Every dependency below supplies one specific piece of the proof.
+Mathlib v4.29.0 provides the kernel-level foundation; the named
+packages provide the heavy mathematical content that fills the
+hypotheses of the compatibility theorems of Section 6 and the
+analytic machinery of Section 5. Pinned revisions live in
+[`lakefile.lean`](lakefile.lean).
 
 ### 7.1 Intellectual foundations
 
-This framework heavily builds upon the entropic-dynamics research
-program pioneered by **Prof. Ariel Caticha** (University at Albany,
-SUNY) —
+This framework builds on the entropic-dynamics research programme of
+**Prof. Ariel Caticha** (University at Albany, SUNY) —
 [arielcaticha.com](https://www.arielcaticha.com/entropic-dynamics-qft-and-gravity).
-The construction of $\tau_{ent} = S_I/\hbar$ and the imaginary-time
-damping interpretation of $S_I$ originate directly from his work; this
-repository serves to give those physical concepts a machine-checked,
+The construction $\tau_{ent} = S_I/\hbar$ and the imaginary-time
+damping interpretation of $S_I$ originate directly from his work;
+this repository gives those physical concepts a machine-checked,
 formal expression in Lean.
 
 ### 7.2 Core ported libraries
 
-* **Gravitas** ([`CATEPTMain/Gravitas/`](CATEPTMain/Gravitas/)) — Lean
-  4 port of the Gravitas symbolic GR package (original: Wolfram
-  Language). Supplies the GR-side spine instance with concrete
-  tensor-curvature carriers (Christoffel, Riemann, Ricci, Einstein
-  tensors), so `gr_minkowski_satisfies_catept_spine` can be evaluated
-  on real geometric content.
+* **Gravitas** ([`CATEPTMain/Gravitas/`](CATEPTMain/Gravitas/)) —
+  Lean 4 port of the Gravitas symbolic general-relativity package
+  (original: Wolfram Language). Supplies the GR-side instance with
+  concrete tensor-curvature objects (Christoffel symbols, Riemann
+  tensor, Ricci tensor, Einstein tensor), so
+  `gr_minkowski_satisfies_catept_spine` can be evaluated on real
+  geometric content rather than abstractly.
 * **IsabelleMarresDirac** ([`CATEPTMain/QuantumOps/IsabelleMarresDirac/`](CATEPTMain/QuantumOps/IsabelleMarresDirac/))
   — Lean 4 port from Isabelle/HOL. Supplies the gate-level
-  quantum-information primitives (Hadamard, CNOT, Deutsch's problem)
-  referenced by the QM-side spine instance.
+  quantum-information primitives (Hadamard gate, CNOT, Deutsch's
+  algorithm) used in the QM-side instance.
 
 ### 7.3 Mathematical-physics dependencies (Michael R. Douglas)
 
-The analytic functional pillars of this repository are made practical
-by the exceptional formalization work of **Michael R. Douglas**
+The analytic-functional pillars of this repository are made practical
+by the formalization work of **Michael R. Douglas**
 ([@mrdouglasny](https://github.com/mrdouglasny)):
 
 * [`bochner`](https://github.com/mrdouglasny/bochner) — the
   Bochner–Minlos theorem (characteristic functionals on nuclear
-  spaces; the measure-theoretic foundation of Euclidean QFT). *Fills
-  the heavy side of contract #2.*
-* [`hille-yosida`](https://github.com/mrdouglasny/hille-yosida) — the
-  Hille–Yosida generation theorem for $C_0$-semigroups (analytic
-  backbone of modular flow and heat-kernel arguments). *Underpins the
-  imaginary-time damping flow that gives $S_I/\hbar$ its semigroup
-  interpretation.*
+  spaces; the measure-theoretic foundation of Euclidean QFT).
+  *Supplies the hard mathematical content for compatibility
+  theorem #2.*
+* [`hille-yosida`](https://github.com/mrdouglasny/hille-yosida) —
+  the Hille–Yosida theorem on generation of $C_0$-semigroups (the
+  analytic backbone of modular flow and heat-kernel arguments).
+  *Underpins the imaginary-time damping flow that gives $S_I/\hbar$
+  its semigroup interpretation.*
 * [`pphi2`](https://github.com/mrdouglasny/pphi2) — $\varphi^4$
   scalar-field-theory infrastructure. *Supplies the canonical
   interacting example on which the rigorous complex Feynman–Kac
-  result (Section 5) is exercised.*
+  result of Section 5 is exercised.*
 
 ### 7.4 Other external Lean 4 dependencies
 
 Each of the following supplies the heavy mathematical content that
-fills one of the 10 boundary contracts (Section 6) or supports the
-analytic machinery behind them:
+fills the hypotheses of one of the 10 compatibility theorems
+(Section 6) or supports the analytic machinery behind them:
 
-* **Mathlib4**, **Physlib** — kernel and physics-lemma substrate used
-  everywhere.
+* **Mathlib4**, **Physlib** — the kernel-level mathematical and
+  physical lemma library used everywhere.
 * **pphi2N**, **GaussianField**, **LGT** — gauge / field-theory
-  carriers fed into the QM-side instance and the FK contract.
-* **cslib** — fills contract #8 (computability / automata).
+  building blocks fed into the QM-side instance and the
+  Feynman–Kac result.
+* **cslib** — supplies the hard content for compatibility theorem
+  #8 (computability and automata).
 * **DeGiorgi**, **spectralPhysics** — supply the regularity and
-  spectral-gap content used by the analytic-machinery theorems.
+  spectral-gap results used by the analytic machinery.
 * **DimensionalAnalysis**, **UnifiedTheory**, **aristotle**,
   **aqeiBridge**, **lean-inf** — supply the dimensional and
   causal-poset infrastructure used by the GR-side instance and
-  contract #10 (VML–Landau).
-* **QuantumAlgebra** — fills the Hopf-algebra / quantum-group side of
-  contract #4.
+  by compatibility theorem #10 (VML–Landau).
+* **QuantumAlgebra** — supplies the Hopf-algebra / quantum-group
+  side of compatibility theorem #4.
 
-The audit gate enforces that no dependency is allowed to introduce
-axioms beyond the kernel triple into the spine surface or the 10
-contracts.
+The verification check enforces that no dependency is allowed to
+introduce axioms beyond the standard Lean kernel triple into the two
+consistency theorems or the 10 compatibility theorems.
 
 ---
 
