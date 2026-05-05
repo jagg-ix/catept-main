@@ -13,13 +13,12 @@ $$
 
 where $S = S_R + i \cdot S_I$ is a complex action.
 
-The central claim of CATEPT is that $\tau_{ent}$ is not merely a
-mathematical analogy, but a single, consistent time parameter capable
-of expressing and unifying both QM and GR. Most importantly, this is a
-formal identity that is rigorously verified by the Lean kernel. By
-machine-checking this connection, CATEPT provides strict verification
-guarantees, ensures mathematical modularity, and anchors theoretical
-physics in highly reliable formal logic.
+The proposition we examine is that $\tau_{ent}$ functions as a single,
+consistent time parameter under which both QM and GR can be expressed.
+The Lean kernel verifies the identity as a formal statement on the
+abstract slot interface; the rest of this document records what the
+formal statement is, what its premises are, and which of its
+consequences have been derived inside Lean.
 
 > **Note**: For the curated publication artifact, see the
 > [`feat/publication`](https://github.com/jagg-ix/catept-main/tree/feat/publication)
@@ -218,12 +217,12 @@ We prove it in **four** concrete instances, packaged in
 | 3 | **General Relativity** (full electrovacuum, Einstein–Maxwell) | `gravitasElectrovacuumPlugin` | `gr_electrovacuum_satisfies_catept_spine` |
 | 4 | **Bundle theorem** (QM and GR together) | both of the above | `qm_gr_unified_via_entropic_proper_time` |
 
-These four theorems are the framework's main claims. Everything else
-in this repository either (a) supplies the analytic machinery that
-gives them physical substance (Section 5), (b) connects the
-instances to an external mathematical area in a way that adds no
-hidden axioms (Section 6), or (c) provides the underlying packages
-(Section 7). All three feed back into the four theorems above.
+These four theorems are the framework's principal statements. The
+remainder of the repository either (a) supplies analytic content
+that the principal statements rely on (Section 5), (b) connects the
+two instances to external mathematical areas without introducing
+additional axioms (Section 6), or (c) provides the underlying
+packages (Section 7).
 
 All four proofs depend strictly on the standard Lean kernel axioms
 (`propext`, `Classical.choice`, `Quot.sound`). The next two
@@ -383,19 +382,18 @@ depend on *no axioms at all*.
 
 ---
 
-## 5. The Capstone: QM + Thermo + EM + GR share a single τ_ent
+## 5. A Single τ_ent Across QM, Thermo, EM, and GR
 
-Sections 3 and 4 audit the spine identity on the **QM** instance and
+Sections 3 and 4 prove the spine identity on the **QM** instance and
 the two **GR** instances (Minkowski and full electrovacuum, which is
-the Einstein–Maxwell case).  But CATEPT's underlying claim is
-broader than that: the *same* real scalar `τ_ent` plays a
-τ_ent-equivalent role in **every** physical pillar — not just QM
-and GR but also thermodynamics and electromagnetism — and they all
-agree at the carrier level.
+the Einstein–Maxwell case). The proposition we now consider is
+broader: that the same real scalar `τ_ent` admits a
+τ_ent-equivalent role in each of QM, thermodynamics, electromagnetism,
+and GR, and that these roles agree at the carrier level.
 
-The proof of that claim is the capstone theorem
+The relevant statement is the theorem
 [`catept_unifies_QM_Thermo_EM_GR`](CATEPTMain/Integration/UnificationSpine.lean)
-in `CATEPTMain.Integration.UnificationSpine`.  Its statement is the
+in `CATEPTMain.Integration.UnificationSpine`. Its statement is a
 six-fold conjunction:
 
 ```lean
@@ -424,11 +422,10 @@ bundle's six shared-`τ_ent` hypotheses, plus the previously-proven
 `relational_time_eq_thermal_time` (Page–Wootters ↔ Connes–Rovelli)
 inside the modular-flow / Kuchař core.
 
-### 5.0 How τ_ent flows through the pillars
+### 5.0 How τ_ent appears in each pillar
 
-The same scalar `τ_ent`, viewed simultaneously through every
-pillar's lens — what the capstone theorem certifies as a single
-real number:
+The diagram below shows the role `τ_ent` plays in each pillar and
+the equalities the present module proves between those roles:
 
 ```text
                        ╔═════════════════════════════╗
@@ -451,7 +448,7 @@ real number:
         │               │             │             │               │
         └───────────────┴─────────────┴─────────────┴───────────────┘
                                       │
-                         (capstone, §5: catept_unifies_QM_Thermo_EM_GR)
+                       (theorem §5: catept_unifies_QM_Thermo_EM_GR)
                                       │
                                       ▼
                        ╔══════════════════════════════════╗
@@ -473,15 +470,16 @@ real number:
                           modular Hamiltonian, §7.2)
 ```
 
-Each arrow is a proven equality theorem in the repo; the capstone
-collapses the five pillar arrows into one conjunction; the
-four-way equivalence (§6.5) collapses four of the operator-side
-realisations into one further identity at the modular-flow origin.
+Each arrow corresponds to a theorem proved in the repository. The
+§5 theorem `catept_unifies_QM_Thermo_EM_GR` is the conjunction of
+the five pillar arrows. The four-way identity at the modular-flow
+origin (§6.5) gives an additional equality among four of the
+operator-side realisations.
 
-### 5.1 Verifying the capstone
+### 5.1 Verifying the §5 theorem
 
 The same `lake build … | grep` pattern as §3.3 / §4 / §6 / §8 audits
-the capstone alongside its five companion pillar-agreement
+the §5 theorem alongside its five companion pillar-agreement
 theorems:
 
 ```bash
@@ -606,7 +604,7 @@ on the damped class.
 
 ### 6.2 Operator-side identifications — Tomita modular flow ↔ τ_ent
 
-§5's capstone is carrier-level.  The operator-side machinery — where
+The §5 theorem is stated at the carrier (real-arithmetic) level.  The operator-side machinery — where
 modular flow is genuinely a one-parameter automorphism group — is
 reachable through the Tomita ↔ Matsubara bridge.
 
@@ -621,9 +619,11 @@ theorem matsubara_S_I_eq_hbar_logDelta_zero :
 
 The Matsubara imaginary action equals Planck's constant times the
 operator-side modular Hamiltonian's image at the spectral origin.
-This is the strongest operator-side identification in the repo:
-the "S_I" in `τ_ent = S_I/ℏ` is *not* an extra physical postulate
-— it's `ℏ` times the Tomita modular Hamiltonian evaluated at 0.
+Read directly: `S_I` in `τ_ent = S_I/ℏ` equals `ℏ` times
+the Tomita modular Hamiltonian evaluated at 0. The imaginary
+action is therefore not an additional physical postulate but
+a quantity expressible through the operator-side modular
+Hamiltonian under the bridge's hypotheses.
 
 **Dichotomy at the modular-flow origin.**
 `...tauEnt_zero_iff_logDelta_zero`:
@@ -752,8 +752,8 @@ info: CATEPTMain/Integration/UnificationSpine.lean:420:0: 'CATEPTMain.Integratio
 
 ### 6.5 Four-way equivalence at modular-flow origin
 
-The strongest single statement in the Matsubara/Tomita layer is the
-four-way equivalence at the modular-flow spectral origin.  Inside
+The Matsubara/Tomita layer also yields a four-way equality at
+the modular-flow spectral origin. Inside
 `CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge`:
 
 ```lean
@@ -764,12 +764,13 @@ theorem four_way_equivalence_at_zero :
         = B.tomitaMatsubara.obligation.tomita.modularSpectralLogScale 0
 ```
 
-**Four scalars coincide at one point.**  The Matsubara `τ_ent` =
-the KMS strip width at 0 = the reduced-channel `τ_ent` at 0 = the
-Tomita modular Hamiltonian's spectral image at 0.  This is the
-unification of operator-side modular flow, KMS-strip thermal time,
-quantum-channel coarse graining, and the closed-form Matsubara
-formula at a single distinguished point.
+Reading the conjunction: at the bridge's evaluation point 0,
+the Matsubara `τ_ent`, the KMS strip width, the reduced-channel
+`τ_ent`, and the Tomita modular Hamiltonian's spectral image are
+the same real number. The four formalisms — closed-form
+Matsubara, KMS thermal-strip, quantum-channel coarse graining,
+operator-algebraic modular flow — agree at the spectral origin
+under the bridge carrier's identification hypotheses.
 
 **Proof-term snippet.**  The four-way equivalence proof is a
 single anonymous-constructor term — three pairwise identities
@@ -1011,10 +1012,10 @@ makes the path-integral weight a contraction
 (the §6.1 theorem), and `τ_ent = S_I/ℏ ≥ 0` is interpretable
 as a real time.
 
-### 6.8 Why §6.4–§6.7 are the heart of the unification
+### 6.8 Reading §6.4–§6.7 together
 
-§5's capstone says "all pillars share one `τ_ent`."  §6.4 says
-"that `τ_ent` is **literally** `β·Ω = -log Z`."  §6.5 says "and at
+§5 states that the four pillars share one `τ_ent`.  §6.4
+gives an explicit form: that `τ_ent` equals `β · Ω = -log Z`.  §6.5 says "and at
 modular-flow origin **four** different operator-side and channel-
 side realisations also collapse to that same scalar."  Together
 the seven theorems give the unification claim its analytic teeth:
@@ -1102,21 +1103,21 @@ itself part of the framework's honesty discipline.
 
 ---
 
-## 7. Surprising Consequences
+## 7. Three Consequences Worth Stating Separately
 
-§3–§6 establish the unification claim and its substance.  Three
-specific results in that machinery are *surprising* in the sense
-that they cut against textbook expectations.  They deserve to be
-flagged as such, with context and implications.
+§3–§6 establish the spine identity and the analytic, operator-
+side, and quantum-information content that supports it. Three
+specific results in that machinery differ from how the same
+physical questions are usually framed in textbook treatments.
+We state each one explicitly here, with the relevant context and
+the scope of what is and is not asserted.
 
-### 7.1 Counterterm-free UV convergence
+### 7.1 UV convergence without counterterms (on the damped class)
 
-**The textbook expectation.**  Path integrals in QFT are notorious
-for requiring counterterms at high energies — divergent integrals
-are tamed by adding cancelling subtractions, leaving renormalized
-quantities that depend on a regularization scheme.  The continuum
-limit of a cutoff-regulated theory only matches the renormalized
-continuum theory after this subtraction is performed.
+**Standard framing.** Path integrals in QFT typically require
+counterterms at high energies: divergent integrals are tamed by
+subtractions, and the continuum limit of a cutoff-regulated theory
+matches the renormalized continuum theory only after subtraction.
 
 **What the framework proves.**
 `CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed`
@@ -1132,30 +1133,30 @@ Tendsto cutoffPartition atTop (𝓝 continuumPartition)
 Both conjuncts are part of the same proof — the limit *and* the
 zero-counterterm pinning are simultaneous.
 
-**Why this is surprising.**  The framework is not making a
-generic claim that all path integrals are UV-finite (they aren't).
-The claim is more focused: when an analytic theory is restricted
-to the damped class (`S_I ≥ 0`), the imaginary action's contraction
-property kills the UV divergences before they ever appear, so the
-counterterm machinery isn't needed.  The price is that the damped
-class is a restriction — not every QFT lives there — but inside
-that class the UV problem dissolves rather than being subtracted
-away.
+**Scope.** The statement is not that all path integrals are
+UV-finite. The premise is the damped class (`S_I ≥ 0`), in which
+the imaginary action's contraction property bounds the regulated
+integrals uniformly in the cutoff. The continuum limit and the
+zero-counterterm assignment then follow from the §6.1 Feynman–Kac
+bound. The damped class is a restriction; the theorem is the
+statement that, within that restriction, the counterterm pinned
+to zero suffices.
 
-**Implication.**  CATEPT's `τ_ent = S_I/ℏ` interpretation
-*requires* the damped class for analytic reasons (§6.7), and that
-same restriction *gives* a UV-finite path integral as a free
-consequence.  The two conditions are linked, not independent.
+**Relation to the spine identity.** The same hypothesis
+`actionIm_nonneg` that allows `τ_ent = S_I/ℏ` to be read as a
+real time parameter (§6.7) is the hypothesis that yields the
+counterterm-free continuum limit. The two are not independent
+requirements but the same condition examined through different
+lemmas.
 
-### 7.2 The imaginary action equals ℏ times the modular Hamiltonian
+### 7.2 S_I expressed through the Tomita modular Hamiltonian
 
-**The textbook expectation.**  The imaginary part of a complex
-action is usually treated as a phenomenological dissipation term
-or a Wick-rotated regulator — a piece of the action you put in
-by hand to suppress oscillations.  The modular Hamiltonian, by
-contrast, is an operator-algebraic object built from the GNS
-construction on a state of a von Neumann algebra: it lives on
-the operator side, not the action side.
+**Standard framing.** The imaginary part of a complex action is
+usually treated either as a phenomenological dissipation term or
+as a Wick-rotated regulator. The modular Hamiltonian is an
+operator-algebraic object built from the GNS construction on a
+state of a von Neumann algebra; it is conventionally placed on
+the operator side, not on the action side.
 
 **What the framework proves.**
 `CATEPTMain.Integration.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero`
@@ -1172,36 +1173,34 @@ machinery equals `ℏ` times the Tomita–Takesaki modular
 Hamiltonian's image at the spectral origin — and equals `ℏ`
 times the reduced-channel `τ_ent` at the same point.
 
-**Why this is surprising.**  It's not a definitional choice.  The
-imaginary action is defined on the path-integral side
-(`actionIm : α → ℝ` over a measure space).  The modular
-Hamiltonian is defined on the operator side
-(`modularSpectralLogScale : ℝ → ℝ`, the spectral image of `log Δ`).
-That they coincide pointwise at zero — and that `S_I` is the
-**same real number** as `ℏ · log Δ(0)` — is a *bridge identity*,
-not a definition.  The proof goes through the
-`TomitaMatsubaraEquivBridge` which exposes a shared-`τ_ent`
-hypothesis the two sides must satisfy, then verifies the
-identity holds at the modular-flow origin.
+**What the equality is.** The two sides of the equality are
+defined independently. The imaginary action `actionIm : α → ℝ`
+is a measurable function on the path-integral side; the modular
+Hamiltonian `modularSpectralLogScale : ℝ → ℝ` is the spectral
+image of `log Δ` on the operator side. Their pointwise agreement
+at the spectral origin is established only after the
+`TomitaMatsubaraEquivBridge` carrier exposes a shared-`τ_ent`
+hypothesis on both sides; the equality is a consequence of that
+hypothesis being satisfied, not a definitional artefact.
 
-**Implication.**  Connes–Rovelli's thermal-time hypothesis
-suggests modular flow gives time.  CATEPT makes that one step
-more concrete: the imaginary action *is* the modular-flow
-Hamiltonian (up to ℏ).  The Wick-rotated regulator and the
-operator-algebraic Hamiltonian are not two different things —
-they're the same object viewed through two formalisms.
+**Relation to Connes–Rovelli.** The thermal-time hypothesis
+proposes that modular flow furnishes a time parameter on certain
+thermal states. The present identity does not establish that
+proposal; it establishes the narrower statement that, under the
+bridge's hypotheses, `S_I` and `ℏ · log Δ(0)` denote the same
+real number.
 
-### 7.3 Four-way collapse at modular-flow origin
+### 7.3 Four-way agreement at the modular-flow origin
 
-**The textbook expectation.**  In a unified-theory programme one
-typically proves *bilateral* identifications: QM ↔ thermal time,
-or path-integral ↔ operator algebra.  Multi-way agreements
-between four or more independent realisations of the same scalar
-require independent proofs that pile up combinatorially.
+**Standard framing.** Identifications between independent
+formalisms in unified-theory programmes are usually established
+bilaterally (e.g. QM ↔ thermal time, or path-integral ↔ operator
+algebra). Agreements among four or more realisations of the same
+scalar conventionally require a separate argument for each pair.
 
 **What the framework proves.**
 `CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero`
-(§6.5) is a single theorem stating:
+of §6.5 states a four-way equality:
 
 ```lean
 Matsubara τ_ent
@@ -1217,30 +1216,27 @@ the modular-flow spectral origin.  The proof is a single
 `⟨…, …, …⟩` constructor over three pairwise identifications,
 each itself proven against a shared-`τ_ent` carrier hypothesis.
 
-**Why this is surprising.**  In standard physics literature, KMS
-thermal time, the Matsubara `β·Ω`, the modular Hamiltonian, and
-quantum-channel τ_ent are different layers — KMS is operator-
+**The four formalisms.** KMS thermal-strip width, Matsubara
+`β·Ω`, the modular Hamiltonian, and quantum-channel `τ_ent`
+are introduced by independent constructions: KMS is operator-
 algebraic, Matsubara is statistical-mechanical, modular flow is
-von-Neumann-algebraic, channels are quantum-information-theoretic.
-That they all collapse to *one number* at the modular-flow
-spectral origin is not a coincidence: it is the signature of
-Connes–Rovelli's thermal-time hypothesis made concrete at a
-distinguished point.
+von-Neumann-algebraic, and quantum channels are
+information-theoretic. The four-way equality records that the
+bridge carrier's identification hypotheses force the four
+scalars to agree at the spectral origin.
 
-**Implication.**  This is the strongest single statement in the
-operator-side layer.  It means that anywhere `τ_ent = S_I/ℏ` is
-evaluated at the modular-flow origin, the answer is independent
-of which of the four formalisms you used to compute it.  The
-spine identity in §3 is therefore not just consistent across
-pillars — at the distinguished point it is *one number* with
-four equivalent computations.
+**Relation to the spine identity.** Where `τ_ent = S_I/ℏ` is
+evaluated at the modular-flow origin under the bridge's
+hypotheses, the value is independent of which of the four
+formalisms is used to compute it. The four-way equality
+therefore strengthens the §3 spine identity at the distinguished
+point to a single value with four equivalent computations.
 
-### 7.4 Verifying the surprises
+### 7.4 Verifying the three statements
 
-The three surprising consequences above are audited as part of
-the existing scripts:
+The three statements above are audited by the existing scripts:
 
-| Consequence | Audited by |
+| Statement | Audited by |
 |---|---|
 | §7.1 UV without counterterms | [`scripts/verify/08_substance_proofs.sh`](scripts/verify/08_substance_proofs.sh) |
 | §7.2 `S_I = ℏ · log Δ(0)` | [`scripts/verify/08_substance_proofs.sh`](scripts/verify/08_substance_proofs.sh) and [`09_matsubara_substance.sh`](scripts/verify/09_matsubara_substance.sh) |
