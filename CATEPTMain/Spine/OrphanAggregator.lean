@@ -38,7 +38,7 @@ import CATEPTMain.GaugeTheory.FBD.OmegaMatrices
 import CATEPTMain.GaugeTheory.FBD.QEDProcesses
 import CATEPTMain.GaugeTheory.FBD.WeakProcesses
 
--- ── GaugeTheory: FEYNCALC (9) ───────────────────────────────────────────────
+-- ── GaugeTheory: FEYNCALC (11) ──────────────────────────────────────────────
 import CATEPTMain.GaugeTheory.FEYNCALC.CliffordEuclidean
 import CATEPTMain.GaugeTheory.FEYNCALC.CliffordMinkowski
 import CATEPTMain.GaugeTheory.FEYNCALC.DiracAlgebra
@@ -48,6 +48,8 @@ import CATEPTMain.GaugeTheory.FEYNCALC.LeviCivita3D
 import CATEPTMain.GaugeTheory.FEYNCALC.LeviCivita4D
 import CATEPTMain.GaugeTheory.FEYNCALC.LeviCivitaConcrete
 import CATEPTMain.GaugeTheory.FEYNCALC.LorentzAlgebra
+import CATEPTMain.GaugeTheory.FEYNCALC.SpinorPropagator
+import CATEPTMain.GaugeTheory.FEYNCALC.SpinorPropagatorCurvedBridge
 
 -- ── GaugeTheory: LDO (9) ────────────────────────────────────────────────────
 import CATEPTMain.GaugeTheory.LDO.AbstractFermions

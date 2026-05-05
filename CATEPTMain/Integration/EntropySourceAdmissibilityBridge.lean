@@ -85,6 +85,58 @@ def euclideanAdmissibleFromThreeComponentRate
   , rate_nonneg := fun _ => R.total_nonneg
   , rate_integrable := hInt }
 
+-- --------------------------------------------------------------------
+-- Reply 16: admissibility classification skeleton (KMS / Petz / Fisher)
+-- --------------------------------------------------------------------
+
+/-- Admissibility carrier for a single entropy source. -/
+structure EntropySource where
+  rate : ℝ
+  nonnegative : Prop
+  localMarkov : Prop
+  scalarDensityCompatible : Prop
+  admitsEuclideanKilling : Prop
+  admitsLorentzianDamping : Prop
+  requiresSK : Prop
+
+/-- KMS source: admissible if temperature is nonnegative. -/
+def KMS_Source (kB T hbar : ℝ) : EntropySource :=
+  { rate := kB * T / hbar
+  , nonnegative := 0 ≤ T ∧ 0 < hbar ∧ 0 < kB
+  , localMarkov := True
+  , scalarDensityCompatible := True
+  , admitsEuclideanKilling := 0 ≤ T
+  , admitsLorentzianDamping := 0 ≤ T
+  , requiresSK := False }
+
+/-- Petz source: sign-sensitive information-flow rate. -/
+def Petz_Source (c_alpha dI_dt : ℝ) : EntropySource :=
+  { rate := c_alpha * dI_dt
+  , nonnegative := 0 ≤ c_alpha * dI_dt
+  , localMarkov := False
+  , scalarDensityCompatible := True
+  , admitsEuclideanKilling := 0 ≤ c_alpha * dI_dt
+  , admitsLorentzianDamping := 0 ≤ c_alpha * dI_dt
+  , requiresSK := c_alpha * dI_dt < 0 }
+
+/-- Fisher source: admissible if eta >= 0 and Fisher density >= 0. -/
+def Fisher_Source (eta hbar I_F : ℝ) : EntropySource :=
+  { rate := eta / hbar * I_F
+  , nonnegative := 0 ≤ eta ∧ 0 < hbar ∧ 0 ≤ I_F
+  , localMarkov := True
+  , scalarDensityCompatible := True
+  , admitsEuclideanKilling := 0 ≤ eta ∧ 0 < hbar ∧ 0 ≤ I_F
+  , admitsLorentzianDamping := 0 ≤ eta ∧ 0 < hbar ∧ 0 ≤ I_F
+  , requiresSK := False }
+
+theorem fisher_source_admissible
+    (eta hbar I_F : ℝ)
+    (h_eta : 0 ≤ eta)
+    (h_hbar : 0 < hbar)
+    (h_IF : 0 ≤ I_F) :
+    (Fisher_Source eta hbar I_F).admitsEuclideanKilling := by
+  exact And.intro h_eta (And.intro h_hbar h_IF)
+
 end
 
 end CATEPTMain.Integration.EntropySourceAdmissibilityBridge

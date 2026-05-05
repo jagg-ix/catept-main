@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 
 set_option autoImplicit false
@@ -72,6 +73,25 @@ def lambdaDamp
     lambdaPetzPos c_alpha (dI_dt t x) +
     lambdaFisher eta hbar (I_F t x)
 
+/-- Placeholder for the ADM normal derivative `∂_⊥`. -/
+axiom normalDerivative :
+  ADMState → (Time → SpacePoint → ℝ) → Time → SpacePoint → ℝ
+
+/-- Petz source using the ADM normal derivative. -/
+def lambdaPetzNormalPos
+    (X : ADMState) (c_alpha : ℝ) (I_alpha : Time → SpacePoint → ℝ) :
+    Time → SpacePoint → ℝ :=
+  fun t x => max (c_alpha * normalDerivative X I_alpha t x) 0
+
+/-- Local damping rate using the ADM normal derivative for Petz. -/
+def lambdaDampNormal
+    (X : ADMState) (kB hbar eta c_alpha : ℝ)
+    (T I_alpha I_F : Time → SpacePoint → ℝ) : Time → SpacePoint → ℝ :=
+  fun t x =>
+    lambdaKMS kB (T t x) hbar +
+    lambdaPetzNormalPos X c_alpha I_alpha t x +
+    lambdaFisher eta hbar (I_F t x)
+
 /-- Nonnegativity of the ADM imaginary action under positive data. -/
 theorem SI_ADM_nonnegative
     (hbar : ℝ) (X : ADMState)
@@ -86,6 +106,14 @@ theorem SI_ADM_nonnegative
   unfold SI_ADM
   exact mul_nonneg hbar_nonneg hint
 
+/-- Amplitude-level ADM damping `exp(-S_I / hbar)`. -/
+def admAmplitudeDamping (hbar : ℝ) (X : ADMState) : ℝ :=
+  Real.exp (-(SI_ADM hbar X / hbar))
+
+/-- Probability-level ADM damping `exp(-2 S_I / hbar)`. -/
+def admProbabilityDamping (hbar : ℝ) (X : ADMState) : ℝ :=
+  Real.exp (-(2 * SI_ADM hbar X / hbar))
+
 /-- Placeholder for normal-direction entropic accumulation. -/
 axiom entropicNormalAccumulation :
   (Time → SpacePoint → ℝ) → Time → SpacePoint → ℝ
@@ -99,6 +127,35 @@ def entropicLapse (X : ADMState) : Time → SpacePoint → ℝ :=
 /-- Dressed lapse `N * N_ent`. -/
 def dressedLapse (X : ADMState) (t : Time) (x : SpacePoint) : ℝ :=
   X.lapse t x * entropicLapse X t x
+
+/-- Complex Hamiltonian constraint density (real + imaginary). -/
+structure ADMComplexHamiltonianDensity where
+  real : Time → SpacePoint → ℝ
+  imag : Time → SpacePoint → ℝ
+
+/-- Build the complex constraint density from real ADM data and damping. -/
+def admComplexHamiltonianDensity
+    (H_R : Time → SpacePoint → ℝ) (hbar : ℝ) (X : ADMState) :
+    ADMComplexHamiltonianDensity :=
+  { real := H_R
+  , imag := fun t x => hbar * X.sqrt_h t x * X.lambda_damp t x }
+
+/-- Lorentzian ADM weight `exp(i S_R/hbar - S_I/hbar)`. -/
+def admLorentzianWeight
+    (hbar : ℝ) (S_R : ADMState → ℝ) (X : ADMState) : ℂ :=
+  Complex.exp ((S_R X / hbar : ℂ) * Complex.I - (SI_ADM hbar X / hbar : ℂ))
+
+/-- Euclidean ADM weight `exp(-S_E/hbar - S_I/hbar)`. -/
+def admEuclideanWeight
+    (hbar : ℝ) (S_E : ADMState → ℝ) (X : ADMState) : ℝ :=
+  Real.exp (-(S_E X / hbar) - (SI_ADM hbar X / hbar))
+
+/-- GTD equilibrium limit for ADM damping. -/
+theorem gtd_equilibrium_damping_ADM
+    (X : ADMState) (deltaS kB : ℝ)
+    (h : tauEnt_ADM X = deltaS / kB) :
+    Real.exp (-(tauEnt_ADM X)) = Real.exp (-(deltaS / kB)) := by
+  simp [h]
 
 /-- Compatibility obligations for the ADM imaginary sector. -/
 structure ADMCompatibilityObligations where

@@ -80,6 +80,21 @@ import CATEPTMain.Integration.BrownianMotionBridge
 -- will be re-wired once their proofs / placeholder types are filled in.
 import CATEPTMain.Integration.EuclideanFeynmanKacAdmissibility
 import CATEPTMain.Integration.LorentzianTrotterKatoBridge
+import CATEPTMain.Integration.ProperTimePathIntegralBridge
+import CATEPTMain.Integration.ProperTimeFeynCalcBridge
+import CATEPTMain.Integration.LorentzInvariantProperTimeBridge
+import CATEPTMain.Integration.LorentzInvariantInvariants
+import CATEPTMain.Integration.LorentzInvariantSpinorBrackets
+import CATEPTMain.Integration.LorentzInvariantSymmetryActions
+import CATEPTMain.Integration.LorentzInvariantSliceConstraints
+import CATEPTMain.Integration.LorentzInvariantLimitStability
+import CATEPTMain.Integration.LorentzInvariantPhaseSpaceMeasure
+import CATEPTMain.Integration.LorentzInvariantTr5LeviCivitaBridge
+import CATEPTMain.Integration.LorentzInvariantGramDetLemmas
+import CATEPTMain.CATEPT_ProperTime.ProperTimeResolvent
+import CATEPTMain.CATEPT_ProperTime.HeatKernelDeterminant
+import CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions
+import CATEPTMain.CATEPT_ProperTime.ClosedTimePathEffectiveAction
 -- ADM / gravitational CAT-EPT entropy insertion (Reply 17).
 import CATEPTMain.Integration.ADMEntropyPathIntegralBridge
 -- Quarantined (draft layer — will be re-wired after fix-ups):
@@ -146,6 +161,8 @@ import CATEPTMain.Integration.OperatorAlgebraicFoundationsBundle
 -- equivalence (PR #127, #128).
 import CATEPTMain.Integration.MatsubaraLuttingerWardCarrier
 import CATEPTMain.Integration.MatsubaraAQFTModularFlowEquivalenceBridge
+import CATEPTMain.Integration.MatsubaraEuclideanCATEPTBridge
+import CATEPTMain.Integration.FeynCalcMatsubaraBridge
 -- Page-Wootters quantum-time carrier (clock-conditional emergent time)
 -- and PW <-> Matsubara equivalence at the imaginary-time evaluation point.
 -- Page & Wootters PRD 27 (1983) 2885; Hoehn-Smith-Lock Front. Phys. 9 (2021) 587083.
