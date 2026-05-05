@@ -60,23 +60,22 @@ this repository contributes to one of these interconnected layers:
                                             └──────────────────────────┘
 ```
 
-* **Layer 1 — The central identity.** The unifying claim, stated as a
+* **1 — The central identity.** The unifying claim, stated as a
   single equation relating the imaginary part of the complex action,
   Planck's constant, and the entropic clock.
-* **Layer 2 — Concrete instances.** To show the central identity is
-  not trivially empty, it is proved separately in a QM setting and a
-  GR setting — two genuinely different physical theories, both
+* **2 — Concrete instances.** To show the central identity is
+  not trivially empty, it is proved separately in a QM setting and
+  in a GR setting — two genuinely different physical theories, both
   satisfying the same equation.
-* **Layer 3 — Analytic machinery.** Gives the framework physical
+* **3 — Analytic machinery.** Gives the framework physical
   substance: a rigorous complex Feynman–Kac formula for the damped
   class, plus a counterterm-free ultraviolet (UV) convergence
   result.
-* **Layer 4 — Axiom-free compatibility theorems.** Ten short
-  theorems that connect the central identity to external
-  mathematical areas (quantum information, Carleson Fourier
-  analysis, thermodynamics, …). Their axiom-free status guarantees
-  that linking these external theories introduces no hidden logical
-  assumptions.
+* **4 — Axiom-free compatibility theorems.** Ten short theorems
+  that connect the central identity to external mathematical areas
+  (quantum information, Carleson Fourier analysis, thermodynamics,
+  …). Their axiom-free status guarantees that linking these
+  external theories introduces no hidden logical assumptions.
 
 The whole architecture is held together by an automated verification
 check: every theorem named in this README depends *only* on the
@@ -107,6 +106,48 @@ sections show how to verify it at the axiom level as well.
 
 ## 3. The Unification: QM ↔ GR
 
+### 3.1 Intuition: what does $\tau_{ent} = S_I/\hbar$ actually mean?
+
+Before going to the formal statement, four standard physics analogies
+make the construction less mysterious.
+
+* **Wick rotation, generalised.** In Euclidean QFT one writes
+  $t \mapsto i\tau$ to turn an oscillatory $e^{iS_R/\hbar}$ into a
+  decaying $e^{-S_E/\hbar}$. CATEPT does *not* require analytic
+  continuation: the action is taken complex from the start
+  ($S = S_R + i\,S_I$), and the imaginary part $S_I$ already
+  *is* a real, non-negative quantity along the damped class. The
+  ratio $S_I/\hbar$ then plays the role that the Wick-rotated
+  Euclidean time plays in QFT — but as a real physical parameter,
+  not a formal substitution.
+
+* **KMS / thermal time.** The KMS condition relates a quantum thermal
+  state at temperature $T$ to imaginary-time translations through
+  $\beta = 1/(k_B T)$, with imaginary-time interval $i\hbar\beta$.
+  The "thermal time hypothesis" of Connes–Rovelli (CQG 11, 1994,
+  2899) reads this $\hbar\beta$ as a genuine time parameter. CATEPT's
+  $\tau_{ent} = S_I/\hbar$ is the *off-equilibrium* analogue: the
+  same kind of object, but defined for any history through its
+  informational dissipation $S_I$, not just for Gibbs states.
+
+* **Friction in mechanics.** A damped harmonic oscillator with a
+  velocity-dependent dissipation has its mechanical action picking up
+  an imaginary contribution $S_I \ge 0$ along any trajectory. CATEPT
+  reads this $S_I$ as quantifying the *informational* dissipation —
+  what is forgotten about the system as the trajectory unfolds — and
+  divides it by $\hbar$ to obtain a time parameter measured in seconds.
+
+* **Proper time as arc length.** In GR, proper time
+  $\tau_{geom} = \int \sqrt{g_{\mu\nu}\,dx^\mu dx^\nu}$ measures
+  *geometric* arc length along a worldline. The CATEPT claim is
+  that the *same* worldline also has an *informational* arc length
+  $\tau_{ent} = S_I/\hbar$, and that under suitable physical
+  conditions (the damped class) the two coincide. The central
+  identity below is the Lean statement of this coincidence on the
+  abstract slot interface.
+
+### 3.2 The formal statement
+
 The framework defines a single common interface that carries the
 variables `actionIm`, `ℏ`, and `eptClock`. The unification is achieved
 by proving the **central identity**
@@ -117,23 +158,131 @@ $$
 
 For $\tau_{ent}$ to function as a genuinely unified time parameter,
 this identity must hold across genuinely different physical regimes.
-We prove it in two concrete instances:
+We prove it in **four** concrete instances, packaged in
+`CATEPT/Showcase/QMGRUnification.lean`:
 
-| Theory | Lean instance | Consistency theorem |
-| :--- | :--- | :--- |
-| **Quantum Mechanics** (n-level density matrices) | `quantumCATEPTSlot n` | `qm_satisfies_catept_spine` |
-| **General Relativity** (Minkowski background) | `gravitasMinkowskiSlot` | `gr_minkowski_satisfies_catept_spine` |
+| # | Setting | Lean instance | Consistency theorem |
+| :--- | :--- | :--- | :--- |
+| 1 | **Quantum Mechanics** (n-level density matrices) | `quantumCATEPTSlot n` | `qm_satisfies_catept_spine` |
+| 2 | **General Relativity** (Minkowski background) | `gravitasMinkowskiSlot` | `gr_minkowski_satisfies_catept_spine` |
+| 3 | **General Relativity** (full electrovacuum, Einstein–Maxwell) | `gravitasElectrovacuumPlugin` | `gr_electrovacuum_satisfies_catept_spine` |
+| 4 | **Bundle theorem** (QM and GR together) | both of the above | `qm_gr_unified_via_entropic_proper_time` |
 
-These two theorems are the framework's only main claims. Everything
-else in this repository either (a) supplies the analytic machinery
-that gives them physical substance (Section 5), (b) connects the two
+These four theorems are the framework's main claims. Everything else
+in this repository either (a) supplies the analytic machinery that
+gives them physical substance (Section 5), (b) connects the
 instances to an external mathematical area in a way that adds no
 hidden axioms (Section 6), or (c) provides the underlying packages
-(Section 7). All three feed back into the two theorems above.
+(Section 7). All three feed back into the four theorems above.
 
-Both proofs depend strictly on the standard Lean kernel axioms
-(`propext`, `Classical.choice`, `Quot.sound`). The next section is
-how to verify that statement on your own machine.
+All four proofs depend strictly on the standard Lean kernel axioms
+(`propext`, `Classical.choice`, `Quot.sound`). The next two
+subsections show how to verify that statement on your own machine
+for each setting individually.
+
+### 3.3 Verifying the central identity for entropic proper time and General Relativity
+
+The fastest way to convince yourself the GR-side proof actually
+works is to ask Lean directly. Two recipes are useful — one for the
+Minkowski case, one for the full electrovacuum case — and then a
+combined recipe that bundles all four spine theorems at once.
+
+#### 3.3.1 The GR Minkowski case
+
+```bash
+cat > /tmp/catept_gr_check.lean <<'EOF'
+import CATEPT.Showcase.QMGRUnification
+#check @CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
+EOF
+lake env lean /tmp/catept_gr_check.lean
+```
+
+**Expected output**:
+
+```
+@CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine :
+  cateptConsistencyConstraint gravitasMinkowskiSlot
+'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+The first line is Lean confirming that the theorem's *statement* is
+exactly the central identity instantiated on `gravitasMinkowskiSlot`.
+The second line is Lean confirming the *proof* depends on nothing
+beyond the standard kernel axioms — i.e. no extra physical
+assumptions, no `sorry`, no analytic continuation smuggled in.
+
+#### 3.3.2 The GR full-electrovacuum case (Einstein–Maxwell)
+
+```bash
+cat > /tmp/catept_gr_full.lean <<'EOF'
+import CATEPT.Showcase.QMGRUnification
+#check @CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
+EOF
+lake env lean /tmp/catept_gr_full.lean
+```
+
+**Expected output**:
+
+```
+@CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine :
+  cateptSpineConstraint gravitasElectrovacuumPlugin
+'…gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+Same pattern: the first line is Lean reporting the *statement* (the
+central identity for the full electrovacuum plugin, including a
+non-trivial electromagnetic stress–energy contribution); the second
+is the kernel-axiom audit on the *proof*.
+
+#### 3.3.3 Combined check: all four spine theorems at once
+
+```bash
+cat > /tmp/catept_spine_full.lean <<'EOF'
+import CATEPT.Showcase.QMGRUnification
+#print axioms CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
+#print axioms CATEPT.Showcase.QMGRUnification.qm_gr_unified_via_entropic_proper_time
+EOF
+lake env lean /tmp/catept_spine_full.lean
+```
+
+**Expected output** (one line per theorem):
+
+```
+'…qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'…gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'…qm_gr_unified_via_entropic_proper_time' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+The fourth theorem,
+`qm_gr_unified_via_entropic_proper_time`, is the bundled headline:
+its statement is the conjunction "QM-side spine identity ∧ GR-side
+spine identity", and its proof is `⟨qm_…, gr_minkowski_…⟩`. Seeing
+all four lines is the machine-checked statement that QM and GR are
+simultaneously compatible with $\tau_{ent} = S_I/\hbar$ as the
+shared time parameter.
+
+### 3.4 Reading the source
+
+If you want to inspect the proof terms themselves rather than just
+their axiom dependencies, the showcase file is at
+
+```
+CATEPT/Showcase/QMGRUnification.lean
+```
+
+on the [`feat/publication`](https://github.com/jagg-ix/catept-main/tree/feat/publication)
+branch. The four theorems are stated in a few dozen lines; each proof
+is a one-liner that simply rewrites the GR-side `actionIm/ℏ` to the
+Tolman-redshifted modular temperature on the relevant background
+(Minkowski for theorem 2, full electrovacuum for theorem 3) and the
+QM-side `actionIm/ℏ` to the von-Neumann entropy (theorem 1). Once
+both sides reduce to their common slot variable `eptClock`, the
+central identity is `rfl`.
 
 ---
 
