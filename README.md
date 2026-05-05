@@ -118,11 +118,35 @@ consistency theorems, the GR Minkowski check, the GR
 electrovacuum check, the combined four-spine check, the
 all-ten-compatibility-theorems check, and the per-theorem version
 of the latter) is also available as a stand-alone script that you
-can run on its own. The suite produces a `PASS` / `SKIP` / `FAIL`
-summary and writes the raw command output to
-`scripts/verify/logs/`. See
-[`scripts/verify/README.md`](scripts/verify/README.md) for the
+can run on its own.  The suite writes the raw command output to
+`scripts/verify/logs/` so the check is reproducible after the run.
+See [`scripts/verify/README.md`](scripts/verify/README.md) for the
 full description.
+
+#### Proof of execution on this commit
+
+The recipe above was actually run on this commit.  Verbatim summary
+from the last run (matches the machine-checked outputs quoted later
+in §3.3, §4, §6.1, and §6.2):
+
+```
+==============================================================
+ Summary
+==============================================================
+  PASS  01_kernel_axiom_audit.sh
+  PASS  02_gr_minkowski.sh
+  PASS  03_gr_electrovacuum.sh
+  PASS  04_all_spine.sh
+  PASS  05_axiom_free_all_10.sh
+  PASS  06_axiom_free_individual.sh
+--------------------------------------------------------------
+  total: 6   pass: 6   skip: 0   fail: 0
+```
+
+`run_all.sh` exits 0 when every script passes and 1 otherwise, so
+this is the same machine-checked guarantee the README claims —
+just bundled into one command.  Re-running it reproduces every
+**Captured output** block in this README from scratch.
 
 ---
 
@@ -209,75 +233,81 @@ works is to ask Lean directly. Two recipes are useful — one for the
 Minkowski case, one for the full electrovacuum case — and then a
 combined recipe that bundles all four spine theorems at once.
 
+All recipes below build the showcase module
+[`CATEPTMain/Showcase/QMGRUnification.lean`](CATEPTMain/Showcase/QMGRUnification.lean)
+and grep the `info:` lines that Lean emits for the four `#print
+axioms` directives at the bottom of that file.  Each captured-output
+block was produced verbatim on this commit by the corresponding
+script in `scripts/verify/` (paths shown).
+
 #### 3.3.1 The GR Minkowski case
 
+**Run**:
+
 ```bash
-cat > /tmp/catept_gr_check.lean <<'EOF'
-import CATEPT.Showcase.QMGRUnification
-#check @CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
-EOF
-lake env lean /tmp/catept_gr_check.lean
+lake build CATEPTMain.Showcase.QMGRUnification 2>&1 \
+  | grep "gr_minkowski_satisfies_catept_spine' depends on axioms"
 ```
 
-**Expected output**:
+**Captured output** (verbatim from
+[`scripts/verify/logs/02_gr_minkowski.out`](scripts/verify/logs/02_gr_minkowski.out)):
 
 ```
-@CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine :
-  cateptConsistencyConstraint gravitasMinkowskiSlot
-'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:85:0: 'CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 ```
 
-The first line is Lean confirming that the theorem's *statement* is
-exactly the central identity instantiated on `gravitasMinkowskiSlot`.
-The second line is Lean confirming the *proof* depends on nothing
-beyond the standard kernel axioms — i.e. no extra physical
-assumptions, no `sorry`, no analytic continuation smuggled in.
+This is Lean confirming the *proof* of
+`gr_minkowski_satisfies_catept_spine` depends on nothing beyond the
+three standard kernel axioms — no extra physical assumptions, no
+`sorry`, no analytic continuation smuggled in.
 
 #### 3.3.2 The GR full-electrovacuum case (Einstein–Maxwell)
 
+**Run**:
+
 ```bash
-cat > /tmp/catept_gr_full.lean <<'EOF'
-import CATEPT.Showcase.QMGRUnification
-#check @CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
-EOF
-lake env lean /tmp/catept_gr_full.lean
+lake build CATEPTMain.Showcase.QMGRUnification 2>&1 \
+  | grep "gr_electrovacuum_satisfies_catept_spine' depends on axioms"
 ```
 
-**Expected output**:
+**Captured output** (verbatim from
+[`scripts/verify/logs/03_gr_electrovacuum.out`](scripts/verify/logs/03_gr_electrovacuum.out)):
 
 ```
-@CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine :
-  cateptSpineConstraint gravitasElectrovacuumPlugin
-'…gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:86:0: 'CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 ```
 
-Same pattern: the first line is Lean reporting the *statement* (the
-central identity for the full electrovacuum plugin, including a
-non-trivial electromagnetic stress–energy contribution); the second
-is the kernel-axiom audit on the *proof*.
+Same pattern, this time for the full electrovacuum plugin
+(including a non-trivial electromagnetic stress–energy
+contribution).
 
 #### 3.3.3 Combined check: all four spine theorems at once
 
+**Run**:
+
 ```bash
-cat > /tmp/catept_spine_full.lean <<'EOF'
-import CATEPT.Showcase.QMGRUnification
-#print axioms CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.qm_gr_unified_via_entropic_proper_time
-EOF
-lake env lean /tmp/catept_spine_full.lean
+lake build CATEPTMain.Showcase.QMGRUnification 2>&1 \
+  | grep -E "'CATEPT\.Showcase\.QMGRUnification\.(qm_satisfies|gr_minkowski_satisfies|gr_electrovacuum_satisfies|qm_gr_unified)"
 ```
 
-**Expected output** (one line per theorem):
+**Captured output** (verbatim from
+[`scripts/verify/logs/04_all_spine.out`](scripts/verify/logs/04_all_spine.out)):
 
 ```
-'…qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…qm_gr_unified_via_entropic_proper_time' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:84:0: 'CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:85:0: 'CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:86:0: 'CATEPT.Showcase.QMGRUnification.gr_electrovacuum_satisfies_catept_spine' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:87:0: 'CATEPT.Showcase.QMGRUnification.qm_gr_unified_via_entropic_proper_time' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 ```
 
 The fourth theorem,
@@ -311,29 +341,41 @@ central identity is `rfl`.
 ## 4. The Testable Guarantee (command-line verification)
 
 CATEPT operates under a strict, testable guarantee: the consistency
-theorems must *never* rely on extra or custom axioms. You can verify
-this yourself by running the following script:
+theorems must *never* rely on extra or custom axioms.  The four
+`#print axioms` directives at the bottom of
+[`CATEPTMain/Showcase/QMGRUnification.lean`](CATEPTMain/Showcase/QMGRUnification.lean)
+are emitted as `info:` diagnostics during `lake build`, so the
+audit is one grep against the build output.
+
+**Run**:
 
 ```bash
-cat > /tmp/catept_audit.lean <<'EOF'
-import CATEPT.Showcase.QMGRUnification
-#print axioms CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine
-#print axioms CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine
-EOF
-lake env lean /tmp/catept_audit.lean
+lake build CATEPTMain.Showcase.QMGRUnification 2>&1 \
+  | grep -E "'CATEPT\.Showcase\.QMGRUnification\.(qm|gr_minkowski)_satisfies_catept_spine' depends on axioms"
 ```
 
-**Expected output** (one line per theorem):
+**Captured output** (verbatim from this commit, file
+[`scripts/verify/logs/01_kernel_axiom_audit.out`](scripts/verify/logs/01_kernel_axiom_audit.out)):
 
 ```
-'…qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
-'…gr_minkowski_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:84:0: 'CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CATEPTMain/Showcase/QMGRUnification.lean:85:0: 'CATEPT.Showcase.QMGRUnification.gr_minkowski_satisfies_catept_spine' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 ```
+
+(Lean wraps the long axiom list across three lines for the second
+theorem; both versions are equivalent.)
 
 The presence of any additional axiom in either list means something
-has broken. Section 6 below tightens this further: the 10
+has broken.  Section 6 below tightens this further: the 10
 compatibility theorems must clear an even stricter bar — they must
 depend on *no axioms at all*.
+
+> **Proof of execution.**  The recipe above was actually run on this
+> commit by `bash scripts/verify/01_kernel_axiom_audit.sh`, which
+> reported `PASS`.  See *§7.5 Proof of execution* below for the
+> full `bash scripts/verify/run_all.sh` summary.
 
 ---
 
