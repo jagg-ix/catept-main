@@ -91,18 +91,241 @@ one is the integration-contract theorem of a sibling plugin whose
 proof is `⟨…⟩` (anonymous constructor, term-mode) over Prop fields,
 and Lean recognises it as axiom-free at the kernel level.
 
-| # | Theorem (fully qualified) | Sibling plugin | What it asserts |
-|--:|---|---|---|
-| 1 | `CATEPTPluginQuantumInfo.quantumInfo_integration_contract` | `catept-plugin-quantum-info` | CPTP / Braket / von Neumann / Rényi / Shannon / capacity contract package |
-| 2 | `CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract` | `catept-plugin-bochner-minlos` | Bochner-Minlos PD / Sazonov / Schur / abstract Minlos contract |
-| 3 | `CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract` | `catept-plugin-gibbs-measure` | Kolmogorov extension / Gibbs-DLR / Giry monad witness |
-| 4 | `CATEPTPluginHopfLean.hopfLean_integration_contract` | `catept-plugin-hopf-lean` | coalgebra / bialgebra / Hopf / Yang-Baxter / BMod-monoidal witness |
-| 5 | `CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract` | `catept-plugin-kolmogorov-complexity` | AIT invariance / Chaitin Ω / incompressibility / Gödel-2 via K |
-| 6 | `CATEPTPluginCarleson.carleson_integration_contract` | `catept-plugin-carleson` | abstract Carleson / a.e. Fourier convergence contract |
-| 7 | `CATEPTPluginCarleson.concrete_witness_contract` | `catept-plugin-carleson` | concrete Carleson witness (Dirichlet / Jackson / antichain) |
-| 8 | `CATEPTPluginCslib.cslib_integration_contract` | `catept-plugin-cslib` | computability / automata / Ramsey integration |
-| 9 | `CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract` | `catept-plugin-thermodynamics-lean` | Lieb-Yngvason axioms / entropy existence-uniqueness-continuity / Kelvin-Planck |
-| 10 | `CATEPTPluginVMLLandau.vml_landau_content_available` | `catept-plugin-vml-landau` | VML-Landau collision-content marker (Aristotle/Clawristotle Theorem 4.2 surface) |
+### How to verify each one
+
+Every entry below ships with a single-line build-and-grep recipe.
+After `lake exe cache get`, run the command from the repo root and
+compare against the **Expected output** block — that line is what
+the Lean compiler emits, and seeing it verbatim is the
+machine-checked proof of axiom-freeness for the corresponding
+theorem.
+
+> **Reading the output**: Lean prints `'<theorem>' does not depend
+> on any axioms` exactly when the theorem's proof term reduces to
+> definitional equality without invoking `propext`,
+> `Classical.choice`, or `Quot.sound`. If a theorem ever drifts
+> away from axiom-free, Lean will instead print
+> `'<theorem>' depends on axioms: [...]` — so the recipes below
+> double as regression checks.
+
+The expected outputs were captured verbatim against this commit; CI
+re-runs them on every push.
+
+---
+
+#### 1. `CATEPTPluginQuantumInfo.quantumInfo_integration_contract`
+
+**Asserts**: structural-package contract for the quantum-information
+lane (CPTP / Braket / von Neumann / Rényi / Shannon / channel-capacity).
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "quantumInfo_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:616:0: 'CATEPTPluginQuantumInfo.quantumInfo_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 2. `CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract`
+
+**Asserts**: Bochner–Minlos / Sazonov / Schur / abstract-Minlos
+positive-definite-functional contract on nuclear spaces.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "bochnerMinlos_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:624:0: 'CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 3. `CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract`
+
+**Asserts**: Kolmogorov extension / Gibbs–DLR equation / Giry-monad
+measure-witness contract.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "gibbsMeasure_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:627:0: 'CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 4. `CATEPTPluginHopfLean.hopfLean_integration_contract`
+
+**Asserts**: coalgebra / bialgebra / Hopf-algebra / Yang–Baxter /
+BMod-monoidal contract package.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "hopfLean_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:630:0: 'CATEPTPluginHopfLean.hopfLean_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 5. `CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract`
+
+**Asserts**: algorithmic-information-theory contract — invariance
+theorem / Chaitin Ω existence / incompressibility / Gödel-2-via-K.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "kolmogorovComplexity_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:633:0: 'CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 6. `CATEPTPluginCarleson.carleson_integration_contract`
+
+**Asserts**: abstract Carleson / almost-everywhere Fourier-convergence
+contract.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "carleson_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:636:0: 'CATEPTPluginCarleson.carleson_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 7. `CATEPTPluginCarleson.concrete_witness_contract`
+
+**Asserts**: concrete Carleson witness — Dirichlet kernel / Jackson
+density / antichain decomposition.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "concrete_witness_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:637:0: 'CATEPTPluginCarleson.concrete_witness_contract' does not depend on any axioms
+```
+
+---
+
+#### 8. `CATEPTPluginCslib.cslib_integration_contract`
+
+**Asserts**: computability / automata / Ramsey-theory integration
+contract from the `cslib` plugin.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "cslib_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:640:0: 'CATEPTPluginCslib.cslib_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 9. `CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract`
+
+**Asserts**: Lieb–Yngvason axioms / entropy existence-uniqueness-
+continuity / Kelvin–Planck second-law contract.
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "thermodynamicsLean_integration_contract"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:653:0: 'CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract' does not depend on any axioms
+```
+
+---
+
+#### 10. `CATEPTPluginVMLLandau.vml_landau_content_available`
+
+**Asserts**: VML–Landau collision-content marker (Aristotle /
+Clawristotle Theorem 4.2 surface).
+
+**Run**:
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 \
+  | grep "vml_landau_content_available"
+```
+
+**Expected output**:
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:662:0: 'CATEPTPluginVMLLandau.vml_landau_content_available' does not depend on any axioms
+```
+
+---
+
+#### Run all 10 in one shot
+
+```bash
+lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 | grep -E "\
+'CATEPTPluginQuantumInfo\.quantumInfo_integration_contract'|\
+'CATEPTPluginBochnerMinlos\.bochnerMinlos_integration_contract'|\
+'CATEPTPluginGibbsMeasure\.gibbsMeasure_integration_contract'|\
+'CATEPTPluginHopfLean\.hopfLean_integration_contract'|\
+'CATEPTPluginKolmogorovComplexity\.kolmogorovComplexity_integration_contract'|\
+'CATEPTPluginCarleson\.carleson_integration_contract'|\
+'CATEPTPluginCarleson\.concrete_witness_contract'|\
+'CATEPTPluginCslib\.cslib_integration_contract'|\
+'CATEPTPluginThermodynamicsLean\.thermodynamicsLean_integration_contract'|\
+'CATEPTPluginVMLLandau\.vml_landau_content_available'"
+```
+
+**Expected output** (10 lines):
+```
+info: CATEPTMain/Domains/CoherenceShowcase.lean:616:0: 'CATEPTPluginQuantumInfo.quantumInfo_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:624:0: 'CATEPTPluginBochnerMinlos.bochnerMinlos_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:627:0: 'CATEPTPluginGibbsMeasure.gibbsMeasure_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:630:0: 'CATEPTPluginHopfLean.hopfLean_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:633:0: 'CATEPTPluginKolmogorovComplexity.kolmogorovComplexity_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:636:0: 'CATEPTPluginCarleson.carleson_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:637:0: 'CATEPTPluginCarleson.concrete_witness_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:640:0: 'CATEPTPluginCslib.cslib_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:653:0: 'CATEPTPluginThermodynamicsLean.thermodynamicsLean_integration_contract' does not depend on any axioms
+info: CATEPTMain/Domains/CoherenceShowcase.lean:662:0: 'CATEPTPluginVMLLandau.vml_landau_content_available' does not depend on any axioms
+```
+
+Seeing all 10 lines exactly as above is the machine-checked proof
+that every contract in this section is axiom-free at the kernel
+level.
 
 
 ### Why "axiom-free" is meaningfully different from "kernel-only"
