@@ -362,3 +362,20 @@ theorem exists_trivial (thermoCert : ThermodynamicsEntropyCertificate) :
 end CATEPTMain.Integration.UnificationSpine
 
 end
+
+/-!
+## Reviewer-facing axiom audit (capstone unification)
+
+The `#print axioms` directives below are emitted as Lean `info:`
+diagnostics during `lake build CATEPTMain.Integration.UnificationSpine`,
+so the audit can be performed with a single grep against the build
+output.  Each must report `[propext, Classical.choice, Quot.sound]`
+— the standard Lean kernel triple, no others.
+-/
+
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.catept_unifies_QM_Thermo_EM_GR
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_via_modular_flow
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_thermo_pillar
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_EM_pillar
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_GR_pillar
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_Matsubara

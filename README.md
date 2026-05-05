@@ -127,7 +127,7 @@ full description.
 
 The recipe above was actually run on this commit.  Verbatim summary
 from the last run (matches the machine-checked outputs quoted later
-in §3.3, §4, §6.1, and §6.2):
+in §3.3, §4, §5, §7.1, and §7.2):
 
 ```
 ==============================================================
@@ -139,8 +139,9 @@ in §3.3, §4, §6.1, and §6.2):
   PASS  04_all_spine.sh
   PASS  05_axiom_free_all_10.sh
   PASS  06_axiom_free_individual.sh
+  PASS  07_unification_spine.sh
 --------------------------------------------------------------
-  total: 6   pass: 6   skip: 0   fail: 0
+  total: 7   pass: 7   skip: 0   fail: 0
 ```
 
 `run_all.sh` exits 0 when every script passes and 1 otherwise, so
@@ -374,12 +375,118 @@ depend on *no axioms at all*.
 
 > **Proof of execution.**  The recipe above was actually run on this
 > commit by `bash scripts/verify/01_kernel_axiom_audit.sh`, which
-> reported `PASS`.  See *§7.5 Proof of execution* below for the
+> reported `PASS`.  See *the §2.1 'Proof of execution on this commit' callout* below for the
 > full `bash scripts/verify/run_all.sh` summary.
 
 ---
 
-## 5. Analytic Machinery (giving the central identity physical substance)
+## 5. The Capstone: QM + Thermo + EM + GR share a single τ_ent
+
+Sections 3 and 4 audit the spine identity on the **QM** instance and
+the two **GR** instances (Minkowski and full electrovacuum, which is
+the Einstein–Maxwell case).  But CATEPT's underlying claim is
+broader than that: the *same* real scalar `τ_ent` plays a
+τ_ent-equivalent role in **every** physical pillar — not just QM
+and GR but also thermodynamics and electromagnetism — and they all
+agree at the carrier level.
+
+The proof of that claim is the capstone theorem
+[`catept_unifies_QM_Thermo_EM_GR`](CATEPTMain/Integration/UnificationSpine.lean)
+in `CATEPTMain.Integration.UnificationSpine`.  Its statement is the
+six-fold conjunction:
+
+```lean
+theorem catept_unifies_QM_Thermo_EM_GR :
+    B.pwClock.relationalTime = B.crClock.thermalTime           -- QM ↔ thermo
+    ∧ B.crClock.thermalTime = B.qmClock.entropicTime           -- QM internal
+    ∧ B.qmClock.entropicTime = B.spine.pwMat.matsubara.τ_ent   -- QM ↔ Matsubara
+    ∧ B.qmClock.entropicTime = emEntropicTime …                -- QM ↔ EM (Maxwell)
+    ∧ B.qmClock.entropicTime = B.grSymmetry.action B.grRefParam -- QM ↔ GR (Noether)
+    ∧ B.spine.pwMat.matsubara.τ_ent = B.spine.kmsBridge.tauEnt 0 -- ↔ KMS modular
+```
+
+In words, the same real number plays the role of:
+
+* the **Page–Wootters** relational time *(QM ↔ GR-style relational dynamics)*,
+* the **Connes–Rovelli** thermal time *(QM ↔ thermo bridge, CQG 11 (1994) 2899)*,
+* the **QM** modular-flow clock's entropic time,
+* the **Matsubara / Luttinger–Ward** `β·Ω` *(path-integral / thermo)*,
+* the **EM** (Maxwell) Gaussian imaginary-action entropic time
+  `emEntropicTime` *(electromagnetism pillar)*,
+* the **GR** Noether-action invariant *(general relativity pillar)*,
+* the **Tomita–Takesaki KMS strip width** `1/γ_I` *(modular flow)*.
+
+The proof is a single `refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩` over the
+bundle's six shared-`τ_ent` hypotheses, plus the previously-proven
+`relational_time_eq_thermal_time` (Page–Wootters ↔ Connes–Rovelli)
+inside the modular-flow / Kuchař core.
+
+### 5.1 Verifying the capstone
+
+The same `lake build … | grep` pattern as §3.3 / §4 / §6 / §7 audits
+the capstone alongside its five companion pillar-agreement
+theorems:
+
+```bash
+lake build CATEPTMain.Integration.UnificationSpine 2>&1 \
+  | grep -E "'CATEPTMain\.Integration\.UnificationSpine\.CATEPTUnificationBundle\.(catept_unifies_QM_Thermo_EM_GR|unification_via_modular_flow|unification_QM_thermo_pillar|unification_QM_EM_pillar|unification_QM_GR_pillar|unification_QM_Matsubara)' depends on axioms"
+```
+
+**Captured output** (verbatim from
+[`scripts/verify/logs/07_unification_spine.out`](scripts/verify/logs/07_unification_spine.out)):
+
+```
+info: CATEPTMain/Integration/UnificationSpine.lean:376:0: 'CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.catept_unifies_QM_Thermo_EM_GR' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:377:0: 'CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_via_modular_flow' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:378:0: 'CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_thermo_pillar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:379:0: 'CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_EM_pillar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:380:0: 'CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_GR_pillar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CATEPTMain/Integration/UnificationSpine.lean:381:0: 'CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_Matsubara' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+```
+
+> **Proof of execution.** The recipe above was actually run on this
+> commit by `bash scripts/verify/07_unification_spine.sh`, which
+> reported `PASS`.  All six theorems clear the kernel-axiom-only
+> bar (`propext`, `Classical.choice`, `Quot.sound`) and nothing else.
+
+### 5.2 What this means relative to §3 and §4
+
+* §3 / §4 prove the central identity on **two** instances (QM, GR)
+  using a minimal slot interface.  They establish that the central
+  identity is not vacuous.
+* §5 proves the *same* `τ_ent` parameter is recognised by **all four**
+  physical pillars (QM, thermodynamics, EM, GR) plus the modular-flow
+  and Matsubara realisations.  It establishes that the central
+  identity is not just non-vacuous but **unifying**.
+* The bundle `CATEPTUnificationBundle` does NOT derive thermo, EM,
+  or GR from QM — it states that the four pillars **agree on one
+  common scalar parameter** at the carrier level, which is the
+  necessary precondition for any unification claim.  Operator-side
+  identifications (e.g. thermal time as a one-parameter group of
+  automorphisms) live in Logos.
+
+### 5.3 Sources cited in the proof
+
+* Connes & Rovelli, *Class. Quantum Grav.* **11** (1994) 2899 — the thermal-time hypothesis.
+* Page & Wootters, *Phys. Rev. D* **27** (1983) 2885 — relational time in WDW.
+* Lieb & Yngvason, *Phys. Rep.* **310** (1999) 1 — entropy axiomatisation.
+* Welden, Phillips & Gull, *Phys. Rev. B* **93** (2016) 165106 — Matsubara / Luttinger–Ward.
+
+---
+
+## 6. Analytic Machinery (giving the central identity physical substance)
 
 Without rigorous analytic backing, the QM/GR consistency theorems
 would be a formal shell. The following theorems supply the missing
@@ -414,7 +521,7 @@ CATEPT** at this commit.
 
 ---
 
-## 6. Axiom-Free Compatibility Theorems
+## 7. Axiom-Free Compatibility Theorems
 
 While the two consistency theorems clear the kernel-axiom bar, the
 framework's modularity rests on **10 short compatibility theorems**
@@ -445,7 +552,7 @@ CATEPT's modularity: the central identity makes no commitments about
 the heavy mathematics in any specific area, and each external theory
 makes commitments only about its own area.
 
-### 6.1 Verify all 10 compatibility theorems at once
+### 7.1 Verify all 10 compatibility theorems at once
 
 ```bash
 lake build CATEPTMain.Domains.CoherenceShowcase 2>&1 | grep -E "\
@@ -490,7 +597,7 @@ testable promise of the framework.
 > depends on axioms: [...]` — so the recipe above doubles as a
 > regression check.
 
-### 6.2 The 10 compatibility theorems, individually
+### 7.2 The 10 compatibility theorems, individually
 
 Each can be verified on its own using a single `grep` against the same
 build output. The expected outputs were captured directly from this
@@ -739,7 +846,7 @@ info: CATEPTMain/Domains/CoherenceShowcase.lean:662:0: 'CATEPTPluginVMLLandau.vm
 
 ---
 
-### 6.3 Why "axiom-free" is strictly stronger than "kernel axioms only"
+### 7.3 Why "axiom-free" is strictly stronger than "kernel axioms only"
 
 The two consistency theorems
 (`qm_satisfies_catept_spine`, `gr_minkowski_satisfies_catept_spine`)
@@ -766,7 +873,7 @@ repositories), but the linking theorem itself does not.
 
 ---
 
-## 7. Dependencies and Acknowledgments
+## 8. Dependencies and Acknowledgments
 
 Every dependency below supplies one specific piece of the proof.
 Mathlib v4.29.0 provides the kernel-level foundation; the named
@@ -775,7 +882,7 @@ hypotheses of the compatibility theorems of Section 6 and the
 analytic machinery of Section 5. Pinned revisions live in
 [`lakefile.lean`](lakefile.lean).
 
-### 7.1 Intellectual foundations
+### 8.1 Intellectual foundations
 
 This framework builds on the entropic-dynamics research programme of
 **Prof. Ariel Caticha** (University at Albany, SUNY) —
@@ -785,7 +892,7 @@ damping interpretation of $S_I$ originate directly from his work;
 this repository gives those physical concepts a machine-checked,
 formal expression in Lean.
 
-### 7.2 Core ported libraries
+### 8.2 Core ported libraries
 
 * **Gravitas** ([`CATEPTMain/Gravitas/`](CATEPTMain/Gravitas/)) —
   Lean 4 port of the Gravitas symbolic general-relativity package
@@ -799,7 +906,7 @@ formal expression in Lean.
   quantum-information primitives (Hadamard gate, CNOT, Deutsch's
   algorithm) used in the QM-side instance.
 
-### 7.3 Mathematical-physics dependencies (Michael R. Douglas)
+### 8.3 Mathematical-physics dependencies (Michael R. Douglas)
 
 The analytic-functional pillars of this repository are made practical
 by the formalization work of **Michael R. Douglas**
@@ -820,7 +927,7 @@ by the formalization work of **Michael R. Douglas**
   interacting example on which the rigorous complex Feynman–Kac
   result of Section 5 is exercised.*
 
-### 7.4 Other external Lean 4 dependencies
+### 8.4 Other external Lean 4 dependencies
 
 Each of the following supplies the heavy mathematical content that
 fills the hypotheses of one of the 10 compatibility theorems

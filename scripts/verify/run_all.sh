@@ -15,6 +15,7 @@ scripts=(
   "04_all_spine.sh"
   "05_axiom_free_all_10.sh"
   "06_axiom_free_individual.sh"
+  "07_unification_spine.sh"
 )
 
 declare -a results=()
