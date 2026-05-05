@@ -155,45 +155,20 @@ just bundled into one command.  Re-running it reproduces every
 
 ## 3. The Unification: QM ↔ GR
 
-### 3.1 Intuition: what does $\tau_{ent} = S_I/\hbar$ actually mean?
+### 3.1 Intuition
 
-Before going to the formal statement, four standard physics analogies
-make the construction less mysterious.
+Two standard analogues:
 
-* **Wick rotation, generalised.** In Euclidean QFT one writes
-  $t \mapsto i\tau$ to turn an oscillatory $e^{iS_R/\hbar}$ into a
-  decaying $e^{-S_E/\hbar}$. CATEPT does *not* require analytic
-  continuation: the action is taken complex from the start
-  ($S = S_R + i\,S_I$), and the imaginary part $S_I$ already
-  *is* a real, non-negative quantity along the damped class. The
-  ratio $S_I/\hbar$ then plays the role that the Wick-rotated
-  Euclidean time plays in QFT — but as a real physical parameter,
-  not a formal substitution.
+* **Wick rotation.** In Euclidean QFT, $t \mapsto i\tau$ turns
+  $e^{iS_R/\hbar}$ into $e^{-S_E/\hbar}$. Here the action is complex
+  from the start; $S_I \ge 0$ on the damped class, so $S_I/\hbar$
+  is a real parameter without analytic continuation.
 
-* **KMS / thermal time.** The KMS condition relates a quantum thermal
-  state at temperature $T$ to imaginary-time translations through
-  $\beta = 1/(k_B T)$, with imaginary-time interval $i\hbar\beta$.
-  The "thermal time hypothesis" of Connes–Rovelli (CQG 11, 1994,
-  2899) reads this $\hbar\beta$ as a genuine time parameter. CATEPT's
-  $\tau_{ent} = S_I/\hbar$ is the *off-equilibrium* analogue: the
-  same kind of object, but defined for any history through its
-  informational dissipation $S_I$, not just for Gibbs states.
-
-* **Friction in mechanics.** A damped harmonic oscillator with a
-  velocity-dependent dissipation has its mechanical action picking up
-  an imaginary contribution $S_I \ge 0$ along any trajectory. CATEPT
-  reads this $S_I$ as quantifying the *informational* dissipation —
-  what is forgotten about the system as the trajectory unfolds — and
-  divides it by $\hbar$ to obtain a time parameter measured in seconds.
-
-* **Proper time as arc length.** In GR, proper time
-  $\tau_{geom} = \int \sqrt{g_{\mu\nu}\,dx^\mu dx^\nu}$ measures
-  *geometric* arc length along a worldline. The CATEPT claim is
-  that the *same* worldline also has an *informational* arc length
-  $\tau_{ent} = S_I/\hbar$, and that under suitable physical
-  conditions (the damped class) the two coincide. The central
-  identity below is the Lean statement of this coincidence on the
-  abstract slot interface.
+* **KMS thermal time.** Connes–Rovelli (CQG 11, 1994, 2899) reads
+  the imaginary-time interval $\hbar\beta$ in a Gibbs state as a
+  time parameter. $\tau_{ent} = S_I/\hbar$ is the off-equilibrium
+  analogue: defined for any history through its $S_I$, not only
+  for Gibbs states.
 
 ### 3.2 The formal statement
 
@@ -384,17 +359,16 @@ depend on *no axioms at all*.
 
 ## 5. A Single τ_ent Across QM, Thermo, EM, and GR
 
-Sections 3 and 4 prove the spine identity on the **QM** instance and
-the two **GR** instances (Minkowski and full electrovacuum, which is
-the Einstein–Maxwell case). The proposition we now consider is
-broader: that the same real scalar `τ_ent` admits a
-τ_ent-equivalent role in each of QM, thermodynamics, electromagnetism,
-and GR, and that these roles agree at the carrier level.
+§3–§4 prove the spine identity on the QM instance and the two GR
+instances (Minkowski and full electrovacuum). §5 records the broader
+statement: the same real scalar `τ_ent` plays a τ_ent-equivalent role
+in each of QM, thermodynamics, EM, and GR, and the roles agree at the
+carrier level.
 
-The relevant statement is the theorem
+The theorem
 [`catept_unifies_QM_Thermo_EM_GR`](CATEPTMain/Integration/UnificationSpine.lean)
-in `CATEPTMain.Integration.UnificationSpine`. Its statement is a
-six-fold conjunction:
+in `CATEPTMain.Integration.UnificationSpine` states this as a six-fold
+conjunction:
 
 ```lean
 theorem catept_unifies_QM_Thermo_EM_GR :
@@ -406,21 +380,14 @@ theorem catept_unifies_QM_Thermo_EM_GR :
     ∧ B.spine.pwMat.matsubara.τ_ent = B.spine.kmsBridge.tauEnt 0 -- ↔ KMS modular
 ```
 
-In words, the same real number plays the role of:
-
-* the **Page–Wootters** relational time *(QM ↔ GR-style relational dynamics)*,
-* the **Connes–Rovelli** thermal time *(QM ↔ thermo bridge, CQG 11 (1994) 2899)*,
-* the **QM** modular-flow clock's entropic time,
-* the **Matsubara / Luttinger–Ward** `β·Ω` *(path-integral / thermo)*,
-* the **EM** (Maxwell) Gaussian imaginary-action entropic time
-  `emEntropicTime` *(electromagnetism pillar)*,
-* the **GR** Noether-action invariant *(general relativity pillar)*,
-* the **Tomita–Takesaki KMS strip width** `1/γ_I` *(modular flow)*.
-
-The proof is a single `refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩` over the
-bundle's six shared-`τ_ent` hypotheses, plus the previously-proven
-`relational_time_eq_thermal_time` (Page–Wootters ↔ Connes–Rovelli)
-inside the modular-flow / Kuchař core.
+The same scalar plays the role of the Page–Wootters relational time
+(QM ↔ relational dynamics), the Connes–Rovelli thermal time (QM ↔
+thermo, CQG 11, 1994, 2899), the Matsubara/Luttinger–Ward `β·Ω` (path-
+integral / thermo), the EM Gaussian imaginary-action entropic time
+`emEntropicTime`, the GR Noether-action invariant, and the Tomita–
+Takesaki KMS strip width `1/γ_I`. The proof is a single
+`refine ⟨?_, …, ?_⟩` over the bundle's six shared-`τ_ent` hypotheses
+together with `relational_time_eq_thermal_time`.
 
 ### 5.0 How τ_ent appears in each pillar
 
@@ -516,43 +483,25 @@ info: CATEPTMain/Integration/UnificationSpine.lean:381:0: 'CATEPTMain.Integratio
 > reported `PASS`.  All six theorems clear the kernel-axiom-only
 > bar (`propext`, `Classical.choice`, `Quot.sound`) and nothing else.
 
-### 5.2 What this means relative to §3 and §4
+### 5.2 Scope
 
-* §3 / §4 prove the central identity on **two** instances (QM, GR)
-  using a minimal slot interface.  They establish that the central
-  identity is not vacuous.
-* §5 proves the *same* `τ_ent` parameter is recognised by **all four**
-  physical pillars (QM, thermodynamics, EM, GR) plus the modular-flow
-  and Matsubara realisations.  It establishes that the central
-  identity is not just non-vacuous but **unifying**.
-* The bundle `CATEPTUnificationBundle` does NOT derive thermo, EM,
-  or GR from QM — it states that the four pillars **agree on one
-  common scalar parameter** at the carrier level, which is the
-  necessary precondition for any unification claim.  Operator-side
-  identifications (e.g. thermal time as a one-parameter group of
-  automorphisms) live in Logos.
+The bundle `CATEPTUnificationBundle` does not derive thermo, EM, or
+GR from QM. It states that the four pillars agree on one common
+scalar at the carrier level — the precondition for any unification
+claim. Operator-side identifications (thermal time as a one-parameter
+automorphism group, etc.) live in Logos.
 
-### 5.3 Sources cited in the proof
-
-* Connes & Rovelli, *Class. Quantum Grav.* **11** (1994) 2899 — the thermal-time hypothesis.
-* Page & Wootters, *Phys. Rev. D* **27** (1983) 2885 — relational time in WDW.
-* Lieb & Yngvason, *Phys. Rep.* **310** (1999) 1 — entropy axiomatisation.
-* Welden, Phillips & Gull, *Phys. Rev. B* **93** (2016) 165106 — Matsubara / Luttinger–Ward.
+References: Connes–Rovelli (CQG **11**, 1994, 2899); Page–Wootters
+(Phys. Rev. D **27**, 1983, 2885); Lieb–Yngvason (Phys. Rep. **310**,
+1999, 1); Welden–Phillips–Gull (Phys. Rev. B **93**, 2016, 165106).
 
 ---
 
-## 6. Substance Proofs Behind the Unification Claim
+## 6. Substance Proofs Behind the Unification
 
-§3–§5 establish *consistency* — the same `τ_ent` parameter is
-recognised by every pillar and the kernel-axiom-only audit confirms
-the bundling.  But consistency alone is shallow: a reader could ask
-whether anything *substantive* happens beneath the bundle.
-
-This section answers that.  Every theorem quoted here ships in the
-repo, has a non-trivial proof term, and clears the same kernel-
-axiom-only bar (`propext`, `Classical.choice`, `Quot.sound`).  The
-list isn't exhaustive — it's the spine substance: one theorem per
-mathematical layer the framework rests on.
+§3–§5 establish consistency. §6 records the substance: one
+non-trivial theorem per layer the framework rests on, each kernel-
+axiom-only.
 
 ### 6.1 Analytic backbone — rigorous Feynman–Kac, UV without counterterms
 
@@ -573,12 +522,9 @@ theorem complex_FK_rigorous
       ‖complexFKExpectation m obs‖ ≤ C * partitionFunction m
 ```
 
-Two real conclusions: (a) `obs · weight` is `μ`-integrable; (b) the
-complex-valued path-integral expectation is bounded by `C · Z`
-(the partition function, in operator-norm).  Inputs: the observable
-is `μ`-essentially bounded by `C` and the damping factor is `L¹`.
-This is what makes the `S_I ≥ 0` damped class an analytic
-contraction rather than a formal symbol.
+Conclusions: `obs · weight` is `μ`-integrable, and
+`‖E[obs]‖ ≤ C · Z`. Inputs: `obs` is `μ`-essentially bounded by `C`
+and the damping factor is `L¹`.
 
 **Counterterm-free UV convergence.**
 `CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed`:
@@ -596,103 +542,54 @@ theorem physical_uv_certificate_no_counterterm_needed
           (physical_uv_convergence_certificate m)).counterterm = 0
 ```
 
-A genuine analytic limit (`Tendsto … atTop (𝓝 …)`) of the
-cutoff-regulated partition to the continuum partition, with the
-explicit pinning `counterterm = 0`.  This pre-empts the standard
-"path integrals need renormalization at high energies" objection
-on the damped class.
+An analytic limit `Tendsto … atTop (𝓝 …)` of the cutoff-regulated
+partition to the continuum partition, with `counterterm = 0`.
 
-### 6.2 Operator-side identifications — Tomita modular flow ↔ τ_ent
+### 6.2 Operator-side: Tomita modular flow ↔ τ_ent
 
-The §5 theorem is stated at the carrier (real-arithmetic) level.  The operator-side machinery — where
-modular flow is genuinely a one-parameter automorphism group — is
-reachable through the Tomita ↔ Matsubara bridge.
-
-**`S_I = ℏ · log Δ(0)`.**
-`CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero`:
+The §5 theorem is at the carrier level. The operator-side
+identifications come through the Tomita ↔ Matsubara bridge:
 
 ```lean
-theorem matsubara_S_I_eq_hbar_logDelta_zero :
-    B.matsubara.S_I
-      = B.matsubara.ℏ * B.obligation.tomita.modularSpectralLogScale 0
+-- TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero
+B.matsubara.S_I = B.matsubara.ℏ * B.obligation.tomita.modularSpectralLogScale 0
+
+-- TomitaMatsubaraEquivBridge.tauEnt_zero_iff_logDelta_zero
+B.matsubara.τ_ent = 0 ↔ B.obligation.tomita.modularSpectralLogScale 0 = 0
 ```
 
-The Matsubara imaginary action equals Planck's constant times the
-operator-side modular Hamiltonian's image at the spectral origin.
-Read directly: `S_I` in `τ_ent = S_I/ℏ` equals `ℏ` times
-the Tomita modular Hamiltonian evaluated at 0. The imaginary
-action is therefore not an additional physical postulate but
-a quantity expressible through the operator-side modular
-Hamiltonian under the bridge's hypotheses.
+`S_I` equals `ℏ` times the Tomita modular Hamiltonian's spectral image
+at 0; `τ_ent = 0` iff that image is 0.
 
-**Dichotomy at the modular-flow origin.**
-`...tauEnt_zero_iff_logDelta_zero`:
-
-```lean
-theorem tauEnt_zero_iff_logDelta_zero :
-    B.matsubara.τ_ent = 0
-      ↔ B.obligation.tomita.modularSpectralLogScale 0 = 0
-```
-
-Iff (not just implies).  `τ_ent` vanishes exactly when the modular
-Hamiltonian's spectral origin is zero — physical agreement between
-the `τ_ent = 0` line and the operator-side fixed point.
-
-**KMS strip carrier is non-trivial.**
+A separation lemma checks the identification is non-trivial.
 `CATEPTMain.Integration.KMSModularParameterBridge.kms_strip_separate_from_entropicProperTime`:
 
 ```lean
-theorem kms_strip_separate_from_entropicProperTime :
-    ∃ (gammaI tauEnt : ℝ → ℝ) (t : ℝ),
-      tauEnt t ≠ kmsStripWidth gammaI t
+∃ (gammaI tauEnt : ℝ → ℝ) (t : ℝ), tauEnt t ≠ kmsStripWidth gammaI t
 ```
 
-A *separation* lemma: without an explicit identification carrier,
-`kmsStripWidth γ_I` and `τ_ent` are *not* the same function.  The
-bundle's identification is therefore content, not tautology.  Proof
-exhibits an explicit counterexample (`γ_I ≡ 1`, `τ_ent t := t`,
-evaluated at `t = 2`).
+— without a carrier, `kmsStripWidth γ_I` and `τ_ent` are different
+functions (counterexample: `γ_I ≡ 1`, `τ_ent t := t`, `t = 2`).
 
-### 6.3 Quantum-information substance — Shannon and Rényi reductions
+### 6.3 Quantum information: Shannon and Rényi reductions
 
-§5.4 / §8.1 contract #1 binds the quantum-information lane to the
-spine.  The substance is in two reductions both proven inside
-`CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge`:
-
-**Rényi at α = 1 reduces to Shannon.**
-`renyi_at_one_eq_shannon_via_plugin`:
+In `CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge`:
 
 ```lean
 theorem renyi_at_one_eq_shannon_via_plugin {n : ℕ} (p : Fin n → ℝ) :
     renyiEntropy 1 p = shannonEntropy p
-```
 
-The classical limit identity `H_α(p) → H(p)` as `α → 1`, on the
-nose at `α = 1`.  Not bundling: actual function-equality.
-
-**Shannon entropy of the zero distribution is zero.**
-`shannon_entropy_zero_via_plugin`:
-
-```lean
 theorem shannon_entropy_zero_via_plugin {n : ℕ} :
     shannonEntropy (fun _ : Fin n => (0 : ℝ)) = 0
 ```
 
-The simplest case-analysis check: vanishing distribution → vanishing
-entropy.  Together with `shannon_entropy_dirac_via_plugin` and
-`renyi_zero_eq_log_n_via_plugin` (also kernel-axiom-only), these
-exercise the entropy functional on its boundary inputs.
+Function-equality, not bundling. `shannon_entropy_dirac_via_plugin`
+and `renyi_zero_eq_log_n_via_plugin` (also kernel-axiom-only) cover
+the remaining boundary inputs.
 
 ### 6.4 Closed-form Matsubara algebra: τ_ent = β·Ω = -log Z
 
-The Matsubara/Luttinger–Ward carrier
-(`CATEPTMain.Integration.MatsubaraLuttingerWardCarrier`) is the
-strongest analytic backbone in the spine.  Four short theorems
-nail down the exact algebraic identities — the same closed-form
-expressions a textbook would write for the relationship between
-the imaginary action `S_I`, the entropic time `τ_ent`, the inverse
-temperature `β`, the Luttinger–Ward functional `Ω`, and the
-partition function `Z`:
+In `CATEPTMain.Integration.MatsubaraLuttingerWardCarrier`:
 
 ```lean
 theorem tauEnt_eq_beta_Omega    : M.τ_ent = M.β * M.Ω
@@ -701,15 +598,11 @@ theorem tauEnt_eq_neg_log_Z     : M.τ_ent = - Real.log M.Z
 theorem S_I_eq_hbar_neg_log_Z   : M.S_I   = -(M.ℏ * Real.log M.Z)
 ```
 
-These are **definitional equalities propagated through Mathlib's
-real-arithmetic / Real.log_exp identities** — not bundling, not
-hypotheses.  Together they pin down the spine's
-`τ_ent = S_I/ℏ` as the same scalar as the textbook Matsubara
-expression `−ℏ ln Z`.
+These are equalities derived through Mathlib's `Real.log_exp` — not
+bundling. They identify the spine `τ_ent = S_I/ℏ` with the textbook
+Matsubara expression `−ℏ ln Z`.
 
-**Proof-term snippet** for the central closed form
-`tauEnt_eq_neg_log_Z`.  The full proof in
-`MatsubaraLuttingerWardCarrier.lean` is two tactics:
+The proof of `tauEnt_eq_neg_log_Z` is two tactics:
 
 ```lean
 theorem tauEnt_eq_neg_log_Z : M.τ_ent = - Real.log M.Z := by
@@ -717,13 +610,10 @@ theorem tauEnt_eq_neg_log_Z : M.τ_ent = - Real.log M.Z := by
   ring
 ```
 
-Reading: the first `rw` rewrites `M.τ_ent` using the carrier's
-`τ_ent_eq : τ_ent = β · Ω`, then `Z = exp(-β · Ω)` via `Z_eq_exp`,
-then `log (exp x) = x` from Mathlib's `Real.log_exp`.  What
-remains is closed by `ring`.  **Two `rw`s and a `ring`** — that's
-the entire derivation of the textbook Matsubara closed form.
+The `rw` chain rewrites `τ_ent` to `β·Ω`, then `Z = exp(-β·Ω)`, then
+`log (exp x) = x`; `ring` closes the residual arithmetic.
 
-The composed `S_I` form chains the same trick once more:
+`S_I_eq_hbar_neg_log_Z` chains the same trick:
 
 ```lean
 theorem S_I_eq_hbar_neg_log_Z : M.S_I = -(M.ℏ * Real.log M.Z) := by
@@ -750,31 +640,9 @@ info: CATEPTMain/Integration/UnificationSpine.lean:420:0: 'CATEPTMain.Integratio
  Quot.sound]
 ```
 
-### 6.5 Four-way equivalence at modular-flow origin
+### 6.5 Four-way equivalence at the modular-flow origin
 
-The Matsubara/Tomita layer also yields a four-way equality at
-the modular-flow spectral origin. Inside
-`CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge`:
-
-```lean
-theorem four_way_equivalence_at_zero :
-    B.tomitaMatsubara.matsubara.τ_ent = B.tauEntKMS 0
-    ∧ B.tauEntKMS 0 = B.tauEntChannel 0
-    ∧ B.tauEntChannel 0
-        = B.tomitaMatsubara.obligation.tomita.modularSpectralLogScale 0
-```
-
-Reading the conjunction: at the bridge's evaluation point 0,
-the Matsubara `τ_ent`, the KMS strip width, the reduced-channel
-`τ_ent`, and the Tomita modular Hamiltonian's spectral image are
-the same real number. The four formalisms — closed-form
-Matsubara, KMS thermal-strip, quantum-channel coarse graining,
-operator-algebraic modular flow — agree at the spectral origin
-under the bridge carrier's identification hypotheses.
-
-**Proof-term snippet.**  The four-way equivalence proof is a
-single anonymous-constructor term — three pairwise identities
-bundled with `⟨…, …, …⟩`:
+In `CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge`:
 
 ```lean
 theorem four_way_equivalence_at_zero :
@@ -787,39 +655,26 @@ theorem four_way_equivalence_at_zero :
    B.channel_eq_logDelta_zero⟩
 ```
 
-Each of `matsubara_eq_kmsStrip_at_zero`,
-`kmsStrip_eq_channel_at_zero`, and `channel_eq_logDelta_zero`
-is itself a proven theorem against a shared-`τ_ent` hypothesis
-field.  The four-way collapse is therefore *transitive*: KMS ↔
-channel ↔ modular Hamiltonian ↔ Matsubara, witnessed term-by-term.
+At the bridge's evaluation point 0, the Matsubara `τ_ent`, the KMS
+strip width, the reduced-channel `τ_ent`, and the Tomita modular
+Hamiltonian's spectral image are the same real number. The proof is
+the anonymous constructor over three pairwise identifications, each
+proved against a shared-`τ_ent` hypothesis.
 
-The composite `S_I` identity:
+Two companion theorems:
 
 ```lean
 theorem S_I_eq_hbar_logDelta_eq_hbar_channel :
-    B.tomitaMatsubara.matsubara.S_I
-      = B.tomitaMatsubara.matsubara.ℏ
-          * B.tomitaMatsubara.obligation.tomita.modularSpectralLogScale 0
-    ∧ B.tomitaMatsubara.matsubara.S_I
-      = B.tomitaMatsubara.matsubara.ℏ * B.tauEntChannel 0
-```
+    B.matsubara.S_I = B.matsubara.ℏ * B.tomita.modularSpectralLogScale 0
+    ∧ B.matsubara.S_I = B.matsubara.ℏ * B.tauEntChannel 0
 
-`S_I` equals **both** `ℏ · log Δ(0)` (Tomita modular Hamiltonian)
-**and** `ℏ · τ_ent_chan(0)` (reduced-channel) simultaneously.
-
-Plus the explicit KMS-strip closed form:
-
-```lean
 theorem matsubara_tauEnt_eq_one_over_gammaI :
-    B.tomitaMatsubara.matsubara.τ_ent = 1 / B.gammaI 0
+    B.matsubara.τ_ent = 1 / B.gammaI 0
 ```
 
-The Matsubara entropic time at the bridge's evaluation point is
-literally the reciprocal of the imaginary-rate `γ_I` at zero.
+— `S_I = ℏ · log Δ(0) = ℏ · τ_ent_chan(0)` and `τ_ent = 1/γ_I(0)`.
 
-**Captured output** (verbatim from
-[`scripts/verify/logs/09_matsubara_substance.out`](scripts/verify/logs/09_matsubara_substance.out),
-last three entries):
+**Captured output** ([`logs/09_matsubara_substance.out`](scripts/verify/logs/09_matsubara_substance.out), last three entries):
 
 ```
 info: CATEPTMain/Integration/UnificationSpine.lean:423:0: 'CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero' depends on axioms: [propext,
@@ -837,104 +692,37 @@ info: CATEPTMain/Integration/UnificationSpine.lean:425:0: 'CATEPTMain.Integratio
 > audited together by `bash scripts/verify/09_matsubara_substance.sh`,
 > which reported `PASS` on this commit.
 
-### 6.6 Electrovacuum: explicit S_I structure beyond the slot rewrite
+### 6.6 Electrovacuum: explicit S_I structure
 
-A fair critique of §3 is that
-`gr_electrovacuum_satisfies_catept_spine` discharges its proof
-obligation by reusing the Minkowski slot — the EM stress-energy
-structure is registered (`gravitasEMStressEnergy`,
-`ElectromagneticTensor`) but doesn't appear in the spine-identity
-proof itself.  This subsection surfaces four substance theorems
-from `CATEPTMain.Integration.GravitasBridge` that go *beyond*
-slot rewrite: they pin `S_I` to an **explicit closed-form
-expression** in the EM 4-velocity and background 4-potential.
-
-**Explicit closed form for the EM imaginary action.**
-`bohmianEM_action_expansion`:
+`gr_electrovacuum_satisfies_catept_spine` (§3) reuses the Minkowski
+proof. Four theorems in `CATEPTMain.Integration.GravitasBridge` go
+beyond that and pin `S_I` to an explicit closed form in the EM
+4-velocity and background 4-potential:
 
 ```lean
 theorem bohmianEM_action_expansion (A_bg v : Fin 4 → ℝ) :
     (bohmianEMCATEPTSlot A_bg).actionIm v =
-        (∑ μ : Fin 4, v μ ^ 2)        / 2
+        (∑ μ : Fin 4, v μ ^ 2)    / 2
       − (∑ μ : Fin 4, v μ * A_bg μ)
-      + (∑ μ : Fin 4, A_bg μ ^ 2)     / 2
-```
+      + (∑ μ : Fin 4, A_bg μ ^ 2) / 2
 
-This is real content: the Bohmian-EM imaginary action is
-**exactly** the gauge-invariant kinetic form `‖v‖²/2 − ⟨v,A⟩ +
-‖A‖²/2 = ‖v − A‖²/2`.
-
-**Proof-term snippet.**  The full proof in `GravitasBridge.lean`
-unfolds three definitions via `simp only` and discharges the
-resulting polynomial identity via `ring`:
-
-```lean
-theorem bohmianEM_action_expansion (A_bg v : Fin 4 → ℝ) :
-    (bohmianEMCATEPTSlot A_bg).actionIm v =
-        (∑ μ : Fin 4, v μ ^ 2)        / 2
-      − (∑ μ : Fin 4, v μ * A_bg μ)
-      + (∑ μ : Fin 4, A_bg μ ^ 2)     / 2 := by
-  simp only [bohmianEMCATEPTSlot,
-    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot, bohmianEMSuperiorSlot,
-    Fin.sum_univ_four]
-  ring
-```
-
-The `simp only` unfolds the slot's `actionIm` projection through
-`SuperiorMethodSlot.toCATEPTSlot` and `bohmianEMSuperiorSlot`,
-then expands `∑ μ : Fin 4` to the explicit four-term sum.  After
-that, the EM imaginary action and the claimed `(v − A)²/2` form
-agree as polynomials in `v 0, v 1, v 2, v 3, A 0, A 1, A 2, A 3` —
-checked mechanically by `ring`.  No physical assumptions, no
-hypotheses; the closed form is forced by the slot definitions.
-
-**Damped-class membership for the EM slot.**
-`bohmianEM_nonneg`:
-
-```lean
-theorem bohmianEM_nonneg (A_bg : Fin 4 → ℝ) (v : Fin 4 → ℝ) :
+theorem bohmianEM_nonneg (A_bg v : Fin 4 → ℝ) :
     0 ≤ (bohmianEMCATEPTSlot A_bg).actionIm v
-```
 
-Combined with the closed form above, this proves the EM-coupled
-slot satisfies `S_I ≥ 0` for all velocities and all background
-4-potentials — the EM sector belongs to the damped class
-unconditionally, so `τ_ent = S_I/ℏ` is treatable as a real time
-parameter on the EM-coupled side without auxiliary assumptions.
-
-**VML steady-state decoupling theorem.**
-`vml_vacuum_em_action_zero`:
-
-```lean
 theorem vml_vacuum_em_action_zero (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
     (gravitasEMCATEPTSlot μ₀ hμ₀).actionIm 0 = 0
-```
 
-At the VML steady-state vacuum (`A = 0` in the Coulomb gauge,
-the global vacuum sector of the 4-potential), the EM CATEPT
-imaginary action *vanishes* — the EM sector decouples from the
-kinetic sector at the vacuum boundary.  This is a physical
-boundary condition, not a definitional artefact.
-
-**Spine identity on an EM-aware slot.**
-`gravitasEMCATEPTSlot_consistent`:
-
-```lean
 theorem gravitasEMCATEPTSlot_consistent (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
     cateptConsistencyConstraint (gravitasEMCATEPTSlot μ₀ hμ₀)
 ```
 
-The full central identity `actionIm/ℏ = eptClock` proved on a
-**different** slot than `gravitasMinkowskiSlot` — one whose
-`actionIm` is the explicit EM closed form above, and whose `ℏ`
-parameter is the vacuum permeability `μ₀` (with the standard
-electromagnetic-units convention `μ₀ ↔ ℏ` on the slot's scale).
-Where `gr_electrovacuum_satisfies_catept_spine` reuses the
-Minkowski proof, this theorem proves the spine identity *de novo*
-on a slot that genuinely uses the EM action structure.
+The first gives the gauge-invariant kinetic form `‖v − A‖²/2`
+(proof: `simp only [...]; ring`). The second gives `S_I ≥ 0` for all
+`v, A`. The third gives `S_I = 0` at the VML vacuum (`A = 0`). The
+fourth proves the spine identity on a slot whose `actionIm` is the
+explicit closed form rather than the Minkowski reduction.
 
-**Captured output** (verbatim from
-[`scripts/verify/logs/10_em_substance.out`](scripts/verify/logs/10_em_substance.out)):
+**Captured output** ([`logs/10_em_substance.out`](scripts/verify/logs/10_em_substance.out)):
 
 ```
 info: CATEPTMain/Integration/UnificationSpine.lean:429:0: 'CATEPTMain.Integration.GravitasBridge.bohmianEM_action_expansion' depends on axioms: [propext,
@@ -949,25 +737,15 @@ info: CATEPTMain/Integration/UnificationSpine.lean:432:0: 'CATEPTMain.Integratio
  Quot.sound]
 ```
 
-> **Proof of execution.**  All four EM substance theorems are
-> audited together by `bash scripts/verify/10_em_substance.sh`,
-> which reported `PASS` on this commit.
+Audited by [`10_em_substance.sh`](scripts/verify/10_em_substance.sh).
+Not yet derived in Lean: the closed-form `(v−A)²/2` from the full
+Einstein–Maxwell field equations, and back-reaction through
+`T_{μν}^{EM}`.
 
-What §6.6 does *not* yet prove (honest scope): a derivation of
-the closed-form `(v−A)²/2` action from the full Einstein–Maxwell
-field equations together with a back-reaction theorem relating
-`S_I` to the metric perturbation through `T_{μν}^{EM}`.  The
-field-equation derivation lives in external Gravitas content;
-encoding it as a Lean theorem is tracked under the worklog task
-`catept_em_stress_energy_from_field_equations`.
+### 6.7 The damped class
 
-### 6.7 The damped class — what "S_I ≥ 0" actually buys
-
-A second fair critique of §3 is the phrasing "under suitable
-physical conditions (the damped class)" without concrete
-specification.  Here is the precise condition: the **damped
-class** is the subset of CAT/EPT path-integral models on which
-the imaginary action is non-negative everywhere.  Formally
+The damped class is the subset of CAT/EPT path-integral models on
+which the imaginary action is point-wise non-negative. Formally
 (`MeasurePathIntegralModel`):
 
 ```lean
@@ -975,63 +753,19 @@ structure MeasurePathIntegralModel (α : Type*) [MeasurableSpace α] where
   μ                    : Measure α
   ℏ                    : ℝ
   ℏ_pos                : 0 < ℏ
-  actionRe             : α → ℝ
-  actionIm             : α → ℝ
+  actionRe, actionIm   : α → ℝ
   measurable_actionRe  : Measurable actionRe
   measurable_actionIm  : Measurable actionIm
-  actionIm_nonneg      : ∀ x, 0 ≤ actionIm x   -- ★ the damped-class hypothesis
+  actionIm_nonneg      : ∀ x, 0 ≤ actionIm x   -- damped-class hypothesis
 ```
 
-Three conditions, each a structure field:
+These four structure fields plus the `Integrable (damping ·) μ`
+hypothesis of §6.1 are the conditions referred to elsewhere as
+"the damped class". The theorem `weight_norm_is_damping` shows
+they imply `‖weight x‖ = exp(-S_I/ℏ) ≤ 1`, so the FK expectation
+of §6.1 is bounded and `τ_ent = S_I/ℏ ≥ 0`.
 
-* **`ℏ_pos`** — Planck's constant is strictly positive (so
-  `S_I/ℏ` is a well-defined real).
-* **`measurable_actionRe`, `measurable_actionIm`** — both action
-  components are measurable with respect to the path-space
-  measure (so `weight` is measurable and integrals make sense).
-* **`actionIm_nonneg`** — the imaginary action is point-wise
-  non-negative (the *damped-class* condition).
-
-These are the hypotheses Lean tracks throughout the analytic
-chain.  When the README says "under suitable physical conditions",
-the conditions are exactly these three structure fields plus the
-`Integrable (damping x) μ` hypothesis of §6.1's
-`complex_FK_rigorous`.  Nothing more, nothing hidden.
-
-The proven theorem `weight_norm_is_damping`:
-
-```lean
-theorem weight_norm_is_damping (x : α) :
-    ‖m.weight x‖ = Real.exp (-(m.actionImScaled x))
-```
-
-shows that `actionIm_nonneg` is exactly the condition that
-makes the path-integral weight a contraction
-(`‖weight x‖ ≤ 1`).  This is the analytic hinge: with `S_I ≥ 0`,
-`exp(−S_I/ℏ) ≤ 1`, the FK formula gives a bounded expectation
-(the §6.1 theorem), and `τ_ent = S_I/ℏ ≥ 0` is interpretable
-as a real time.
-
-### 6.8 Reading §6.4–§6.7 together
-
-§5 states that the four pillars share one `τ_ent`.  §6.4
-gives an explicit form: that `τ_ent` equals `β · Ω = -log Z`.  §6.5 says "and at
-modular-flow origin **four** different operator-side and channel-
-side realisations also collapse to that same scalar."  Together
-the seven theorems give the unification claim its analytic teeth:
-the spine identity is not a label glued to four loosely-related
-quantities but the closed-form Matsubara formula
-`τ_ent = -log Z`, identified pointwise with the Tomita modular
-Hamiltonian and the KMS strip width.
-
-This is the claim a careful reader would test first before
-trusting §3-§5 — and it is what scripts
-[`08_substance_proofs.sh`](scripts/verify/08_substance_proofs.sh)
-and
-[`09_matsubara_substance.sh`](scripts/verify/09_matsubara_substance.sh)
-audit.
-
-### 6.9 Verifying the substance proofs
+### 6.8 Verifying the substance proofs
 
 The same `lake build … | grep` pattern as the other sections audits
 all seven substance theorems with a single recipe:
@@ -1072,165 +806,76 @@ info: CATEPTMain/Integration/UnificationSpine.lean:413:0: 'CATEPTMain.Integratio
 > commit by `bash scripts/verify/08_substance_proofs.sh`, which
 > reported `PASS`.
 
-### 6.10 What's NOT in this section (honest scope)
+### 6.9 Not yet derived in Lean
 
-The substance theorems above land kernel-axiom-only certificates
-on the analytic, operator-side, and quantum-information layers.
-Other claims a reader might want — and which the framework does
-*not* yet prove from first principles in Lean — include:
+* General `τ_ent = τ_geom` for arbitrary pseudo-Riemannian
+  worldlines (only Minkowski and electrovacuum are discharged in §3).
+* Carleson a.e. convergence under entropic damping (§8.1 #6 binds
+  the abstract statement; the concrete theorem is a hypothesis).
+* Kelvin–Planck derivation for `τ_ent` (§8.1 #9 ties `S_I` to
+  Lieb–Yngvason entropy; the second law is a carrier hypothesis).
 
-* A general **`τ_ent = τ_geom`** equivalence proof for arbitrary
-  worldlines.  The Minkowski and electrovacuum spine theorems
-  (§3) discharge the equation on those backgrounds; a "general
-  contraction" identity for arbitrary pseudo-Riemannian
-  worldlines is currently external mathematical content.
-
-* A **Carleson a.e. convergence** theorem under entropic
-  damping.  §8.1 contract #6 binds the abstract Carleson
-  statement to the spine; the *concrete* a.e. theorem under
-  entropic damping is treated as a user-supplied hypothesis,
-  not a derivation.
-
-* A **Kelvin–Planck second-law derivation** for `τ_ent`.  §7.1
-  contract #9 ties `S_I` to Lieb–Yngvason entropy; the second
-  law itself is a hypothesis on the carrier, not a theorem.
-
-These remaining external obligations are tracked in the worklog
-under `catept_substance_proof_*` tasks; each item reduces to
-either an external mathematical reference or a Lean
-formalisation in flight.  Marking them as *not* yet proven is
-itself part of the framework's honesty discipline.
+Tracked under `catept_substance_proof_*` worklog tasks.
 
 ---
 
 ## 7. Three Consequences Worth Stating Separately
 
-§3–§6 establish the spine identity and the analytic, operator-
-side, and quantum-information content that supports it. Three
-specific results in that machinery differ from how the same
-physical questions are usually framed in textbook treatments.
-We state each one explicitly here, with the relevant context and
-the scope of what is and is not asserted.
+Three results from §6 differ from how the same physical questions
+are usually framed.
 
-### 7.1 UV convergence without counterterms (on the damped class)
+### 7.1 UV convergence without counterterms
 
-**Standard framing.** Path integrals in QFT typically require
-counterterms at high energies: divergent integrals are tamed by
-subtractions, and the continuum limit of a cutoff-regulated theory
-matches the renormalized continuum theory only after subtraction.
-
-**What the framework proves.**
-`CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed`
-(introduced in §6.1) shows that **on the damped class**, the
-cutoff-regulated partition function converges to the continuum
-partition function with the counterterm pinned to zero:
+In QFT, divergent path integrals are usually tamed by counterterm
+subtractions; the continuum limit matches the renormalized theory
+only after subtraction. On the damped class,
+`physical_uv_certificate_no_counterterm_needed` (§6.1) gives:
 
 ```lean
 Tendsto cutoffPartition atTop (𝓝 continuumPartition)
   ∧  counterterm = 0
 ```
 
-Both conjuncts are part of the same proof — the limit *and* the
-zero-counterterm pinning are simultaneous.
+Scope: `S_I ≥ 0` bounds the regulated integrals uniformly in the
+cutoff, so the continuum limit holds with counterterm pinned to
+zero. The statement is restricted to the damped class — not all
+path integrals. The same hypothesis `actionIm_nonneg` that allows
+`τ_ent = S_I/ℏ` to be read as a real time (§6.7) is what yields
+this UV bound.
 
-**Scope.** The statement is not that all path integrals are
-UV-finite. The premise is the damped class (`S_I ≥ 0`), in which
-the imaginary action's contraction property bounds the regulated
-integrals uniformly in the cutoff. The continuum limit and the
-zero-counterterm assignment then follow from the §6.1 Feynman–Kac
-bound. The damped class is a restriction; the theorem is the
-statement that, within that restriction, the counterterm pinned
-to zero suffices.
+### 7.2 S_I through the Tomita modular Hamiltonian
 
-**Relation to the spine identity.** The same hypothesis
-`actionIm_nonneg` that allows `τ_ent = S_I/ℏ` to be read as a
-real time parameter (§6.7) is the hypothesis that yields the
-counterterm-free continuum limit. The two are not independent
-requirements but the same condition examined through different
-lemmas.
-
-### 7.2 S_I expressed through the Tomita modular Hamiltonian
-
-**Standard framing.** The imaginary part of a complex action is
-usually treated either as a phenomenological dissipation term or
-as a Wick-rotated regulator. The modular Hamiltonian is an
-operator-algebraic object built from the GNS construction on a
-state of a von Neumann algebra; it is conventionally placed on
-the operator side, not on the action side.
-
-**What the framework proves.**
-`CATEPTMain.Integration.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero`
-(§6.2) and the composite identity
-`S_I_eq_hbar_logDelta_eq_hbar_channel` (§6.5) state that they
-are the same scalar:
+The imaginary action is usually treated as a dissipation term or
+Wick-rotated regulator on the action side; the modular Hamiltonian
+lives on the operator side via the GNS construction. The
+identifications of §6.2 / §6.5 give:
 
 ```lean
 S_I = ℏ · modularSpectralLogScale 0   ∧   S_I = ℏ · τ_ent_chan(0)
 ```
 
-The imaginary action `S_I` evaluated through the Matsubara
-machinery equals `ℏ` times the Tomita–Takesaki modular
-Hamiltonian's image at the spectral origin — and equals `ℏ`
-times the reduced-channel `τ_ent` at the same point.
-
-**What the equality is.** The two sides of the equality are
-defined independently. The imaginary action `actionIm : α → ℝ`
-is a measurable function on the path-integral side; the modular
-Hamiltonian `modularSpectralLogScale : ℝ → ℝ` is the spectral
-image of `log Δ` on the operator side. Their pointwise agreement
-at the spectral origin is established only after the
-`TomitaMatsubaraEquivBridge` carrier exposes a shared-`τ_ent`
-hypothesis on both sides; the equality is a consequence of that
-hypothesis being satisfied, not a definitional artefact.
-
-**Relation to Connes–Rovelli.** The thermal-time hypothesis
-proposes that modular flow furnishes a time parameter on certain
-thermal states. The present identity does not establish that
-proposal; it establishes the narrower statement that, under the
-bridge's hypotheses, `S_I` and `ℏ · log Δ(0)` denote the same
-real number.
+The two sides are defined independently. The equality is a
+consequence of the `TomitaMatsubaraEquivBridge` carrier's shared-
+`τ_ent` hypothesis, not a definitional artefact. It does not
+establish the Connes–Rovelli thermal-time hypothesis; only that,
+under the bridge's hypotheses, `S_I` and `ℏ · log Δ(0)` are the
+same real number.
 
 ### 7.3 Four-way agreement at the modular-flow origin
 
-**Standard framing.** Identifications between independent
-formalisms in unified-theory programmes are usually established
-bilaterally (e.g. QM ↔ thermal time, or path-integral ↔ operator
-algebra). Agreements among four or more realisations of the same
-scalar conventionally require a separate argument for each pair.
-
-**What the framework proves.**
-`CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero`
-of §6.5 states a four-way equality:
+Identifications among independent formalisms are usually
+established bilaterally. `four_way_equivalence_at_zero` (§6.5)
+gives a single conjunction:
 
 ```lean
-Matsubara τ_ent
-  = KMS strip width τ_ent_KMS(0)
-  = reduced-channel τ_ent_chan(0)
-  = Tomita modular Hamiltonian log Δ(0)
+Matsubara τ_ent  =  KMS τ_ent(0)  =  channel τ_ent(0)  =  log Δ(0)
 ```
 
-Four scalars from four different formalisms (closed-form
-Matsubara, KMS thermal-strip, quantum-channel coarse graining,
-operator-algebraic modular flow) collapse to one real number at
-the modular-flow spectral origin.  The proof is a single
-`⟨…, …, …⟩` constructor over three pairwise identifications,
-each itself proven against a shared-`τ_ent` carrier hypothesis.
-
-**The four formalisms.** KMS thermal-strip width, Matsubara
-`β·Ω`, the modular Hamiltonian, and quantum-channel `τ_ent`
-are introduced by independent constructions: KMS is operator-
-algebraic, Matsubara is statistical-mechanical, modular flow is
-von-Neumann-algebraic, and quantum channels are
-information-theoretic. The four-way equality records that the
-bridge carrier's identification hypotheses force the four
-scalars to agree at the spectral origin.
-
-**Relation to the spine identity.** Where `τ_ent = S_I/ℏ` is
-evaluated at the modular-flow origin under the bridge's
-hypotheses, the value is independent of which of the four
-formalisms is used to compute it. The four-way equality
-therefore strengthens the §3 spine identity at the distinguished
-point to a single value with four equivalent computations.
+The four formalisms (Matsubara closed form, KMS thermal-strip,
+reduced channel, Tomita modular flow) agree at the spectral origin
+under the bridge carrier's hypotheses. At that point, evaluating
+`τ_ent = S_I/ℏ` gives the same real number through any of the
+four computations.
 
 ### 7.4 Verifying the three statements
 
