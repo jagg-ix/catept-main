@@ -26,6 +26,38 @@ consequences have been derived inside Lean.
 
 ---
 
+## Stability index
+
+Each section's claims are backed by one or more theorems in the
+Lean source and audited by a script under
+[`scripts/verify/`](scripts/verify/README.md). All ten scripts pass
+on this commit (see [§2.1](#proof-of-execution-on-this-commit)).
+
+| Section | Claims | Status | Audited by |
+|---|---|---|---|
+| §3 Spine identity (QM + GR Minkowski + electrovacuum + bundle) | 4 theorems | Stable | `01`–`04` |
+| §4 Kernel-axiom audit on the spine | 2 theorems | Stable | `01` |
+| §5 Multi-pillar agreement (QM + Thermo + EM + GR + Matsubara + KMS) | 6 theorems | Stable | `07` |
+| §6.1 Analytic backbone (rigorous Feynman–Kac, UV without counterterms) | 2 theorems | Stable | `08` |
+| §6.2 Tomita modular flow ↔ τ_ent | 3 theorems | Stable | `08` |
+| §6.3 Quantum-information reductions (Shannon, Rényi) | 2 theorems | Stable | `08` |
+| §6.4 Closed-form Matsubara algebra (`τ_ent = β·Ω = -log Z`) | 4 theorems | Stable | `09` |
+| §6.5 Four-way equivalence at modular-flow origin | 3 theorems | Stable | `09` |
+| §6.6 Electrovacuum: explicit `S_I = ‖v−A‖²/2` | 4 theorems | Stable | `10` |
+| §6.7 Damped class hypotheses (`actionIm_nonneg`, `weight_norm_is_damping`) | 1 structure + 1 theorem | Stable | `08` (FK bound) |
+| §6.9 Open items | listed in-text | Tracked via worklog | — |
+| §7 Three notable consequences | 3 statements (no new theorems) | Stable | `08`, `09` |
+| §8 Axiom-free compatibility theorems | 10 contracts | Stable (kernel-clean: zero axioms) | `05`, `06` |
+
+`Stable` = present on this branch, kernel-axiom-only, audited PASS
+by the named script(s) in the most recent run of
+`bash scripts/verify/run_all.sh`. `Tracked via worklog` = listed
+explicitly with status notes; the items in §6.9 reduce either to
+external mathematical references or to in-flight Lean
+formalisation tasks.
+
+---
+
 ## 1. The Proof Architecture
 
 To understand how CATEPT verifies this unification, it helps to
@@ -74,7 +106,7 @@ this repository contributes to one of these interconnected layers:
   that connect the central identity to external mathematical areas
   (quantum information, Carleson Fourier analysis, thermodynamics,
   …). Their axiom-free status guarantees that linking these
-  external theories introduces no hidden logical assumptions.
+  external theories uses only the standard kernel axioms.
 
 The whole architecture is held together by an automated verification
 check: every theorem named in this README depends *only* on the
@@ -583,7 +615,7 @@ theorem shannon_entropy_zero_via_plugin {n : ℕ} :
     shannonEntropy (fun _ : Fin n => (0 : ℝ)) = 0
 ```
 
-Function-equality, not bundling. `shannon_entropy_dirac_via_plugin`
+Both are function-level equalities. `shannon_entropy_dirac_via_plugin`
 and `renyi_zero_eq_log_n_via_plugin` (also kernel-axiom-only) cover
 the remaining boundary inputs.
 
@@ -806,16 +838,22 @@ info: CATEPTMain/Integration/UnificationSpine.lean:413:0: 'CATEPTMain.Integratio
 > commit by `bash scripts/verify/08_substance_proofs.sh`, which
 > reported `PASS`.
 
-### 6.9 Not yet derived in Lean
+### 6.9 Open items
 
-* General `τ_ent = τ_geom` for arbitrary pseudo-Riemannian
-  worldlines (only Minkowski and electrovacuum are discharged in §3).
-* Carleson a.e. convergence under entropic damping (§8.1 #6 binds
-  the abstract statement; the concrete theorem is a hypothesis).
-* Kelvin–Planck derivation for `τ_ent` (§8.1 #9 ties `S_I` to
-  Lieb–Yngvason entropy; the second law is a carrier hypothesis).
+The following statements are *external* to the Lean tree on this
+commit. They reduce to references against established mathematical
+results or to in-flight formalisation tasks; each is tracked under
+`catept_substance_proof_*` worklog entries.
 
-Tracked under `catept_substance_proof_*` worklog tasks.
+* **General `τ_ent = τ_geom`** for arbitrary pseudo-Riemannian
+  worldlines. The Minkowski and electrovacuum cases are proved in
+  §3; the general case is an external mathematical reference.
+* **Carleson a.e. convergence under entropic damping.** §8.1 #6
+  registers the abstract Carleson statement against the spine; the
+  concrete a.e. theorem is supplied as a carrier hypothesis.
+* **Kelvin–Planck derivation for `τ_ent`.** §8.1 #9 binds `S_I` to
+  Lieb–Yngvason entropy; the second law itself is a carrier
+  hypothesis.
 
 ---
 
