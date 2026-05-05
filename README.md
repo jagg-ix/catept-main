@@ -102,6 +102,28 @@ If the final command finishes without errors, the unification claim
 has been verified at the type level on this commit. The next two
 sections show how to verify it at the axiom level as well.
 
+### One-shot verification suite
+
+If you would rather run every Lean check shown later in this README
+in a single command (instead of typing each one by hand), the
+[`scripts/verify/`](scripts/verify/README.md) directory contains a
+small test suite:
+
+```bash
+bash scripts/verify/run_all.sh
+```
+
+Each individual recipe (the kernel-axiom audit on the QM/GR
+consistency theorems, the GR Minkowski check, the GR
+electrovacuum check, the combined four-spine check, the
+all-ten-compatibility-theorems check, and the per-theorem version
+of the latter) is also available as a stand-alone script that you
+can run on its own. The suite produces a `PASS` / `SKIP` / `FAIL`
+summary and writes the raw command output to
+`scripts/verify/logs/`. See
+[`scripts/verify/README.md`](scripts/verify/README.md) for the
+full description.
+
 ---
 
 ## 3. The Unification: QM ↔ GR
