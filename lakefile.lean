@@ -7,8 +7,28 @@ package CATEPTMain where
   ]
 
 -- 4.29-compatible dependencies pinned by commit for reproducibility.
+-- Physlib pinned to a catept-main fork at jagg-ix/physlib whose
+-- HEAD is exactly upstream commit 9ca1ee1d (the same revision
+-- catept-main has been tracking) plus *one* cherry-picked patch
+-- from upstream PR #1059: namespacing Physlib's `Distribution`
+-- abbrev under `namespace Physlib ... end Physlib` so Lean's
+-- auto-generated `Distribution._proof_1` no longer collides with
+-- Mathlib's homonymous one when both libraries are loaded.
+--
+-- Without this patch, `BohmianQMBridge`, `GravitasBridge`, and the
+-- QM/GR showcase fail to build with `import
+-- Physlib.Mathematics.Distribution.Basic failed, environment
+-- already contains 'Distribution._proof_1' from
+-- Mathlib.Analysis.Distribution.Distribution`.
+--
+-- Bumping to upstream `b70b5cdc` (the commit that landed PR #1059
+-- on master) was rejected because that path also carries `chore:
+-- bump to v4.29.1` (PR #1045), which would invalidate the entire
+-- Mathlib olean cache and force a full Lean toolchain bump
+-- across every catept-main sibling dep. The fork avoids that by
+-- branching from 9ca1ee1d directly.
 require «Physlib» from git
-  "https://github.com/leanprover-community/physlib.git" @ "9ca1ee1d0cac43391399fcdc9e9fca8c94c17057"
+  "https://github.com/jagg-ix/physlib.git" @ "6fd9a929fac46d3098c7e95ae66cbcd561aef4d8"
 
 require «BochnerMinlos» from git
   "https://github.com/mrdouglasny/bochner.git" @ "1b56973aff9b4e6ba761a6bd8af678e38bfd8d10"
