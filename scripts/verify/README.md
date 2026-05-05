@@ -5,13 +5,11 @@ verification recipe shown in the project [`README.md`](../../README.md)
 and checks that each one produces the expected output.
 
 Each script:
-1. Builds (or asks Lean to elaborate) the relevant module.
+1. Builds the relevant Lean module with `lake build`.
 2. Captures the raw command output to `logs/<script-name>.out`.
 3. Greps the output for the lines the project README claims should
    appear, and prints `PASS` or `FAIL`.
-4. Exits 0 on success, 1 on failure. (Skips, exit 77, are reserved
-   for prerequisites that are intrinsically unavailable on a host;
-   no script in this suite currently uses skip.)
+4. Exits 0 on success, 1 on failure.
 
 Logs persist after the run so they can be inspected later, attached
 to bug reports, or diffed across branches.
@@ -31,7 +29,7 @@ This runs all six scripts in order and prints a summary table.
 Individual scripts can also be run on their own:
 
 ```bash
-bash scripts/verify/05_axiom_free_all_10.sh
+bash scripts/verify/04_all_spine.sh
 ```
 
 The summary at the end of `run_all.sh` looks like:
@@ -51,8 +49,8 @@ The summary at the end of `run_all.sh` looks like:
   logs : /…/catept-main/scripts/verify/logs/
 ```
 
-Exit codes: `run_all.sh` exits **0** if every script passed (or
-skipped) and **1** if any script failed.
+`run_all.sh` exits **0** when every script passes and **1** when
+any script fails.
 
 ---
 
@@ -60,60 +58,54 @@ skipped) and **1** if any script failed.
 
 | # | Script | Mirrors README § | What it asserts |
 |--:|---|---|---|
-| 1 | `01_kernel_axiom_audit.sh` | §4 | The QM-style and GR-Minkowski-style spine theorems both depend only on `propext`, `Classical.choice`, `Quot.sound`. |
-| 2 | `02_gr_minkowski.sh` | §3.3.1 | The GR-Minkowski-style instance has the correct *statement type* (`spineConstraint (trivialSlot 1)`) and depends only on the kernel axiom triple. |
-| 3 | `03_gr_electrovacuum.sh` | §3.3.2 | The GR-full-electrovacuum-style instance has the correct *statement type* (`spineConstraint (trivialSlot 2)`) and depends only on the kernel axiom triple. |
-| 4 | `04_all_spine.sh` | §3.3.3 | All four spine theorems (QM, GR-Minkowski, GR-electrovacuum, bundled headline) clear the kernel-axiom-only bar simultaneously. |
+| 1 | `01_kernel_axiom_audit.sh` | §4 | The QM-side and GR-Minkowski-side spine theorems both depend only on `propext`, `Classical.choice`, `Quot.sound`. |
+| 2 | `02_gr_minkowski.sh` | §3.3.1 | The GR Minkowski instance (`gr_minkowski_satisfies_catept_spine`) depends only on the kernel-axiom triple. |
+| 3 | `03_gr_electrovacuum.sh` | §3.3.2 | The full electrovacuum instance (`gr_electrovacuum_satisfies_catept_spine`) depends only on the kernel-axiom triple. |
+| 4 | `04_all_spine.sh` | §3.3.3 | All four spine theorems (QM, GR Minkowski, GR full electrovacuum, bundled headline) clear the kernel-axiom-only bar simultaneously. |
 | 5 | `05_axiom_free_all_10.sh` | §6.1 | All ten compatibility theorems print `does not depend on any axioms` in a single combined grep. |
 | 6 | `06_axiom_free_individual.sh` | §6.2 | Each of the ten compatibility theorems independently prints `does not depend on any axioms`. |
 
 ---
 
-## How scripts 1–4 are implemented (the demo file)
+## How scripts 1–4 are implemented
 
-Scripts 1–4 verify the spine theorems against a self-contained Lean
-file at [`scripts/verify/lean/SpineDemo.lean`](lean/SpineDemo.lean).
+Scripts 1–4 verify the four spine theorems against
+[`CATEPTMain/Showcase/QMGRUnification.lean`](../../CATEPTMain/Showcase/QMGRUnification.lean).
+That file ports the canonical
+[`CATEPT/Showcase/QMGRUnification.lean`](https://github.com/jagg-ix/catept-main/blob/feat/publication/CATEPT/Showcase/QMGRUnification.lean)
+on the `feat/publication` branch verbatim — same symbols
+(`CATEPT.Showcase.QMGRUnification.qm_satisfies_catept_spine`,
+`...gr_minkowski_satisfies_catept_spine`,
+`...gr_electrovacuum_satisfies_catept_spine`,
+`...qm_gr_unified_via_entropic_proper_time`), same proofs,
+same `#print axioms` directives — but lives under
+`CATEPTMain/Showcase/` so Lake's `lean_lib CATEPTMain` owns
+the *module path* unambiguously (the `CATEPT/Showcase/` path
+is owned by NSC's `lean_lib CATEPT` on this branch and would
+route the build there).
 
-The demo file proves the *same four spine theorems* the canonical
-showcase
-([`CATEPT/Showcase/QMGRUnification.lean`](https://github.com/jagg-ix/catept-main/blob/feat/publication/CATEPT/Showcase/QMGRUnification.lean)
-on the `feat/publication` branch) proves on the full Gravitas /
-QuantumCATEPTBridge stack:
+The four `#print axioms` directives at the bottom of the
+showcase file are emitted as `info:` diagnostics during
+`lake build CATEPTMain.Showcase.QMGRUnification`.  Each script
+then greps that build output for the line corresponding to its
+target theorem, asserting the kernel-axiom triple
+`[propext, Classical.choice, Quot.sound]` and nothing else.
 
-* `qm_satisfies_catept_spine`              — QM-style instance
-* `gr_minkowski_satisfies_catept_spine`    — GR Minkowski instance
-* `gr_electrovacuum_satisfies_catept_spine` — full electrovacuum instance
-* `qm_gr_unified_via_entropic_proper_time`  — bundled headline
-
-The demo's content is the *abstract* `actionIm / ℏ = eptClock`
-pattern over a minimal three-field `SpineSlot` carrier, not the
-rich physics content of the canonical showcase. Its purpose is to
-exhibit the same kernel-axiom-only signature
-`[propext, Classical.choice, Quot.sound]` so the verification
-scripts can mechanically check the audit mechanism on any branch
-without depending on the full Gravitas / Bohmian dependency chain.
-
-When the canonical showcase is checked out (i.e. on
-`feat/publication`), running the same recipes by hand against
-`CATEPT.Showcase.QMGRUnification.*` produces the same kernel-axiom-
-only output on the *full physics-content* theorems. The recipes
-shown in the project README are written for that case.
-
-Scripts 5–6 do not need the demo: they verify the ten compatibility
-theorems against
+Scripts 5 and 6 use the same pattern against
 [`CATEPTMain/Domains/CoherenceShowcase.lean`](../../CATEPTMain/Domains/CoherenceShowcase.lean),
-which is present on every branch where the repo builds.
+which also embeds `#print axioms` directives for the ten
+compatibility theorems.
 
 ---
 
 ## Where the logs live
 
-* `logs/01_kernel_axiom_audit.out`   — `lake env lean` output for §4
-* `logs/02_gr_minkowski.out`         — `lake env lean` output for §3.3.1
-* `logs/03_gr_electrovacuum.out`     — `lake env lean` output for §3.3.2
-* `logs/04_all_spine.out`            — `lake env lean` output for §3.3.3
+* `logs/01_kernel_axiom_audit.out`   — `lake build … | grep` output for §4
+* `logs/02_gr_minkowski.out`         — `lake build … | grep` output for §3.3.1
+* `logs/03_gr_electrovacuum.out`     — `lake build … | grep` output for §3.3.2
+* `logs/04_all_spine.out`            — `lake build … | grep` output for §3.3.3
 * `logs/05_axiom_free_all_10.out`    — `lake build … | grep` output for §6.1
-* `logs/06_axiom_free_individual.out` — per-theorem matches for §6.2
+* `logs/06_axiom_free_individual.out`     — per-theorem matches for §6.2
 * `logs/06_axiom_free_individual.build.out` — full `lake build` output (kept
   separately so the per-theorem grep doesn't suppress unrelated build noise)
 
