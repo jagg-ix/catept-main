@@ -253,24 +253,15 @@ require OSreconstruction from
 lean_lib CATEPTMain where
   srcDir := "."
 
-lean_lib CATEPT where
-  srcDir := "."
-
-lean_lib QuantumInfo where
-  srcDir := "."
-
-lean_lib ClassicalInfo where
-  srcDir := "."
-
-lean_lib StatMech where
-  srcDir := "."
-
 -- The former in-tree `lean_lib NavierStokes`, `lean_lib NavierStokesClean`,
--- and `lean_lib QuantumAlgebra` declarations were retired on 2026-05-04:
--- their source code never lived in catept-main proper (these were stub
--- declarations that resolved to empty libs).  The corresponding
--- `require` entries above now pull in the actual sources from the
--- public sibling repos.
+-- `lean_lib QuantumAlgebra`, `lean_lib CATEPT`, `lean_lib QuantumInfo`,
+-- `lean_lib ClassicalInfo`, and `lean_lib StatMech` declarations were
+-- retired on 2026-05-04: their source code never lived in catept-main
+-- proper (these were stub declarations whose local srcDirs were empty
+-- or removed by commit df7ad497e "Sync from dev 2026-05 (#5)" when the
+-- trees were consolidated upstream).  The corresponding `require`
+-- entries pull in the actual sources from the public sibling repos
+-- (NavierStokesClean's lean_libs `CATEPT`, `QuantumInfo`, etc.).
 
 -- External String / PDE / Stochastic-PDE sibling repositories.
 -- Converted from relative-path requires to git pins on 2026-04-24 so
