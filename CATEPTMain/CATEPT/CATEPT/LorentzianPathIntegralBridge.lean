@@ -28,8 +28,9 @@ theorem lorentzianKernel_factorizes (S_R S_I hbar : ℝ) :
 theorem lorentzianKernel_norm_is_damping (S_R S_I hbar : ℝ) :
     ‖lorentzianKernel S_R S_I hbar‖ = Real.exp (-(S_I / hbar)) := by
   rw [lorentzianKernel_factorizes, norm_mul]
-  have hphase : ‖Complex.exp ((S_R / hbar : ℂ) * Complex.I)‖ = 1 :=
-    Complex.norm_exp_ofReal_mul_I _
+  have hphase : ‖Complex.exp ((S_R / hbar : ℂ) * Complex.I)‖ = 1 := by
+    have : (S_R / hbar : ℂ) = ((S_R / hbar : ℝ) : ℂ) := by push_cast; ring
+    rw [this]; exact Complex.norm_exp_ofReal_mul_I _
   rw [hphase, one_mul]
   rw [Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le]
 

@@ -1,6 +1,5 @@
 import CATEPTMain.CATEPT.CATEPT.LorentzianPathIntegralBridge
-import Mathlib.Algebra.BigOperators.Basic
-import Mathlib.Data.Nat.Interval
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic.Linarith
 
 set_option autoImplicit false
@@ -48,12 +47,15 @@ theorem lorentzianTrotterStep_td_norm_le_one
     ‖lorentzianTrotterStep_td H t hbar dt‖ ≤ 1 := by
   unfold lorentzianTrotterStep_td
   rw [norm_mul]
-  have hphase : ‖Complex.exp ((-(dt * H.H_R t) / hbar : ℂ) * Complex.I)‖ = 1 :=
-    Complex.norm_exp_ofReal_mul_I _
+  have hphase : ‖Complex.exp ((-(dt * H.H_R t) / hbar : ℂ) * Complex.I)‖ = 1 := by
+    have : (-(dt * H.H_R t) / hbar : ℂ) = ((-(dt * H.H_R t) / hbar : ℝ) : ℂ) := by
+      push_cast; ring
+    rw [this]; exact Complex.norm_exp_ofReal_mul_I _
   rw [hphase, one_mul]
   have hnorm : ‖(Real.exp (-(dt * H.H_I t / hbar)) : ℂ)‖ =
       Real.exp (-(dt * H.H_I t / hbar)) := by
-    simp [Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le]
+    rw [Complex.norm_real]
+    exact Real.norm_of_nonneg (Real.exp_pos _).le
   rw [hnorm]
   have hI : 0 ≤ H.H_I t := H.H_I_nonneg t
   have hdiv : 0 ≤ dt * H.H_I t / hbar :=

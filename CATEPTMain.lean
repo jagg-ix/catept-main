@@ -75,15 +75,31 @@ import CATEPTMain.Integration.AdSCFTEntropicEntanglementBridge
 import CATEPTMain.Integration.AdSCFTExtended
 import CATEPTMain.Integration.BochnerMinlosBridge
 import CATEPTMain.Integration.BrownianMotionBridge
-import CATEPTMain.Integration.OperatorPathIntegralFoundation
-import CATEPTMain.Integration.LorentzianRateKernelBridge
+-- CAT-EPT Lorentzian/Euclidean bridge layers (commit 3e8f0cff9).  Two of
+-- the nine ship-ready; the rest are quarantined as draft/incomplete and
+-- will be re-wired once their proofs / placeholder types are filled in.
 import CATEPTMain.Integration.EuclideanFeynmanKacAdmissibility
 import CATEPTMain.Integration.LorentzianTrotterKatoBridge
-import CATEPTMain.Integration.WickRotationBridge
-import CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge
-import CATEPTMain.Integration.SchwingerKeldyshADMBridge
-import CATEPTMain.Integration.NormalizationOpenSystemBridge
-import CATEPTMain.Integration.EntropySourceAdmissibilityBridge
+-- Quarantined (draft layer — will be re-wired after fix-ups):
+-- * OperatorPathIntegralFoundation: `congr 1` leaves unsolved goal at L39.
+-- * LorentzianRateKernelBridge: `lorentzianKernel_from_rate_exp` is false
+--   without an `hbar ≠ 0` hypothesis (mul_div_cancel obligation).
+-- * WickRotationBridge: 5 elaboration / linarith / type-mismatch issues.
+-- * SchwingerKeldyshInfluenceFunctionalBridge: uses Lean-3 `constant`
+--   keyword (removed in Lean 4); `FieldHistory` / `RealAction` placeholder
+--   types never get registered.  Replace with `def X := Unit` or
+--   `structure X where`.
+-- * SchwingerKeldyshADMBridge: same pattern (`constant ADMMetric : Type`).
+-- * NormalizationOpenSystemBridge: same pattern (`constant Operator`,
+--   `constant HilbertState`, `constant DensityMatrix`).
+-- * EntropySourceAdmissibilityBridge: 4 issues including unbound `P`.
+-- import CATEPTMain.Integration.OperatorPathIntegralFoundation
+-- import CATEPTMain.Integration.LorentzianRateKernelBridge
+-- import CATEPTMain.Integration.WickRotationBridge
+-- import CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge
+-- import CATEPTMain.Integration.SchwingerKeldyshADMBridge
+-- import CATEPTMain.Integration.NormalizationOpenSystemBridge
+-- import CATEPTMain.Integration.EntropySourceAdmissibilityBridge
 import CATEPTMain.Integration.CslibBridge
 import CATEPTMain.Integration.EnergyTensorConeLane
 import CATEPTMain.Integration.GibbsMeasureBridge

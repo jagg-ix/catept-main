@@ -44,8 +44,7 @@ theorem euclideanWeight_factorizes
       Real.exp (-(fkPathPotential V x t / hbar)) *
       Real.exp (-(entropicTimeIntegral lambda t)) := by
   unfold euclideanWeight euclideanKillingIntegral
-  ring_nf
-  simp [Real.exp_add, Real.exp_neg]
+  rw [neg_add, Real.exp_add]
 
 /-- Admissibility carrier for Euclidean rates (non-negative and integrable). -/
 structure EuclideanAdmissibleRate where
@@ -60,14 +59,14 @@ theorem euclideanWeight_le_one
     (x : ℝ → ℝ) (t : ℝ)
     (hh : 0 < hbar) (ht : 0 ≤ t)
     (hV : ∀ y, 0 ≤ V y)
-    (hλ : ∀ s, 0 ≤ lambda s) :
+    (hlam : ∀ s, 0 ≤ lambda s) :
     euclideanWeight hbar V lambda x t ≤ 1 := by
   unfold euclideanWeight euclideanKillingIntegral
   have hVint : 0 ≤ fkPathPotential V x t := by
     unfold fkPathPotential
     exact intervalIntegral.integral_nonneg ht (fun τ _ => hV (x τ))
   have hL : 0 ≤ entropicTimeIntegral lambda t :=
-    entropicTimeIntegral_nonneg_of_nonneg_rate lambda hλ t ht
+    entropicTimeIntegral_nonneg_of_nonneg_rate lambda hlam t ht
   have hsum : 0 ≤ fkPathPotential V x t / hbar + entropicTimeIntegral lambda t := by
     exact add_nonneg (div_nonneg hVint (le_of_lt hh)) hL
   have hneg : -(fkPathPotential V x t / hbar + entropicTimeIntegral lambda t) ≤ 0 := by
