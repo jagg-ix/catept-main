@@ -140,7 +140,13 @@ import CATEPTMain.Integration.DiscreteHarmonicSpineInstance
 import CATEPTMain.Integration.SIRealizationsBundle
 -- Capstone: single entropic-time parameter wiring QM + Thermodynamics + EM + GR.
 import CATEPTMain.Integration.UnificationSpine
--- Previously-orphaned bridges now wired into root:
+-- Previously-orphaned files (substantive theorems, not WORKLOG/Examples):
+-- 94 of 110 substantive orphan roots wired here; 16 quarantined as rotted
+-- (catept-main internal drift) or held back by pre-existing upstream issues
+-- (lean-mwe/NSC NavierStokes lib collision, Mathlib/Physlib Distribution
+-- clash, NSC `×` token).  See CATEPTMain/Spine/OrphanAggregator.lean for
+-- per-file rationales.
+import CATEPTMain.Spine.OrphanAggregator
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.

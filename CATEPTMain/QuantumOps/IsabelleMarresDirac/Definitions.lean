@@ -212,7 +212,9 @@ noncomputable def H_gate : Matrix (Fin 2) (Fin 2) ℂ :=
   (1 / Real.sqrt 2 : ℝ) • !![1, 1; 1, -1]
 
 -- dagger (conjugate transpose)
-abbrev dag {m n : Type*} (M : Matrix m n ℂ) := Matrix.conjTranspose M
+-- `noncomputable` required by Mathlib v4.29: Matrix.conjTranspose depends on
+-- `Complex.instNormedField` which is itself noncomputable.
+noncomputable abbrev dag {m n : Type*} (M : Matrix m n ℂ) := Matrix.conjTranspose M
 
 -- inner product ⟨u|v⟩ = Σ_i conj(u i) * v i
 noncomputable def inner_prod {n : ℕ} (u v : Fin n → ℂ) : ℂ :=
