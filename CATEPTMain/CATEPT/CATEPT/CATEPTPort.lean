@@ -1,5 +1,19 @@
 import CATEPTMain.CATEPT.CATEPT.FeynmanKacBridge
-import CATEPTMain.CATEPT.CATEPT.ModularFlowBridge
+-- ModularFlowBridge intentionally NOT imported here:
+-- it defines `EntropicModularFlowClock` in the same namespace as
+-- `ModularFlowKucharCoreAbstractions`, causing a duplicate-declaration
+-- collision when downstream modules (UnificationSpine and beyond) load
+-- both via this barrel. The five symbols formerly referenced in this
+-- file's docstring (entropic_time_eq_accumulated_modular_flow,
+-- page_wootters_time_eq_accumulated_modular_flow,
+-- connes_rovelli_time_eq_accumulated_modular_flow,
+-- relational_time_eq_thermal_time, hyers_ulam_weight_stability) now
+-- live in ModularFlowKucharCoreAbstractions or
+-- ThermodynamicsCoreAbstractions, both of which are reachable via
+-- the modern CATEPTMain.Integration.* tree. Consumers that genuinely
+-- need ModularFlowBridge's bespoke symbols (modularFlowToPathIntegral,
+-- modularFlow_actionImScaled_eq_rate) import it directly — see
+-- CATEPTMain/Integration/UnifiedTheorySpine.lean.
 import CATEPTMain.CATEPT.CATEPT.ComplexMeasureBridge
 import CATEPTMain.CATEPT.CATEPT.CATEPTPlanckBridge
 import CATEPTMain.CATEPT.CATEPT.DSFCouplingKernel
