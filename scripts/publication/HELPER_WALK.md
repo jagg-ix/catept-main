@@ -107,12 +107,50 @@ The naive port — "move the 5 SUBSTANTIVE theorems" — undershoots. Better str
    - The 8 capstone-family / projection-only cases (B1, B3, B4, B5, B6, B14, B22, B24) are *genuinely shallow* — they're field projections on a hand-built bundle structure. Either drop them from the publication-facing README or reframe them as "these are the assumptions, codified".
    - The eq003-style trivial cases (A3, A4, A10, A11, A13, A14) similarly are definitional restatements; consider removing from `feat/publication`'s public face and keeping only as internal lemmas.
 
-## Open follow-ups
+## Phase 3 finalization — pending helpers walked
 
-- `*Slot_consistent` definitions in `CATEPTMain.Integration.{QuantumCATEPTBridge, GravitasBridge}` (governs A21–A24).
-- `proved_renyi_at_one_eq_shannon`, `proved_renyi_zero_eq_log_n` in `CATEPTMain/Integration/AbstractWitnessContracts/QuantumInfo.lean` (governs B13).
-- `ofUVConvergenceCertificate_no_counterterm_needed` (governs B8).
-- `complexFKExpectation_integrable` (the second half of B7's bundle).
-- `OSReconstruction.Bridge.AxiomBridge` external dep — out of scope for this audit but worth a citation.
+Eight helpers from the first pass were marked "needs second walk". Their bodies have now been classified.
 
-These are tracked in `catept_pub_classify_20260505` (in_progress).
+| Helper | Tactics | Verdict |
+|---|---|---|
+| `quantumCATEPTSlot_consistent` | `(qmSuperiorSlot n).consistent` | **BUNDLING** (single field projection; underlying `qmSuperiorSlot.consistent` is itself a hand-built `consistent : Prop` field) |
+| `gravitasMinkowskiSlot_consistent` | `minkowskiSuperiorSlot.consistent` | **BUNDLING** (the file's own docstring says "Term-mode proof via `SuperiorMethodSlot.consistent` (`fun _ => div_one _`)" — three layers, ending in `div_one`) |
+| `gravitasElectrovacuumPlugin_consistent` | `gravitasMinkowskiSlot_consistent` | **BUNDLING** (direct re-export of the previous) |
+| `proved_shannon_entropy_dirac` | `unfold ; rw [neg_eq_zero] ; apply Finset.sum_eq_zero ; intro ; by_cases ; simp ; simp` | **SUBSTANTIVE** (case split + finset induction; `simp` handles `0·log 0 = 0` and `1·log 1 = 0`) |
+| `proved_renyi_at_one_eq_shannon` | `unfold renyiEntropy ; simp` | **BORDERLINE** (single `simp` after unfold; closes via the `if α = 1 then …` definitional branch — no real algebra) |
+| `proved_renyi_zero_eq_log_n` | `unfold ; have ... by norm_num × 3 ; rw [if_neg, hsub, hone, one_mul] ; congr 1 ; simp [Real.rpow_zero]` | **SUBSTANTIVE** (multi-step `norm_num` chain + closed-form `Real.rpow_zero` expansion) |
+| `ofUVConvergenceCertificate_no_counterterm_needed` | `:= exponential_uv_tail_implies_no_counterterm_needed _` | **BUNDLING** at this layer (single re-export — substance is one helper deeper, in `exponential_uv_tail_implies_no_counterterm_needed`) |
+| `complexFKExpectation_integrable` | `refine Integrable.mono' ; exact aestronglyMeasurable.mul ; refine hBound.mono ; intro ; rw [norm_mul, weight_norm_is_damping] ; rw [h_damp_eq] ; exact mul_le_mul ...` | **SUBSTANTIVE** (measure-theoretic chain — `Integrable.mono'`, `aestronglyMeasurable.mul`, `mul_le_mul`; class-2 analytic) |
+
+### Reclassification of parents
+
+- **A21–A24** (slot-`consistent` projections, Pool A): remain **BUNDLING-VIA-HELPER**. The slot-`consistent` chain is `qmSuperiorSlot.consistent`/`minkowskiSuperiorSlot.consistent`/etc., which are `def` fields populated by `fun _ => div_one _` or equivalent at construction time. Three layers, all shallow. **The honest constructor `CATEPTUnificationBundle` rescues this only when paired with `honestUnificationBundle`** (which discharges its own `qm_tauEnt_eq_*` fields with real carrier identities). The `*_satisfies_catept_spine` family on its own is genuinely shallow.
+- **B12** `shannon_entropy_zero_via_plugin` → **BORDERLINE** (helper `proved_shannon_entropy_zero` is `unfold + simp`).
+- **B13** `renyi_at_one_eq_shannon_via_plugin` → **BORDERLINE** (helper is `unfold + simp` with the `if α=1` branch reducing).
+- New SUBSTANTIVE-VIA-HELPER candidates outside the original 24:
+  - `shannon_entropy_dirac_via_plugin` (helper `proved_shannon_entropy_dirac` SUBSTANTIVE)
+  - `renyi_zero_eq_log_n_via_plugin` (helper `proved_renyi_zero_eq_log_n` SUBSTANTIVE)
+- **B7** `complex_FK_rigorous` → already SUBSTANTIVE-VIA-HELPER (anchored on `complexFKExpectation_norm_le`); now further confirmed via the second-half helper `complexFKExpectation_integrable` (also SUBSTANTIVE).
+- **B8** `physical_uv_certificate_no_counterterm_needed` → **BUNDLING-VIA-HELPER** at the second layer too. Verdict requires walking one more level into `exponential_uv_tail_implies_no_counterterm_needed`. Deferred to a third pass.
+
+### Final SUBSTANTIVE inventory after Phase 3
+
+| Verdict | Pool A | Pool B | New (outside original 24) | Total |
+|---|---:|---:|---:|---:|
+| SUBSTANTIVE (direct, outermost) | 0 | 5 | 0 | 5 |
+| SUBSTANTIVE-VIA-HELPER | 9 | 1 | 2 | 12 |
+| **Net SUBSTANTIVE** | **9** | **6** | **2** | **17** |
+| BORDERLINE / via-helper | 2 | 6 | 0 | 8 |
+| Genuinely-shallow BUNDLING | 13 | 12 | — | 25 |
+
+Up from 15 → 17 SUBSTANTIVE after Phase 3.
+
+The 4 slot-`consistent` cases (A21–A24) are now confirmed **genuinely shallow** at every layer of the chain — the only honest fix is to pair them with `honestUnificationBundle` (or an analogous non-degenerate constructor) so the *bundle* itself carries the real cross-pillar equalities.
+
+## What's still pending after Phase 3
+
+- One more helper walk into `exponential_uv_tail_implies_no_counterterm_needed` (governs B8). Likely SUBSTANTIVE based on the file's name and the fact that `RigorousComplexFeynmanKac` and `PhysicalUVConvergenceCertificate` are paired — but unverified.
+- `OSReconstruction.Bridge.AxiomBridge` external dep — out of scope; cite as external.
+- `qmSuperiorSlot.consistent` / `minkowskiSuperiorSlot.consistent` / `emSuperiorSlot.consistent` — all confirmed shallow (the file's docstring says so explicitly: `fun _ => div_one _`). No further walk needed.
+
+These are tracked in `catept_pub_classify_20260505`.
