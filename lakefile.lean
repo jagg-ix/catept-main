@@ -173,8 +173,18 @@ require «catept-core» from git
 -- under Lean v4.29.0 + mathlib v4.29.0 at the pinned SHA below.
 -- Repinning discipline mirrors catept-core: pin to a permanent commit
 -- reachable from `main`, never to a PR-branch tip.
-require «MaxwellWave» from git
-  "https://github.com/jagg-ix/lean-mwe.git" @ "095175e42ba56563092aff973f5554bfdc4a065c"
+--
+-- IMPORTANT: this require is intentionally MOVED below the
+-- `require NavierStokesClean from git` line below. Both this dep and
+-- NavierStokesClean declare `lean_lib NavierStokes`; lake's resolution
+-- picks whichever lib is registered first. NavierStokesClean's
+-- NavierStokes lib has the files catept-main consumers expect
+-- (NSFieldFourier, NSDiscreteIntegralKernel, etc.) — MaxwellWave's
+-- NavierStokes lib has a disjoint set (Equations, Euler,
+-- PressurePoisson, Vorticity) that no consumer in catept-main imports.
+-- Loading NavierStokesClean first ensures `import NavierStokes.*`
+-- resolves to its lib, not MaxwellWave's. Tracked under
+-- catept_navierstokes_lib_collision_20260506.
 
 -- catept-plugin-architecture: namespace-preserving home for the CAT/EPT
 -- Integration-layer plugin-slot abstractions (T60 step 2). Extracts
@@ -192,7 +202,7 @@ require «MaxwellWave» from git
 -- decoupling work (T60 follow-on) by removing the central plugin-slot
 -- coupling point.
 require «catept-plugin-architecture» from git
-  "https://github.com/jagg-ix/catept-plugin-architecture.git" @ "09b06d768e09d8172ebd8480f05cc39ed325b789"
+  "https://github.com/jagg-ix/catept-plugin-architecture.git" @ "5173b04b157996a7e4f083b5637d069173da6aed"
 
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
@@ -214,6 +224,17 @@ require QuantumAlgebra from git
 -- ClassicalHerglotzETHBridge,CATEPT.WeylYukawaContracts}).
 require NavierStokesClean from git
   "https://github.com/jagg-ix/navier-stokes-project-clean.git" @ "5212e5033d0480810878024bbb3c3e3c720871dd"
+
+-- MaxwellWave (jagg-ix/lean-mwe) — bumped 2026-05-06 to pick up the
+-- rename of `lean_lib NavierStokes` → `lean_lib MaxwellWaveNS` (commit
+-- 5a55c311a). The rename eliminates the same-name lib collision with
+-- NavierStokesClean's `lean_lib NavierStokes` so `import NavierStokes.X`
+-- resolves to NavierStokesClean's lib (which has the files catept-main
+-- consumers import). MaxwellWave's NavierStokes-namespace files (now
+-- under MaxwellWaveNS/) remain available via `import MaxwellWaveNS.X`
+-- but no consumer in catept-main currently uses them.
+require «MaxwellWave» from git
+  "https://github.com/jagg-ix/lean-mwe.git" @ "5a55c311a61bf888fb71a408ca5e78653b5baeac"
 
 require pphi2 from git
   "https://github.com/jagg-ix/pphi2.git" @ "b0cbac4703cfa6c6bb859a10687915472ad88fca"
