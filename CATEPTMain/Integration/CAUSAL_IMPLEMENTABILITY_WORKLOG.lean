@@ -118,7 +118,9 @@ Plan:
   New module
     `CATEPTMain/Integration/RetardedGreenFisherBridge.lean`
   with `RetardedSharpnessBound` and Fisher-info reciprocal carrier.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-003 lands in CATEPTMain/Integration/RetardedGreenFisherBridge.lean (RetardedSharpnessCarrier, SharpnessLowerBound, FisherReciprocalBound, retardedSharpness_constant_witness).
 
 -/
 
@@ -138,7 +140,9 @@ Plan:
   New module
     `CATEPTMain/Integration/QuantumInertialFramesLocalityBridge.lean`
   with `QIFSliceTransform` and `qifPreservesFactorisation` carriers.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-004 lands in CATEPTMain/Integration/QuantumInertialFramesLocalityBridge.lean (QIFSliceTransform, qifPreservesFactorisation, qifPreservesFactorisation_constant_witness).
 
 -/
 
@@ -160,7 +164,9 @@ Plan:
     `CATEPTMain/Integration/EntropicStressTensorConservationBridge.lean`
   with `EntropicStressTensor`, conservation field, and admissibility
   link to a causal local probe-field interaction.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-005 lands in CATEPTMain/Integration/EntropicStressTensorConservationBridge.lean (EntropicStressTensor, Conserved, entropicStress_conservation_witness).
 
 -/
 
@@ -177,7 +183,9 @@ Bridge:
 Plan:
   Extend SchwingerKeldyshInfluenceFunctionalBridge with
   `IFCauchyAdditive` and a witness type linking to `LocalSmatrix`.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-006 lands in CATEPTMain/Integration/IFInfluenceFunctionalCauchyAdditiveBridge.lean (standalone bridge: InfluenceFunctional, IFCauchyAdditive, IFHammersteinCorrection, ifCauchyAdditive_zero_witness). Standalone because CATEPTMain/Integration/SchwingerKeldyshInfluenceFunctionalBridge has a pre-existing FieldHistory build error unrelated to this work.
 
 -/
 
@@ -198,7 +206,9 @@ Plan:
     `CATEPTMain/Integration/KrausEntropicDampingBridge.lean`
   with `FactorisedKraus` carrier and damping link
     `||Pi_q^psi[f]||^2 ~ exp(- S_I[f] / hbar)`.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-007 lands in CATEPTMain/Integration/KrausEntropicDampingBridge.lean (FactorisedKraus, KrausFactorises, EntropicDampingLink, krausFactorises_constant_witness).
 
 -/
 
@@ -219,7 +229,9 @@ Plan:
     `CATEPTMain/Integration/MeasurementSharpnessEntropicCostBridge.lean`
   with `MeasurementSharpnessCarrier` and a Fisher/`tau_ent` reciprocal
   inequality.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-008 lands in CATEPTMain/Integration/MeasurementSharpnessEntropicCostBridge.lean (MeasurementSharpnessCarrier, FisherEntropicBound, fisherEntropicBound_zero_witness).
 
 -/
 
@@ -253,7 +265,9 @@ Plan:
   New module
     `CATEPTMain/Integration/LorentzInvariantCausalBoundsBridge.lean`
   with `RetardedSupportInvariant` carrier and a damping/`Delta_r` link.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-010 lands in CATEPTMain/Integration/LorentzInvariantCausalBoundsBridge.lean (RetardedSupportInvariant, LorentzInvariantRetardedSupport, lorentzInvariantRetardedSupport_constant_witness).
 
 -/
 
@@ -270,7 +284,9 @@ Bridge:
 Plan:
   Extend NHQMCATEPTBridge with an `epAdmissibleMeasurement` carrier
   anchored to `nhPersistentCurrentField_continuousAtEP`.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-011 lands in CATEPTMain/Integration/EPAdmissibleMeasurementBridge.lean (EPAdmissibleMeasurement, epAdmissible, epAdmissibleMeasurement_constant_witness). Standalone bridge; the NHQMCATEPTBridge extension can wire later.
 
 -/
 
@@ -289,7 +305,9 @@ Plan:
   New module
     `CATEPTMain/Integration/ResponseTemplatePointerBridge.lean`
   with `PointerProbeCarrier` and a wiring lemma to `FactorisedKraus`.
-Status: TODO
+Status: DONE
+Landed:
+  CIE-012 lands in CATEPTMain/Integration/ResponseTemplatePointerBridge.lean (PointerProbeCarrier, WiredToKraus, pointerProbe_kraus_witness).
 
 -/
 
@@ -300,16 +318,16 @@ Status: TODO
 |---------|----------------------------------------------------|----------|-----------|
 | CIE-001 | Sorkin impossible-measurement axiom                | P1       | DONE      |
 | CIE-002 | Local S-matrix continuous-additivity carrier       | P1       | DONE      |
-| CIE-003 | Retarded Green Fisher-information bound            | P1       | TODO      |
-| CIE-004 | QIF-locality axiom                                 | P2       | TODO      |
-| CIE-005 | Entropic stress tensor conservation                | P1       | TODO      |
-| CIE-006 | SK influence functional factorisation              | P2       | TODO      |
-| CIE-007 | Kraus factorisation across Cauchy cuts             | P2       | TODO      |
-| CIE-008 | Measurement sharpness as entropic cost             | P2       | TODO      |
+| CIE-003 | Retarded Green Fisher-information bound            | P1       | DONE      |
+| CIE-004 | QIF-locality axiom                                 | P2       | DONE      |
+| CIE-005 | Entropic stress tensor conservation                | P1       | DONE      |
+| CIE-006 | SK influence functional factorisation              | P2       | DONE      |
+| CIE-007 | Kraus factorisation across Cauchy cuts             | P2       | DONE      |
+| CIE-008 | Measurement sharpness as entropic cost             | P2       | DONE      |
 | CIE-009 | AdS/CFT entropic Einstein locality anchor          | P1       | REFERENCE |
-| CIE-010 | Lorentz-invariant causal bounds                    | P3       | TODO      |
-| CIE-011 | NHQM EP measurement regularity                     | P2       | TODO      |
-| CIE-012 | ResponseTemplate / pointer-probe carrier           | P3       | TODO      |
+| CIE-010 | Lorentz-invariant causal bounds                    | P3       | DONE      |
+| CIE-011 | NHQM EP measurement regularity                     | P2       | DONE      |
+| CIE-012 | ResponseTemplate / pointer-probe carrier           | P3       | DONE      |
 
 Final criterion (target theorem):
   CAT/EPT-admissible local operation iff
