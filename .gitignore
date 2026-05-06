@@ -8,3 +8,18 @@ build/
 .recovery/
 __pycache__/
 *.pyc
+
+# Watchdog-forbidden patterns (Private content watchdog: .github/workflows)
+**/.DS_Store
+build_*.txt
+build_*.log
+lean_*.txt
+lean_run.txt
+lean_axiom_log.txt
+lean_output.txt
+test_export.md
+test_file.txt
+*.private.*
+.env
+.env.local
+.envrc
