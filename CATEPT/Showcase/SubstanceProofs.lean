@@ -1,6 +1,7 @@
 import CATEPTMain.Integration.MatsubaraLuttingerWardCarrier
 import CATEPTMain.Integration.KMSModularParameterBridge
 import CATEPTMain.Integration.RigorousComplexFeynmanKac
+import CATEPTMain.Integration.UnificationSpineHonestWitness
 
 /-!
 # CATEPT Showcase — substance proofs (axiom-free)
@@ -18,15 +19,11 @@ The four Matsubara identities are classified **SUBSTANTIVE** in
 existential is **SUBSTANTIVE** (witness construction + `norm_num`). The
 Feynman–Kac bound is **SUBSTANTIVE-VIA-HELPER** (the
 `complexFKExpectation_norm_le` it bundles is a `calc` chain over
-integrals).
-
-The non-degenerate `CATEPTUnificationBundle` constructor
-`honestUnificationBundle` lives on `public/main` (see
-`CATEPTMain/Integration/UnificationSpineHonestWitness.lean` there). It
-is not yet on `feat/publication` because porting `UnificationSpine.lean`
-hits a transitive symbol collision with the legacy
-`ModularFlowBridge` imported by this branch's `CATEPTPort.lean`. That
-port is tracked as a separate worklog task.
+integrals). The non-degenerate `CATEPTUnificationBundle` constructor
+`honestUnificationBundle` is the **non-degenerate witness** for
+`CATEPTUnificationBundle` whose every cross-pillar equality field is
+discharged by a SUBSTANTIVE-verdict carrier theorem rather than `0 = 0`
+(see `scripts/publication/CONSTRUCTOR_PLAN.md`).
 
 Every theorem in this file depends only on the Lean kernel axioms
 `{propext, Classical.choice, Quot.sound}`.
@@ -78,3 +75,8 @@ emit kernel-axiom-only lines for every named theorem. Each must report
 
 -- ── Rigorous Feynman–Kac bound (SUBSTANTIVE-VIA-HELPER: calc chain on integrals) ──
 #print axioms CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous
+
+-- ── The non-degenerate bundle constructor (every cross-pillar field is
+-- closed by a SUBSTANTIVE-verdict carrier theorem; see
+-- scripts/publication/CONSTRUCTOR_PLAN.md and HELPER_WALK.md) ──
+#print axioms CATEPTMain.Integration.UnificationSpineHonestWitness.honestUnificationBundle
