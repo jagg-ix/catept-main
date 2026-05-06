@@ -3,7 +3,7 @@ import CATEPTMain.Integration.CausalImplementabilitySMatrixBridge
 import CATEPTMain.Integration.RetardedGreenFisherBridge
 import CATEPTMain.Integration.QuantumInertialFramesLocalityBridge
 import CATEPTMain.Integration.EntropicStressTensorConservationBridge
-import CATEPTMain.Integration.IFInfluenceFunctionalCauchyAdditiveBridge
+import CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge
 import CATEPTMain.Integration.KrausEntropicDampingBridge
 import CATEPTMain.Integration.MeasurementSharpnessEntropicCostBridge
 import CATEPTMain.Integration.LorentzInvariantCausalBoundsBridge
@@ -75,13 +75,13 @@ Each `#print axioms` directive must report
 #print axioms
   CATEPTMain.Integration.EntropicStressTensorConservationBridge.entropicStress_conservation_witness
 
--- ── CIE-006  SK influence functional Cauchy-additivity ─────────────
+-- ── CIE-006  SK influence functional Cauchy-additivity (in-place) ──
 #print axioms
-  CATEPTMain.Integration.IFInfluenceFunctionalCauchyAdditiveBridge.InfluenceFunctional.exists_trivial
+  CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge.InfluenceFunctional.exists_trivial
 #print axioms
-  CATEPTMain.Integration.IFInfluenceFunctionalCauchyAdditiveBridge.IFCauchyAdditive
+  CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge.IFCauchyAdditive
 #print axioms
-  CATEPTMain.Integration.IFInfluenceFunctionalCauchyAdditiveBridge.ifCauchyAdditive_zero_witness
+  CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge.ifCauchyAdditive_zero_witness
 
 -- ── CIE-007  Kraus factorisation across Cauchy cuts ────────────────
 #print axioms

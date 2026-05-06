@@ -185,7 +185,17 @@ Plan:
   `IFCauchyAdditive` and a witness type linking to `LocalSmatrix`.
 Status: DONE
 Landed:
-  CIE-006 lands in CATEPTMain/Integration/IFInfluenceFunctionalCauchyAdditiveBridge.lean (standalone bridge: InfluenceFunctional, IFCauchyAdditive, IFHammersteinCorrection, ifCauchyAdditive_zero_witness). Standalone because CATEPTMain/Integration/SchwingerKeldyshInfluenceFunctionalBridge has a pre-existing FieldHistory build error unrelated to this work.
+  CIE-006 lands in-place in
+  CATEPTMain/Integration/SchwingerKeldyshInfluenceFunctionalBridge.lean
+  (InfluenceFunctional, IFCauchyAdditive, IFHammersteinCorrection,
+  ifCauchyAdditive_zero_witness). The upstream module's pre-existing
+  Lean 3 `constant` declarations (`FieldHistory : Type` and
+  `RealAction : FieldHistory → ℝ`) were refactored to a `(α : Type)`
+  parameter on `InfluenceAction`, matching the carrier-level pattern
+  used elsewhere in CIE bridges. No prior consumer of the original
+  symbols existed in the tree at the time of the fix. The earlier
+  standalone bridge `IFInfluenceFunctionalCauchyAdditiveBridge.lean`
+  has been removed.
 
 -/
 
