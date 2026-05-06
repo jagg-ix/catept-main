@@ -246,7 +246,7 @@ Landed:
 -/
 
 /-!
-## CIE-009  AdS/CFT entropic Einstein locality anchor (REFERENCE)
+## CIE-009  AdS/CFT entropic Einstein locality anchor (REFERENCE→DONE)
 Goal:
   Treat AdSCFTEntropicEinsteinLocalityBridge as the existing anchor for
   CIE-001..CIE-008. Add open hooks:
@@ -257,7 +257,25 @@ Goal:
 Bridge:
   - CATEPTMain/Integration/AdSCFTEntropicEinsteinLocalityBridge.lean
   - CATEPTMain/Integration/UnifiedTheorySpine.lean
-Status: REFERENCE
+Status: DONE
+Landed:
+  CIE-001/002/005 carriers exist on this branch, so the open hooks
+  are now wired. Three additions to AdSCFTEntropicEinsteinLocalityBridge.lean:
+    - structure AdSCFTCIEHooks (w : AdSCFTEntropicEinsteinLocalityWitness)
+      with three Prop-existential fields:
+        sorkin_impossible_measurement_witness
+        local_s_matrix_factorization
+        entropic_stress_tensor_conservation
+    - theorem AdSCFTCIEHooks.cie_hooks_exist : ∀ w, Nonempty (AdSCFTCIEHooks w)
+      discharged by composing
+        EntropicLocalityTheoremsBridge.sorkinScenario_satisfies_noSignalling
+        CausalImplementabilitySMatrixBridge.continuousAdditive_of_constant_one
+        EntropicStressTensorConservationBridge.entropicStress_conservation_witness
+  Audit line added to CIE_All_Audit.lean (kernel-only). The hooks live
+  in a sibling structure rather than as fields on
+  AdSCFTEntropicEinsteinLocalityWitness, following the existing
+  EntropicEinsteinLocalityAssumptions / NoFTLHardenedAdSCFTWitness
+  wrapping pattern, so existing constructors are unaffected.
 
 -/
 
@@ -334,7 +352,7 @@ Landed:
 | CIE-006 | SK influence functional factorisation              | P2       | DONE      |
 | CIE-007 | Kraus factorisation across Cauchy cuts             | P2       | DONE      |
 | CIE-008 | Measurement sharpness as entropic cost             | P2       | DONE      |
-| CIE-009 | AdS/CFT entropic Einstein locality anchor          | P1       | REFERENCE |
+| CIE-009 | AdS/CFT entropic Einstein locality anchor          | P1       | DONE      |
 | CIE-010 | Lorentz-invariant causal bounds                    | P3       | DONE      |
 | CIE-011 | NHQM EP measurement regularity                     | P2       | DONE      |
 | CIE-012 | ResponseTemplate / pointer-probe carrier           | P3       | DONE      |

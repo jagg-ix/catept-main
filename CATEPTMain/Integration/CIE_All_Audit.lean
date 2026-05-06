@@ -9,6 +9,7 @@ import CATEPTMain.Integration.MeasurementSharpnessEntropicCostBridge
 import CATEPTMain.Integration.LorentzInvariantCausalBoundsBridge
 import CATEPTMain.Integration.EPAdmissibleMeasurementBridge
 import CATEPTMain.Integration.ResponseTemplatePointerBridge
+import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
 
 /-!
 # CIE-001..CIE-012 — combined kernel-axiom audit
@@ -124,3 +125,7 @@ Each `#print axioms` directive must report
   CATEPTMain.Integration.ResponseTemplatePointerBridge.WiredToKraus
 #print axioms
   CATEPTMain.Integration.ResponseTemplatePointerBridge.pointerProbe_kraus_witness
+
+-- ── CIE-009  AdS/CFT entropic Einstein locality CIE hooks ──────────
+#print axioms
+  CATEPTMain.Integration.AdSCFT.EntropicEinsteinLocality.AdSCFTCIEHooks.cie_hooks_exist
