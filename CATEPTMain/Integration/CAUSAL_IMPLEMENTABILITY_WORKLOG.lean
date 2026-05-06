@@ -314,7 +314,11 @@ Plan:
   anchored to `nhPersistentCurrentField_continuousAtEP`.
 Status: DONE
 Landed:
-  CIE-011 lands in CATEPTMain/Integration/EPAdmissibleMeasurementBridge.lean (EPAdmissibleMeasurement, epAdmissible, epAdmissibleMeasurement_constant_witness). Standalone bridge; the NHQMCATEPTBridge extension can wire later.
+  CIE-011 now lands in-place in CATEPTMain/CATEPT/CATEPT/NHQMCATEPTBridge.lean
+  under sub-namespace `CATEPTMain.CATEPT.CATEPT.EPAdmissible`
+  (EPAdmissibleMeasurement, epAdmissible,
+  epAdmissibleMeasurement_constant_witness). Earlier standalone bridge
+  CATEPTMain/Integration/EPAdmissibleMeasurementBridge.lean removed.
 
 -/
 

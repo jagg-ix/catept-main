@@ -7,7 +7,7 @@ import CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge
 import CATEPTMain.Integration.KrausEntropicDampingBridge
 import CATEPTMain.Integration.MeasurementSharpnessEntropicCostBridge
 import CATEPTMain.Integration.LorentzInvariantCausalBoundsBridge
-import CATEPTMain.Integration.EPAdmissibleMeasurementBridge
+import CATEPTMain.CATEPT.CATEPT.NHQMCATEPTBridge
 import CATEPTMain.Integration.ResponseTemplatePointerBridge
 import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
 
@@ -110,13 +110,13 @@ Each `#print axioms` directive must report
 #print axioms
   CATEPTMain.Integration.LorentzInvariantCausalBoundsBridge.lorentzInvariantRetardedSupport_constant_witness
 
--- ── CIE-011  NHQM exceptional-point measurement regularity ─────────
+-- ── CIE-011  NHQM exceptional-point measurement regularity (in-place) ──
 #print axioms
-  CATEPTMain.Integration.EPAdmissibleMeasurementBridge.EPAdmissibleMeasurement.exists_trivial
+  CATEPTMain.CATEPT.CATEPT.EPAdmissible.EPAdmissibleMeasurement.exists_trivial
 #print axioms
-  CATEPTMain.Integration.EPAdmissibleMeasurementBridge.epAdmissible
+  CATEPTMain.CATEPT.CATEPT.EPAdmissible.epAdmissible
 #print axioms
-  CATEPTMain.Integration.EPAdmissibleMeasurementBridge.epAdmissibleMeasurement_constant_witness
+  CATEPTMain.CATEPT.CATEPT.EPAdmissible.epAdmissibleMeasurement_constant_witness
 
 -- ── CIE-012  ResponseTemplate / pointer-probe carrier ──────────────
 #print axioms
