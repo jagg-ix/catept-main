@@ -75,6 +75,48 @@ import CATEPTMain.Integration.AdSCFTEntropicEntanglementBridge
 import CATEPTMain.Integration.AdSCFTExtended
 import CATEPTMain.Integration.BochnerMinlosBridge
 import CATEPTMain.Integration.BrownianMotionBridge
+-- CAT-EPT Lorentzian/Euclidean bridge layers (commit 3e8f0cff9).  Two of
+-- the nine ship-ready; the rest are quarantined as draft/incomplete and
+-- will be re-wired once their proofs / placeholder types are filled in.
+import CATEPTMain.Integration.EuclideanFeynmanKacAdmissibility
+import CATEPTMain.Integration.LorentzianTrotterKatoBridge
+import CATEPTMain.Integration.ProperTimePathIntegralBridge
+import CATEPTMain.Integration.ProperTimeFeynCalcBridge
+import CATEPTMain.Integration.LorentzInvariantProperTimeBridge
+import CATEPTMain.Integration.LorentzInvariantInvariants
+import CATEPTMain.Integration.LorentzInvariantSpinorBrackets
+import CATEPTMain.Integration.LorentzInvariantSymmetryActions
+import CATEPTMain.Integration.LorentzInvariantSliceConstraints
+import CATEPTMain.Integration.LorentzInvariantLimitStability
+import CATEPTMain.Integration.LorentzInvariantPhaseSpaceMeasure
+import CATEPTMain.Integration.LorentzInvariantTr5LeviCivitaBridge
+import CATEPTMain.Integration.LorentzInvariantGramDetLemmas
+import CATEPTMain.CATEPT_ProperTime.ProperTimeResolvent
+import CATEPTMain.CATEPT_ProperTime.HeatKernelDeterminant
+import CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions
+import CATEPTMain.CATEPT_ProperTime.ClosedTimePathEffectiveAction
+-- ADM / gravitational CAT-EPT entropy insertion (Reply 17).
+import CATEPTMain.Integration.ADMEntropyPathIntegralBridge
+-- Quarantined (draft layer — will be re-wired after fix-ups):
+-- * OperatorPathIntegralFoundation: `congr 1` leaves unsolved goal at L39.
+-- * LorentzianRateKernelBridge: `lorentzianKernel_from_rate_exp` is false
+--   without an `hbar ≠ 0` hypothesis (mul_div_cancel obligation).
+-- * WickRotationBridge: 5 elaboration / linarith / type-mismatch issues.
+-- * SchwingerKeldyshInfluenceFunctionalBridge: uses Lean-3 `constant`
+--   keyword (removed in Lean 4); `FieldHistory` / `RealAction` placeholder
+--   types never get registered.  Replace with `def X := Unit` or
+--   `structure X where`.
+-- * SchwingerKeldyshADMBridge: same pattern (`constant ADMMetric : Type`).
+-- * NormalizationOpenSystemBridge: same pattern (`constant Operator`,
+--   `constant HilbertState`, `constant DensityMatrix`).
+-- * EntropySourceAdmissibilityBridge: 4 issues including unbound `P`.
+-- import CATEPTMain.Integration.OperatorPathIntegralFoundation
+-- import CATEPTMain.Integration.LorentzianRateKernelBridge
+-- import CATEPTMain.Integration.WickRotationBridge
+-- import CATEPTMain.Integration.SchwingerKeldyshInfluenceFunctionalBridge
+-- import CATEPTMain.Integration.SchwingerKeldyshADMBridge
+-- import CATEPTMain.Integration.NormalizationOpenSystemBridge
+-- import CATEPTMain.Integration.EntropySourceAdmissibilityBridge
 import CATEPTMain.Integration.CslibBridge
 import CATEPTMain.Integration.EnergyTensorConeLane
 import CATEPTMain.Integration.GibbsMeasureBridge
@@ -119,6 +161,8 @@ import CATEPTMain.Integration.OperatorAlgebraicFoundationsBundle
 -- equivalence (PR #127, #128).
 import CATEPTMain.Integration.MatsubaraLuttingerWardCarrier
 import CATEPTMain.Integration.MatsubaraAQFTModularFlowEquivalenceBridge
+import CATEPTMain.Integration.MatsubaraEuclideanCATEPTBridge
+import CATEPTMain.Integration.FeynCalcMatsubaraBridge
 -- Page-Wootters quantum-time carrier (clock-conditional emergent time)
 -- and PW <-> Matsubara equivalence at the imaginary-time evaluation point.
 -- Page & Wootters PRD 27 (1983) 2885; Hoehn-Smith-Lock Front. Phys. 9 (2021) 587083.
@@ -140,7 +184,13 @@ import CATEPTMain.Integration.DiscreteHarmonicSpineInstance
 import CATEPTMain.Integration.SIRealizationsBundle
 -- Capstone: single entropic-time parameter wiring QM + Thermodynamics + EM + GR.
 import CATEPTMain.Integration.UnificationSpine
--- Previously-orphaned bridges now wired into root:
+-- Previously-orphaned files (substantive theorems, not WORKLOG/Examples):
+-- 94 of 110 substantive orphan roots wired here; 16 quarantined as rotted
+-- (catept-main internal drift) or held back by pre-existing upstream issues
+-- (lean-mwe/NSC NavierStokes lib collision, Mathlib/Physlib Distribution
+-- clash, NSC `×` token).  See CATEPTMain/Spine/OrphanAggregator.lean for
+-- per-file rationales.
+import CATEPTMain.Spine.OrphanAggregator
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.

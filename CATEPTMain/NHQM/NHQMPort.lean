@@ -26,3 +26,4 @@ Source: `(private intake)`
 
 import CATEPTMain.NHQM.NHQMPrelude
 import CATEPTMain.NHQM.NHQMCATEPTBridge
+import CATEPTMain.NHQM.NHQMMiddleTargets

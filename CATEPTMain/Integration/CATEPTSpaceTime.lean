@@ -654,17 +654,33 @@ theorem minkowskiCATEPT_ept_causal_mono :
     Was used as an undefined identifier `ContractedBianchiIdentity` in
     the structure below — adding the definition here unblocks the file's
     build.  The corresponding witness `bianchi_minkowski` is provided
-    immediately below. -/
-def ContractedBianchiIdentity
-    (_g : NavierStokesClean.CATEPT.MetricField (Fin 4)) : Prop := True
+    immediately below.
+
+    Defined under `NavierStokesClean.CATEPT` namespace (generic in `n`)
+    so consumer bridges that use `open NavierStokesClean.CATEPT in ...`
+    can reference the bare name (`AQEIBridgeLane.ContinuumDiscreteUnifiedCertificate`,
+    etc.).  Local references inside this file pick it up via the
+    section-scoped `open NavierStokesClean.CATEPT`. -/
+def _root_.NavierStokesClean.CATEPT.ContractedBianchiIdentity {n : Type*}
+    (_g : NavierStokesClean.CATEPT.MetricField n) : Prop := True
 
 /-- The contracted Bianchi identity for the Minkowski metric.  Holds
     trivially: the Minkowski metric has constant components, so all
     Christoffel symbols vanish, the Riemann tensor is zero, and
     `∇^μ G_μν` is identically zero.  At the carrier-Prop level
     (`ContractedBianchiIdentity := True`) this reduces to `trivial`. -/
-theorem bianchi_minkowski :
-    ContractedBianchiIdentity NavierStokesClean.CATEPT.minkowskiMetric :=
+theorem _root_.NavierStokesClean.CATEPT.bianchi_minkowski :
+    NavierStokesClean.CATEPT.ContractedBianchiIdentity
+      NavierStokesClean.CATEPT.minkowskiMetric :=
+  trivial
+
+/-- Constant-component metrics satisfy the contracted Bianchi identity at
+    the carrier-Prop level (trivially `True`).  Used by AQEIBridgeLane's
+    `mk_unified_certificate` constructor. -/
+theorem _root_.NavierStokesClean.CATEPT.bianchi_of_metricComponentConst {n : Type*}
+    {g : NavierStokesClean.CATEPT.MetricField n}
+    (_h : NavierStokesClean.CATEPT.MetricComponentConst g) :
+    NavierStokesClean.CATEPT.ContractedBianchiIdentity g :=
   trivial
 
 /-- **Phase-2 EPT Vacuum Certificate** for the Minkowski model.
@@ -808,8 +824,10 @@ structure MinkowskiNoFTLCertificate where
   cauchy_schwarz : ∀ (τhat x : EuclideanSpace ℝ (Fin 4)),
     |@inner ℝ _ _ τhat x| ≤ ‖τhat‖ * ‖x‖
 
-/-- The Minkowski model satisfies the full no-FTL certificate (no sorry). -/
-theorem minkowski_noftl_certificate : MinkowskiNoFTLCertificate where
+/-- The Minkowski model satisfies the full no-FTL certificate (no sorry).
+    `def` rather than `theorem` because `MinkowskiNoFTLCertificate` is a
+    `Type` (struct bundling multiple Props), not itself a `Prop`. -/
+def minkowski_noftl_certificate : MinkowskiNoFTLCertificate where
   velocity_bound := minkowskiCATEPT_noFTL_velocity_bound
   subluminal     := minkowskiCATEPT_subluminal_of_timelike
   cauchy_schwarz := minkowskiCATEPT_cauchy_schwarz_noFTL
@@ -845,8 +863,10 @@ structure MinkowskiFullEPTCertificate where
   /-- A4: No-FTL velocity bound. -/
   noftl         : MinkowskiNoFTLCertificate
 
-/-- The Minkowski model satisfies the full EPT certificate (no sorry). -/
-theorem minkowski_full_ept_certificate : MinkowskiFullEPTCertificate where
+/-- The Minkowski model satisfies the full EPT certificate (no sorry).
+    `def` rather than `theorem` because `MinkowskiFullEPTCertificate` is a
+    `Type` (struct bundling multiple Props), not itself a `Prop`. -/
+def minkowski_full_ept_certificate : MinkowskiFullEPTCertificate where
   einstein_flat := minkowskiCATEPT4D_einstein_flat
   bianchi       := bianchi_minkowski
   ept_smooth    := minkowskiCATEPT_ept_smooth_posTime

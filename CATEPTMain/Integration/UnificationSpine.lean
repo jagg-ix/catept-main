@@ -8,6 +8,12 @@ import CATEPTMain.Integration.MatsubaraLuttingerWardCarrier
 import CATEPTMain.Integration.KMSModularParameterBridge
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
+import CATEPTMain.Integration.RigorousComplexFeynmanKac
+import CATEPTMain.Integration.PhysicalUVConvergenceCertificate
+import CATEPTMain.Integration.TomitaMatsubaraEquivBridge
+import CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge
+import CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge
+import CATEPTMain.Integration.GravitasBridge
 
 /-!
 # UnificationSpine — capstone unifying QM, Thermodynamics, EM, and GR
@@ -362,3 +368,65 @@ theorem exists_trivial (thermoCert : ThermodynamicsEntropyCertificate) :
 end CATEPTMain.Integration.UnificationSpine
 
 end
+
+/-!
+## Reviewer-facing axiom audit (capstone unification)
+
+The `#print axioms` directives below are emitted as Lean `info:`
+diagnostics during `lake build CATEPTMain.Integration.UnificationSpine`,
+so the audit can be performed with a single grep against the build
+output.  Each must report `[propext, Classical.choice, Quot.sound]`
+— the standard Lean kernel triple, no others.
+-/
+
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.catept_unifies_QM_Thermo_EM_GR
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_via_modular_flow
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_thermo_pillar
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_EM_pillar
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_GR_pillar
+#print axioms CATEPTMain.Integration.UnificationSpine.CATEPTUnificationBundle.unification_QM_Matsubara
+
+/-!
+## Substance proofs — additional kernel-axiom-only theorems
+
+The capstone above states that one real `τ_ent` plays each pillar's
+role.  The directives below are the kernel-axiom audit on the
+**substance** that backs each pillar's contribution: the rigorous
+analytic Feynman–Kac bound, the UV convergence theorem, the
+operator-side Tomita modular-flow identifications, the KMS carrier
+separation lemma, and the quantum-info Shannon/Rényi reductions.
+
+Each line below is emitted as a Lean `info:` diagnostic during
+`lake build` and reports `[propext, Classical.choice, Quot.sound]`
+— the standard kernel triple, no others.
+-/
+
+-- §6.1 Analytic backbone
+#print axioms CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous
+#print axioms CATEPTMain.Integration.PhysicalUVConvergenceCertificate.physical_uv_certificate_no_counterterm_needed
+
+-- §6.2 Operator-side identifications (Tomita modular flow ↔ τ_ent)
+#print axioms CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.matsubara_S_I_eq_hbar_logDelta_zero
+#print axioms CATEPTMain.Integration.TomitaMatsubaraEquivBridge.TomitaMatsubaraEquivBridge.tauEnt_zero_iff_logDelta_zero
+#print axioms CATEPTMain.Integration.KMSModularParameterBridge.kms_strip_separate_from_entropicProperTime
+
+-- §6.3 Substantive quantum-info content (Shannon/Rényi via plugin)
+#print axioms CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.shannon_entropy_zero_via_plugin
+#print axioms CATEPTMain.Integration.QuantumInfoEntropyConsistencyBridge.renyi_at_one_eq_shannon_via_plugin
+
+-- §6.4 Closed-form Matsubara algebra (β·Ω, log Z, S_I/ℏ identities)
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.tauEnt_eq_beta_Omega
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.S_I_eq_hbar_tauEnt
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.tauEnt_eq_neg_log_Z
+#print axioms CATEPTMain.Integration.MatsubaraLuttingerWardCarrier.MatsubaraLuttingerWardCarrier.S_I_eq_hbar_neg_log_Z
+
+-- §6.5 Four-way equivalence at modular-flow origin (Tomita ↔ Matsubara ↔ KMS ↔ channel)
+#print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.four_way_equivalence_at_zero
+#print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.S_I_eq_hbar_logDelta_eq_hbar_channel
+#print axioms CATEPTMain.Integration.TomitaMatsubaraAQFTSpineBridge.TomitaMatsubaraAQFTSpineBridge.matsubara_tauEnt_eq_one_over_gammaI
+
+-- §6.6 EM stress-energy substance (explicit S_I closed form, nonneg, vacuum)
+#print axioms CATEPTMain.Integration.GravitasBridge.bohmianEM_action_expansion
+#print axioms CATEPTMain.Integration.GravitasBridge.bohmianEM_nonneg
+#print axioms CATEPTMain.Integration.GravitasBridge.vml_vacuum_em_action_zero
+#print axioms CATEPTMain.Integration.GravitasBridge.gravitasEMCATEPTSlot_consistent
