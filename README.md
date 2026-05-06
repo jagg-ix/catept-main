@@ -26,38 +26,6 @@ consequences have been derived inside Lean.
 
 ---
 
-## Stability index
-
-Each section's claims are backed by one or more theorems in the
-Lean source and audited by a script under
-[`scripts/verify/`](scripts/verify/README.md). All ten scripts pass
-on this commit (see [§2.1](#proof-of-execution-on-this-commit)).
-
-| Section | Claims | Status | Audited by |
-|---|---|---|---|
-| §3 Spine identity (QM + GR Minkowski + electrovacuum + bundle) | 4 theorems | Stable | `01`–`04` |
-| §4 Kernel-axiom audit on the spine | 2 theorems | Stable | `01` |
-| §5 Multi-pillar agreement (QM + Thermo + EM + GR + Matsubara + KMS) | 6 theorems | Stable | `07` |
-| §6.1 Analytic backbone (rigorous Feynman–Kac, UV without counterterms) | 2 theorems | Stable | `08` |
-| §6.2 Tomita modular flow ↔ τ_ent | 3 theorems | Stable | `08` |
-| §6.3 Quantum-information reductions (Shannon, Rényi) | 2 theorems | Stable | `08` |
-| §6.4 Closed-form Matsubara algebra (`τ_ent = β·Ω = -log Z`) | 4 theorems | Stable | `09` |
-| §6.5 Four-way equivalence at modular-flow origin | 3 theorems | Stable | `09` |
-| §6.6 Electrovacuum: explicit `S_I = ‖v−A‖²/2` | 4 theorems | Stable | `10` |
-| §6.7 Damped class hypotheses (`actionIm_nonneg`, `weight_norm_is_damping`) | 1 structure + 1 theorem | Stable | `08` (FK bound) |
-| §6.9 Open items | listed in-text | Tracked via worklog | — |
-| §7 Three notable consequences | 3 statements (no new theorems) | Stable | `08`, `09` |
-| §8 Axiom-free compatibility theorems | 10 contracts | Stable (kernel-clean: zero axioms) | `05`, `06` |
-
-`Stable` = present on this branch, kernel-axiom-only, audited PASS
-by the named script(s) in the most recent run of
-`bash scripts/verify/run_all.sh`. `Tracked via worklog` = listed
-explicitly with status notes; the items in §6.9 reduce either to
-external mathematical references or to in-flight Lean
-formalisation tasks.
-
----
-
 ## 1. The Proof Architecture
 
 To understand how CATEPT verifies this unification, it helps to
