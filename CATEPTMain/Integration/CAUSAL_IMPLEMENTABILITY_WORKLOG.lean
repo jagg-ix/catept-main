@@ -59,7 +59,13 @@ Bridge:
 Plan:
   Extend EntropicLocalityTheoremsBridge with a `SorkinScenario` carrier
   and the `NoSignalling` predicate keyed to spacelike triples.
-Status: TODO
+Status: DONE
+Landed:
+  EntropicLocalityTheoremsBridge §9 — `SorkinScenario` structure,
+  `noSignallingInSorkinScenario` extraction, `exists_trivial`,
+  `NoSignallingInSorkinScenario` predicate, and the carrier-vs-predicate
+  identity `sorkinScenario_satisfies_noSignalling`. Kernel-only audit
+  intended.
 
 -/
 
@@ -278,7 +284,7 @@ Status: TODO
 
 | ID      | Title                                              | Priority | Status    |
 |---------|----------------------------------------------------|----------|-----------|
-| CIE-001 | Sorkin impossible-measurement axiom                | P1       | TODO      |
+| CIE-001 | Sorkin impossible-measurement axiom                | P1       | DONE      |
 | CIE-002 | Local S-matrix continuous-additivity carrier       | P1       | TODO      |
 | CIE-003 | Retarded Green Fisher-information bound            | P1       | TODO      |
 | CIE-004 | QIF-locality axiom                                 | P2       | TODO      |

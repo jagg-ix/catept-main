@@ -431,6 +431,94 @@ theorem entropic_locality_theorems_bundle :
    DataProcessingInequalityCarrier.exists_trivial,
    EntropicLocalityTheorems.exists_trivial⟩
 
+-- ============================================================================
+-- 9. CIE-001 — Sorkin impossible-measurement carrier
+-- ============================================================================
+
+/-! ## CIE-001 — Sorkin impossible-measurement scenario
+
+Carrier-level encoding of the Sorkin scenario (Alice/Bob/Charlie regions)
+that the Bostelmann/Fewster/Ruep impossibility argument blocks: a CAT/EPT
+update `Phi_R` at Charlie's region cannot signal back to Alice's region
+when A and B are spacelike-separated and C lies in the causal future of
+both. This complements `NoSignallingCarrier` (T1) by encoding the
+*three-region* causal relations directly as carrier data, so consumers
+can pair the carrier with their preferred Lorentz / globally-hyperbolic
+spacetime model.
+
+REPLYID: CAT-EPT-20260506-01.  See
+`CATEPTMain/Integration/CAUSAL_IMPLEMENTABILITY_WORKLOG.lean` (CIE-001)
+for the broader plan and leverage map. -/
+
+/-- Magnitude-level surrogate for the Sorkin three-region scenario:
+
+* `regionA`, `regionB`, `regionC` — opaque region markers (`Unit` here;
+  consumers refine to globally hyperbolic open subsets `O_A, O_B, O_C ⊆ M`).
+* `aSpacelikeB`, `cInFutureOfA`, `cInFutureOfB` — `Prop`-level causal
+  relations the consumer has to discharge from their spacetime model.
+* `marginalA` — surrogate for `Tr_{B,C}(ρ)` evaluated as a real scalar.
+* `marginalA_after_Phi_R_C` — surrogate for
+  `Tr_{B,C}((Id_A ⊗ Phi_R^C)(ρ))` after applying a CAT/EPT
+  measurement-update channel `Phi_R` whose outcome statistics may
+  depend on Bob's data.
+* `no_signalling_sorkin` — Sorkin admissibility: under the three causal
+  relations, the marginal at A is unchanged. This is the
+  `NoSignallingInSorkinScenario` predicate keyed to the spacelike
+  triple. -/
+structure SorkinScenario where
+  regionA                        : Unit
+  regionB                        : Unit
+  regionC                        : Unit
+  aSpacelikeB                    : Prop
+  cInFutureOfA                   : Prop
+  cInFutureOfB                   : Prop
+  marginalA                      : ℝ
+  marginalA_after_Phi_R_C        : ℝ
+  no_signalling_sorkin           :
+    aSpacelikeB → cInFutureOfA → cInFutureOfB →
+      marginalA_after_Phi_R_C = marginalA
+
+namespace SorkinScenario
+
+variable (S : SorkinScenario)
+
+/-- **CIE-001 / Sorkin no-signalling.**  Apply the carrier predicate to
+the three causal hypotheses to extract the marginal-invariance equation. -/
+theorem noSignallingInSorkinScenario
+    (hAB : S.aSpacelikeB) (hCA : S.cInFutureOfA) (hCB : S.cInFutureOfB) :
+    S.marginalA_after_Phi_R_C = S.marginalA :=
+  S.no_signalling_sorkin hAB hCA hCB
+
+/-- Trivial existence: zero marginals, all causal relations `True`. -/
+theorem exists_trivial : ∃ _ : SorkinScenario, True :=
+  ⟨{ regionA                    := ()
+   , regionB                    := ()
+   , regionC                    := ()
+   , aSpacelikeB                := True
+   , cInFutureOfA               := True
+   , cInFutureOfB               := True
+   , marginalA                  := 0
+   , marginalA_after_Phi_R_C    := 0
+   , no_signalling_sorkin       := fun _ _ _ => rfl }, trivial⟩
+
+end SorkinScenario
+
+/-- **`NoSignallingInSorkinScenario` predicate** (CIE-001).
+
+Predicate form keyed to spacelike triples: a `SorkinScenario` is
+*Sorkin-admissible* iff the no-signalling field holds when the three
+causal relations are simultaneously witnessed. -/
+def NoSignallingInSorkinScenario (S : SorkinScenario) : Prop :=
+  S.aSpacelikeB → S.cInFutureOfA → S.cInFutureOfB →
+    S.marginalA_after_Phi_R_C = S.marginalA
+
+/-- Every `SorkinScenario` carrier satisfies its
+`NoSignallingInSorkinScenario` predicate by construction (the predicate
+IS the field). -/
+theorem sorkinScenario_satisfies_noSignalling (S : SorkinScenario) :
+    NoSignallingInSorkinScenario S :=
+  S.no_signalling_sorkin
+
 end CATEPTMain.Integration.EntropicLocalityTheoremsBridge
 
 end
