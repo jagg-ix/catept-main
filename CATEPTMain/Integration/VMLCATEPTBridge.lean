@@ -83,6 +83,9 @@ def kineticCATEPTSlot (T : ℝ) (hT : 0 < T) : CATEPTPluginSlot where
   hbar_pos        := one_pos
   eptClock        := fun v => VML.normSq v / (2 * T)
   eptClock_nonneg := fun v => div_nonneg (VML.normSq_nonneg v) (by linarith)
+  -- Trivial-by-construction: `actionIm = eptClock` (same function) and
+  -- `hbar = 1`, so the spine identity reduces to `S_I(v) / 1 = S_I(v)`.
+  consistent      := fun _ => div_one _
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 
