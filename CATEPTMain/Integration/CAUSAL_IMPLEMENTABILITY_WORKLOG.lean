@@ -85,7 +85,21 @@ Plan:
     `CATEPTMain/Integration/CausalImplementabilitySMatrixBridge.lean`
   with `LocalSmatrix`, `CauchySplit`, `ContinuousAdditive`,
   `HammersteinFactorisation` carriers.
-Status: TODO
+Status: DONE
+Landed:
+  CausalImplementabilitySMatrixBridge.lean ships
+    - structure LocalSmatrix
+    - structure CauchySplit
+    - def Unitary (predicate)
+    - def ContinuousAdditive (predicate)
+    - structure HammersteinFactorisation (correction-bundle)
+    - theorem continuousAdditive_of_constant_one
+    - exists_trivial helpers
+  No `consistent`/`factorise` field embedded in the carrier (avoids
+  the slot-`consistent` shallowness pattern documented in
+  `scripts/publication/HELPER_WALK.md`); both unitarity and
+  factorisation are external predicates a consumer must discharge.
+  CIE_002_Audit.lean confirms 6 declarations kernel-axiom-only.
 
 -/
 
@@ -285,7 +299,7 @@ Status: TODO
 | ID      | Title                                              | Priority | Status    |
 |---------|----------------------------------------------------|----------|-----------|
 | CIE-001 | Sorkin impossible-measurement axiom                | P1       | DONE      |
-| CIE-002 | Local S-matrix continuous-additivity carrier       | P1       | TODO      |
+| CIE-002 | Local S-matrix continuous-additivity carrier       | P1       | DONE      |
 | CIE-003 | Retarded Green Fisher-information bound            | P1       | TODO      |
 | CIE-004 | QIF-locality axiom                                 | P2       | TODO      |
 | CIE-005 | Entropic stress tensor conservation                | P1       | TODO      |
