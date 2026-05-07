@@ -62,7 +62,7 @@ theorem value_nonneg
   exact mul_nonneg hc hI
 
 /-- Positive/negative split of a Petz rate. -/
-structure Split where
+structure Split (P : PetzInformationRate) where
   pos : ℝ
   neg : ℝ
   pos_nonneg : 0 ≤ pos

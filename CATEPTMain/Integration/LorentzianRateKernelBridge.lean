@@ -44,15 +44,21 @@ def lorentzianKernel_from_rate
     (S_R hbar : ℝ) (lambda_total : ℝ → ℝ) (t : ℝ) : ℂ :=
   lorentzianKernel S_R (entropicActionFromRate hbar lambda_total t) hbar
 
-/-- Lorentzian kernel expressed directly with the rate integral. -/
+/-- Lorentzian kernel expressed directly with the rate integral.
+
+The `hh : hbar ≠ 0` hypothesis is required: without it the identity
+`ℏ · (S_I/ℏ) = S_I` collapses to `0 = S_I` when `ℏ = 0`. -/
 theorem lorentzianKernel_from_rate_exp
-    (S_R hbar : ℝ) (lambda_total : ℝ → ℝ) (t : ℝ) :
+    (S_R hbar : ℝ) (lambda_total : ℝ → ℝ) (t : ℝ) (hh : hbar ≠ 0) :
     lorentzianKernel_from_rate S_R hbar lambda_total t =
       Complex.exp ((S_R / hbar : ℂ) * Complex.I -
         (imaginaryActionAccumulation lambda_total t : ℂ)) := by
   unfold lorentzianKernel_from_rate entropicActionFromRate
   unfold lorentzianKernel
-  simp [mul_div_assoc]
+  have hC : (hbar : ℂ) ≠ 0 := by exact_mod_cast hh
+  congr 1
+  push_cast
+  field_simp
 
 /-- If the total rate is non-negative, the Lorentzian kernel is bounded. -/
 theorem lorentzianKernel_from_rate_norm_le_one
@@ -67,9 +73,12 @@ theorem lorentzianKernel_from_rate_norm_le_one
     exact entropicTimeIntegral_nonneg_of_nonneg_rate lambda_total hpos t ht
   have hnorm : ‖lorentzianKernel S_R (hbar * imaginaryActionAccumulation lambda_total t) hbar‖
       = Real.exp (-(imaginaryActionAccumulation lambda_total t)) := by
-    simpa [lorentzianKernel_norm_is_damping, mul_div_assoc] using
-      (lorentzianKernel_norm_is_damping (S_R := S_R)
-        (S_I := hbar * imaginaryActionAccumulation lambda_total t) (hbar := hbar))
+    have hh' : hbar ≠ 0 := ne_of_gt hh
+    have hcancel : hbar * imaginaryActionAccumulation lambda_total t / hbar
+        = imaginaryActionAccumulation lambda_total t := by
+      field_simp
+    rw [lorentzianKernel_norm_is_damping (S_R := S_R)
+        (S_I := hbar * imaginaryActionAccumulation lambda_total t) (hbar := hbar), hcancel]
   rw [hnorm]
   rw [Real.exp_le_one_iff]
   linarith

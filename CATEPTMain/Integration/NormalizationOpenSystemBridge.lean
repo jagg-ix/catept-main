@@ -14,14 +14,28 @@ namespace CATEPTMain.Integration.NormalizationOpenSystemBridge
 
 noncomputable section
 
-/-- Abstract placeholders for state and operator levels. -/
-constant HilbertState : Type
-constant DensityMatrix : Type
-constant Operator : Type
+/-- Hilbert-state carrier (realised as `Unit`).
 
-constant normSq : HilbertState → ℝ
-constant expectation : HilbertState → Operator → ℝ
-constant trace : DensityMatrix → ℝ
+Lean-3 `constant` keyword is removed in Lean 4; this whole bridge was
+quarantined under that pattern. Migrated to the trivial-witness pattern
+used by PRs #50/#52/#54/#55 (`def X := Unit` for type axioms,
+`noncomputable def := fun _ => 0` for function axioms). -/
+def HilbertState : Type := Unit
+
+/-- Density-matrix carrier (realised as `Unit`). -/
+def DensityMatrix : Type := Unit
+
+/-- Operator carrier (realised as `Unit`). -/
+def Operator : Type := Unit
+
+/-- Norm-squared on Hilbert states (trivial-witness placeholder). -/
+noncomputable def normSq : HilbertState → ℝ := fun _ => 0
+
+/-- Expectation of an operator in a state (trivial-witness placeholder). -/
+noncomputable def expectation : HilbertState → Operator → ℝ := fun _ _ => 0
+
+/-- Trace of a density matrix (trivial-witness placeholder). -/
+noncomputable def trace : DensityMatrix → ℝ := fun _ => 0
 
 /-- No-jump evolution: norm decay driven by H_I. -/
 structure NoJumpEvolution where
@@ -56,8 +70,8 @@ theorem probabilityDamping_eq_sq
     (S_I hbar : ℝ) :
     probabilityDamping S_I hbar = (amplitudeDamping S_I hbar) ^ 2 := by
   unfold probabilityDamping amplitudeDamping
+  rw [pow_two, ← Real.exp_add]
   ring_nf
-  simp [Real.exp_add]
 
 /-- If S_I >= 0, amplitude damping is in (0, 1]. -/
 theorem amplitudeDamping_le_one
@@ -75,7 +89,8 @@ theorem probabilityDamping_le_one
     probabilityDamping S_I hbar ≤ 1 := by
   unfold probabilityDamping
   have hneg : -(2 * S_I / hbar) ≤ 0 := by
-    have hdiv : 0 ≤ S_I / hbar := div_nonneg hS (le_of_lt hh)
+    have hdiv : 0 ≤ 2 * S_I / hbar :=
+      div_nonneg (by linarith) (le_of_lt hh)
     linarith
   exact (Real.exp_le_one_iff).mpr hneg
 

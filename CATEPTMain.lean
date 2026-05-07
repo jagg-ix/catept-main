@@ -194,13 +194,23 @@ import CATEPTMain.Spine.OrphanAggregator
 
 -- Orphan-triage Milestone 2: 6 obvious-keep roots wired into the barrel.
 -- See `scripts/publication/ORPHAN_TRIAGE_INVENTORY_20260507.md` for the
--- per-root disposition; the remaining 18 roots are queued for Milestones 3-5.
+-- per-root disposition.
 import CATEPTMain.Integration.SlotConsistentFix_Audit
 import CATEPTMain.CATEPT_ProperTime.Audit
 import CATEPTMain.Integration.CIE_All_Audit
 import CATEPTMain.Integration.GROrphanBundle
 import CATEPTMain.Showcase.QMGRUnification
 import CATEPTMain.Integration.UnificationSpineHonestWitness
+
+-- Orphan-triage Milestone 4: 6 of 7 quarantined "rotted bridge" files
+-- now build (the 7th, GTDEntropyAffineBridge, hits the deeper M5
+-- sibling-vs-local namespace collision and is queued for M5).
+import CATEPTMain.Integration.OperatorPathIntegralFoundation
+import CATEPTMain.Integration.LorentzianRateKernelBridge
+import CATEPTMain.Integration.NormalizationOpenSystemBridge
+import CATEPTMain.Integration.WickRotationBridge
+import CATEPTMain.Integration.EntropySourceAdmissibilityBridge
+import CATEPTMain.Integration.KrausGKSLContinuousLimitBridge
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.
