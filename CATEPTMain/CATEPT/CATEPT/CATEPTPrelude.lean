@@ -1,4 +1,5 @@
 import CATEPTMain.Core.Framework.AFPBridgeFramework
+import CATEPTMain.CATEPT.CATEPT.Foundations
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
@@ -51,32 +52,36 @@ open MeasureTheory Complex Real
 
 namespace CATEPTMain.CATEPT.CATEPT
 
--- ── Complex action structure ──────────────────────────────────────────────────
+-- ── Complex action / Hamiltonian / entropicTime ─────────────────────────────
+--
+-- M5.2 (orphan-triage Milestone 5): the duplicates of `ComplexAction`,
+-- `ComplexHamiltonian`, and `entropicTime` that were previously declared
+-- here have been retired in favor of the canonical declarations from
+-- `CATEPTMainExtracted.CATEPT.CATEPT.Foundations` (re-exported via the
+-- `CATEPTMain.CATEPT.CATEPT.Foundations` shim, imported at line 2 above).
+-- This eliminates a `noConfusionType` collision that previously blocked
+-- `OrphanAggregator`, `QMOrphanBundle`, and `GTDEntropyAffineBridge`
+-- whenever both files were in the same import closure.
+--
+-- The catept-core canonical version uses snake-case `entropic_time`. To
+-- preserve the catept-main camelCase consumer surface (~15 references
+-- across Domains/Adapters/*, Integration/*, Spacetime/*), we keep
+-- `entropicTime` as a local alias plus the camelCase theorem aliases.
 
-/-- Complex action S[φ] = S_R[φ] + i S_I[φ] with S_I[φ] ≥ 0.
-    The non-negative imaginary part encodes irreversibility. -/
-structure ComplexAction (Φ : Type*) where
-  S_R      : Φ → ℝ
-  S_I      : Φ → ℝ
-  S_I_nonneg : ∀ φ, 0 ≤ S_I φ
+/-- Camel-case alias for `entropic_time` (back-compat with the
+~15 catept-main consumers that reference `entropicTime` directly). -/
+noncomputable def entropicTime (hbar S_I : ℝ) : ℝ := entropic_time hbar S_I
 
-/-- Non-Hermitian Hamiltonian Ĥ = H_R − i H_I with H_I ≥ 0. -/
-structure ComplexHamiltonian where
-  H_R      : ℝ
-  H_I      : ℝ
-  H_I_nonneg : 0 ≤ H_I
-
-/-- Entropic proper time: τ_ent = S_I / ħ. -/
-noncomputable def entropicTime (hbar S_I : ℝ) : ℝ := S_I / hbar
-
+/-- Camel-case re-export of `eq003_entropic_time_nonneg`. -/
 theorem entropicTime_nonneg (hbar S_I : ℝ) (hh : 0 < hbar) (hS : 0 ≤ S_I) :
     0 ≤ entropicTime hbar S_I :=
   div_nonneg hS hh.le
 
+/-- Camel-case re-export of `eq003_entropic_time_linear`. -/
 theorem entropicTime_linear (hbar S_I S_I' : ℝ) :
     entropicTime hbar (S_I + S_I') =
     entropicTime hbar S_I + entropicTime hbar S_I' := by
-  unfold entropicTime; rw [add_div]
+  unfold entropicTime entropic_time; rw [add_div]
 
 -- ── Measurable path integral model ───────────────────────────────────────────
 
