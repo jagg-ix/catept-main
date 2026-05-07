@@ -80,6 +80,9 @@ def nhqmCATEPTSlot
   eptClock        := fun n => CATEPTMain.NHQM.complexEigenvalueIm N H φ n / ħ
   eptClock_nonneg := fun n =>
     div_nonneg (CATEPTMain.NHQM.complexEigenvalueIm_nonneg N H φ n) (le_of_lt hħ)
+  -- `eptClock n` is defined as `actionIm n / ħ` literally; the spine
+  -- identity `actionIm n / hbar = eptClock n` reduces to `rfl`.
+  consistent      := fun _ => rfl
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 

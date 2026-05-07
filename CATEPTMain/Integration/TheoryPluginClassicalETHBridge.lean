@@ -24,6 +24,9 @@ def classicalETHSiteSlot (p : CATEPT.DampedOscillatorParams)
   hbar_pos := h_pos
   eptClock := fun J => action_im J / hbar'
   eptClock_nonneg := fun J => div_nonneg (action_im_nonneg J) (le_of_lt h_pos)
+  -- `eptClock J` is defined as `action_im J / hbar'`, which is exactly the
+  -- spine identity goal `actionIm J / hbar = eptClock J` after unfolding.
+  consistent := fun _ => rfl
 
 /-- Extract the ETH canonical clock from the Plugin Slot explicitly -/
 theorem classicalETHSite_clock_matches_canonicalTauDiag

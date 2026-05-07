@@ -157,7 +157,9 @@ theorem bcj_gauge_amplitude_single_vanishing
       exp(−S_I^{product}) = exp(−S_I^1) · exp(−S_I^2).
 
     This matches the BCJ double-copy: gravity amplitude = gauge₁ × gauge₂. -/
-noncomputable def bcjProductSlot (s₁ s₂ : CATEPTPluginSlot) : CATEPTPluginSlot where
+noncomputable def bcjProductSlot
+    (s₁ s₂ : CATEPTPluginSlot) (hbar_eq : s₁.hbar = s₂.hbar) :
+    CATEPTPluginSlot where
   ConfigSpaceTy   := s₁.ConfigSpaceTy × s₂.ConfigSpaceTy
   actionRe        := fun _ => 0
   actionIm        := fun p => s₁.actionIm p.1 + s₂.actionIm p.2
@@ -168,6 +170,14 @@ noncomputable def bcjProductSlot (s₁ s₂ : CATEPTPluginSlot) : CATEPTPluginSl
   eptClock        := fun p => s₁.eptClock p.1 + s₂.eptClock p.2
   eptClock_nonneg := fun p =>
     add_nonneg (s₁.eptClock_nonneg p.1) (s₂.eptClock_nonneg p.2)
+  -- The product slot's spine identity needs both factors' `consistent` proofs
+  -- and the hypothesis that they share `hbar`. Substantive proof: distribute
+  -- the division over the sum, rewrite each factor via its own `consistent`
+  -- field, and conclude. Genuinely uses `hbar_eq` — not a `div_one` triviality.
+  consistent      := fun p => by
+    show (s₁.actionIm p.1 + s₂.actionIm p.2) / s₁.hbar
+         = s₁.eptClock p.1 + s₂.eptClock p.2
+    rw [add_div, s₁.consistent p.1, hbar_eq, s₂.consistent p.2]
 
 /-- **BCJ double-copy factorization**: the Feynman-Kac weight of the product
     slot equals the product of the individual FK weights.
@@ -177,26 +187,24 @@ noncomputable def bcjProductSlot (s₁ s₂ : CATEPTPluginSlot) : CATEPTPluginSl
     This is the path-integral realisation of the BCJ double-copy construction:
     the gravity amplitude factorises into the product of two gauge amplitudes. -/
 theorem bcj_product_fk_factorization (s₁ s₂ : CATEPTPluginSlot)
+    (hbar_eq : s₁.hbar = s₂.hbar)
     (φ₁ : s₁.ConfigSpaceTy) (φ₂ : s₂.ConfigSpaceTy) :
-    Real.exp (-((bcjProductSlot s₁ s₂).actionIm (φ₁, φ₂))) =
+    Real.exp (-((bcjProductSlot s₁ s₂ hbar_eq).actionIm (φ₁, φ₂))) =
       Real.exp (-(s₁.actionIm φ₁)) * Real.exp (-(s₂.actionIm φ₂)) := by
   simp only [bcjProductSlot]
   have h : -(s₁.actionIm φ₁ + s₂.actionIm φ₂) =
            -(s₁.actionIm φ₁) + (-(s₂.actionIm φ₂)) := by ring
   rw [h, Real.exp_add]
 
-/-- The product slot satisfies the CATEPT consistency constraint when both
-    sub-slots do and both use ħ = 1. -/
+/-- The product slot satisfies the CATEPT consistency constraint by
+    construction (the `consistent` field on the slot itself, derived from
+    the two factors' `consistent` fields and `hbar_eq`). This wrapper is
+    retained for back-compat; new code should call `(bcjProductSlot s₁ s₂
+    hbar_eq).consistent` directly. -/
 theorem bcj_product_slot_consistent
-    (s₁ s₂ : CATEPTPluginSlot)
-    (h₁ : cateptConsistencyConstraint s₁) (h₂ : cateptConsistencyConstraint s₂)
-    (hh1 : s₁.hbar = 1) (hh2 : s₂.hbar = 1) :
-    cateptConsistencyConstraint (bcjProductSlot s₁ s₂) := by
-  intro ⟨x₁, x₂⟩
-  simp only [bcjProductSlot]
-  have e₁ := h₁ x₁; rw [hh1, div_one] at e₁
-  have e₂ := h₂ x₂; rw [hh2, div_one] at e₂
-  rw [hh1, div_one, e₁, e₂]
+    (s₁ s₂ : CATEPTPluginSlot) (hbar_eq : s₁.hbar = s₂.hbar) :
+    cateptConsistencyConstraint (bcjProductSlot s₁ s₂ hbar_eq) :=
+  (bcjProductSlot s₁ s₂ hbar_eq).consistent
 
 -- ── §4  BCJ–CATEPT identification ────────────────────────────────────────────
 
@@ -228,9 +236,9 @@ theorem bcjNumerator_nonneg
     n_{12}(φ₁, φ₂) = n_1(φ₁) + n_2(φ₂)
     (assuming both sub-slots have the same ħ). -/
 theorem bcjNumerator_product_additive
-    (s₁ s₂ : CATEPTPluginSlot)
+    (s₁ s₂ : CATEPTPluginSlot) (hbar_eq : s₁.hbar = s₂.hbar)
     (φ₁ : s₁.ConfigSpaceTy) (φ₂ : s₂.ConfigSpaceTy) :
-    bcjNumeratorFromCATEPT (bcjProductSlot s₁ s₂) (φ₁, φ₂) =
+    bcjNumeratorFromCATEPT (bcjProductSlot s₁ s₂ hbar_eq) (φ₁, φ₂) =
       s₁.actionIm φ₁ / s₁.hbar + s₂.actionIm φ₂ / s₁.hbar := by
   simp only [bcjNumeratorFromCATEPT, bcjProductSlot]
   ring
@@ -274,6 +282,15 @@ theorem gravitas_bianchi_eq_bcj_kinematic_jacobi :
 
 -- ── §6  VML double-copy: kinetic × EM-vacuum = Maxwellian ───────────────────
 
+/-- For the kinetic + gravitasEM pair both `hbar = 1`, so the
+    `bcjProductSlot` `hbar_eq` argument is dischargeable by `simp` over
+    the underlying slot definitions. -/
+private theorem kinetic_em_hbar_eq (T μ₀ : ℝ) (hT : 0 < T) (hμ₀ : 0 < μ₀) :
+    (kineticCATEPTSlot T hT).hbar = (gravitasEMCATEPTSlot μ₀ hμ₀).hbar := by
+  simp [kineticCATEPTSlot, gravitasEMCATEPTSlot,
+    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot,
+    CATEPTMain.Domains.GR.emSuperiorSlot]
+
 /-- **VML BCJ double-copy theorem**: the product of the VML kinetic CATEPT slot
     (encoding the Maxwellian) and the Gravitas EM CATEPT slot at vacuum (A = 0)
     factorises to the Maxwellian alone.
@@ -290,7 +307,8 @@ theorem vml_bcj_double_copy
     (T μ₀ : ℝ) (hT : 0 < T) (hμ₀ : 0 < μ₀) (v : Fin 3 → ℝ) :
     Real.exp (-((bcjProductSlot
                    (kineticCATEPTSlot T hT)
-                   (gravitasEMCATEPTSlot μ₀ hμ₀)).actionIm
+                   (gravitasEMCATEPTSlot μ₀ hμ₀)
+                   (kinetic_em_hbar_eq T μ₀ hT hμ₀)).actionIm
                  (v, fun _ => 0))) =
       Real.exp (-(kineticCATEPTSlot T hT).actionIm v) := by
   rw [bcj_product_fk_factorization]
@@ -298,18 +316,17 @@ theorem vml_bcj_double_copy
   ring
 
 /-- The product slot for the VML kinetic and Gravitas EM sectors satisfies
-    the CATEPT consistency constraint (both sub-slots have ħ = 1). -/
+    the CATEPT consistency constraint by construction (both sub-slots have
+    `hbar = 1`, so `kinetic_em_hbar_eq` discharges the `hbar_eq` hypothesis,
+    and the `consistent` field of `bcjProductSlot` is derived from both
+    factors' `consistent` fields). -/
 theorem vml_em_product_slot_consistent
     (T μ₀ : ℝ) (hT : 0 < T) (hμ₀ : 0 < μ₀) :
     cateptConsistencyConstraint
-      (bcjProductSlot (kineticCATEPTSlot T hT) (gravitasEMCATEPTSlot μ₀ hμ₀)) := by
-  apply bcj_product_slot_consistent
-  · exact kineticCATEPTSlot_consistent T hT
-  · exact gravitasEMCATEPTSlot_consistent μ₀ hμ₀
-  · simp [kineticCATEPTSlot]
-  · simp [gravitasEMCATEPTSlot,
-      CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot,
-      CATEPTMain.Domains.GR.emSuperiorSlot]
+      (bcjProductSlot (kineticCATEPTSlot T hT) (gravitasEMCATEPTSlot μ₀ hμ₀)
+        (kinetic_em_hbar_eq T μ₀ hT hμ₀)) :=
+  (bcjProductSlot (kineticCATEPTSlot T hT) (gravitasEMCATEPTSlot μ₀ hμ₀)
+    (kinetic_em_hbar_eq T μ₀ hT hμ₀)).consistent
 
 -- ── §7  Loop-level equivalence theorem (Phase-1 proposition) ─────────────────
 
@@ -391,9 +408,9 @@ def BCJIntegrationContract (w : BCJWitness) : Prop :=
     constructions. -/
 noncomputable def phase1BCJWitness : BCJWitness :=
   { product_fk_factorizes :=
-      ∀ (s₁ s₂ : CATEPTPluginSlot)
+      ∀ (s₁ s₂ : CATEPTPluginSlot) (hbar_eq : s₁.hbar = s₂.hbar)
         (φ₁ : s₁.ConfigSpaceTy) (φ₂ : s₂.ConfigSpaceTy),
-        Real.exp (-((bcjProductSlot s₁ s₂).actionIm (φ₁, φ₂))) =
+        Real.exp (-((bcjProductSlot s₁ s₂ hbar_eq).actionIm (φ₁, φ₂))) =
           Real.exp (-(s₁.actionIm φ₁)) * Real.exp (-(s₂.actionIm φ₂))
     numerator_eq_eptClock :=
       ∀ (s : CATEPTPluginSlot) (hc : cateptConsistencyConstraint s)
@@ -405,13 +422,15 @@ noncomputable def phase1BCJWitness : BCJWitness :=
       ∀ (T μ₀ : ℝ) (hT : 0 < T) (hμ₀ : 0 < μ₀) (v : Fin 3 → ℝ),
         Real.exp (-((bcjProductSlot
                        (kineticCATEPTSlot T hT)
-                       (gravitasEMCATEPTSlot μ₀ hμ₀)).actionIm
+                       (gravitasEMCATEPTSlot μ₀ hμ₀)
+                       (kinetic_em_hbar_eq T μ₀ hT hμ₀)).actionIm
                      (v, fun _ => 0))) =
           Real.exp (-(kineticCATEPTSlot T hT).actionIm v)
     product_slot_consistent :=
       ∀ (T μ₀ : ℝ) (hT : 0 < T) (hμ₀ : 0 < μ₀),
         cateptConsistencyConstraint
-          (bcjProductSlot (kineticCATEPTSlot T hT) (gravitasEMCATEPTSlot μ₀ hμ₀))
+          (bcjProductSlot (kineticCATEPTSlot T hT) (gravitasEMCATEPTSlot μ₀ hμ₀)
+            (kinetic_em_hbar_eq T μ₀ hT hμ₀))
     loop_equiv_tree := BCJLoopEquivalenceStatement 0
     entropic_bfield_exists := BCJEntropicBFieldStatement
     trivial_duality_valid := True }
@@ -419,7 +438,7 @@ noncomputable def phase1BCJWitness : BCJWitness :=
 /-- Phase-1 BCJ integration contract. -/
 theorem phase1_bcj_contract :
     BCJIntegrationContract phase1BCJWitness :=
-  ⟨fun s₁ s₂ φ₁ φ₂ => bcj_product_fk_factorization s₁ s₂ φ₁ φ₂,
+  ⟨fun s₁ s₂ hbar_eq φ₁ φ₂ => bcj_product_fk_factorization s₁ s₂ hbar_eq φ₁ φ₂,
    fun s hc φ => bcjNumerator_eq_eptClock s hc φ,
    gravitas_bianchi_eq_bcj_kinematic_jacobi,
    fun T μ₀ hT hμ₀ v => vml_bcj_double_copy T μ₀ hT hμ₀ v,
@@ -612,15 +631,16 @@ theorem bcj_second_bianchi_is_catept_consistency
   hcons φ
 
 /-- For the product (double-copy) slot, the second Bianchi / consistency holds
-    if both sub-slots are consistent (ħ = 1 for both). -/
+    by construction: it is exactly the slot's `consistent` field, which the
+    structure now requires. The legacy "ħ = 1 for both" hypotheses have been
+    subsumed into the single shape-compatibility hypothesis `hbar_eq`. -/
 theorem bcj_double_copy_second_bianchi
-    (s₁ s₂ : CATEPTPluginSlot)
-    (h₁ : cateptConsistencyConstraint s₁) (h₂ : cateptConsistencyConstraint s₂)
-    (hh1 : s₁.hbar = 1) (hh2 : s₂.hbar = 1)
+    (s₁ s₂ : CATEPTPluginSlot) (hbar_eq : s₁.hbar = s₂.hbar)
     (φ₁ : s₁.ConfigSpaceTy) (φ₂ : s₂.ConfigSpaceTy) :
-    (bcjProductSlot s₁ s₂).actionIm (φ₁, φ₂) / (bcjProductSlot s₁ s₂).hbar =
-      (bcjProductSlot s₁ s₂).eptClock (φ₁, φ₂) := by
-  apply bcj_product_slot_consistent s₁ s₂ h₁ h₂ hh1 hh2
+    (bcjProductSlot s₁ s₂ hbar_eq).actionIm (φ₁, φ₂)
+        / (bcjProductSlot s₁ s₂ hbar_eq).hbar =
+      (bcjProductSlot s₁ s₂ hbar_eq).eptClock (φ₁, φ₂) :=
+  (bcjProductSlot s₁ s₂ hbar_eq).consistent (φ₁, φ₂)
 
 /-- Extended BCJ witness bundling both Bianchi identities. -/
 structure BCJExtendedWitness where
@@ -652,10 +672,8 @@ noncomputable def phase1BCJExtendedWitness : BCJExtendedWitness :=
       phase1DualBianchiContracts.secondBianchi ∧
       phase1DualBianchiContracts.contractedConservation
     double_copy_second_bianchi :=
-      ∀ (s₁ s₂ : CATEPTPluginSlot)
-        (h₁ : cateptConsistencyConstraint s₁) (h₂ : cateptConsistencyConstraint s₂)
-        (hh1 : s₁.hbar = 1) (hh2 : s₂.hbar = 1),
-        cateptConsistencyConstraint (bcjProductSlot s₁ s₂) }
+      ∀ (s₁ s₂ : CATEPTPluginSlot) (hbar_eq : s₁.hbar = s₂.hbar),
+        cateptConsistencyConstraint (bcjProductSlot s₁ s₂ hbar_eq) }
 
 /-- Phase-1 extended BCJ integration contract. -/
 theorem phase1_bcj_extended_contract :
@@ -664,8 +682,7 @@ theorem phase1_bcj_extended_contract :
    gravitasEinsteinSol_bianchi_size,
    bcj_second_bianchi_vector_holds,
    phase1_dual_bianchi_contract,
-   fun s₁ s₂ h₁ h₂ hh1 hh2 =>
-     bcj_product_slot_consistent s₁ s₂ h₁ h₂ hh1 hh2⟩
+   fun s₁ s₂ hbar_eq => bcj_product_slot_consistent s₁ s₂ hbar_eq⟩
 
 /-- Phase-1 extended BCJ record. -/
 structure BCJExtendedCATEPTRecord where

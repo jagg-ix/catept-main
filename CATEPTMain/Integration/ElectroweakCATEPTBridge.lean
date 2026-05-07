@@ -109,6 +109,9 @@ def higgsCATEPTSlot (v lam : ℝ) (hlam : 0 < lam) : CATEPTPluginSlot where
   hbar_pos        := one_pos
   eptClock        := fun φ => higgsVacuumAction v lam φ
   eptClock_nonneg := fun φ => higgsVacuumAction_nonneg v lam hlam φ
+  -- Trivial-by-construction: `actionIm = eptClock` and `hbar = 1`,
+  -- so the spine identity reduces to `V(φ) / 1 = V(φ)`.
+  consistent      := fun _ => div_one _
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 

@@ -93,6 +93,12 @@ def cateptPlanckSlot
     apply mul_nonneg
     · exact mul_nonneg (by norm_num) (le_of_lt Real.pi_pos)
     · exact Real.sqrt_nonneg _
+  -- Substantive: `actionIm n = ħ · 2π√n`, `eptClock n = 2π√n`, so
+  -- `actionIm n / ħ = (ħ · 2π√n) / ħ = 2π√n = eptClock n` via `field_simp`.
+  consistent      := fun n => by
+    show ħ * (2 * Real.pi * Real.sqrt (n : ℝ)) / ħ
+        = 2 * Real.pi * Real.sqrt (n : ℝ)
+    field_simp [ne_of_gt hħ]
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 
