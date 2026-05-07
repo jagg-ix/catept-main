@@ -15,10 +15,14 @@ namespace CATEPTMain.Integration.SchwingerKeldyshADMBridge
 
 noncomputable section
 
-/-- Placeholder types for ADM variables. -/
-axiom ADMMetric : Type
-axiom ADMMomentum : Type
-axiom MatterField : Type
+/-- ADM metric carrier (realised as `Unit` — structures parameterised by
+`ADMMetric` collapse to scalar wrappers under this witness). -/
+def ADMMetric : Type := Unit
+
+-- `ADMMomentum` and `MatterField` were carrier-type axioms with zero
+-- downstream uses (orphan within this file and across catept-main).
+-- Removed entirely; reintroduce concretely if/when an actual consumer
+-- emerges.
 
 /-- ADM lapse and spatial density carriers for entropy insertions. -/
 structure ADMLapseDensity where
