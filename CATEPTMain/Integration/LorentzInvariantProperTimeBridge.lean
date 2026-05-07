@@ -10,7 +10,7 @@ set_option autoImplicit false
 
 Defines a Lorentz-invariant proper-time denominator using the FEYNCALC
 Lorentz product and connects it to the CAT/EPT proper-time kernel.
--/-
+-/
 
 namespace CATEPTMain.Integration.LorentzInvariantProperTimeBridge
 

@@ -10,7 +10,7 @@ set_option autoImplicit false
 Links FEYNCALC loop amplitudes to the Matsubara/KMS Euclidean upgrade.
 Matsubara compactification supplies thermal boundary conditions; CAT/EPT
 adds only the extra entropy functional (no double-counting of KMS).
--/-
+-/
 
 namespace CATEPTMain.Integration.FeynCalcMatsubaraBridge
 

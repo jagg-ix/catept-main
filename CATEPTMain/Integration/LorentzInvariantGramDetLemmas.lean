@@ -6,12 +6,13 @@ set_option autoImplicit false
 # Gram determinant invariants
 
 Symmetry and positivity claims for the 2x2 Gram determinant carrier.
--/-
+-/
 
 namespace CATEPTMain.Integration.LorentzInvariantGramDetLemmas
 
 noncomputable section
 
+open CATEPTMain.GaugeTheory.FEYNCALC
 open CATEPTMain.Integration.LorentzInvariantInvariants
 
 /-- Symmetry claim for `gramDet2`. -/
