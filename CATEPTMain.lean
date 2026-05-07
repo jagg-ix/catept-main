@@ -191,6 +191,10 @@ import CATEPTMain.Integration.UnificationSpine
 -- clash, NSC `×` token).  See CATEPTMain/Spine/OrphanAggregator.lean for
 -- per-file rationales.
 import CATEPTMain.Spine.OrphanAggregator
+-- Reviewer-facing audit ledger: 22 #print axioms directives covering the
+-- 18 SUBSTANTIVE-verdict theorems classified in scripts/publication/HELPER_WALK.md
+-- (six-phase pass closed via PR #59 Phase 6).  Each must report kernel-only.
+import CATEPTMain.Showcase.SubstantiveAudit
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.
