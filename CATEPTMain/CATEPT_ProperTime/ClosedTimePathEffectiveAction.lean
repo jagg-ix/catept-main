@@ -58,9 +58,6 @@ structure CTPEffectiveActionCarrier (α : Type*) where
   action : ℂ
   representation : ∃ phi : CTPField α, action = ctpWeight IF hbar phi
 
-/-- Architectural requirement: finite-temperature real-time response uses CTP doubling. -/
-axiom ctp_required_for_finite_temp_effective_action : Prop
-
 end
 
 end CATEPTMain.CATEPT_ProperTime.ClosedTimePathEffectiveAction
