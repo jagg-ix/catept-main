@@ -192,6 +192,16 @@ import CATEPTMain.Integration.UnificationSpine
 -- per-file rationales.
 import CATEPTMain.Spine.OrphanAggregator
 
+-- Orphan-triage Milestone 2: 6 obvious-keep roots wired into the barrel.
+-- See `scripts/publication/ORPHAN_TRIAGE_INVENTORY_20260507.md` for the
+-- per-root disposition; the remaining 18 roots are queued for Milestones 3-5.
+import CATEPTMain.Integration.SlotConsistentFix_Audit
+import CATEPTMain.CATEPT_ProperTime.Audit
+import CATEPTMain.Integration.CIE_All_Audit
+import CATEPTMain.Integration.GROrphanBundle
+import CATEPTMain.Showcase.QMGRUnification
+import CATEPTMain.Integration.UnificationSpineHonestWitness
+
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.
 -/
