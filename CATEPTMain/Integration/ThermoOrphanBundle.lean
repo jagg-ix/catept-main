@@ -8,7 +8,14 @@ import CATEPTMain.Integration.RelativeEntropyProductionBridge
 import CATEPTMain.Integration.GibbsMeasureKolmogorovBridge
 import CATEPTMain.Integration.ThermodynamicsLYEntropyBridge
 
-import CATEPTMain.CATEPT.CATEPT.Examples.Ex22_UnifiedMercuryMpemba
+-- `Ex22_UnifiedMercuryMpemba` was wired here but it references
+-- `CATEPTMain.CATEPT.PaperData.{TiroleOpticalDoubleSlit2206,
+-- ShapiraTrappedIonMpemba2401}` namespaces that only exist under
+-- `CATEPTMain/Experimental/` (intentionally outside the default
+-- target). Per the HELPER_WALK convention, Examples/* files are
+-- documentation-style and not load-bearing on the spine; removing
+-- the import here.
+-- import CATEPTMain.CATEPT.CATEPT.Examples.Ex22_UnifiedMercuryMpemba
 import CATEPTMain.Integration.EntropicCoercivityFromViscousDissipation
 import CATEPTMain.Integration.GelfandYaglomPartition
 import CATEPTMain.Integration.GelfandYaglomPartitionPos

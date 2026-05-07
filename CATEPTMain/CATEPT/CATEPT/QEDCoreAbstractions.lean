@@ -28,7 +28,7 @@ def mandelstamU (p1 p4 : FourMomentum) : ℝ :=
   minkowskiInner (fun μ => p1 μ - p4 μ) (fun μ => p1 μ - p4 μ)
 
 /-- Reduced Compton amplitude expression in massless normalization. -/
-def comptonAmplitudeReduced (s u : ℝ) : ℝ :=
+noncomputable def comptonAmplitudeReduced (s u : ℝ) : ℝ :=
   -2 * (s / u + u / s)
 
 theorem comptonAmplitudeReduced_eq_rational
@@ -36,7 +36,6 @@ theorem comptonAmplitudeReduced_eq_rational
     comptonAmplitudeReduced s u = -2 * (s ^ 2 + u ^ 2) / (s * u) := by
   unfold comptonAmplitudeReduced
   field_simp [hs, hu]
-  ring
 
 theorem compton_crossing_symmetry (s u : ℝ) :
     s / u + u / s = u / s + s / u := by
