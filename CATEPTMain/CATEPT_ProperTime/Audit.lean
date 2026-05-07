@@ -2,6 +2,7 @@ import CATEPTMain.CATEPT_ProperTime.HeatKernelDeterminant
 import CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions
 import CATEPTMain.CATEPT_ProperTime.ClosedTimePathEffectiveAction
 import CATEPTMain.Integration.ADMEntropyPathIntegralBridge
+import CATEPTMain.Integration.SchwingerKeldyshADMBridge
 
 /-! Kernel-axiom audit for the post-axiom-cleanup carrier surface.
 
@@ -11,9 +12,13 @@ CATEPT_ProperTime carriers — PR #50 (7 axioms retired):
     thermal_boson_periodic, thermal_fermion_antiperiodic
   ClosedTimePathEffectiveAction: ctp_required_for_finite_temp_effective_action (deleted)
 
-ADMEntropyPathIntegralBridge — PR #(this PR) (5 axioms retired):
+ADMEntropyPathIntegralBridge — PR #52 (5 axioms retired):
   Time, SpacePoint (carrier-type axioms → defs)
   admIntegral, normalDerivative, entropicNormalAccumulation (function-axioms → trivial-witness defs)
+
+SchwingerKeldyshADMBridge — PR #(this PR) (3 axioms retired):
+  ADMMetric (carrier-type axiom → def := Unit)
+  ADMMomentum, MatterField (carrier-type axioms — both were unused; deleted)
 
 Each `#print axioms` directive must report `[propext, Classical.choice, Quot.sound]`. -/
 
@@ -29,3 +34,7 @@ Each `#print axioms` directive must report `[propext, Classical.choice, Quot.sou
 #print axioms CATEPTMain.Integration.ADMEntropyPathIntegralBridge.admIntegral
 #print axioms CATEPTMain.Integration.ADMEntropyPathIntegralBridge.normalDerivative
 #print axioms CATEPTMain.Integration.ADMEntropyPathIntegralBridge.entropicNormalAccumulation
+
+-- SchwingerKeldyshADMBridge carrier + downstream substantive theorem
+#print axioms CATEPTMain.Integration.SchwingerKeldyshADMBridge.ADMMetric
+#print axioms CATEPTMain.Integration.SchwingerKeldyshADMBridge.admEntropyActionDensity_nonneg
