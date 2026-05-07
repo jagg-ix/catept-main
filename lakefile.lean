@@ -223,7 +223,7 @@ require QuantumAlgebra from git
 -- CATEPT.{ArrowMpemba,ClassicalCore,ClassicalETHIntegration,ClassicalHerglotz,
 -- ClassicalHerglotzETHBridge,CATEPT.WeylYukawaContracts}).
 require NavierStokesClean from git
-  "https://github.com/jagg-ix/navier-stokes-project-clean.git" @ "5212e5033d0480810878024bbb3c3e3c720871dd"
+  "https://github.com/jagg-ix/navier-stokes-project-clean.git" @ "b5a3fa4fe89a7514dc895adcbe0e4210bc8c2484"
 
 -- MaxwellWave (jagg-ix/lean-mwe) — bumped 2026-05-06 to pick up the
 -- rename of `lean_lib NavierStokes` → `lean_lib MaxwellWaveNS` (commit
