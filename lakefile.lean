@@ -202,7 +202,7 @@ require «catept-core» from git
 -- decoupling work (T60 follow-on) by removing the central plugin-slot
 -- coupling point.
 require «catept-plugin-architecture» from git
-  "https://github.com/jagg-ix/catept-plugin-architecture.git" @ "5173b04b157996a7e4f083b5637d069173da6aed"
+  "https://github.com/jagg-ix/catept-plugin-architecture.git" @ "8c63498c2dba4d3129f5f909c61eba8650887dd2"
 
 require cslib from git
   "https://github.com/Timeroot/cslib.git" @ "0d37cc7fcc985cfc53b155e7eef2453f846c6da2"
@@ -234,7 +234,7 @@ require NavierStokesClean from git
 -- under MaxwellWaveNS/) remain available via `import MaxwellWaveNS.X`
 -- but no consumer in catept-main currently uses them.
 require «MaxwellWave» from git
-  "https://github.com/jagg-ix/lean-mwe.git" @ "5a55c311a61bf888fb71a408ca5e78653b5baeac"
+  "https://github.com/jagg-ix/lean-mwe.git" @ "804f0cae5f88bc8d614ef4b61d93838c6b8ccb83"
 
 require pphi2 from git
   "https://github.com/jagg-ix/pphi2.git" @ "b0cbac4703cfa6c6bb859a10687915472ad88fca"
