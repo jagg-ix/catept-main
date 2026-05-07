@@ -55,7 +55,7 @@ structure LorentzScalarKernel where
 /-- Constant kernel is invariant under permutation and parity. -/
 def constantKernel (c : ℝ) : LorentzScalarKernel :=
   { eval := fun _ => c
-    perm_invariant := by intro; rfl
+    perm_invariant := by intros; rfl
     parity_invariant := by intro; rfl }
 
 /-- Convenience lemma: permutation invariance for any Lorentz-scalar kernel. -/
