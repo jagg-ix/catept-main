@@ -4,92 +4,33 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import NavierStokesClean.CATEPT.Foundations
 import CATEPTMain.CATEPT.CATEPT.PhysicalConstantsCommon
+import CATEPTMain.CATEPT.CATEPT.AQFTFoundations
+
+/-!
+# GeometryGauge — gravitational clock-rate theorems
+
+Builds on `AQFTFoundations` (which provides the shared structures
+`LocalRegion`, `LocalAlgebra`, `ModularData`, `EntropicLocalityPrinciple`,
+the helpers `entropicActionOfEntropy`, `entropicTimeField`,
+`entropicForceDensity`, `localUnruhTemperature`, `entropicRedshiftedBeta`,
+`entropicStressScalar`, `SatisfiesComplexEinsteinSectionXI`,
+`EntropicEEPPrinciple`, `modularSlopeCriterion`).
+
+This module adds Tolman / clock-rate theorems and the Hawking /
+entropic-time identifications that close the gap to
+`NavierStokesClean.CATEPT.Foundations`.
+
+Refactor note (2026-05-07): the structure / def declarations that were
+formerly duplicated between this file and `AQFTFoundations.lean`
+(causing a `ModularData.noConfusionType` collision when both were
+imported, e.g. via `CATEPTMain.Spine.OrphanAggregator`) have been
+consolidated in `AQFTFoundations`. This file now imports them.
+-/
 
 noncomputable section
 set_option autoImplicit false
 
 namespace CATEPTMain.CATEPT.CATEPT
-
--- `PhysicalConstants` is now provided by `PhysicalConstantsCommon` (T101).
-
-/-- Minimal local-region interface for Section XI. -/
-structure LocalRegion where
-  Carrier : Type
-
-/-- Abstract local algebra attached to a region. -/
-structure LocalAlgebra (R : LocalRegion) where
-  Obs : Type
-
-/-- Section XI modular generator for a region A. -/
-structure ModularData (A : LocalRegion) where
-  K : Type
-
-/-- Entropic-locality relation:
-SI(A) = (hbar/kB) Sent(A), and deltaSent(A) = delta⟨K_A⟩. -/
-def entropicActionOfEntropy
-    (c : PhysicalConstants) (Sent : ℝ) : ℝ :=
-  (c.hbar / c.kB) * Sent
-
-/-- Entropic time field Theta(x) = ⟨K_Ax⟩ for nested local regions. -/
-def entropicTimeField (Kexp : Type → ℝ) (Ax : Type) : ℝ :=
-  Kexp Ax
-
-/-- Entropic Locality: irreversible effects are local, modular, and causal. -/
-structure EntropicLocalityPrinciple (c : PhysicalConstants) where
-  microcausality : Prop
-  local_modular_origin : Prop
-  no_superluminal_influence : Prop
-  data_processing_monotone : Prop
-
-/-- Section XI entropic force density:
-    F_T^mu = lambda Delta^{mu nu} nabla_nu Theta.
-
-Represented here as a scalar-valued interface map until tensor
-infrastructure is added.
--/
-def entropicForceDensity
-    (lam projector_gradTheta : ℝ) : ℝ :=
-  lam * projector_gradTheta
-
-/-- Section XI local Unruh/Rindler temperature:
-    T_loc = hbar a_loc / (2 pi k_B c). -/
-def localUnruhTemperature
-    (c : PhysicalConstants) (aLoc : ℝ) : ℝ :=
-  c.hbar * aLoc / (2 * Real.pi * c.kB * c.c)
-
-/-- Tolman/redshift law for the entropic inverse-temperature scale:
-    beta_I(x) = beta_inf sqrt(-g_00).
--/
-def entropicRedshiftedBeta
-    (betaInf minus_g00_sqrt : ℝ) : ℝ :=
-  betaInf * minus_g00_sqrt
-
-/-- Section XI entropic stress tensor, compressed to the scalar-valued
-combination appearing in the formula:
-(hbar/kB)(sigma·sigma + zeta theta) + lambda |nabla Theta|^2.
-This is a placeholder until tensor infrastructure is added.
--/
-def entropicStressScalar
-    (c : PhysicalConstants)
-    (sigmaTerm zeta theta lam gradThetaSq : ℝ) : ℝ :=
-  (c.hbar / c.kB) * (sigmaTerm + zeta * theta) + lam * gradThetaSq
-
-/-- Complex Einstein coupling interface from Section XI:
-    G_{mu nu} + i Xi_{mu nu} = (8 pi G/c^4)(T_{mu nu} + i T^{(I)}_{mu nu}).
--/
-def SatisfiesComplexEinsteinSectionXI : Prop := True
-
-/-- Entropic EEP:
-in a local inertial frame, the imaginary sector is Rindler/Unruh-like. -/
-structure EntropicEEPPrinciple (c : PhysicalConstants) where
-  local_real_SR_frame : Prop
-  local_rindler_imaginary_sector : Prop
-  local_unruh_scale : Prop
-  shared_redshift : Prop
-
-/-- Section XI prediction: larger modular slope means faster relaxation. -/
-def modularSlopeCriterion (uGradThetaA uGradThetaB : ℝ) : Prop :=
-  uGradThetaA > uGradThetaB
 
 -- Gravitational clock-rate theorems (from gravity/clock-rates chat, score 7)
 
