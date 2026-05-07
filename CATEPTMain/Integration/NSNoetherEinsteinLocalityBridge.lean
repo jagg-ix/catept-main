@@ -158,7 +158,8 @@ theorem noether_conserved_implies_enstrophy_bounded
 theorem ns_noether_implies_einstein_locality
     (d : NSNoetherEinsteinData)
     (hΩ_pos : ∀ t, 0 < d.Omega t)
-    (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords) :
+    (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords)
+    (h_flat : coords.EinsteinFlat) :
     -- The three lanes compose to Einstein flatness
     (∀ t, deriv (fun τ => CATEPTMain.Integration.NSEPTNoether.NSEPTNoetherInvariant
       d.constants d.Tacc d.Omega τ) t = 0)
@@ -168,7 +169,7 @@ theorem ns_noether_implies_einstein_locality
     coords.EinsteinFlat :=
   ⟨(noether_and_second_law d hΩ_pos).1,
    (noether_and_second_law d hΩ_pos).2.2,
-   CATEPTMain.Integration.CATEPTSpaceTime.ept_entropic_einstein_locality coords⟩
+   CATEPTMain.Integration.CATEPTSpaceTime.ept_entropic_einstein_locality coords h_flat⟩
 
 /-- **Stress-energy bridge composition.**
 
@@ -226,9 +227,12 @@ theorem ns_noether_einstein_locality_bridge_available :
     (∀ (se : CATEPTMain.Integration.NSStressEnergyEinstein.NSComplexStressEnergy) (κ : ℝ),
        (CATEPTMain.Integration.NSStressEnergyEinstein.nsToComplexEFE se κ).HoldsPointwise)
     ∧
-    -- (4) Einstein locality on any CATEPT spacetime
-    (∀ (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords),
-       coords.EinsteinFlat) :=
+    -- (4) Einstein locality on any CATEPT spacetime — soundly conditional
+    --     on a consumer-supplied einstein_flat proof for that coords (was
+    --     previously unsoundly universal via the retired
+    --     `ept_entropic_einstein_locality_core` axiom).
+    (∀ (coords : CATEPTMain.Integration.CATEPTSpaceTime.CATEPTSpacetime4DCoords)
+       (_ : coords.EinsteinFlat), coords.EinsteinFlat) :=
   ⟨fun c Omega Tacc D_I hΩd hTd hΩp hbal hacc =>
      CATEPTMain.Integration.NSEPTNoether.nsEPT_noether_invariant_deriv_zero
        c Omega Tacc D_I hΩd hTd hΩp hbal hacc,

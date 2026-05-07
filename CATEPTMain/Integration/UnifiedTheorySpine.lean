@@ -1,5 +1,6 @@
 import CATEPTMain.Integration.TheoryPluginArchitecture
 import CATEPTMain.CATEPT.CATEPT.ModularFlowBridge
+import CATEPTMain.CATEPT.CATEPT.FeynmanKacBridge
 import CATEPTMain.Integration.AdSCFT1907Port
 import CATEPTMain.Integration.AdSCFT1907Phase2Bridge
 import CATEPTMain.Integration.AdSCFTEntropicEinsteinLocalityBridge
@@ -122,6 +123,9 @@ def modularFlowCATEPTSlot
   hbar_pos        := one_pos
   eptClock        := clk.modularRate
   eptClock_nonneg := hnn
+  -- Trivial-by-construction: `actionIm = eptClock = clk.modularRate` and
+  -- `hbar = 1`, so the spine identity reduces to `modularRate x / 1 = modularRate x`.
+  consistent      := fun _ => div_one _
 
 /-- The modular flow slot satisfies the CATEPT consistency constraint:
     S_I(x)/ħ = eptClock(x)  (both equal modularRate(x), with ħ = 1). -/

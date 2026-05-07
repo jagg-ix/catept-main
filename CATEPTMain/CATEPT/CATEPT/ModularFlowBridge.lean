@@ -1,5 +1,9 @@
 import CATEPTMain.CATEPT.CATEPT.ComplexMeasureBridge
+import CATEPTMain.Core.Assumptions
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+open CATEPTMain (CATEPTAssumption)
+open CATEPTMain.AssumptionId
 /-!
 # CATEPT Port — Modular Flow / Tomita-Takesaki Bridge
 
@@ -198,18 +202,27 @@ theorem hyers_ulam_weight_stability
 
 -- ── KMS condition ─────────────────────────────────────────────────────────────
 
-/-- KMS condition (axiom).
-    At equilibrium: ⟨A B(t)⟩_β = ⟨B(t + iħβ) A⟩_β.
-    Source: modular flow theory, Tomita-Takesaki theorem.
-    Status: requires full Type III₁ factor machinery. -/
-axiom kms_condition : True
-  -- phase2: ⟨A B(t)⟩ = ⟨B(t + iħβ) A⟩ where β = 1/(k_B T_Hawking)
+/-- KMS condition — registry-bound `True`-anchored assumption.
 
-/-- Cameron-Martin-Girsanov (axiom).
-    dμ_CAT/EPT = exp(−τ_ent) dμ_Wiener.
-    Source: StochasticWeberBridge.lean, RemainingObligationsBridge.lean. -/
-axiom cameron_martin_girsanov : True
-  -- phase2: absolute continuity, Radon-Nikodym derivative = exp(-τ_ent)
+    The full physical claim is operator-side: at equilibrium
+    `⟨A B(t)⟩_β = ⟨B(t + iℏβ) A⟩_β`, which lives outside the carrier
+    layer (requires Type III₁ factor machinery — see e.g. the
+    Logos modular-theory module).  At this layer we record only the
+    registry-bound `CATEPTAssumption` tag, so the symbol is reachable
+    by `#print axioms` audits without a custom global axiom.
+
+    Since `CATEPTAssumption _ True` reduces to `True`, the theorem is
+    discharged by `trivial`. -/
+theorem kms_condition : CATEPTAssumption kmsCondition True := trivial
+
+/-- Cameron-Martin-Girsanov — registry-bound `True`-anchored assumption.
+
+    The full physical claim is the absolute-continuity
+    `dμ_CAT/EPT = exp(−τ_ent) dμ_Wiener` with explicit Radon-Nikodym
+    derivative.  At this layer we record only the registry tag.
+    `CATEPTAssumption _ True` reduces to `True`, discharged by
+    `trivial`. -/
+theorem cameron_martin_girsanov : CATEPTAssumption cameronMartinGirsanov True := trivial
 
 -- ── ComplexMeasureBridge: modular flow → complex measure ─────────────────────
 

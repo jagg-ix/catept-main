@@ -1,5 +1,0 @@
-import NavierStokesClean.CATEPT.Extracted.InfoGeometryExtracted.Foundations
-import NavierStokesClean.CATEPT.Extracted.InfoGeometryExtracted.Atoms
-import NavierStokesClean.CATEPT.Extracted.InfoGeometryExtracted.HolladaySymmetryCore
-import NavierStokesClean.CATEPT.Extracted.InfoGeometryExtracted.UnifiedComplexActionCore
-import NavierStokesClean.CATEPT.Extracted.InfoGeometryExtracted.Index

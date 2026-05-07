@@ -7,9 +7,9 @@ import Mathlib
 
 Lean-facing equation stubs extracted from:
 
-- `~/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md`
+- `(private intake) Hyperunit Concept.md`
 - extraction DB run: `chat_artifact_extractions.sqlite3`, `run_id = 3`
-- curated output: `~/Downloads/chat_artifact_query (10)-physics.csv`
+- curated output: `(private intake) (10)-physics.csv`
 
 This module keeps the formulas in typed Lean form and provides small bridge
 theorems tying them to the existing AdSCFT and entropic Einstein-locality lanes.
@@ -35,34 +35,34 @@ deriving Repr
 def run3Top10 : List EquationStub :=
   [ { rowId := 229137
       equationHash := "e9be018c40fcc0aa92d0ee994b9cd1d2d99fbe42148c26a55b71fbaac94cc89c"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0009_latex_document_part_2_2.tex:32" }
+      definitionLocation := "(private intake) latex/0009_latex_document_part_2_2.tex:32" }
   , { rowId := 229039
       equationHash := "65c056871cfa24a3031ea6688af430677304ed76c9c80026394ce3baffc70f4e"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0164_use_case_shortest_path_between_two_p_2.tex:1" }
+      definitionLocation := "(private intake) latex/0164_use_case_shortest_path_between_two_p_2.tex:1" }
   , { rowId := 229025
       equationHash := "d9d7ed3373b9629b78885057da6a0174ac49dd0c6fce5ef11aa95d605ca04616"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0144_3_._volume_form_and_local_scaling_in.tex:1" }
+      definitionLocation := "(private intake) latex/0144_3_._volume_form_and_local_scaling_in.tex:1" }
   , { rowId := 229034
       equationHash := "8ecc14de6e7f81254fe3deef17b292f15f608958d6e17de2b31031f18ce82d1e"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0157_2_._determinant_of_the_metric_tensor_2.tex:1" }
+      definitionLocation := "(private intake) latex/0157_2_._determinant_of_the_metric_tensor_2.tex:1" }
   , { rowId := 229040
       equationHash := "9054fa5404e7af1046e757f7676027969d7f0c2511744edf87eef2ae9d6b9f74"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0165_4_._integrating_action_in_the_einste_2.tex:1" }
+      definitionLocation := "(private intake) latex/0165_4_._integrating_action_in_the_einste_2.tex:1" }
   , { rowId := 229060
       equationHash := "84fd0f31e181cd1b766b9f6f9938ff5328f954c789860f9ee8fe28edff941001"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0216_1.2_deriving_the_hyperunit_for_the_p_2.tex:1" }
+      definitionLocation := "(private intake) latex/0216_1.2_deriving_the_hyperunit_for_the_p_2.tex:1" }
   , { rowId := 229061
       equationHash := "3e6290fd5ed3393d19cdafe04123aa4ca1f0895f0fbb7748ff6d3f1541f80bbd"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0217_1.2_deriving_the_hyperunit_for_the_p_2.tex:1" }
+      definitionLocation := "(private intake) latex/0217_1.2_deriving_the_hyperunit_for_the_p_2.tex:1" }
   , { rowId := 229062
       equationHash := "db2dc026bcf005eced38c2987c178ed89e67143ef509eeb9f72187c69f29870a"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0218_1.2_deriving_the_hyperunit_for_the_p_2.tex:1" }
+      definitionLocation := "(private intake) latex/0218_1.2_deriving_the_hyperunit_for_the_p_2.tex:1" }
   , { rowId := 229063
       equationHash := "c70d2af949c2b75d92cf8125f0ad52a9de244f5f2f086c5b563ebca7e8c183ea"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0219_1.3_hyperunit_effects_on_distances_a_2.tex:1" }
+      definitionLocation := "(private intake) latex/0219_1.3_hyperunit_effects_on_distances_a_2.tex:1" }
   , { rowId := 229064
       equationHash := "f2f5c741c21fddcb29f6488eca54a5bf24d8ad9b4e232dccf55fb762c4033933"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0220_1.3_hyperunit_effects_on_distances_a_2.tex:1" }
+      definitionLocation := "(private intake) latex/0220_1.3_hyperunit_effects_on_distances_a_2.tex:1" }
   ]
 
 theorem run3Top10_length : run3Top10.length = 10 := rfl
@@ -71,34 +71,34 @@ theorem run3Top10_length : run3Top10.length = 10 := rfl
 def run3Next10 : List EquationStub :=
   [ { rowId := 229032
       equationHash := "60b541061ed71a2090ae55d1cb3144cd90ea97dbfb466c637ea78c80869c64ef"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0155_5_._why_det_g_ij_is_essential_for_co_2.tex:1" }
+      definitionLocation := "(private intake) latex/0155_5_._why_det_g_ij_is_essential_for_co_2.tex:1" }
   , { rowId := 229035
       equationHash := "b8e4e9a6f0fa0ecb11ad84ac5d108623c85190e0db73572deb9444a550eac4be"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0159_a_calculating_4-volume_in_curved_spa_2.tex:1" }
+      definitionLocation := "(private intake) latex/0159_a_calculating_4-volume_in_curved_spa_2.tex:1" }
   , { rowId := 229036
       equationHash := "f9840159e044d3e49e01e074190333a661ab7776e17b3f9ba5762dec4201a10e"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0160_b_measuring_spatial_volumes_in_a_tim_2.tex:1" }
+      definitionLocation := "(private intake) latex/0160_b_measuring_spatial_volumes_in_a_tim_2.tex:1" }
   , { rowId := 229041
       equationHash := "ee7b2e88da3cd8862c40abc1bb903c418c9a445f836f25a92413907a3b1d1cdf"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0166_response_2.tex:1" }
+      definitionLocation := "(private intake) latex/0166_response_2.tex:1" }
   , { rowId := 229044
       equationHash := "79b2a9d2241ab37c482b013236ac4bbdf7ec7a2b5187250540adc806ac4e05c3"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0173_method_1_standard_approach_direct_ca_2.tex:1" }
+      definitionLocation := "(private intake) latex/0173_method_1_standard_approach_direct_ca_2.tex:1" }
   , { rowId := 229048
       equationHash := "eed631186373278b7e98e97351642012669ee9d68679fd5fa37b4c03a81850aa"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0181_application_2.tex:1" }
+      definitionLocation := "(private intake) latex/0181_application_2.tex:1" }
   , { rowId := 229049
       equationHash := "0fd86ad0da18ed2af50c926f51ad5ff1bab5658885803e50d6558fe02e440596"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0182_application_2.tex:1" }
+      definitionLocation := "(private intake) latex/0182_application_2.tex:1" }
   , { rowId := 229051
       equationHash := "d33118a7bed5405a3cd7002c9ab3940e676108155c1f4070a2928f65a52ca08a"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0188_revised_application_2.tex:1" }
+      definitionLocation := "(private intake) latex/0188_revised_application_2.tex:1" }
   , { rowId := 229071
       equationHash := "5e20beed93d8c714de46f22ca63405bb95abbf5e443517da4cbc87119e6ba6b8"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0228_3.3_applying_hyperunits_to_adjust_di_2.tex:1" }
+      definitionLocation := "(private intake) latex/0228_3.3_applying_hyperunits_to_adjust_di_2.tex:1" }
   , { rowId := 229072
       equationHash := "da5d08beb01e8b4ab28bf014bea1a58f1069e1ce069da506137724837fd7c6d9"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0229_3.3_applying_hyperunits_to_adjust_di_2.tex:1" }
+      definitionLocation := "(private intake) latex/0229_3.3_applying_hyperunits_to_adjust_di_2.tex:1" }
   ]
 
 theorem run3Next10_length : run3Next10.length = 10 := rfl
@@ -107,34 +107,34 @@ theorem run3Next10_length : run3Next10.length = 10 := rfl
 def run3Next10B : List EquationStub :=
   [ { rowId := 228959
       equationHash := "b26659a673021c5fba5927e16e5f17aa37dcd775288e9dd896e5a2ae12a76d74"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0013_3_._generalization_to_higher_dimensi_2.tex:1" }
+      definitionLocation := "(private intake) latex/0013_3_._generalization_to_higher_dimensi_2.tex:1" }
   , { rowId := 228963
       equationHash := "1d69daf8164a44aa30dde39840197945e4eff0a065394acdde6aae5bacc763ac"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0021_functionals_involving_hyperunits_2.tex:1" }
+      definitionLocation := "(private intake) latex/0021_functionals_involving_hyperunits_2.tex:1" }
   , { rowId := 228965
       equationHash := "df67e2a40ac700ec0756a5df6bdfc3c54443ced7c739ed7f106fb894d6be34d3"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0023_3_._hyperunit_in_hilbert_spaces_2.tex:1" }
+      definitionLocation := "(private intake) latex/0023_3_._hyperunit_in_hilbert_spaces_2.tex:1" }
   , { rowId := 228966
       equationHash := "cc3ae3f1bc0e86b9034f9313c797ee984bdef4cdbe9b49e249c44d964049e663"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0024_4_._measure-theoretic_functionals_2.tex:1" }
+      definitionLocation := "(private intake) latex/0024_4_._measure-theoretic_functionals_2.tex:1" }
   , { rowId := 228967
       equationHash := "8d1d389fbf71e9b25ea623ef0e77dffe834fd2f71e22677e65e391b507cc126f"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0025_5_._hyperunit_and_probability_measur_2.tex:1" }
+      definitionLocation := "(private intake) latex/0025_5_._hyperunit_and_probability_measur_2.tex:1" }
   , { rowId := 228968
       equationHash := "385ec2231f0449fdf50b6c6b7434f252c6f172fb0467d526211dcd9ab7c2d5d4"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0026_6_._hyperunits_in_functional_spaces_2.tex:1" }
+      definitionLocation := "(private intake) latex/0026_6_._hyperunits_in_functional_spaces_2.tex:1" }
   , { rowId := 228970
       equationHash := "200e34ccf58b0ef7fb4931c80b73df47f76edbbbfff4239442abb93429431c86"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0028_3_._hyperunit-scaled_metric_2.tex:1" }
+      definitionLocation := "(private intake) latex/0028_3_._hyperunit-scaled_metric_2.tex:1" }
   , { rowId := 228978
       equationHash := "75270b71c19bb12297ffc3ddbe1e752e717e5327796557155c921f24175eacbd"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0087_2d_area_calculation_2.tex:1" }
+      definitionLocation := "(private intake) latex/0087_2d_area_calculation_2.tex:1" }
   , { rowId := 228981
       equationHash := "1fb3a401d0c11610e46be33c235749038aad9fa6737bb04059ff39ef8378d3fd"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0093_3d_volume_calculation_2.tex:1" }
+      definitionLocation := "(private intake) latex/0093_3d_volume_calculation_2.tex:1" }
   , { rowId := 228984
       equationHash := "29757547fa62958b248194503ffdfd6d2b1ef9b40e5c181401eb4ca7ef610257"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0097_4d_hypervolume_calculation_2.tex:1" }
+      definitionLocation := "(private intake) latex/0097_4d_hypervolume_calculation_2.tex:1" }
   ]
 
 theorem run3Next10B_length : run3Next10B.length = 10 := rfl
@@ -143,34 +143,34 @@ theorem run3Next10B_length : run3Next10B.length = 10 := rfl
 def run3Next10C : List EquationStub :=
   [ { rowId := 229075
       equationHash := "06ba2fdf1a8a917e0f56958bf651abc34788d50fd20bd2be0cc9731e4446122d"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0235_5_._similarity_of_metric_spaces_and__2.tex:1" }
+      definitionLocation := "(private intake) latex/0235_5_._similarity_of_metric_spaces_and__2.tex:1" }
   , { rowId := 229076
       equationHash := "631625427470976232af225245e8d379b726aa9c6d7401b919a1538043d75e24"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0236_5_._similarity_of_metric_spaces_and__2.tex:1" }
+      definitionLocation := "(private intake) latex/0236_5_._similarity_of_metric_spaces_and__2.tex:1" }
   , { rowId := 228969
       equationHash := "5737eef1a5d37474d7527f9143ba10544e22a80db2da4ec8d083deae4b446263"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0027_2_._hyperunit_in_euclidean_metric_sp_2.tex:1" }
+      definitionLocation := "(private intake) latex/0027_2_._hyperunit_in_euclidean_metric_sp_2.tex:1" }
   , { rowId := 228972
       equationHash := "9c41b441960eee2c2eaa15daafc27bbeebf6634c029abb2a1344837f5da35f5a"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0031_6_._distance_function_in_product_spa_2.tex:1" }
+      definitionLocation := "(private intake) latex/0031_6_._distance_function_in_product_spa_2.tex:1" }
   , { rowId := 228973
       equationHash := "59164f55935e0f1703833d3f526fcd7fef17eb91b9e77ff813559d09774703f8"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0033_7.1._hyperunit-scaled_balls_2.tex:1" }
+      definitionLocation := "(private intake) latex/0033_7.1._hyperunit-scaled_balls_2.tex:1" }
   , { rowId := 228974
       equationHash := "2c6452cf6316131246d217d3dc1215924a5c7caf779371e6a7e3f0e31f064da3"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0035_7.2._convergence_in_hyperunit-scaled_2.tex:1" }
+      definitionLocation := "(private intake) latex/0035_7.2._convergence_in_hyperunit-scaled_2.tex:1" }
   , { rowId := 228988
       equationHash := "b4151b46d843d52e36bdc90d2353d15ca6f4a9641a860f50091cfdc961eeb092"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0108_2_._calculating_the_area_of_a_non-pl_2.tex:1" }
+      definitionLocation := "(private intake) latex/0108_2_._calculating_the_area_of_a_non-pl_2.tex:1" }
   , { rowId := 228997
       equationHash := "871f979c998359fb9c0e15bf5178be56e0e473c571f3becae134d649c0d11aeb"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0126_4_._application_to_surface_integrals_2.tex:1" }
+      definitionLocation := "(private intake) latex/0126_4_._application_to_surface_integrals_2.tex:1" }
   , { rowId := 228998
       equationHash := "ea8d918db4f9226f8d7e1ec92223d2ac7a35125f28561ec63addbebc517bbeb9"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0129_6_._optimizing_path_lengths_in_non-e_2.tex:1" }
+      definitionLocation := "(private intake) latex/0129_6_._optimizing_path_lengths_in_non-e_2.tex:1" }
   , { rowId := 228999
       equationHash := "55e8aaf7efb89d54e29345b8a12b6040073de8d1dfd2358c4f4f375864994179"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0130_6_._optimizing_path_lengths_in_non-e_2.tex:1" }
+      definitionLocation := "(private intake) latex/0130_6_._optimizing_path_lengths_in_non-e_2.tex:1" }
   ]
 
 theorem run3Next10C_length : run3Next10C.length = 10 := rfl
@@ -179,34 +179,34 @@ theorem run3Next10C_length : run3Next10C.length = 10 := rfl
 def run3Next10D : List EquationStub :=
   [ { rowId := 228960
       equationHash := "5f346d1a891c1d9f921e4930c66e632beaaa548b3f01ed56e3ae0507ac3f9417"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0014_4_._orthonormal_basis_and_scaling_2.tex:1" }
+      definitionLocation := "(private intake) latex/0014_4_._orthonormal_basis_and_scaling_2.tex:1" }
   , { rowId := 228961
       equationHash := "0a543f6389cdf4dff7eda07da38ae7fd92592253d0816a5e50f3ac57413ba135"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0015_5_._metric_properties_of_hyperunits_2.tex:1" }
+      definitionLocation := "(private intake) latex/0015_5_._metric_properties_of_hyperunits_2.tex:1" }
   , { rowId := 228962
       equationHash := "220c9a539d44a7a786bdc1de040446a8a6b556b7849556b338175a9d109ae66c"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0020_functionals_involving_hyperunits_2.tex:1" }
+      definitionLocation := "(private intake) latex/0020_functionals_involving_hyperunits_2.tex:1" }
   , { rowId := 228964
       equationHash := "67c89c79fd153546ec2dc5cb1423ba61cf17451269d4d5d7ff32d95d2a3dc072"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0022_3_._hyperunit_in_hilbert_spaces_2.tex:1" }
+      definitionLocation := "(private intake) latex/0022_3_._hyperunit_in_hilbert_spaces_2.tex:1" }
   , { rowId := 228971
       equationHash := "7e92812eeb4a6c2744c430177ec02a6e5b10b20e748587a9412d812f13f5a565"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0030_6_._distance_function_in_product_spa_2.tex:1" }
+      definitionLocation := "(private intake) latex/0030_6_._distance_function_in_product_spa_2.tex:1" }
   , { rowId := 228985
       equationHash := "dac7ca31ecec8fb8198c85584096621840062e1371be294116bc2cea0f5385f7"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0105_1_._finding_the_distance_between_ske_2.tex:1" }
+      definitionLocation := "(private intake) latex/0105_1_._finding_the_distance_between_ske_2.tex:1" }
   , { rowId := 228986
       equationHash := "c6960af7b2a4ab204719c12021cf0d249c60290c2838072697d17190d8086efe"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0106_2_._calculating_the_area_of_a_non-pl_2.tex:1" }
+      definitionLocation := "(private intake) latex/0106_2_._calculating_the_area_of_a_non-pl_2.tex:1" }
   , { rowId := 228987
       equationHash := "0f8778bc72f2da6d43d96978e16f0f1782d7f57fb349635d7c1e085ceb433d9f"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0107_2_._calculating_the_area_of_a_non-pl_2.tex:1" }
+      definitionLocation := "(private intake) latex/0107_2_._calculating_the_area_of_a_non-pl_2.tex:1" }
   , { rowId := 228989
       equationHash := "3bc97273d3bbcd2ba8fff4540d548f296537f3619e687b002dfcbba2bb997847"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0110_3_._finding_the_inradius_of_a_2d_tri_2.tex:1" }
+      definitionLocation := "(private intake) latex/0110_3_._finding_the_inradius_of_a_2d_tri_2.tex:1" }
   , { rowId := 228990
       equationHash := "4cc1f0311ac2fcf6ef04d4544a72a82a251e4ab5b6c08173aa828b491226286c"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0111_4_._calculating_the_volume_of_a_tetr_2.tex:1" }
+      definitionLocation := "(private intake) latex/0111_4_._calculating_the_volume_of_a_tetr_2.tex:1" }
   ]
 
 theorem run3Next10D_length : run3Next10D.length = 10 := rfl
@@ -215,34 +215,34 @@ theorem run3Next10D_length : run3Next10D.length = 10 := rfl
 def run3Next10E : List EquationStub :=
   [ { rowId := 228975
       equationHash := "c00e38c8a841e2b3f21a49a6484857d945070bbfd76bee9392facf42aaf77974"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0045_5_._general_rotation_in_4d_2.tex:1" }
+      definitionLocation := "(private intake) latex/0045_5_._general_rotation_in_4d_2.tex:1" }
   , { rowId := 228976
       equationHash := "0da0e7fff4db384e17ef9a06ca0b498dd2938ea8a0cade92ad96c2b3ec11cb28"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0049_summary_of_geometric_algebra_equatio_2.tex:1" }
+      definitionLocation := "(private intake) latex/0049_summary_of_geometric_algebra_equatio_2.tex:1" }
   , { rowId := 229107
       equationHash := "f09405cc3e581894eb9aaa001c108a66ec80e4a9e495887edc9c4b4b4c78068d"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0006_latex_document_part_2_2.tex:42" }
+      definitionLocation := "(private intake) latex/0006_latex_document_part_2_2.tex:42" }
   , { rowId := 229108
       equationHash := "849abde57a7fe368588c730e473ea641d6f6fbdb0b26255d8f4faba550c21430"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0006_latex_document_part_2_2.tex:46" }
+      definitionLocation := "(private intake) latex/0006_latex_document_part_2_2.tex:46" }
   , { rowId := 229109
       equationHash := "65c2ae2404cef109e54262ab2553adb8c6fa1f4cf85d62dcaf825d8b2942c9d7"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0006_latex_document_part_2_2.tex:54" }
+      definitionLocation := "(private intake) latex/0006_latex_document_part_2_2.tex:54" }
   , { rowId := 229110
       equationHash := "27fdc70fc30d958bb870f8194730c24225ed5645d4d7a17dad151a58e7c9d4c2"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0006_latex_document_part_2_2.tex:58" }
+      definitionLocation := "(private intake) latex/0006_latex_document_part_2_2.tex:58" }
   , { rowId := 229125
       equationHash := "137f63c7df09419611ba7b40c1e5c9a1f3362475ac270e8a892c95342355a495"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0007_latex_document_part_3_final_part_2.tex:75" }
+      definitionLocation := "(private intake) latex/0007_latex_document_part_3_final_part_2.tex:75" }
   , { rowId := 229126
       equationHash := "57abd5f813ba9e3776192b9254868566c142467f28c344682fd53d836e7392b1"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0007_latex_document_part_3_final_part_2.tex:79" }
+      definitionLocation := "(private intake) latex/0007_latex_document_part_3_final_part_2.tex:79" }
   , { rowId := 229127
       equationHash := "1731da3d4e54b8c5a18c6a64325c53af95c992549da902e94671478d17798434"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0007_latex_document_part_3_final_part_2.tex:91" }
+      definitionLocation := "(private intake) latex/0007_latex_document_part_3_final_part_2.tex:91" }
   , { rowId := 229128
       equationHash := "639d1855c0a5147adbf495c91deb357bef620b5b4f432b89b9ea405c7a599f99"
-      definitionLocation := "/Users/macbookpro/Downloads/tau/ChatGPT-Understanding Hyperunit Concept.md -> latex/0007_latex_document_part_3_final_part_2.tex:95" }
+      definitionLocation := "(private intake) latex/0007_latex_document_part_3_final_part_2.tex:95" }
   ]
 
 theorem run3Next10E_length : run3Next10E.length = 10 := rfl

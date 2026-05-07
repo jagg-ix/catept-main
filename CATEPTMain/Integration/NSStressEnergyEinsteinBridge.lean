@@ -1,5 +1,5 @@
 import NavierStokesClean.CATEPT.ComplexEinsteinMTPIBridge
-import NavierStokes.Core.AxiomaticEstimates
+import NavierStokes.AxiomaticEstimates
 import CATEPTMain.Integration.NSEPTNoetherInvariantBridge
 
 /-!

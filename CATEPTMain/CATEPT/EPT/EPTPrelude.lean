@@ -1,7 +1,11 @@
 import CATEPTMain.Core.Framework.AFPBridgeFramework
+import CATEPTMain.Core.Assumptions
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Order.Field.Basic
+
+open CATEPTMain (CATEPTAssumption)
+open CATEPTMain.AssumptionId
 /-!
 # EPT Port — Prelude
 
@@ -128,10 +132,23 @@ theorem eptCriticalTime_pos (hbar nu C : ℝ) (hh : 0 < hbar) (hn : 0 < nu) (hC 
 -- ── Constantin-Iyer identification ──────────────────────────────────────────
 
 /-- Constantin-Iyer identification: ħ = 2ν.
-    Axiom: the physical calibration of the EPT framework to Navier-Stokes.
-    Source: NSEPTCIBound.lean Stage 281, and the CAT/EPT paper §4. -/
-axiom constantinIyer_identification (hbar nu : ℝ) (hh : 0 < hbar) (hn : 0 < nu) :
-    hbar = 2 * nu
+
+    Carrier-hypothesis form: was previously an `axiom` declaration but
+    the universal-ℝ statement was unsound (`hbar = 2 * nu` only holds
+    for the specific NS calibration, not arbitrary positive reals).
+    Now requires the calibration witness `hCI` as an explicit
+    hypothesis; the conclusion is the registry-bound assumption tag.
+
+    Concrete proof for the NS-specific calibration in the now-public
+    sibling repo:
+    `NavierStokesClean.NavierStokes.CIEntropicIdentification.constantinIyer_identification`
+    (proves `hbar = 2 * nsNu` for the fixed `Core.Types.hbar`/`nsNu`).
+
+    Tagged with `AssumptionId.hbarIsTwoNu` for registry audit. -/
+theorem constantinIyer_identification (hbar nu : ℝ) (_hh : 0 < hbar) (_hn : 0 < nu)
+    (hCI : hbar = 2 * nu) :
+    CATEPTAssumption hbarIsTwoNu (hbar = 2 * nu) :=
+  hCI
 
 /-- Under CI (ħ = 2ν), the EPT decay rate σ = 1 (C = 1). -/
 theorem eptDecayRate_ci (hbar nu : ℝ) (hh : 0 < hbar) (hn : 0 < nu)
@@ -173,29 +190,53 @@ theorem tauBound_denom_pos (hbar nu C T : ℝ)
     (hC : 0 < C) (hsmall : eptDecayRate hbar nu C * T < 1) :
     0 < 1 - eptDecayRate hbar nu C * T := by linarith
 
-/-- EPT physical bound for NS solutions (axiom — self-referential Gronwall step).
-    Source: `ept_self_referential_bound` in NSEPTPhysicalTimeBridge.lean Stage 280.
-    The integration step is axiomatic: ∀s≤T bound appears in its own integrand. -/
-axiom ept_physical_bound_axiom (hbar nu Omega0 C T S_I : ℝ)
-    (hh : 0 < hbar) (hn : 0 < nu) (hO : 0 ≤ Omega0) (hT : 0 < T)
-  (hC : 0 < C) (hsmall : eptDecayRate hbar nu C * T < 1) (hSI : 0 ≤ S_I) :
-  entropicTime hbar S_I ≤ tauBound hbar nu Omega0 C T
+/-- EPT physical bound for NS solutions.
+
+    Carrier-hypothesis form: was previously an `axiom` (the
+    universal-ℝ Gronwall self-referential statement was a contract,
+    not a derivable result).  Now requires the bound `hbound` as an
+    explicit hypothesis.
+
+    Concrete NS-specific proof:
+    `NavierStokesClean.NavierStokes.NSEPTNSSynthesisBound.ept_le_linear_ns`
+    plus the Gronwall-integrated form in
+    `NavierStokesClean.NavierStokes.NSEPTPhysicalTimeBridge.*`. -/
+theorem ept_physical_bound_axiom (hbar nu Omega0 C T S_I : ℝ)
+    (_hh : 0 < hbar) (_hn : 0 < nu) (_hO : 0 ≤ Omega0) (_hT : 0 < T)
+    (_hC : 0 < C) (_hsmall : eptDecayRate hbar nu C * T < 1) (_hSI : 0 ≤ S_I)
+    (hbound : entropicTime hbar S_I ≤ tauBound hbar nu Omega0 C T) :
+    entropicTime hbar S_I ≤ tauBound hbar nu Omega0 C T :=
+  hbound
 
 /-- Global linear bound: τ_ent(T) ≤ (ν/ħ)·Ω₀·T for ALL T ≥ 0.
-    Source: Stage 283 `ept_le_linear_ns` — enstrophy monotone decay theorem. -/
-axiom ept_linear_bound_ns (hbar nu Omega0 T S_I : ℝ)
-    (hh : 0 < hbar) (hn : 0 < nu) (hO : 0 ≤ Omega0) (hT : 0 ≤ T) :
-  entropicTime hbar S_I ≤ (nu / hbar) * Omega0 * T
+
+    Carrier-hypothesis form: requires `hbound` explicitly.
+
+    Concrete NS-specific proof:
+    `NavierStokesClean.NavierStokes.NSEPTNSSynthesisBound.ept_le_linear_ns`
+    (Stage 283 enstrophy-monotone-decay theorem). -/
+theorem ept_linear_bound_ns (hbar nu Omega0 T S_I : ℝ)
+    (_hh : 0 < hbar) (_hn : 0 < nu) (_hO : 0 ≤ Omega0) (_hT : 0 ≤ T)
+    (hbound : entropicTime hbar S_I ≤ (nu / hbar) * Omega0 * T) :
+    entropicTime hbar S_I ≤ (nu / hbar) * Omega0 * T :=
+  hbound
 
 /-- Degree-4 BKM polynomial right-hand side extracted from the Stage 283 bridge. -/
 def bkmDegree4RHS (hbar nu Omega0 T B : ℝ) : ℝ :=
   B * (1 + (nu / hbar) * Omega0 * T)^3 * ((hbar / nu) * ((nu / hbar) * Omega0 * T))
 
 /-- BKM degree-4 polynomial bound via EPT (NS context).
-    Source: Stage 283 `bkm_ns_polynomial_bound`. -/
-axiom bkm_degree4_bound (hbar nu Omega0 T B bkmT : ℝ)
-  (hh : 0 < hbar) (hn : 0 < nu) (hO : 0 ≤ Omega0) (hT : 0 ≤ T) (hB : 0 ≤ B) :
-  bkmT ≤ bkmDegree4RHS hbar nu Omega0 T B
+
+    Carrier-hypothesis form.  Concrete NS-specific proof:
+    `NavierStokesClean.NavierStokes.NSBernsteinEPTDegree4Bridge.bkm_physical_degree4_ept_bound`
+    (Stage 283 polynomial bound).
+
+    Tagged with `AssumptionId.bkmCriterion` for registry audit. -/
+theorem bkm_degree4_bound (hbar nu Omega0 T B bkmT : ℝ)
+    (_hh : 0 < hbar) (_hn : 0 < nu) (_hO : 0 ≤ Omega0) (_hT : 0 ≤ T) (_hB : 0 ≤ B)
+    (hbkm : bkmT ≤ bkmDegree4RHS hbar nu Omega0 T B) :
+    CATEPTAssumption bkmCriterion (bkmT ≤ bkmDegree4RHS hbar nu Omega0 T B) :=
+  hbkm
 
 end
 

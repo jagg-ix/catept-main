@@ -2,6 +2,9 @@ import CATEPTMain.Integration.AdSCFT1907Port
 import CATEPTMain.Integration.CATEPTSpaceTime
 import CATEPTMain.CATEPT.CATEPT.EntropicLocality
 import CATEPTMain.Integration.EntropicProperTimeCoreBridge
+import CATEPTMain.Integration.EntropicLocalityTheoremsBridge
+import CATEPTMain.Integration.CausalImplementabilitySMatrixBridge
+import CATEPTMain.Integration.EntropicStressTensorConservationBridge
 /-!
 # AdS/CFT × Entropic Einstein Locality Bridge
 
@@ -36,13 +39,18 @@ structure AdSCFTEntropicEinsteinLocalityWitness where
   entropicEEP : CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple constants
   coords : CATEPTSpacetime4DCoords
   bulk_model_matches : coords.model = adscftRecord.bulkSpacetime
+  /-- Einstein-flatness witness for the bundled coords.  Was previously
+      derived from the unsound `ept_entropic_einstein_locality_core` axiom;
+      now required as a structure field, so consumers supply (e.g.) the
+      Minkowski/AdS-bulk einstein_flat proof from their own model. -/
+  einstein_flat : coords.EinsteinFlat
 
 /-- Entropic Einstein locality yields Einstein flatness on the bundled
 coordinate model, using the witness model's causal/no-FTL fields. -/
 theorem adscft_einstein_flat_of_locality
     (w : AdSCFTEntropicEinsteinLocalityWitness) :
     w.coords.EinsteinFlat :=
-  ept_entropic_einstein_locality w.coords
+  ept_entropic_einstein_locality w.coords w.einstein_flat
 
 /-- Typed assumptions wrapping the locality lane so downstream theorems do not
 take raw `True` placeholders directly.  This is a phase-2 interface hardening
@@ -109,7 +117,8 @@ theorem adscft_locality_and_rt_ssa_bundle_typed
   exact adscft_rt_ssa_from_area w G_N aAB aBC aB aABC hG hAreaSSA
 
 /-- Concrete phase-1 unification witness anchored on existing phase-1 AdS/CFT
-record and Minkowski Einstein-locality instance. -/
+record and Minkowski Einstein-locality instance.  The `einstein_flat`
+field is filled by `minkowskiCATEPT4D_einstein_flat` (proved). -/
 noncomputable def phase1AdSCFTEntropicEinsteinLocalityWitness
   (constants : CATEPTMain.CATEPT.CATEPT.PhysicalConstants)
   (locality : CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple constants)
@@ -122,6 +131,7 @@ noncomputable def phase1AdSCFTEntropicEinsteinLocalityWitness
   entropicEEP := entropicEEP
   coords := minkowskiCATEPT4D
   bulk_model_matches := rfl
+  einstein_flat := minkowskiCATEPT4D_einstein_flat
 
 /-- In the concrete phase-1 witness, locality is already discharged by the
 proved Minkowski Einstein-flat theorem (no extra axiom invocation needed). -/
@@ -208,5 +218,92 @@ theorem phase1_noftl_velocity_bound
     (Δx : CATEPTST) (htl : CausalTimelike Δx) (ht : Δx 0 ≠ 0) :
     SubluminalVelocity (fun i : Fin 3 => Δx i.succ / Δx 0) :=
   (phase1NoFTLHardenedWitness constants locality entropicEEP).noftl_certificate.subluminal Δx htl ht
+
+-- ============================================================================
+-- CIE-009: Open hooks linking the AdS/CFT entropic locality witness
+-- to the carrier-level Causal-Implementability layer (REPLYID
+-- CAT-EPT-20260506-01)
+-- ============================================================================
+
+/-! ## CIE-009 — Open hooks
+
+Per `CATEPTMain/Integration/CAUSAL_IMPLEMENTABILITY_WORKLOG.lean` record
+CIE-009, this section pairs the AdS/CFT witness with the three load-bearing
+carriers from CIE-001 (Sorkin no-signalling), CIE-002 (local S-matrix
+factorisation), and CIE-005 (entropic stress-tensor conservation).
+
+The hooks are exposed as a separate structure `AdSCFTCIEHooks` rather
+than as fields on `AdSCFTEntropicEinsteinLocalityWitness` itself,
+following the same wrapping pattern as `EntropicEinsteinLocalityAssumptions`
+and `NoFTLHardenedAdSCFTWitness` already used in this file. This keeps
+existing constructors of the witness intact while making the CIE
+linkage available where needed.
+
+Each hook is an existential pairing the AdS/CFT witness with a CIE
+carrier that satisfies the relevant predicate. The existential form is
+deliberate: the AdS/CFT witness does not *embed* a Sorkin scenario or a
+local S-matrix; it asserts that *one exists* compatible with this
+spacetime model. Concrete refinements (for a given AdS bulk + CFT
+boundary) discharge the existentials with non-trivial carrier data. -/
+
+/-- **CIE-009 hooks** for an AdS/CFT entropic locality witness. The
+three fields each existentially pair `w` with a CIE carrier satisfying
+the relevant predicate. -/
+structure AdSCFTCIEHooks (w : AdSCFTEntropicEinsteinLocalityWitness) where
+  /-- **CIE-001 hook**: a Sorkin no-signalling certificate compatible
+      with this AdS/CFT witness. -/
+  sorkin_impossible_measurement_witness :
+    ∃ S : EntropicLocalityTheoremsBridge.SorkinScenario,
+      EntropicLocalityTheoremsBridge.NoSignallingInSorkinScenario S
+  /-- **CIE-002 hook**: a local S-matrix continuously-additive across
+      every spacelike Cauchy split. -/
+  local_s_matrix_factorization :
+    ∃ S : CausalImplementabilitySMatrixBridge.LocalSmatrix Unit,
+      CausalImplementabilitySMatrixBridge.ContinuousAdditive S
+  /-- **CIE-005 hook**: a Bianchi-conserved entropic stress tensor. -/
+  entropic_stress_tensor_conservation :
+    ∃ T : EntropicStressTensorConservationBridge.EntropicStressTensor,
+      EntropicStressTensorConservationBridge.Conserved T
+
+namespace AdSCFTCIEHooks
+
+/-- **CIE-009 existence theorem**: for every AdS/CFT entropic locality
+witness, the three CIE hooks can be discharged by the carrier-level
+existence witnesses landed in CIE-001 / CIE-002 / CIE-005.
+
+The proof composes
+  - `EntropicLocalityTheoremsBridge.sorkinScenario_satisfies_noSignalling`
+  - `CausalImplementabilitySMatrixBridge.continuousAdditive_of_constant_one`
+  - `EntropicStressTensorConservationBridge.entropicStress_conservation_witness`
+into the three existential payloads. None of these helpers is `rfl` on
+`0 = 0`; each invokes a real algebraic / structural step. -/
+theorem cie_hooks_exist
+    (w : AdSCFTEntropicEinsteinLocalityWitness) :
+    Nonempty (AdSCFTCIEHooks w) := by
+  -- Sorkin hook: pair the trivial scenario with the carrier-vs-predicate identity.
+  obtain ⟨S, _hS⟩ := EntropicLocalityTheoremsBridge.SorkinScenario.exists_trivial
+  have sorkin_hook :
+      ∃ S' : EntropicLocalityTheoremsBridge.SorkinScenario,
+        EntropicLocalityTheoremsBridge.NoSignallingInSorkinScenario S' :=
+    ⟨S, EntropicLocalityTheoremsBridge.sorkinScenario_satisfies_noSignalling S⟩
+  -- S-matrix factorisation hook: discharge via the constant-1 witness.
+  obtain ⟨Smat, _hUnit, hCA⟩ :=
+    CausalImplementabilitySMatrixBridge.continuousAdditive_of_constant_one
+  have smatrix_hook :
+      ∃ Smat' : CausalImplementabilitySMatrixBridge.LocalSmatrix Unit,
+        CausalImplementabilitySMatrixBridge.ContinuousAdditive Smat' :=
+    ⟨Smat, hCA⟩
+  -- Stress-tensor conservation hook: zero-tensor witness.
+  have stress_hook :
+      ∃ T : EntropicStressTensorConservationBridge.EntropicStressTensor,
+        EntropicStressTensorConservationBridge.Conserved T :=
+    EntropicStressTensorConservationBridge.entropicStress_conservation_witness
+  exact ⟨{
+    sorkin_impossible_measurement_witness := sorkin_hook
+    local_s_matrix_factorization := smatrix_hook
+    entropic_stress_tensor_conservation := stress_hook
+  }⟩
+
+end AdSCFTCIEHooks
 
 end CATEPTMain.Integration.AdSCFT.EntropicEinsteinLocality

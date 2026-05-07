@@ -81,7 +81,7 @@ theorem adsPoincaré_conformal_factor_pos (L z : ℝ) (hL : 0 < L) (hz : 0 < z) 
 theorem adsPoincaré_metric_symm (L : ℝ) (z_coord : CoordVec (Fin 4) → ℝ)
     (cv : CoordVec (Fin 4)) (i j : Fin 4) :
     adsPoincaréMetric L z_coord cv i j = adsPoincaréMetric L z_coord cv j i := by
-  unfold adsPoincaréMetric minkowskiMetric constantMetric minkowskiMatrix
+  unfold adsPoincaréMetric minkowskiMetric constantMetric NavierStokesClean.CATEPT.minkowskiMatrix
   by_cases h : i = j
   · subst h; ring
   · have hij : ¬ (j = i) := fun hji => h hji.symm
@@ -91,21 +91,21 @@ theorem adsPoincaré_metric_symm (L : ℝ) (z_coord : CoordVec (Fin 4) → ℝ)
 theorem adsPoincaré_tt_component (L : ℝ) (z_coord : CoordVec (Fin 4) → ℝ)
     (cv : CoordVec (Fin 4)) :
     adsPoincaréMetric L z_coord cv 0 0 = -(L / z_coord cv) ^ 2 := by
-  unfold adsPoincaréMetric minkowskiMetric constantMetric minkowskiMatrix
+  unfold adsPoincaréMetric minkowskiMetric constantMetric NavierStokesClean.CATEPT.minkowskiMatrix
   norm_num
 
 /-- The spatial components of Poincaré AdS are `+(L/z)²`. -/
 theorem adsPoincaré_spatial_component (L : ℝ) (z_coord : CoordVec (Fin 4) → ℝ)
     (cv : CoordVec (Fin 4)) (i : Fin 4) (hi : i ≠ 0) :
     adsPoincaréMetric L z_coord cv i i = (L / z_coord cv) ^ 2 := by
-  unfold adsPoincaréMetric minkowskiMetric constantMetric minkowskiMatrix
+  unfold adsPoincaréMetric minkowskiMetric constantMetric NavierStokesClean.CATEPT.minkowskiMatrix
   simp [hi]
 
 /-- Off-diagonal components vanish (diagonal metric). -/
 theorem adsPoincaré_offdiag_zero (L : ℝ) (z_coord : CoordVec (Fin 4) → ℝ)
     (cv : CoordVec (Fin 4)) (i j : Fin 4) (hij : i ≠ j) :
     adsPoincaréMetric L z_coord cv i j = 0 := by
-  unfold adsPoincaréMetric minkowskiMetric constantMetric minkowskiMatrix
+  unfold adsPoincaréMetric minkowskiMetric constantMetric NavierStokesClean.CATEPT.minkowskiMatrix
   simp [hij]
 
 /-- Poincaré AdS is conformal to Minkowski: the metric is a pointwise

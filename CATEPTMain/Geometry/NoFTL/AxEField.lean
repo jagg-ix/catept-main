@@ -1,20 +1,11 @@
-import CATEPTMain.Geometry.NoFTL.Sorts
+import CATEPTPluginDomainGeometry.NoFTL.AxEField
 
 /-!
-# AxEField — Euclidean Field Axiom
+# AxEField — re-export shim
+Authoritative source: `CATEPTPluginDomainGeometry.NoFTL.AxEField` in sibling
+[`jagg-ix/catept-domain-geometry`](https://github.com/jagg-ix/catept-domain-geometry).
 
-The field of quantities is Euclidean: every non-negative element has a
-square root. Isabelle: `class AxEField = axEField + assumes AxEField`.
+NoFTL files declare symbols under the bare `NoFTL.*` namespace (AFP port
+convention), so no `export` clause is required — the namespace is in
+scope wherever this shim is imported.
 -/
-
-set_option autoImplicit false
-
-namespace NoFTL
-
-open Sorts
-
-/-- A linearly ordered field where every non-negative element has a square root. -/
-class AxEField (Q : Type*) [Field Q] [LinearOrder Q] [IsStrictOrderedRing Q] where
-  axEField : ∀ x : Q, x ≥ 0 → hasRoot x
-
-end NoFTL

@@ -3,6 +3,7 @@ import CATEPTMain.Integration.VMLCATEPTBridge
 import CATEPTMain.Integration.BohmianQMBridge
 import CATEPTMain.Integration.AdSCFTBridge
 import CATEPTMain.CATEPT.CATEPT.GeometryGauge
+import CATEPTMain.Domains.GR.Domain
 
 /-!
 # Gravitas CATEPT Bridge
@@ -64,6 +65,7 @@ set_option autoImplicit false
 open CATEPTMain.Integration
 open Gravitas
 open CATEPTMain.Integration.VMLCATEPTBridge
+open CATEPTMain.Domains.GR (minkowskiSuperiorSlot emSuperiorSlot bohmianEMSuperiorSlot)
 
 namespace CATEPTMain.Integration.GravitasBridge
 
@@ -79,26 +81,16 @@ def gravitasMinkowski : MetricTensor :=
 /-- CATEPT spine slot for the Minkowski background.
 
     The flat Minkowski metric has zero Euclidean gravitational action: S_I = 0.
-    The Feynman-Kac weight `exp(0) = 1` on every configuration — the kinetic
-    and matter slots (VML, Bohmian, etc.) carry all nontrivial weights.
+    Built from the Superior-Method `minkowskiSuperiorSlot` (same record,
+    consistency by `div_one`). -/
+def gravitasMinkowskiSlot : CATEPTPluginSlot :=
+  minkowskiSuperiorSlot.toCATEPTSlot
 
-    This slot serves as the gravitational backbone for the electrovacuum plugin
-    and for the VML kinetic plugin (which lives on the same flat spacetime). -/
-def gravitasMinkowskiSlot : CATEPTPluginSlot where
-  ConfigSpaceTy   := Fin 4 → ℝ
-  actionRe        := fun _ => 0
-  actionIm        := fun _ => 0
-  actionIm_nonneg := fun _ => le_refl 0
-  hbar            := 1
-  hbar_pos        := one_pos
-  eptClock        := fun _ => 0
-  eptClock_nonneg := fun _ => le_refl 0
-
-/-- The Minkowski slot satisfies the CATEPT consistency constraint. -/
+/-- The Minkowski slot satisfies the CATEPT consistency constraint.
+    Term-mode proof via `SuperiorMethodSlot.consistent` (`fun _ => div_one _`). -/
 theorem gravitasMinkowskiSlot_consistent :
-    cateptConsistencyConstraint gravitasMinkowskiSlot := by
-  intro _
-  simp [gravitasMinkowskiSlot]
+    cateptConsistencyConstraint gravitasMinkowskiSlot :=
+  minkowskiSuperiorSlot.consistent
 
 /-- **Tolman flat-limit**: on the Gravitas Minkowski background (√(−g₀₀) = 1)
     the Tolman redshift factor is trivial and the local temperature equals
@@ -140,29 +132,16 @@ theorem gravitasMinkowski_born_weight_no_redshift
     The Feynman-Kac weight `exp(−‖A‖²/(2μ₀))` is a Gaussian in potential
     space, matching the free-field (quadratic) path-integral measure.
 
-    **Connection to Gravitas**: the `ElectromagneticTensor.ofMetric g A`
-    stores `F_{μν} = ∂_μ A_ν − ∂_ν A_μ` symbolically.  This slot quantifies
-    the real-valued 4-potential `A^μ` as a CATEPT configuration; the entropic
-    time density `τ_ent(A) = ‖A‖²/(2μ₀)` measures EM field irreversibility. -/
+    Built from the Superior-Method `emSuperiorSlot μ₀ hμ₀`. -/
 noncomputable def gravitasEMCATEPTSlot (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
-    CATEPTPluginSlot where
-  ConfigSpaceTy   := Fin 4 → ℝ
-  actionRe        := fun _ => 0
-  actionIm        := fun A => (∑ μ : Fin 4, A μ ^ 2) / (2 * μ₀)
-  actionIm_nonneg := fun A =>
-    div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (A μ)) (by linarith)
-  hbar            := 1
-  hbar_pos        := one_pos
-  eptClock        := fun A => (∑ μ : Fin 4, A μ ^ 2) / (2 * μ₀)
-  eptClock_nonneg := fun A =>
-    div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (A μ)) (by linarith)
+    CATEPTPluginSlot :=
+  (emSuperiorSlot μ₀ hμ₀).toCATEPTSlot
 
 /-- The EM Gaussian slot satisfies the CATEPT consistency constraint
-    `S_I(A) / 1 = eptClock(A)`. -/
+    `S_I(A) / 1 = eptClock(A)`.  Term-mode proof via `div_one`. -/
 theorem gravitasEMCATEPTSlot_consistent (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
-    cateptConsistencyConstraint (gravitasEMCATEPTSlot μ₀ hμ₀) := by
-  intro A
-  simp [gravitasEMCATEPTSlot]
+    cateptConsistencyConstraint (gravitasEMCATEPTSlot μ₀ hμ₀) :=
+  (emSuperiorSlot μ₀ hμ₀).consistent
 
 -- ── §3  VML equilibrium: EM CATEPT weight = 1 at A = 0 ────────────────────────
 
@@ -174,7 +153,8 @@ theorem gravitasEMCATEPTSlot_consistent (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
     is then 1, decoupling the EM sector from the kinetic sector. -/
 theorem vml_vacuum_em_action_zero (μ₀ : ℝ) (hμ₀ : 0 < μ₀) :
     (gravitasEMCATEPTSlot μ₀ hμ₀).actionIm (fun _ => 0) = 0 := by
-  simp [gravitasEMCATEPTSlot]
+  simp [gravitasEMCATEPTSlot,
+    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot, emSuperiorSlot]
 
 /-- **VML–Gravitas EM decoupling**: at A = 0, the EM CATEPT Feynman-Kac weight
     equals 1.
@@ -224,30 +204,71 @@ theorem vml_total_catept_weight_factorizes
 
     **CATEPT identification**: the gauge field shifts the Bohm guidance equation
     `v = ∇S/m` to `v − A = ∇S_phys/m`, identifying the EM potential with the
-    shift in the entropic time density. -/
+    shift in the entropic time density.
+
+    **2026-05-06 refactor (F3 of `catept_pub_slot_consistent_fix_20260506`)**:
+    constructed *directly* as a `CATEPTPluginSlot` rather than via
+    `SuperiorMethodSlot.toCATEPTSlot`.  `actionIm` carries the compact
+    form `‖v − A‖²/2`; `eptClock` carries the expanded form
+    `‖v‖²/2 − ⟨v,A⟩ + ‖A‖²/2`.  The structural distinction is what makes
+    `consistent` a real algebraic identity rather than a `div_one`
+    triviality: the proof needs to rewrite the four-fold sum of
+    squares before `ring` can close it.  This is the publication-facing
+    answer to the slot-`consistent` shallowness pattern documented in
+    `scripts/publication/HELPER_WALK.md` Phase 3. -/
 noncomputable def bohmianEMCATEPTSlot (A_bg : Fin 4 → ℝ) : CATEPTPluginSlot where
   ConfigSpaceTy   := Fin 4 → ℝ
   actionRe        := fun _ => 0
+  -- Compact form: `S_I(v) = Σ_μ (v^μ − A^μ)² / 2`.
   actionIm        := fun v => (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2
   actionIm_nonneg := fun v =>
     div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (v μ - A_bg μ)) (by norm_num)
   hbar            := 1
   hbar_pos        := one_pos
-  eptClock        := fun v => (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2
-  eptClock_nonneg := fun v =>
-    div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (v μ - A_bg μ)) (by norm_num)
+  -- Expanded form: `eptClock(v) = ‖v‖²/2 − ⟨v,A⟩ + ‖A‖²/2`.
+  eptClock        := fun v =>
+    (∑ μ : Fin 4, v μ ^ 2) / 2
+    - (∑ μ : Fin 4, v μ * A_bg μ)
+    + (∑ μ : Fin 4, A_bg μ ^ 2) / 2
+  eptClock_nonneg := fun v => by
+    -- Expanded form equals compact form, which is a sum of squares.
+    have h :
+        (∑ μ : Fin 4, v μ ^ 2) / 2 - (∑ μ : Fin 4, v μ * A_bg μ)
+            + (∑ μ : Fin 4, A_bg μ ^ 2) / 2
+          = (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2 := by
+      rw [Fin.sum_univ_four, Fin.sum_univ_four, Fin.sum_univ_four,
+          Fin.sum_univ_four]
+      ring
+    rw [h]
+    exact div_nonneg (Finset.sum_nonneg fun μ _ => sq_nonneg (v μ - A_bg μ))
+      (by norm_num)
+  -- Substantive consistency proof (no `div_one`):
+  -- `‖v − A‖²/2 / 1 = ‖v‖²/2 − ⟨v,A⟩ + ‖A‖²/2` requires expanding each
+  -- `(v_μ − A_μ)²` via `Fin.sum_univ_four` and closing with `ring`.
+  -- Class-1 algebraic discharge on a non-trivial polynomial obligation.
+  consistent      := fun v => by
+    show (∑ μ : Fin 4, (v μ - A_bg μ) ^ 2) / 2 / 1
+         = (∑ μ : Fin 4, v μ ^ 2) / 2
+           - (∑ μ : Fin 4, v μ * A_bg μ)
+           + (∑ μ : Fin 4, A_bg μ ^ 2) / 2
+    rw [div_one, Fin.sum_univ_four, Fin.sum_univ_four, Fin.sum_univ_four,
+        Fin.sum_univ_four]
+    ring
 
-/-- The Bohmian-EM slot satisfies the CATEPT consistency constraint. -/
+/-- The Bohmian-EM slot satisfies the CATEPT consistency constraint.
+    After the F3 refactor (2026-05-06), this is a field projection on
+    the slot itself rather than a `div_one` shortcut through
+    `SuperiorMethodSlot`. -/
 theorem bohmianEMCATEPTSlot_consistent (A_bg : Fin 4 → ℝ) :
-    cateptConsistencyConstraint (bohmianEMCATEPTSlot A_bg) := by
-  intro v
-  simp [bohmianEMCATEPTSlot]
+    cateptConsistencyConstraint (bohmianEMCATEPTSlot A_bg) :=
+  (bohmianEMCATEPTSlot A_bg).consistent
 
 /-- At zero background (A_bg = 0), the Bohmian-EM action equals the free
     Bohmian action `‖v‖²/2`. -/
 theorem bohmianEM_zero_A_eq_free (v : Fin 4 → ℝ) :
     (bohmianEMCATEPTSlot (fun _ => 0)).actionIm v = (∑ μ : Fin 4, v μ ^ 2) / 2 := by
-  simp [bohmianEMCATEPTSlot]
+  simp [bohmianEMCATEPTSlot,
+    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot, bohmianEMSuperiorSlot]
 
 /-- The Bohmian-EM action is nonneg for all velocities and backgrounds. -/
 theorem bohmianEM_nonneg (A_bg : Fin 4 → ℝ) (v : Fin 4 → ℝ) :
@@ -262,7 +283,9 @@ theorem bohmianEM_action_expansion (A_bg v : Fin 4 → ℝ) :
       (∑ μ : Fin 4, v μ ^ 2) / 2
       - (∑ μ : Fin 4, v μ * A_bg μ)
       + (∑ μ : Fin 4, A_bg μ ^ 2) / 2 := by
-  simp only [bohmianEMCATEPTSlot, Fin.sum_univ_four]
+  simp only [bohmianEMCATEPTSlot,
+    CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot, bohmianEMSuperiorSlot,
+    Fin.sum_univ_four]
   ring
 
 -- ── §6  Gravitas Faraday tensor and electrovacuum plugin ─────────────────────

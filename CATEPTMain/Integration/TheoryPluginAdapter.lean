@@ -12,7 +12,7 @@ import CATEPTMain.Gravitas.SolveEinsteinEquations
 import CATEPTMain.Gravitas.SolveElectrovacuumEinsteinEquations
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Geometry.Manifold.Instances.Real
-import NavierStokes.Core.NSFieldFourier
+import NavierStokes.NSFieldFourier
 
 /-!
 # TheoryPlugin Adapter (WP01 scaffold)
@@ -106,6 +106,8 @@ def adapterCATEPTSlot : CATEPTPluginSlot where
   hbar_pos        := one_pos
   eptClock        := fun _ => 0
   eptClock_nonneg := fun _ => le_refl 0
+  -- Trivial: 0 / 1 = 0.
+  consistent      := fun _ => by norm_num
 
 /-- The trivial CATEPT slot is consistent: actionIm/hbar = eptClock (both 0). -/
 theorem adapterCATEPTSlot_consistent :

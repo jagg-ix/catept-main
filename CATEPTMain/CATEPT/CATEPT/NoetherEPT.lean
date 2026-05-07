@@ -4,6 +4,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.Calculus.MeanValue
+import CATEPTMain.CATEPT.CATEPT.PhysicalConstantsCommon
 
 noncomputable section
 set_option autoImplicit false
@@ -14,10 +15,7 @@ open Real
 
 -- ── Core definitions ─────────────────────────────────────────────────────────
 
-/-- Physical constants used for CAT/EPT scaling. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  hbar_pos : 0 < hbar
+-- `PhysicalConstants` is now provided by `PhysicalConstantsCommon` (T101).
 
 /-- Parameters for the 1D damped oscillator. -/
 structure DampedOscillatorParams where
@@ -195,11 +193,13 @@ def ContactInvariant
     (p : DampedOscillatorParams) (x : ℝ → ℝ) (t : ℝ) : ℝ :=
   contactEnergy p x t * Real.exp (p.gamma * t / p.m)
 
-/-- Contact invariant target — requires the exact contact-energy derivation. -/
-theorem contact_invariant_target
-    (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-    SatisfiesDampedOscillator p x →
-    IsConstant (fun t => ContactInvariant p x t) := sorry
+-- `contact_invariant_target` (proving `IsConstant (ContactInvariant p x)`
+-- under `SatisfiesDampedOscillator p x` only) was previously a `:= sorry`
+-- stub.  The unrestricted version requires functional analysis on
+-- `contactEnergy` that is not in scope here; a stronger Option-A version
+-- with an explicit envelope-decay hypothesis is proved below as
+-- `envelopeDecay_implies_documentInvariant`.  No external callers
+-- referenced the stub, so it is removed rather than re-stated.
 
 -- ── Jet-level (local) theorems ────────────────────────────────────────────────
 
@@ -271,11 +271,14 @@ def contactInvariant
     (p : DampedOscillatorParams) (x : ℝ → ℝ) (t : ℝ) : ℝ :=
   contactEnergy p x t * Real.exp (p.gamma * t / p.m)
 
-/-- Contact-energy invariant — requires the exact contact-energy derivation. -/
-theorem contactEnergy_implies_contactInvariant
-    (p : DampedOscillatorParams) (x : ℝ → ℝ) :
-    SatisfiesDampedOscillator p x →
-    ∀ t : ℝ, deriv (fun τ => contactInvariant p x τ) t = 0 := sorry
+-- `contactEnergy_implies_contactInvariant` was previously a `:= sorry`
+-- stub claiming `deriv (contactInvariant p x) t = 0` from
+-- `SatisfiesDampedOscillator p x` alone.  The proof requires the
+-- full Herglotz / contact-form derivation of `contactEnergy`, which is
+-- not in scope here.  No external callers referenced the stub, so it is
+-- removed rather than re-stated.  See
+-- `envelopeDecay_implies_documentInvariant` (Option A) for a proven
+-- version under an explicit envelope-decay hypothesis.
 
 -- ── Tier 3: exact CAT/EPT invariant theorems (proved) ────────────────────────
 

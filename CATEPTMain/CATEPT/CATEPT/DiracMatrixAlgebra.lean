@@ -67,31 +67,42 @@ Evaluates a string of Dirac algebra elements into a scalar.
 -/
 opaque DiracTrace : DiracAlgebra → ℂ
 
-/--
-Clifford algebra fundamental anticommutation relation:
-$\{\gamma^\mu, \gamma^\nu\} = \gamma^\mu \gamma^\nu + \gamma^\nu \gamma^\mu = 2\eta^{\mu\nu}\mathbf{I}_4$
-This acts as an axiom for the perturbative reduction system.
--/
-axiom clifford_anticommutation (μ ν : LorentzIndex) :
-  -- Note: Abstract equality intended for future expansion into full term-rewriting AST
-  True
+/-!
+## Sandwich identity-tags (registry-bound `True` placeholders)
 
-/--
-Fundamental track property: The trace of the identity is 4.
-$\text{Tr}(\mathbf{I}_4) = 4$
--/
-axiom dirac_trace_identity : True
+The abstract `DiracAlgebra` scaffold above is opaque and does not carry
+matrix arithmetic, so the genuine algebraic content
+(`{γ^μ, γ^ν} = 2η^{μν}·𝟙₄`, trace identities) cannot be stated here at
+the `Matrix (Fin 4)(Fin 4) ℂ` level.  Concrete proofs live in the
+`catept-domain-gauge` plugin:
 
-/--
-Fundamental track property: The trace of a single gamma matrix is 0.
-$\text{Tr}(\gamma^\mu) = 0$
--/
-axiom dirac_trace_single_gamma (μ : LorentzIndex) : True
+* `CATEPTPluginDomainGauge/FEYNCALC/CliffordMinkowski.lean`
+    `theorem diracGamma_anticommute` — Clifford anticommutator.
+* `CATEPTPluginDomainGauge/FEYNCALC/DiracTrace.lean`
+    Single, pair, and four-gamma trace identities.
 
-/--
-Fundamental track property: The trace of two gamma matrices is $4\eta^{\mu\nu}$.
-$\text{Tr}(\gamma^\mu \gamma^\nu) = 4\eta^{\mu\nu}$
+At the carrier layer the scaffold-level statements collapse to `True`
+(no matrix structure to verify against).  We record them as
+`theorem ... := trivial` placeholders so downstream consumers can still
+reference the names (`MuonG2Anomaly`, perturbative bridges) and
+`#print axioms` audits stay kernel-clean.
 -/
-axiom dirac_trace_two_gammas (μ ν : LorentzIndex) : True
+
+/-- Clifford algebra anticommutation relation tag.
+    `{γ^μ, γ^ν} = 2η^{μν}·𝟙₄`.  Concrete proof:
+    `CATEPTPluginDomainGauge.FEYNCALC.CliffordMinkowski.diracGamma_anticommute`. -/
+theorem clifford_anticommutation (_μ _ν : LorentzIndex) : True := trivial
+
+/-- Trace identity tag: `Tr(𝟙₄) = 4`.  Concrete proof in
+    `catept-domain-gauge` FEYNCALC.DiracTrace. -/
+theorem dirac_trace_identity : True := trivial
+
+/-- Trace identity tag: `Tr(γ^μ) = 0`.  Concrete proof in
+    `catept-domain-gauge` FEYNCALC.DiracTrace. -/
+theorem dirac_trace_single_gamma (_μ : LorentzIndex) : True := trivial
+
+/-- Trace identity tag: `Tr(γ^μ γ^ν) = 4 η^{μν}`.  Concrete proof in
+    `catept-domain-gauge` FEYNCALC.DiracTrace. -/
+theorem dirac_trace_two_gammas (_μ _ν : LorentzIndex) : True := trivial
 
 end CATEPTMain.CATEPT.CATEPT

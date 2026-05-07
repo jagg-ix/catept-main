@@ -109,15 +109,19 @@ def higgsCATEPTSlot (v lam : ℝ) (hlam : 0 < lam) : CATEPTPluginSlot where
   hbar_pos        := one_pos
   eptClock        := fun φ => higgsVacuumAction v lam φ
   eptClock_nonneg := fun φ => higgsVacuumAction_nonneg v lam hlam φ
+  -- Trivial-by-construction: `actionIm = eptClock` and `hbar = 1`,
+  -- so the spine identity reduces to `V(φ) / 1 = V(φ)`.
+  consistent      := fun _ => div_one _
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 
 /-- The Higgs CATEPT slot satisfies the consistency constraint:
-    V(φ) / 1 = V(φ)  (entropic clock = scaled imaginary action, ħ = 1). -/
+    V(φ) / 1 = V(φ)  (entropic clock = scaled imaginary action, ħ = 1).
+    Term-mode proof: both `actionIm` and `eptClock` are the same function and
+    `hbar = 1`, so the constraint reduces to `div_one _`. -/
 theorem higgsCATEPTSlot_consistent (v lam : ℝ) (hlam : 0 < lam) :
-    cateptConsistencyConstraint (higgsCATEPTSlot v lam hlam) := by
-  intro φ
-  simp [higgsCATEPTSlot]
+    cateptConsistencyConstraint (higgsCATEPTSlot v lam hlam) :=
+  fun _ => div_one _
 
 -- ── Physical consequences ─────────────────────────────────────────────────────
 

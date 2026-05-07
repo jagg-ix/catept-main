@@ -30,7 +30,7 @@ Lean 4 port of the Gravitas general-relativity package
 
 ## Source
 
-  /Users/macbookpro/lab/tau/Gravitas/Gravitas/Kernel/
+  (private path)/tau/Gravitas/Gravitas/Kernel/
 
 ## Module structure
 
