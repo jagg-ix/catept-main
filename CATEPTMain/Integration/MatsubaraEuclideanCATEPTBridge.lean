@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Trigonometric
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import CATEPTMain.Integration.EntropicTimeIntegralStateDependent
 
 set_option autoImplicit false
@@ -12,7 +12,7 @@ Encodes the finite-temperature (KMS) Euclidean-time compactification and
 Matsubara frequencies as the thermal upgrade of the Euclidean CAT/EPT
 layer.  CAT/EPT entropy production is modeled as an **extra** functional
 (`lambda_extra`), not as a duplicate KMS term.
--/-
+-/
 
 namespace CATEPTMain.Integration.MatsubaraEuclideanCATEPTBridge
 
