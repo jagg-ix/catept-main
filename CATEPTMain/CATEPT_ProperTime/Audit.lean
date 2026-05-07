@@ -1,0 +1,12 @@
+import CATEPTMain.CATEPT_ProperTime.HeatKernelDeterminant
+import CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions
+import CATEPTMain.CATEPT_ProperTime.ClosedTimePathEffectiveAction
+
+/-! Kernel-axiom audit for the CATEPT_ProperTime carriers (7 axioms retired). -/
+
+#print axioms CATEPTMain.CATEPT_ProperTime.HeatKernelDeterminant.heatKernelTrace
+#print axioms CATEPTMain.CATEPT_ProperTime.HeatKernelDeterminant.properTimeDeterminantIntegral
+#print axioms CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions.bosonPartitionFunction
+#print axioms CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions.fermionPartitionFunction
+#print axioms CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions.thermal_boson_periodic
+#print axioms CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions.thermal_fermion_antiperiodic

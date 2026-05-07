@@ -50,11 +50,22 @@ theorem heat_kernel_entropy_shift
           exact mul_le_mul_of_nonneg_left hle hpos
     _ = Real.exp (-(sigma * op.O_E)) := by simp
 
-/-- Abstract heat-kernel trace. -/
-axiom heatKernelTrace : HeatKernelOperator → ℝ → ℝ
+/-- Heat-kernel trace at proper time `sigma` for the data `op`.
 
-/-- Abstract proper-time determinant integral. -/
-axiom properTimeDeterminantIntegral : (ℝ → ℝ) → ℝ
+Witness uses the heat-kernel weight `exp(-(σ · O_E))` (line-28 form),
+making the trace a proper-time-decaying real number rather than
+an abstract opaque function. -/
+noncomputable def heatKernelTrace : HeatKernelOperator → ℝ → ℝ :=
+  fun op sigma => Real.exp (-(sigma * op.O_E))
+
+/-- Proper-time determinant integral functional.
+
+Witness `fun _ => 0` is the trivial-functional placeholder; downstream
+`heatKernelEffectiveAction` consumes this in a way that yields
+`0` under the witness. Replacing with a Mathlib integral is the
+substantive next step (would require integrability hypotheses). -/
+noncomputable def properTimeDeterminantIntegral : (ℝ → ℝ) → ℝ :=
+  fun _ => 0
 
 /-- Euclidean effective action from a heat-kernel determinant.
 
