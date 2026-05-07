@@ -1,5 +1,6 @@
 import CATEPTMain.Core.Framework.AFPBridgeFramework
 import CATEPTMain.CATEPT.CATEPT.Foundations
+import CATEPTMain.CATEPT.CATEPT.MeasurePathIntegral
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
@@ -84,120 +85,28 @@ theorem entropicTime_linear (hbar S_I S_I' : ℝ) :
   unfold entropicTime entropic_time; rw [add_div]
 
 -- ── Measurable path integral model ───────────────────────────────────────────
+--
+-- M5.3 (orphan-triage Milestone 5): the duplicate `MeasurePathIntegralModel`
+-- structure that was previously declared here has been retired in favor of
+-- the canonical declaration from
+-- `CATEPTMainExtracted.CATEPT.CATEPT.MeasurePathIntegral` (re-exported via
+-- the `CATEPTMain.CATEPT.CATEPT.MeasurePathIntegral` shim, imported above).
+-- This eliminates the second `noConfusionType` collision (the first was on
+-- ComplexHamiltonian, fixed in M5.2). The catept-core version uses Latin
+-- field names (`mu`, `alpha`) instead of catept-main's former Greek
+-- (`μ`, `α`); the few catept-main consumers using Greek names migrate
+-- alongside this gut (M5.3 same PR).
 
-/-- Measurable CAT/EPT path integral model on state space α.
-    Ported from `NavierStokesClean.CATEPT.MeasurePathIntegral`. -/
-structure MeasurePathIntegralModel (α : Type*) [MeasurableSpace α] where
-  μ                   : Measure α
-  hbar                : ℝ
-  hbar_pos            : 0 < hbar
-  actionRe            : α → ℝ
-  actionIm            : α → ℝ
-  measurable_actionRe : Measurable actionRe
-  measurable_actionIm : Measurable actionIm
-  actionIm_nonneg     : ∀ x, 0 ≤ actionIm x
-
-namespace MeasurePathIntegralModel
-
-variable {α : Type*} [MeasurableSpace α] (m : MeasurePathIntegralModel α)
-
-noncomputable section
-
-/-- Scaled real action S_R / ħ. -/
-def actionReScaled (x : α) : ℝ := m.actionRe x / m.hbar
-
-/-- Scaled imaginary action S_I / ħ = τ_ent. -/
-def actionImScaled (x : α) : ℝ := m.actionIm x / m.hbar
-
-/-- Oscillatory phase exp(i S_R/ħ). -/
-def phase (x : α) : ℂ :=
-  Complex.exp ((m.actionReScaled x : ℂ) * Complex.I)
-
-/-- FK damping factor exp(−S_I/ħ) = exp(−τ_ent) ∈ (0,1]. -/
-def damping (x : α) : ℝ := Real.exp (-(m.actionImScaled x))
-
-/-- Full CAT/EPT weight exp(i S_R/ħ − S_I/ħ). -/
-def weight (x : α) : ℂ :=
-  Complex.exp
-    ((-(m.actionImScaled x) : ℂ) +
-     ((m.actionReScaled x : ℂ) * Complex.I))
-
--- ── Core weight theorems ──────────────────────────────────────────────────────
-
-/-- Weight factorizes: w = phase · damping. -/
-theorem weight_factorizes (x : α) :
-    m.weight x =
-      Complex.exp ((m.actionReScaled x : ℂ) * Complex.I) *
-      (Real.exp (-(m.actionImScaled x)) : ℂ) := by
-  unfold weight
-  rw [show (Real.exp (-(m.actionImScaled x)) : ℂ) =
-      Complex.exp (-(m.actionImScaled x : ℂ)) from by
-    simp [Complex.ofReal_exp, Complex.ofReal_neg]]
-  rw [← Complex.exp_add]
-  congr 1; ring
-
-/-- The oscillatory phase has unit norm. -/
-theorem phase_norm_one (x : α) :
-    ‖m.phase x‖ = 1 := by
-  unfold phase
-  rw [Complex.norm_exp_ofReal_mul_I]
-
-/-- The weight norm equals the damping factor. -/
-theorem weight_norm_is_damping (x : α) :
-    ‖m.weight x‖ = Real.exp (-(m.actionImScaled x)) := by
-  rw [weight_factorizes]
-  rw [norm_mul]
-  have hphase : ‖Complex.exp ((m.actionReScaled x : ℂ) * Complex.I)‖ = 1 :=
-    Complex.norm_exp_ofReal_mul_I _
-  rw [hphase, one_mul]
-  rw [Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le]
-
-/-- Damping is strictly positive. -/
-theorem damping_pos (x : α) : 0 < m.damping x :=
-  Real.exp_pos _
-
-/-- Damping is at most 1 (since S_I ≥ 0). -/
-theorem damping_le_one (x : α) : m.damping x ≤ 1 := by
-  unfold damping actionImScaled
-  rw [Real.exp_le_one_iff]
-  linarith [div_nonneg (m.actionIm_nonneg x) m.hbar_pos.le]
-
-/-- The weight has norm at most 1. -/
-theorem weight_bochner_bounded (x : α) : ‖m.weight x‖ ≤ 1 := by
-  rw [weight_norm_is_damping]
-  exact damping_le_one m x
-
-/-- Cameron condition: Re(weight exponent) = −S_I/ħ ≤ 0. -/
-theorem cameron_condition (x : α) :
-    (-(m.actionImScaled x : ℂ) +
-     ((m.actionReScaled x : ℂ) * Complex.I)).re ≤ 0 := by
-  simp only [Complex.add_re, Complex.neg_re, Complex.ofReal_re,
-             Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
-             mul_zero, mul_one, sub_zero]
-  unfold actionImScaled
-  linarith [div_nonneg (m.actionIm_nonneg x) m.hbar_pos.le]
-
-/-- The weight is measurable. -/
-theorem measurable_weight : Measurable m.weight := by
-  unfold weight
-  apply Complex.measurable_exp.comp
-  apply Measurable.add
-  · exact (Complex.measurable_ofReal.comp
-      (m.measurable_actionIm.div_const m.hbar)).neg
-  · exact (Complex.measurable_ofReal.comp
-      (m.measurable_actionRe.div_const m.hbar)).mul_const Complex.I
-
-/-- The scaled imaginary action is measurable. -/
-theorem measurable_actionImScaled : Measurable m.actionImScaled :=
-  m.measurable_actionIm.div_const m.hbar
-
-/-- The damping factor is measurable. -/
-theorem measurable_damping : Measurable m.damping :=
-  Real.measurable_exp.comp m.measurable_actionImScaled.neg
-
-end  -- noncomputable section
-
-end MeasurePathIntegralModel
+-- The structure `MeasurePathIntegralModel` and its theorem block
+-- (`actionReScaled`, `actionImScaled`, `phase`, `damping`, `weight`,
+-- `weight_factorizes`, `phase_norm_one`, `weight_norm_is_damping`,
+-- `damping_pos`, `damping_le_one`, `weight_bochner_bounded`,
+-- `cameron_condition`, `measurable_weight`, `measurable_actionImScaled`,
+-- `measurable_damping`) previously declared here are now provided by
+-- `CATEPTMainExtracted.CATEPT.CATEPT.MeasurePathIntegral` (Latin
+-- field-name version: `mu : Measure alpha`). The eq-numbered theorems
+-- and `weight_eq_damping_of_actionRe_zero` are extra deliveries from
+-- the catept-core canonical extraction.
 
 -- ── Complex Schrödinger functional ───────────────────────────────────────────
 
