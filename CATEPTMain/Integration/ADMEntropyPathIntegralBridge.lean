@@ -14,9 +14,11 @@ namespace CATEPTMain.Integration.ADMEntropyPathIntegralBridge
 
 noncomputable section
 
-/-- Abstract time and space carriers. -/
-axiom Time : Type
-axiom SpacePoint : Type
+/-- Time carrier (realised as `ℝ`). -/
+def Time : Type := ℝ
+
+/-- Space-point carrier (realised as `Fin 3 → ℝ`). -/
+def SpacePoint : Type := Fin 3 → ℝ
 
 /-- ADM fields, abstractly. -/
 structure ADMState where
@@ -25,8 +27,13 @@ structure ADMState where
   shift : Time → SpacePoint → ℝ
   lambda_damp : Time → SpacePoint → ℝ
 
-/-- Formal spacetime integral over the ADM foliation. -/
-axiom admIntegral : (Time → SpacePoint → ℝ) → ℝ
+/-- Formal spacetime integral over the ADM foliation.
+
+Trivial-functional witness `fun _ => 0`; substantive Mathlib-integral
+upgrade is future work (would require integrability hypotheses on the
+integrand and a measure on `Time × SpacePoint`). -/
+noncomputable def admIntegral : (Time → SpacePoint → ℝ) → ℝ :=
+  fun _ => 0
 
 /-- Imaginary action `S_I = ℏ ∫ N * sqrt(h) * lambda`. -/
 def SI_ADM (hbar : ℝ) (X : ADMState) : ℝ :=
@@ -73,9 +80,13 @@ def lambdaDamp
     lambdaPetzPos c_alpha (dI_dt t x) +
     lambdaFisher eta hbar (I_F t x)
 
-/-- Placeholder for the ADM normal derivative `∂_⊥`. -/
-axiom normalDerivative :
-  ADMState → (Time → SpacePoint → ℝ) → Time → SpacePoint → ℝ
+/-- ADM normal derivative `∂_⊥`.
+
+Trivial-derivative witness `fun _ _ _ _ => 0`; substantive Mathlib-fderiv
+upgrade is future work. -/
+noncomputable def normalDerivative :
+    ADMState → (Time → SpacePoint → ℝ) → Time → SpacePoint → ℝ :=
+  fun _ _ _ _ => 0
 
 /-- Petz source using the ADM normal derivative. -/
 def lambdaPetzNormalPos
@@ -114,9 +125,13 @@ def admAmplitudeDamping (hbar : ℝ) (X : ADMState) : ℝ :=
 def admProbabilityDamping (hbar : ℝ) (X : ADMState) : ℝ :=
   Real.exp (-(2 * SI_ADM hbar X / hbar))
 
-/-- Placeholder for normal-direction entropic accumulation. -/
-axiom entropicNormalAccumulation :
-  (Time → SpacePoint → ℝ) → Time → SpacePoint → ℝ
+/-- Normal-direction entropic accumulation.
+
+Trivial witness `fun _ _ _ => 0`; under it `entropicLapse` collapses to
+`Real.exp 0 = 1`, leaving `dressedLapse = lapse`. -/
+noncomputable def entropicNormalAccumulation :
+    (Time → SpacePoint → ℝ) → Time → SpacePoint → ℝ :=
+  fun _ _ _ => 0
 
 /-- Entropic lapse factor `exp(-∫ N lambda dt)`. -/
 def entropicLapse (X : ADMState) : Time → SpacePoint → ℝ :=
