@@ -61,20 +61,21 @@ theorem euclideanWeight_factorizes
     euclideanWeight S_E S_I hbar =
       Real.exp (-(S_E / hbar)) * entropyDamping S_I hbar := by
   unfold euclideanWeight entropyDamping
-  ring_nf
-  simp [Real.exp_add, Real.exp_neg]
+  rw [show -(S_E / hbar) - (S_I / hbar) = -(S_E / hbar) + -(S_I / hbar) from by ring,
+      Real.exp_add]
 
 /-- Wick-rotation keeps the damping sector real and contractive. -/
 theorem euclideanWeight_damping_le_one
     (S_E S_I hbar : ℝ) (hS : 0 ≤ S_I) (hh : 0 < hbar) :
     euclideanWeight S_E S_I hbar ≤ Real.exp (-(S_E / hbar)) := by
-  unfold euclideanWeight
+  rw [euclideanWeight_factorizes]
   have hneg : -(S_I / hbar) ≤ 0 := by
     have hdiv : 0 ≤ S_I / hbar := div_nonneg hS (le_of_lt hh)
     linarith
-  have hle : Real.exp (-(S_I / hbar)) ≤ 1 :=
-    (Real.exp_le_one_iff).mpr hneg
-  nlinarith
+  have hle : entropyDamping S_I hbar ≤ 1 := by
+    unfold entropyDamping
+    exact (Real.exp_le_one_iff).mpr hneg
+  exact mul_le_of_le_one_right (Real.exp_nonneg _) hle
 
 /-- Wick-rotation admissibility carrier. -/
 structure WickAdmissible where
@@ -97,10 +98,13 @@ structure WickFailureMode where
   gravitationalLapseProblem : Prop
   stokesJump : Prop
 
-/-- Admissibility implies the entropy sector is required to be positive. -/
-theorem wick_admissible_requires_entropy_positive
-    (W : WickAdmissible) : W.entropySectorPositive :=
-  W.entropySectorPositive
+-- The original theorem `wick_admissible_requires_entropy_positive` was
+-- a tautological extraction of a `Prop`-valued field — the structure
+-- recorded the *statement* of admissibility conditions but no *proofs*
+-- of them, so trying to derive `W.entropySectorPositive` from `(W :
+-- WickAdmissible)` alone could not typecheck. Removing it; reintroduce
+-- with an explicit hypothesis once the structure is upgraded to carry
+-- proof witnesses (same pattern as the slot-`consistent` upgrade).
 
 end
 

@@ -40,6 +40,7 @@ theorem lorentzianEvolution_eq_propagator
   unfold lorentzianEvolution lorentzianGenerator lorentzianPropagator
   unfold lorentzianKernel
   congr 1
+  push_cast
   ring
 
 /-- Dissipativity: the real part of A_L is non-positive when H_I >= 0. -/
