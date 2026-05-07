@@ -3,6 +3,7 @@ import CATEPTMain.CATEPT_ProperTime.ThermalBoundaryConditions
 import CATEPTMain.CATEPT_ProperTime.ClosedTimePathEffectiveAction
 import CATEPTMain.Integration.ADMEntropyPathIntegralBridge
 import CATEPTMain.Integration.SchwingerKeldyshADMBridge
+import CATEPTMain.Integration.ProperTimePathIntegralBridge
 
 /-! Kernel-axiom audit for the post-axiom-cleanup carrier surface.
 
@@ -38,3 +39,6 @@ Each `#print axioms` directive must report `[propext, Classical.choice, Quot.sou
 -- SchwingerKeldyshADMBridge carrier + downstream substantive theorem
 #print axioms CATEPTMain.Integration.SchwingerKeldyshADMBridge.ADMMetric
 #print axioms CATEPTMain.Integration.SchwingerKeldyshADMBridge.admEntropyActionDensity_nonneg
+
+-- ProperTimePathIntegralBridge function-witness
+#print axioms CATEPTMain.Integration.ProperTimePathIntegralBridge.properTimeIntegral

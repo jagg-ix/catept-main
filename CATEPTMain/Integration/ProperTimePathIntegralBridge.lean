@@ -43,8 +43,14 @@ theorem properTimeKernel_via_lorentzian
   unfold properTimeKernel properTimeKernelViaLorentzian properTimePhase properTimeRegulator
   simp [lorentzianKernel_factorizes, mul_assoc]
 
-/-- Abstract proper-time integral (carrier-level placeholder). -/
-axiom properTimeIntegral : (ℝ → ℂ) → ℂ
+/-- Proper-time integral (carrier-level placeholder).
+
+Trivial-functional witness `fun _ => 0`; substantive Mathlib-integral
+upgrade is future work (would require integrability hypotheses on the
+kernel). Same pattern as `properTimeDeterminantIntegral` in
+`CATEPT_ProperTime/HeatKernelDeterminant.lean` (PR #50). -/
+noncomputable def properTimeIntegral : (ℝ → ℂ) → ℂ :=
+  fun _ => 0
 
 /-- Proper-time representation of a propagator. -/
 def properTimeRepresentation (kernel : ℝ → ℂ) (propagator : ℂ) : Prop :=
