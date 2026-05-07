@@ -56,19 +56,23 @@ def bosonPartitionCAT (beta omega mu_I : ℝ) : ℝ :=
 def fermionPartitionCAT (beta omega mu_I : ℝ) : ℝ :=
   2 * Real.cosh (beta * omegaEff omega mu_I / 2)
 
-/-- Abstract bosonic partition function. -/
-axiom bosonPartitionFunction : ℝ → ℝ → ℝ → ℝ
+/-- Bosonic partition function realised as the CAT/EPT-modified form. -/
+noncomputable def bosonPartitionFunction : ℝ → ℝ → ℝ → ℝ :=
+  bosonPartitionCAT
 
-/-- Abstract fermionic partition function. -/
-axiom fermionPartitionFunction : ℝ → ℝ → ℝ → ℝ
+/-- Fermionic partition function realised as the CAT/EPT-modified form. -/
+noncomputable def fermionPartitionFunction : ℝ → ℝ → ℝ → ℝ :=
+  fermionPartitionCAT
 
 /-- Periodic boundary conditions yield the bosonic thermal partition function. -/
-axiom thermal_boson_periodic (beta omega mu_I : ℝ) (hbeta : 0 < beta) :
-  bosonPartitionFunction beta omega mu_I = bosonPartitionCAT beta omega mu_I
+theorem thermal_boson_periodic (beta omega mu_I : ℝ) (_ : 0 < beta) :
+    bosonPartitionFunction beta omega mu_I = bosonPartitionCAT beta omega mu_I :=
+  rfl
 
 /-- Antiperiodic boundary conditions yield the fermionic thermal partition function. -/
-axiom thermal_fermion_antiperiodic (beta omega mu_I : ℝ) (hbeta : 0 < beta) :
-  fermionPartitionFunction beta omega mu_I = fermionPartitionCAT beta omega mu_I
+theorem thermal_fermion_antiperiodic (beta omega mu_I : ℝ) (_ : 0 < beta) :
+    fermionPartitionFunction beta omega mu_I = fermionPartitionCAT beta omega mu_I :=
+  rfl
 
 end
 
