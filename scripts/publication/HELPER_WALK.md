@@ -244,3 +244,87 @@ Nothing in code. This README section *is* the disposition. Reviewers reading the
 A3, A10, A13 remain BUNDLING (the `:= rfl` *is* bundling at every layer — and we confirm that's the right verdict). A12 remains BORDERLINE-VIA-HELPER. The 17-SUBSTANTIVE inventory is unchanged; the publication face just gets a clearer pointer to where substance lives.
 
 These two phases are tracked in `catept_pub_slot_consistent_fix_20260506` (Phase 4) and `catept_pub_eq003_cosmetic_disposition_20260506` (Phase 5).
+
+---
+
+## Phase 6 — B8 helper walk: `exponential_uv_tail_implies_no_counterterm_needed`
+
+The Phase 3 finalization deferred the verdict on `physical_uv_certificate_no_counterterm_needed` (B8) one helper deeper, into `exponential_uv_tail_implies_no_counterterm_needed`. That helper is now classified.
+
+### Body of the helper
+
+`CATEPTMain/Integration/SimplexPathIntegralNoRenormBridge.lean:127`:
+
+```lean
+theorem exponential_uv_tail_implies_no_counterterm_needed
+    (c : CountertermFreeUVLimit) :
+    Tendsto c.cutoffPartition atTop (𝓝 c.continuumPartition) ∧
+      c.counterterm = 0 :=
+  ⟨c.tendsto_cutoff_to_continuum, c.counterterm_zero⟩
+```
+
+**Verdict at this layer: BUNDLING** — `⟨_, _⟩` packaging two existing field/theorem projections, no algebra, no analytic content.
+
+### One layer further: `CountertermFreeUVLimit.tendsto_cutoff_to_continuum`
+
+The substance lives in the carrier theorem, which the helper merely projects:
+
+```lean
+theorem tendsto_cutoff_to_continuum (c : CountertermFreeUVLimit) :
+    Tendsto c.cutoffPartition atTop (𝓝 c.continuumPartition) := by
+  have hε : 0 < c.epsilonUV := c.epsilonUV_pos
+  -- ε · N → ∞
+  have h1 : Tendsto (fun N : ℕ => c.epsilonUV * (N : ℝ)) atTop atTop :=
+    Tendsto.const_mul_atTop hε tendsto_natCast_atTop_atTop
+  -- -(ε · N) → -∞
+  have h2 : Tendsto (fun N : ℕ => -(c.epsilonUV * (N : ℝ))) atTop atBot :=
+    tendsto_neg_atTop_atBot.comp h1
+  -- exp(-(ε · N)) → 0
+  have h3 : Tendsto (fun N : ℕ => Real.exp (-(c.epsilonUV * (N : ℝ))))
+      atTop (𝓝 0) := Real.tendsto_exp_atBot.comp h2
+  -- ‖Z_N - Z_∞‖ ≤ exp(-(ε·N)) ⟹ Z_N - Z_∞ → 0 in ℂ
+  have h4 : Tendsto (fun N => c.cutoffPartition N - c.continuumPartition)
+      atTop (𝓝 0) := squeeze_zero_norm c.exponentialTail h3
+  have h5 := h4.add_const c.continuumPartition
+  simpa using h5
+```
+
+**Verdict for the carrier helper: SUBSTANTIVE.** Real analytic chain:
+
+1. `Tendsto.const_mul_atTop hε tendsto_natCast_atTop_atTop` — `ε · N → ∞` from `ε > 0` and `N → ∞`.
+2. `tendsto_neg_atTop_atBot.comp h1` — flip direction: `-(ε · N) → -∞`.
+3. `Real.tendsto_exp_atBot.comp h2` — exponential of something going to `-∞` goes to `0`.
+4. `squeeze_zero_norm c.exponentialTail h3` — squeeze theorem on `‖cutoffPartition N - continuumPartition‖`.
+5. `h4.add_const + simpa` — translate `Z_N - Z_∞ → 0` to `Z_N → Z_∞`.
+
+This is class-2 analytic reasoning (limits, squeeze, composition of tendsto facts), comparable to `complexFKExpectation_norm_le` and `eq054_damping_magnitude` in our existing SUBSTANTIVE inventory.
+
+### Reclassification
+
+| Theorem | Old verdict (Phase 3) | New verdict (Phase 6) |
+|---|---|---|
+| `physical_uv_certificate_no_counterterm_needed` (B8) | BUNDLING-VIA-HELPER (substance one layer further) | **SUBSTANTIVE-VIA-CHAIN** (composes `ofUVConvergenceCertificate_no_counterterm_needed _` → `exponential_uv_tail_implies_no_counterterm_needed` → `tendsto_cutoff_to_continuum`, the last of which is class-2 analytic) |
+
+### Updated SUBSTANTIVE inventory after Phase 6
+
+| Verdict | Pool A | Pool B | New (outside original 24) | Total |
+|---|---:|---:|---:|---:|
+| SUBSTANTIVE (direct, outermost) | 0 | 5 | 0 | 5 |
+| SUBSTANTIVE-VIA-HELPER / VIA-CHAIN | 9 | 1+1 | 2 | 13 |
+| **Net SUBSTANTIVE** | **9** | **7** | **2** | **18** |
+| BORDERLINE / via-helper | 2 | 6 | 0 | 8 |
+| Genuinely-shallow BUNDLING | 13 | 11 | — | 24 |
+
+Up from 17 → 18 SUBSTANTIVE after Phase 6. B8 lifts out of the BUNDLING bucket on the strength of `tendsto_cutoff_to_continuum`'s analytic chain.
+
+### Helpers walked, all phases
+
+After six phases of helper walking, the original 24-theorem inventory has been classified to a final state:
+
+- **18 SUBSTANTIVE / SUBSTANTIVE-VIA-(HELPER|CHAIN|CARRIER)** — proof bodies do real mathematical work somewhere in the chain (algebra, real-inequality reasoning, calc-style analytic bounds, integral estimates, ring-on-polynomial-expansion, or composition through carriers proved by all of the above).
+- **8 BORDERLINE** — single-Mathlib-rewrite or single-`simp` proofs that aren't substantive on their own but aren't pure bundling either; their honest reading is "trivially true after the right hypothesis is in scope".
+- **24 BUNDLING** — pure field projections, definitional `:= rfl`, or short re-exports. Includes the eq003 family (definitional restatements of carrier defs, Phase 5) and OSReconstruction-external delegations.
+
+These six phases close out `catept_pub_classify_20260505`.
+
+This phase is tracked in `catept_pub_helper_walk_b8_finalization_20260507`.
