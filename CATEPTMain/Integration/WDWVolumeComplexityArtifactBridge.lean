@@ -8,7 +8,7 @@ import NavierStokesClean.CATEPT.Theoremized.Batch20260408_G091_DSFFrameworkPhysi
 
 Lean-facing equation stubs extracted from:
 
-- `~/Downloads/chat_artifact_query (19).csv` (10 rows, 6 unique hashes)
+- `(private intake) (19).csv` (10 rows, 6 unique hashes)
 - extraction DB run: `chat_artifact_extractions.sqlite3`, `run_id = 2`
 
 ## Curation summary
@@ -86,12 +86,12 @@ def run19PhysicsRows : List EquationStub :=
     { rowId := 111354
       equationHash := "faf563e774e1780107ceb45b4c2b6af7e2e0d01db8ea7a90a60ebcfd359ec791"
       definitionLocation :=
-        "/Users/macbookpro/Downloads/tau/ChatGPT-Quantum Gravity paper inspection.md -> latex/0452_response.tex:1" }
+        "(private intake) latex/0452_response.tex:1" }
   , -- DSF framework Lean skeleton (canonical copy, deduped from 4 identical hashes)
     { rowId := 58006
       equationHash := "f248e5cf15ad61015051784db2c65bd6a640a2fe4bd16afc033f5965a24b64c0"
       definitionLocation :=
-        "/Users/macbookpro/Downloads/tau/Grok-Quantum_Physics_Lean4_Modules_Analysis.md -> lean/0008_reply_66_conclusion_on_dsf_framework.lean:6" }
+        "(private intake doc) -> lean/0008_reply_66_conclusion_on_dsf_framework.lean:6" }
   ]
 
 theorem run19PhysicsRows_length : run19PhysicsRows.length = 2 := rfl
@@ -322,7 +322,7 @@ theorem run19_wdw_ept_vacuum_bundle
 /-!
 ## Run 25 — Verlinde Entropic Force
 
-CSV source: `~/Downloads/chat_artifact_query (25).csv` (4 rows, 4 unique hashes).
+CSV source: `(private intake) (25).csv` (4 rows, 4 unique hashes).
 
 ### Curation summary
 
@@ -361,12 +361,12 @@ def run25PhysicsRows : List EquationStub :=
     { rowId := 228908
       equationHash := "e52d23cc0058c888fbbfb145de7f763203b24d2a459f9a7aad4057ec20844485"
       definitionLocation :=
-        "/Users/macbookpro/Downloads/tau/ChatGPT-Making history in theory (3).md -> latex/0900_response.tex:310" }
+        "(private intake) latex/0900_response.tex:310" }
   , -- Same physics, different source
     { rowId := 218739
       equationHash := "ec097904ea526a34e97319c248f2fd45b7f7cfcc93c96ed1a4a2fb065086cc99"
       definitionLocation :=
-        "/Users/macbookpro/Downloads/tau/ChatGPT-2025-05-04-QCF Theory Development.md -> latex/0107_from_entanglement_gravity_e.g._verli.tex:1" }
+        "(private intake) latex/0107_from_entanglement_gravity_e.g._verli.tex:1" }
   ]
 
 theorem run25PhysicsRows_length : run25PhysicsRows.length = 2 := rfl

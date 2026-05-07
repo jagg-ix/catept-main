@@ -1,9 +1,6 @@
-/-
-# FBD Port — Root Module
+import CATEPTPluginDomainGauge.FBD.FBDPort
 
-Fermion-Boson Duality / Omega Matrix port from Mathematica notebooks.
+/-!
+Compatibility shim.
+Canonical implementation lives in `catept-domain-gauge`.
 -/
-import CATEPTMain.GaugeTheory.FBD.FBDPrelude
-import CATEPTMain.GaugeTheory.FBD.OmegaMatrices
-import CATEPTMain.GaugeTheory.FBD.QEDProcesses
-import CATEPTMain.GaugeTheory.FBD.WeakProcesses

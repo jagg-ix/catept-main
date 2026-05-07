@@ -1,1 +1,0 @@
-import NavierStokesClean.CATEPT.Extracted.InfoGeometryExtracted.Atoms.SourceAtoms

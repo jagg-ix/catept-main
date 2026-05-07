@@ -135,16 +135,29 @@ theorem catept_damping_equals_fk_path_weight
   congr 1
   rw [entropic_time_equals_path_potential hbar hh V x t S_I hSI]
 
-/--
-Complex FK bridge kept explicit as an axiom.
-This matches reference status: the fully complex FK theorem remains open.
+/-! ## Legacy `complex_FK_bridge` placeholder removed
+
+Earlier drafts of this file shipped a vacuous
+
+    theorem complex_FK_bridge {X} (_M : FeynmanKacModel X) (_obs : X → ℂ) :
+        True := by trivial
+
+as a stand-in for "the Glimm–Jaffe complex Feynman–Kac open problem."
+That placeholder added no proof power and has been removed.
+
+For the **rigorous** complex FK theorem in the catept-physics class
+(entropically damped oscillatory measures over `MeasurePathIntegralModel`),
+see `CATEPTMain.Integration.RigorousComplexFeynmanKac.complex_FK_rigorous`,
+which leverages the Phase-12 `‖weight‖ = damping` identity together with
+Mathlib's Bochner-integral theory to give a fully formal, kernel-only
+result.
+
+The fully general Glimm–Jaffe oscillatory-measure problem (arbitrary
+complex measures with no real damping component) remains open in the
+literature; the catept framework restricts attention to the
+entropically-damped class precisely because that class admits the
+rigorous treatment shipped in `RigorousComplexFeynmanKac`.
 -/
-theorem complex_FK_bridge
-    {X : Type*}
-    (_M : FeynmanKacModel X)
-    (_obs : X -> ℂ) :
-    True := by
-  trivial
 
 /-! ## FK / Complex-Measure Reusable Bridge Theorems -/
 

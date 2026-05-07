@@ -233,10 +233,12 @@ theorem uv_admissible_renorm_step (s : RenormState) (h : UvAdmissible s) :
 
 -- ── §10  Topological anomaly: Chern-Simons sector ─────────────────────────────
 
-/-- Confirms that `TopologicalAnomalyBridge` is imported and its witness structure
-    is available.  The witness is parameterized so theorems are stated for any
-    concrete `W : TopologicalAnomalyChernSimonsWitness α`. -/
-theorem topological_anomaly_module_imported : True := trivial
+/-! Earlier drafts shipped a `theorem topological_anomaly_module_imported :
+    True := trivial` here, intended as an "import success" smoke test.
+    That added no audit value: the import is already witnessed by
+    `weyl_block_432_for_witness` below referencing
+    `TopologicalAnomalyChernSimonsWitness α` in its signature.  The
+    placeholder has been removed. -/
 
 /-- For any Chern-Simons witness, Weyl block 432 relates nontrivial topological
     invariants to stable attractor evolution. -/

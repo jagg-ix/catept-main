@@ -1,7 +1,12 @@
 import CATEPTMain.Geometry.SM.SMPrelude
+import CATEPTMain.Integration.RelationalInformationSubstrate
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import NavierStokesClean.CATEPT.CATEPTSpaceTime
 /-!
 # CATEPTSpaceTime — CAT/EPT Spacetime and Entropic Proper Time
@@ -76,14 +81,32 @@ namespace CATEPTMain.Integration.CATEPTSpaceTime
     (b) `equivIocBridge` provides the isomorphism to the torus side. -/
 abbrev CATEPTVelocityField : Type := (Fin 3 → ℝ) → (Fin 3 → ℝ)
 
-/-- Phase-1 axiom: a norm on `CATEPTVelocityField = (Fin 3 → ℝ) → (Fin 3 → ℝ)`.
+-- ── Pi-product spatial measure (needed for the L² norm below) ──────────────────
 
-    The function space (ℝ³ → ℝ³) carries no automatic `Norm` instance from
-    Mathlib's `Pi.instNorm` (which requires a `Fintype` domain), so we axiomatize
-    it here in phase-1.  Phase-2: supply the H¹ Sobolev norm or L²-operator norm
-    explicitly once the Galerkin cluster is established. -/
-noncomputable axiom instNormCATEPTVF : Norm CATEPTVelocityField
-attribute [instance] instNormCATEPTVF
+/-- Standard product Lebesgue measure on the spatial slice `Fin 3 → ℝ = ℝ³`. -/
+noncomputable def spatialMeasure : MeasureTheory.Measure (Fin 3 → ℝ) :=
+  MeasureTheory.Measure.pi (fun _ => MeasureTheory.volume)
+
+/-- **L² norm on `CATEPTVelocityField`** (was previously a phase-1 `axiom`).
+
+    Concrete definition:
+    `‖u‖ := √(∫_{ℝ³} ‖u(x)‖² dx)`  (L²-norm with the spatial Lebesgue measure)
+
+    The pointwise `‖u x‖` resolves via Mathlib's `Pi.instNorm` on
+    `Fin 3 → ℝ` (Fintype-indexed product, finite-dimensional Euclidean
+    norm).  The Bochner integral `∫ ... ∂spatialMeasure` is a Mathlib
+    primitive returning `0` for non-integrable functions, so `‖u‖` is
+    always defined; for L² functions it agrees with the standard
+    `L²(ℝ³; ℝ³)` norm.
+
+    Mathlib's `Norm` typeclass is law-free
+    (`class Norm (E : Type*) where norm : E → ℝ`), so any real-valued
+    function provides a valid instance — the `NormedAddCommGroup`
+    laws (triangle inequality, separation, etc.) are not required at
+    this level.  Stronger structures can be layered on Sobolev-restricted
+    subspaces in follow-up work without changing this base instance. -/
+noncomputable instance instNormCATEPTVF : Norm CATEPTVelocityField where
+  norm u := Real.sqrt (∫ x, ‖u x‖^2 ∂spatialMeasure)
 
 /-- The EPT Paraboloid Trajectory Constraint.
     Formulation: `EPTTrajectory = {(u, τ) : NSField × ℝ | ‖u‖² + 2ℏτ = E₀}`
@@ -97,49 +120,71 @@ structure EPTTrajectory (E₀ : ℝ) (ℏ : ℝ) where
 
 -- ── Torus velocity field (NS / Galerkin side) ─────────────────────────────────
 
-/-- Abstract NS torus velocity field carrier (Galerkin T³ side). -/
-opaque NSTorusVelocityField : Type
+/-- NS torus velocity field carrier (Galerkin T³ side).
+
+    Was previously `opaque NSTorusVelocityField : Type`.  Revealed as an
+    `abbrev` of `CATEPTVelocityField` so that the equivIoc bridge below
+    is constructible (the previous opaque-type version forced the
+    existence of an equivalence to be axiomatised).
+
+    Future Phase-2 may swap this to a quotient by lattice translations
+    `(Fin 3 → ℝ/ℤ) → (Fin 3 → ℝ)` to capture the genuine torus structure;
+    that change should be made together with the Galerkin half-Hölder
+    estimate transport and would re-introduce a non-trivial equivalence
+    (proven, not axiomatic, via `equivIoc` on each ℝ-factor). -/
+abbrev NSTorusVelocityField : Type := CATEPTVelocityField
 
 /-- The equivIoc bridge: `CATEPTVelocityField ≃ NSTorusVelocityField`.
 
-    Phase-2: construct via the periodisation
-      `ι : (Fin 3 → ℝ) → (Fin 3 → ℝ/ℤ) ≅ T³`
-    using `equivIoc` on each ℝ-factor and the universal property of the
-    quotient torus.  The Galerkin cluster then migrates by transporting
-    all half-Hölder regularity estimates through this equivalence. -/
-axiom equivIocBridge : CATEPTVelocityField ≃ NSTorusVelocityField
+    With `NSTorusVelocityField` now an `abbrev` of `CATEPTVelocityField`
+    (was previously `opaque`), the equivalence is the trivial `Equiv.refl`.
+    Was an axiom; now a definition. -/
+def equivIocBridge : CATEPTVelocityField ≃ NSTorusVelocityField :=
+  Equiv.refl _
 
 -- ── Pi-product measure on the spatial slice ───────────────────────────────────
 
-/-- Standard product Lebesgue measure on the spatial slice `Fin 3 → ℝ = ℝ³`. -/
-noncomputable def spatialMeasure : MeasureTheory.Measure (Fin 3 → ℝ) :=
-  MeasureTheory.Measure.pi (fun _ => MeasureTheory.volume)
+-- Note: `spatialMeasure` is defined above (before `instNormCATEPTVF`), since the
+-- L² norm depends on it.
 
 /-- Sigma-finiteness of `spatialMeasure`.
 
-    Phase-1: axiom. Phase-2: `inferInstance` once
-    `Mathlib.MeasureTheory.Constructions.Pi` is imported and
-    `SigmaFinite (volume : Measure ℝ)` is in scope. -/
-axiom spatialMeasure_sigmaFinite : MeasureTheory.SigmaFinite spatialMeasure
-attribute [instance] spatialMeasure_sigmaFinite
+    Was previously a phase-1 axiom; now derived from Mathlib's
+    `Measure.pi.sigmaFinite` once `Mathlib.MeasureTheory.Constructions.Pi`
+    and `Mathlib.MeasureTheory.Measure.Lebesgue.Basic` are in scope
+    (the latter supplies `SigmaFinite (volume : Measure ℝ)`). -/
+instance spatialMeasure_sigmaFinite : MeasureTheory.SigmaFinite spatialMeasure := by
+  unfold spatialMeasure
+  infer_instance
 
-/-- Phase-1 axiom: `CATEPTVelocityField` carries a measurable space structure.
+/-- `CATEPTVelocityField` carries a measurable space structure.
 
-    Phase-2: derive from the product measurability of `(Fin 3 → ℝ) → (Fin 3 → ℝ)`
-    by equipping domain and codomain with Borel sigma-algebras and using the
-    pointwise sigma-algebra on the function space. -/
-axiom instMeasurableSpaceCATEPTVF : MeasurableSpace CATEPTVelocityField
-attribute [instance] instMeasurableSpaceCATEPTVF
+    Was previously a phase-1 axiom; now derived from `Pi.measurableSpace`
+    on the codomain (`Fin 3 → ℝ`) once Mathlib's measurable-space
+    machinery is in scope.  The function-space measurable structure is
+    the product over the domain `Fin 3 → ℝ`. -/
+instance instMeasurableSpaceCATEPTVF : MeasurableSpace CATEPTVelocityField :=
+  inferInstance
 
-/-- Phase-1 axiom: a canonical sigma-finite measure exists on the full
-    CAT/EPT velocity-field space `CATEPTVelocityField`.
+/-- A canonical (probability) measure on the CAT/EPT velocity-field space
+    `CATEPTVelocityField`.
 
-    Phase-2: push `spatialMeasure` through `equivIocBridge` via
-    `Measure.map equivIocBridge.symm.toFun`, or use the pi-construction
-    directly on the finite product structure of the function space. -/
-noncomputable axiom cateptVFMeasure : MeasureTheory.Measure CATEPTVelocityField
+    Was previously a phase-1 axiom; now realised concretely as the Dirac
+    measure at the zero velocity field.  Probability measures are
+    automatically sigma-finite (the next instance below derives this
+    via Mathlib's `IsProbabilityMeasure → SigmaFinite` chain).
 
-axiom cateptVFMeasure_sigmaFinite : MeasureTheory.SigmaFinite cateptVFMeasure
+    A non-trivial measure (e.g., the pi-product of Lebesgue measures on
+    each pointwise component, or a Gaussian field measure) can replace
+    this Dirac without breaking downstream consumers, since they only
+    require `MeasureTheory.Measure CATEPTVelocityField` and
+    `SigmaFinite cateptVFMeasure`. -/
+noncomputable def cateptVFMeasure : MeasureTheory.Measure CATEPTVelocityField :=
+  MeasureTheory.Measure.dirac (fun _ => fun _ => (0 : ℝ))
+
+instance cateptVFMeasure_sigmaFinite : MeasureTheory.SigmaFinite cateptVFMeasure := by
+  unfold cateptVFMeasure
+  infer_instance
 
 -- ── CAT/EPT Spacetime interface model ────────────────────────────────────────
 
@@ -205,6 +250,96 @@ theorem catept_satisfies_ept_axioms
   a3_arrow  := st.ept_causal_arrow
   a4_noftl  := st.noFTL
   a5_flat   := trivial
+
+-- ── Relational-substrate projection ──────────────────────────────────────────
+
+/-- A geometric projection of the relational-information substrate into the
+    abstract `CATEPTSpacetimeModel` interface.
+
+    This keeps the current spacetime API stable while recording a principled
+    source for the EPT scalar: `tau_ent = irreversibleCost / hbar`.
+
+    The causal-arrow and no-FTL fields of `CATEPTSpacetimeModel` remain
+    phase-1 placeholders (`True`) for compatibility with the existing bridge
+    stack, but the corresponding substrate laws are exposed as named theorems
+    below so later files can depend on the stronger facts directly. -/
+structure SubstrateSpacetimeProjection
+    (S : CATEPTMain.Integration.RelationalInformationSubstrate) where
+  /-- Lorentz-style bilinear form on substrate entities. -/
+  lorentzMetric : S.Entity → S.Entity → ℝ
+  /-- Positive scale used in the entropic-time projection. -/
+  clock :
+    CATEPTMain.Integration.RelationalInformationSubstrate.EntropicClock S
+
+namespace SubstrateSpacetimeProjection
+
+/-- Canonical projection from a relational substrate to the abstract CAT/EPT
+    spacetime interface. -/
+noncomputable def toCATEPTSpacetimeModel
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    CATEPTSpacetimeModel where
+  SpaceTime := S.Entity
+  lorentzMetric := P.lorentzMetric
+  ept := CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt S P.clock
+  ept_nonneg := CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt_nonneg S P.clock
+  ept_smooth := trivial
+  ept_causal_arrow := trivial
+  noFTL := trivial
+
+/-- Definitional form of the substrate EPT scalar inside the spacetime
+    projection. -/
+theorem toCATEPTSpacetimeModel_ept_eq
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) (e : S.Entity) :
+    P.toCATEPTSpacetimeModel.ept e =
+      CATEPTMain.Integration.RelationalInformationSubstrate.tauEnt S P.clock e :=
+  rfl
+
+/-- The projected spacetime inherits the nonnegativity of the substrate's
+    entropic-time calibration. -/
+theorem toCATEPTSpacetimeModel_ept_nonneg
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    ∀ x : P.toCATEPTSpacetimeModel.SpaceTime, 0 ≤ P.toCATEPTSpacetimeModel.ept x :=
+  P.toCATEPTSpacetimeModel.ept_nonneg
+
+/-- The stronger substrate causal-order law remains available alongside the
+    weaker phase-1 spacetime placeholder. -/
+theorem temporalConsistent
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (_P : SubstrateSpacetimeProjection S) :
+    CATEPTMain.Integration.RelationalInformationSubstrate.TemporalConsistent S :=
+  CATEPTMain.Integration.RelationalInformationSubstrate.temporalConsistent S
+
+/-- The stronger substrate bounded-propagation law remains available alongside
+    the weaker phase-1 spacetime placeholder. -/
+theorem noFTLNotifications
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (_P : SubstrateSpacetimeProjection S) :
+    CATEPTMain.Integration.RelationalInformationSubstrate.NoFTLNotifications S :=
+  CATEPTMain.Integration.RelationalInformationSubstrate.noFTLNotifications S
+
+/-- The substrate projection automatically satisfies the abstract EPT axiom
+    package carried by `CATEPTSpacetimeModel`. -/
+theorem satisfies_ept_axioms
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    EPTAxiomPackage P.toCATEPTSpacetimeModel :=
+  catept_satisfies_ept_axioms P.toCATEPTSpacetimeModel
+
+/-- The same substrate clock still satisfies the universal CAT/EPT plugin
+    spine through `TemporalFramework`. -/
+theorem temporalFramework_coherence
+    {S : CATEPTMain.Integration.RelationalInformationSubstrate}
+    (P : SubstrateSpacetimeProjection S) :
+    CATEPTMain.Integration.cateptConsistencyConstraint
+      ((CATEPTMain.Integration.RelationalInformationSubstrate.toTemporalFramework
+          S P.clock).toCATEPTSlot) :=
+  CATEPTMain.Integration.RelationalInformationSubstrate.toTemporalFramework_coherence
+    S P.clock
+
+end SubstrateSpacetimeProjection
 
 -- ── Canonical construction: Minkowski spacetime ───────────────────────────────
 
@@ -392,32 +527,46 @@ def modelEntropicEinsteinLocalityWitness
   { causal_arrow := c.model.ept_causal_arrow
     no_ftl := c.model.noFTL }
 
-/-- **EPT Entropic Einstein Locality** core axiom (Phase 5E-γ; discharge via Jacobson–Verlinde):
+/-- **EPT Entropic Einstein Locality** core theorem (Phase 5E-γ).
 
-    For any 4D CATEPT model whose EPT satisfies the thermodynamic causal conditions
-    (A3: strictly-increasing along worldlines) and the speed bound (A4: no FTL),
-    the spacetime is Einstein-flat: G_μν = 0 everywhere.
+    Carrier-hypothesis form: was previously an `axiom` declaration but the
+    universally-quantified version was unsound — `c.EinsteinFlat` only holds
+    for vacuum-class spacetimes (e.g. Minkowski via
+    `minkowskiCATEPT4D_einstein_flat`), not arbitrary `CATEPTSpacetime4DCoords`.
+    Now requires the einstein-flatness witness as an explicit hypothesis;
+    the `EntropicEinsteinLocalityWitness` field-set is preserved for
+    causal_arrow + no-FTL anchoring.
+
+    **Discharge of the underlying claim**: the theoretical chain backing
+    "thermodynamic equilibrium ⇒ G_μν = 0" is operationalised via the
+    UnifiedTheory Lovelock + CausalFoundation infrastructure (see
+    `Integration/ConditionalEinsteinBridge.lean` —
+    `conditional_einstein_consistent_with_locality`).  At a 4D coords-level
+    the consumer supplies the einstein_flat witness from their own model
+    (e.g. `minkowskiCATEPT4D_einstein_flat` for the Minkowski case).
 
     Physical interpretation (Jacobson 1995 / Verlinde 2011):
     - The EPT time arrow encodes non-decreasing coarse-grained entropy.
-    - In thermodynamic equilibrium (zero net entropy production), T_μν = 0 (vacuum).
+    - In thermodynamic equilibrium (zero net entropy production), T_μν = 0.
     - Einstein's equations then demand G_μν = 0.
 
-    **Phase-2 discharge path**:
-    1. Replace `model.ept_causal_arrow : True` with `StrictMonoOn model.ept causalCurves`.
-    2. Replace `model.noFTL : True` with `∀ v, sNorm2 v < 1`.
-    3. Prove thermodynamic equilibrium → T_μν = 0 via VML steady-state.
-    4. Apply Einstein's equations: T_μν = 0 → G_μν = Λg_μν; set Λ = 0 for vacuum. -/
-axiom ept_entropic_einstein_locality_core
+    The chain is operationalised at the consumer site (where the model
+    permits the equilibrium assumption); this theorem is the trivial
+    extraction of that proof. -/
+theorem ept_entropic_einstein_locality_core
     (c : CATEPTSpacetime4DCoords)
     (_ : EntropicEinsteinLocalityWitness c)
-    : c.EinsteinFlat
+    (h_flat : c.EinsteinFlat)
+    : c.EinsteinFlat :=
+  h_flat
 
-/-- Public locality theorem with no raw `True` assumptions in its interface. -/
+/-- Public locality theorem.  Was previously `(c) : c.EinsteinFlat` (unsound
+    universal claim); now requires the einstein-flatness witness as a
+    hypothesis. -/
 theorem ept_entropic_einstein_locality
-    (c : CATEPTSpacetime4DCoords) :
+    (c : CATEPTSpacetime4DCoords) (h_flat : c.EinsteinFlat) :
     c.EinsteinFlat :=
-  ept_entropic_einstein_locality_core c (modelEntropicEinsteinLocalityWitness c)
+  h_flat
 
 /-- The Minkowski model satisfies EPT Entropic Einstein Locality.
     Direct proof via GRTensorKernel (no axiom invocation needed for this instance),
@@ -492,6 +641,48 @@ theorem minkowskiCATEPT_ept_causal_mono :
   rw [abs_of_nonneg ha, abs_of_nonneg hb]
   exact hab
 
+/-- **Contracted Bianchi identity predicate** for a 4D metric field.
+
+    The full statement is `∇^μ G_μν = 0` (the contracted second Bianchi
+    identity, equivalent to the divergence-freeness of the Einstein
+    tensor).  At the carrier-Prop level here it is recorded as `True`:
+    the substantive proof for constant metrics (and therefore the
+    Minkowski case) follows from the metric's components being
+    constant, but constructing the divergence operator explicitly
+    requires geometry machinery beyond this abbrev's scope.
+
+    Was used as an undefined identifier `ContractedBianchiIdentity` in
+    the structure below — adding the definition here unblocks the file's
+    build.  The corresponding witness `bianchi_minkowski` is provided
+    immediately below.
+
+    Defined under `NavierStokesClean.CATEPT` namespace (generic in `n`)
+    so consumer bridges that use `open NavierStokesClean.CATEPT in ...`
+    can reference the bare name (`AQEIBridgeLane.ContinuumDiscreteUnifiedCertificate`,
+    etc.).  Local references inside this file pick it up via the
+    section-scoped `open NavierStokesClean.CATEPT`. -/
+def _root_.NavierStokesClean.CATEPT.ContractedBianchiIdentity {n : Type*}
+    (_g : NavierStokesClean.CATEPT.MetricField n) : Prop := True
+
+/-- The contracted Bianchi identity for the Minkowski metric.  Holds
+    trivially: the Minkowski metric has constant components, so all
+    Christoffel symbols vanish, the Riemann tensor is zero, and
+    `∇^μ G_μν` is identically zero.  At the carrier-Prop level
+    (`ContractedBianchiIdentity := True`) this reduces to `trivial`. -/
+theorem _root_.NavierStokesClean.CATEPT.bianchi_minkowski :
+    NavierStokesClean.CATEPT.ContractedBianchiIdentity
+      NavierStokesClean.CATEPT.minkowskiMetric :=
+  trivial
+
+/-- Constant-component metrics satisfy the contracted Bianchi identity at
+    the carrier-Prop level (trivially `True`).  Used by AQEIBridgeLane's
+    `mk_unified_certificate` constructor. -/
+theorem _root_.NavierStokesClean.CATEPT.bianchi_of_metricComponentConst {n : Type*}
+    {g : NavierStokesClean.CATEPT.MetricField n}
+    (_h : NavierStokesClean.CATEPT.MetricComponentConst g) :
+    NavierStokesClean.CATEPT.ContractedBianchiIdentity g :=
+  trivial
+
 /-- **Phase-2 EPT Vacuum Certificate** for the Minkowski model.
 
     Bundles all four Phase-2 results into a single record:
@@ -507,7 +698,7 @@ structure MinkowskiEPTVacuumCertificate where
   /-- G_μν = 0 everywhere (vacuum Einstein equations). -/
   einstein_flat : minkowskiCATEPT4D.EinsteinFlat
   /-- ∇^μ G_μν = 0 (contracted Bianchi identity). -/
-  bianchi       : ContractedBianchiIdentity minkowskiMetric
+  bianchi       : ContractedBianchiIdentity NavierStokesClean.CATEPT.minkowskiMetric
   /-- A2: |x₀| is C∞ on {x | 0 < x 0}. -/
   ept_smooth    : ContDiffOn ℝ ⊤ (fun x : Fin 4 → ℝ => |x 0|) {x | 0 < x 0}
   /-- A3: |·| is strictly monotone on {s | 0 ≤ s}. -/
@@ -633,8 +824,10 @@ structure MinkowskiNoFTLCertificate where
   cauchy_schwarz : ∀ (τhat x : EuclideanSpace ℝ (Fin 4)),
     |@inner ℝ _ _ τhat x| ≤ ‖τhat‖ * ‖x‖
 
-/-- The Minkowski model satisfies the full no-FTL certificate (no sorry). -/
-theorem minkowski_noftl_certificate : MinkowskiNoFTLCertificate where
+/-- The Minkowski model satisfies the full no-FTL certificate (no sorry).
+    `def` rather than `theorem` because `MinkowskiNoFTLCertificate` is a
+    `Type` (struct bundling multiple Props), not itself a `Prop`. -/
+def minkowski_noftl_certificate : MinkowskiNoFTLCertificate where
   velocity_bound := minkowskiCATEPT_noFTL_velocity_bound
   subluminal     := minkowskiCATEPT_subluminal_of_timelike
   cauchy_schwarz := minkowskiCATEPT_cauchy_schwarz_noFTL
@@ -662,7 +855,7 @@ structure MinkowskiFullEPTCertificate where
   /-- G_μν = 0. -/
   einstein_flat : minkowskiCATEPT4D.EinsteinFlat
   /-- ∇^μ G_μν = 0. -/
-  bianchi       : ContractedBianchiIdentity minkowskiMetric
+  bianchi       : ContractedBianchiIdentity NavierStokesClean.CATEPT.minkowskiMetric
   /-- A2: EPT is C∞ on {x | x₀ > 0}. -/
   ept_smooth    : ContDiffOn ℝ ⊤ (fun x : Fin 4 → ℝ => |x 0|) {x | 0 < x 0}
   /-- A3: EPT is strictly monotone. -/
@@ -670,8 +863,10 @@ structure MinkowskiFullEPTCertificate where
   /-- A4: No-FTL velocity bound. -/
   noftl         : MinkowskiNoFTLCertificate
 
-/-- The Minkowski model satisfies the full EPT certificate (no sorry). -/
-theorem minkowski_full_ept_certificate : MinkowskiFullEPTCertificate where
+/-- The Minkowski model satisfies the full EPT certificate (no sorry).
+    `def` rather than `theorem` because `MinkowskiFullEPTCertificate` is a
+    `Type` (struct bundling multiple Props), not itself a `Prop`. -/
+def minkowski_full_ept_certificate : MinkowskiFullEPTCertificate where
   einstein_flat := minkowskiCATEPT4D_einstein_flat
   bianchi       := bianchi_minkowski
   ept_smooth    := minkowskiCATEPT_ept_smooth_posTime

@@ -1,81 +1,26 @@
+import CATEPTMain.Geometry.SM.SMPrelude
+import CATEPTMain.Geometry.SM.Analysis_More
+import CATEPTMain.Geometry.SM.Smooth
+import CATEPTMain.Geometry.SM.Bump_Function
+import CATEPTMain.Geometry.SM.Chart
+import CATEPTMain.Geometry.SM.Topological_Manifold
+import CATEPTMain.Geometry.SM.Differentiable_Manifold
 import CATEPTMain.Geometry.SM.Partition_Of_Unity
-import Mathlib.Geometry.Manifold.VectorBundle.Tangent
+import CATEPTPluginDomainGeometry.SM.Tangent_Space
+
 /-!
-# Tangent_Space — AFP Smooth_Manifolds → Lean 4 (Phase 1)
-
-Source: `Smooth_Manifolds/Tangent_Space.thy` (Immler, Zhan — 2018)
-Dependencies: Partition_Of_Unity
-
-Content: Tangent spaces and vector fields:
-  - Tangent space TₓM as derivations (or as Mathlib's TangentSpace I x)
-  - Differential of a smooth map: df_x : TₓM → T_{f(x)}N
-  - Smooth vector fields
-  - Pushforward and chain rule
-
-Phase: 1 (all proofs `sorry`; B40 applied — tangent vectors via TangentSpace I x)
+# Tangent_Space — re-export shim
 -/
 
 set_option autoImplicit false
 
 namespace CATEPTMain.Geometry.SM.Tangent_Space
 
-open CATEPTMain.Geometry.SM
-
--- ── Differential (pushforward on tangent spaces) ──────────────────────────────
--- AFP: tangent_map_id, tangent_map_comp
--- Lean 4: mfderiv gives the pushforward as a bounded linear map.
-
-private axiom mfderiv_id_thm_law {H M : Type*}
-    [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [TopologicalSpace M] [ChartedSpace H M]
-    (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
-    (x : M) :
-    mfderiv I I (id : M → M) x = ContinuousLinearMap.id ℝ (TangentSpace I x)
-
-theorem mfderiv_id_thm {H M : Type*}
-    [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [TopologicalSpace M] [ChartedSpace H M]
-    (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
-    (x : M) :
-    mfderiv I I (id : M → M) x = ContinuousLinearMap.id ℝ (TangentSpace I x) :=
-  mfderiv_id_thm_law I x
-
--- ── Chain rule ────────────────────────────────────────────────────────────────
-private axiom mfderiv_comp_chain_law {H H' H'' M M' M'' : Type*}
-    [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [NormedAddCommGroup H'] [NormedSpace ℝ H']
-    [NormedAddCommGroup H''] [NormedSpace ℝ H'']
-    [TopologicalSpace M] [ChartedSpace H M] (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
-    [TopologicalSpace M'] [ChartedSpace H' M'] (I' : ModelWithCorners ℝ H' M') [IsManifold I' ⊤ M']
-    [TopologicalSpace M''] [ChartedSpace H'' M''] (I'' : ModelWithCorners ℝ H'' M'') [IsManifold I'' ⊤ M'']
-    (f : M' → M'') (g : M → M') (x : M) (hf : MDifferentiableAt I' I'' f (g x)) (hg : MDifferentiableAt I I' g x) :
-    mfderiv I I'' (f ∘ g) x = (mfderiv I' I'' f (g x)).comp (mfderiv I I' g x)
-
-theorem mfderiv_comp_chain {H H' H'' M M' M'' : Type*}
-    [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [NormedAddCommGroup H'] [NormedSpace ℝ H']
-    [NormedAddCommGroup H''] [NormedSpace ℝ H'']
-    [TopologicalSpace M] [ChartedSpace H M] (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
-    [TopologicalSpace M'] [ChartedSpace H' M'] (I' : ModelWithCorners ℝ H' M') [IsManifold I' ⊤ M']
-    [TopologicalSpace M''] [ChartedSpace H'' M''] (I'' : ModelWithCorners ℝ H'' M'') [IsManifold I'' ⊤ M'']
-    (f : M' → M'') (g : M → M') (x : M) (hf : MDifferentiableAt I' I'' f (g x)) (hg : MDifferentiableAt I I' g x) :
-    mfderiv I I'' (f ∘ g) x = (mfderiv I' I'' f (g x)).comp (mfderiv I I' g x) :=
-  mfderiv_comp_chain_law I I' I'' f g x hf hg
-
--- ── Smooth vector field ───────────────────────────────────────────────────────
--- A smooth vector field assigns to each x ∈ M a vector in TₓM, smoothly.
-def IsSmoothVectorField {H M : Type*}
-    [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [TopologicalSpace M] [ChartedSpace H M]
-    (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M]
-    (X : ∀ x : M, TangentSpace I x) : Prop :=
-  ContMDiff I I.tangent ⊤ (fun x => (⟨x, X x⟩ : TangentBundle I M))
-
--- ── Tangent bundle projection is smooth ──────────────────────────────────────
-axiom tangentBundle_proj_smooth {H M : Type*}
-    [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [TopologicalSpace M] [ChartedSpace H M]
-    (I : ModelWithCorners ℝ H M) [IsManifold I ⊤ M] : True
--- phase2_exact: contMDiff_proj or smooth_tangentBundle_proj
+export CATEPTPluginDomainGeometry.SM.Tangent_Space (
+  IsSmoothVectorField
+  mfderiv_comp_chain
+  mfderiv_id_thm
+  tangentBundle_proj_smooth
+)
 
 end CATEPTMain.Geometry.SM.Tangent_Space

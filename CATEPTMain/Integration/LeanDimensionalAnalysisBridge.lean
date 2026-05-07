@@ -1,58 +1,26 @@
-import DimensionalAnalysis
-import PhysicalVariables.Basic_implicityDimension
+import CATEPTPluginDimensionalAnalysis.IntegrationBridge
 
 /-!
-# LeanDimensionalAnalysis Integration Bridge
+# LeanDimensionalAnalysis Integration Bridge — re-export shim
 
-Direct 4.29 integration for:
-`/Users/macbookpro/lab/tau/tau-information-dynamics/LeanDimensionalAnalysis`
-(pinned in `catept-main` via Lake git dependency).
+Extracted to sibling repo `jagg-ix/catept-plugin-dimensional-analysis`
+under [Target 4](../../docs/architecture/targets/target-4-plan.md)
+(third sibling, follow-up beyond the parent ≥2 minimum).
 
-## CATEPT leverage points
-
-* `CATEPTMain.Core.PHQ` (Physical Quantities): use explicit dimensional
-  witnesses (`dimension`, `PhysicalVariable`) to validate unit coherence.
-
-* `CATEPTMain.Analysis.LSI` and `CATEPTMain.Analysis.CPM`: dimensional
-  constraints for derived fields used in measure/integral side conditions.
-
-* `CATEPTMain.Quantum.IMD`: cross-check scalar constants and derived formulas
-  with unit-correctness obligations before theorem promotion.
-
-The upstream package now runs on Lean 4.29 in place; this bridge records the
-capabilities CATEPT expects from it.
+The witness, contract, and bridge theorem are now authoritatively in
+`CATEPTPluginDimensionalAnalysis.IntegrationBridge`. This file
+re-exports them under the original
+`CATEPTMain.Integration.LeanDimensionalAnalysis` namespace so existing
+consumers continue to compile unchanged.
 -/
 
 set_option autoImplicit false
 
 namespace CATEPTMain.Integration.LeanDimensionalAnalysis
 
-/-- Witness of capabilities exported by LeanDimensionalAnalysis and
-    PhysicalVariables libraries. -/
-structure LeanDimensionalAnalysisWitness where
-  dimensionsCoreAvailable : Prop
-  physicalVariableCoreAvailable : Prop
-  isqBaseSystemAvailable : Prop
-  dimensionalHomogeneityAvailable : Prop
-  lennardJonesUnitModelAvailable : Prop
-
-/-- Contract consumed by CATEPT bridges that require dimensional typing. -/
-def LeanDimensionalAnalysisIntegrationContract
-    (w : LeanDimensionalAnalysisWitness) : Prop :=
-  w.dimensionsCoreAvailable ∧
-  w.physicalVariableCoreAvailable ∧
-  w.isqBaseSystemAvailable ∧
-  w.dimensionalHomogeneityAvailable ∧
-  w.lennardJonesUnitModelAvailable
-
-theorem leanDimensionalAnalysis_integration_contract
-    (w : LeanDimensionalAnalysisWitness)
-    (h1 : w.dimensionsCoreAvailable)
-    (h2 : w.physicalVariableCoreAvailable)
-    (h3 : w.isqBaseSystemAvailable)
-    (h4 : w.dimensionalHomogeneityAvailable)
-    (h5 : w.lennardJonesUnitModelAvailable) :
-    LeanDimensionalAnalysisIntegrationContract w :=
-  ⟨h1, h2, h3, h4, h5⟩
+export CATEPTPluginDimensionalAnalysis (
+  LeanDimensionalAnalysisWitness
+  LeanDimensionalAnalysisIntegrationContract
+  leanDimensionalAnalysis_integration_contract)
 
 end CATEPTMain.Integration.LeanDimensionalAnalysis

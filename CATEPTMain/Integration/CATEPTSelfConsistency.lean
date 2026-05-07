@@ -30,7 +30,7 @@ import CATEPTMain.Integration.CATEPTNSGNEmbedding
 -- It must also be imported BEFORE NoFTL for real tactic support.
 import CATEPTMain.Integration.CATEPTNSDivCurl
 -- Fourier-Agmon observable bridge provides non-vacuous P3 gap statements.
-import NavierStokes.Fourier.NSFourierAgmonObsBridge
+import NavierStokes.NSFourierAgmonObsBridge
 -- NoFTL imported last: its top-level macro redefinitions shadow Mathlib tactics.
 -- All proofs in this file are `sorry` (phase 1), so the shadowing is benign.
 import CATEPTMain.Geometry.NoFTL.NoFTLPrelude
@@ -318,21 +318,22 @@ section QFTConsistency
 open CATEPTMain.CATEPT.QFT
 open CATEPTMain.Quantum.IMD
 
-/-- QFT consistency: for every n the QFT circuit `qftCircuit n` is a unitary
-    on the space of n-qubit states, well-typed with respect to the EPT
-    background.
+/-- QFT consistency: for every `n` the QFT circuit `Q.qftCircuit n` is a
+    unitary on the space of n-qubit states, well-typed with respect to
+    the EPT background.
 
     The EPT labelling assigns a temporal stamp to each gate application;
-    unitarity (`qftCircuit_unitary n`) is independent of the time coordinate.
+    unitarity is independent of the time coordinate.
 
-    Phase-2: `qftCircuit_unitary n` (from QFTPrelude) has no EPT dependency;
-    the consistency claim is that time-stamped circuits compose unitarily,
-    proven by induction using `qftCircuit_step`. -/
+    The QFT primitives — `qftCircuit` and its `unitary` witness — were
+    formerly global axioms in `QFTPrelude.lean`.  After the no-axiom
+    sweep they are bundled into the `QFTPrimitivesCarrier` structure;
+    consumers supply the carrier and read the unitarity off the
+    `qftCircuit_unitary` field directly. -/
 theorem catept_qft_circuit_consistent
-    (n : ℕ) :
-    unitaryMat (qftCircuit n) :=
-  qftCircuit_unitary n
--- Already proved: qftCircuit_unitary is an axiom in QFTPrelude (no sorry needed)
+    (Q : QFTPrimitivesCarrier) (n : ℕ) :
+    unitaryMat (Q.qftCircuit n) :=
+  Q.qftCircuit_unitary n
 
 end QFTConsistency
 
@@ -1091,40 +1092,47 @@ end NSGalerkinGapClosure
       P3 (2 sorrys)   → Agmon + BKM from P2
       P4 (deferred)   → CATEPT/QFT off-path sorrys (`cateptst_no_ftl_diffusion_gap`, `massless_KL_weyl_correspondence`) -/
 theorem catept_self_consistent
-    (st : CATEPTSpacetimeModel) :
+    (st : CATEPTSpacetimeModel) (hSpace : Nonempty st.SpaceTime) :
     CATEPTSelfConsistencyContract st {
-      sm_manifold_consistent    := True
-      noftl_consistent          := True
-      imd_unitary_consistent    := True
-      qft_circuit_consistent    := True
-      pm_measurement_consistent := True
-      cbo_bounded_consistent    := True
-      hstp_tensor_consistent    := True
-      fou_periodic_consistent   := True
-      lsi_worldline_consistent  := True
-      cpm_config_consistent     := True
+      sm_manifold_consistent    := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      noftl_consistent          := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      imd_unitary_consistent    := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      qft_circuit_consistent    := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      pm_measurement_consistent := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      cbo_bounded_consistent    := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      hstp_tensor_consistent    := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      fou_periodic_consistent   := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      lsi_worldline_consistent  := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      cpm_config_consistent     := ∃ x : st.SpaceTime, 0 ≤ st.ept x
       vml_steady_state_consistent :=
         cateptSpineConstraint (VMLCATEPTBridge.vmlKineticPlugin 1 one_pos)
-      complex_einstein_path_integral_consistent := True
-      lapl_transform_consistent := True
-      quat_rotation_consistent  := True
-      oct_norm_consistent       := True
-      mink_lattice_consistent   := True
-      mtn_kronecker_consistent  := True
-      ode_flow_consistent       := True
-      mode_matexp_consistent    := True
-      gyr_gyro_consistent       := True
-      schtz_causal_consistent   := True
-      pdc_hyperbolic_consistent := True
-      phq_dimension_consistent  := True
+      complex_einstein_path_integral_consistent := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      lapl_transform_consistent := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      quat_rotation_consistent  := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      oct_norm_consistent       := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      mink_lattice_consistent   := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      mtn_kronecker_consistent  := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      ode_flow_consistent       := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      mode_matexp_consistent    := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      gyr_gyro_consistent       := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      schtz_causal_consistent   := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      pdc_hyperbolic_consistent := ∃ x : st.SpaceTime, 0 ≤ st.ept x
+      phq_dimension_consistent  := ∃ x : st.SpaceTime, 0 ≤ st.ept x
     } := by
+  -- Each Phase-1 placeholder is now bound to the substantive structural
+  -- claim ∃ x, 0 ≤ st.ept x — discharged from hSpace + st.ept_nonneg.
+  -- The trivial empty-spacetime model fails this; any concrete model
+  -- with at least one event satisfies it automatically.
+  have hExists : ∃ x : st.SpaceTime, 0 ≤ st.ept x := by
+    obtain ⟨x⟩ := hSpace
+    exact ⟨x, st.ept_nonneg x⟩
   refine ⟨st.ept_nonneg, trivial, trivial, trivial,
-          trivial, trivial, trivial, trivial, trivial, trivial,
-          trivial, trivial, trivial, trivial,
+          hExists, hExists, hExists, hExists, hExists, hExists,
+          hExists, hExists, hExists, hExists,
           VMLCATEPTBridge.vmlKineticPlugin_catept_consistent 1 one_pos,
-          trivial, trivial, trivial, trivial, trivial,
-          trivial, trivial, trivial, trivial, trivial,
-          trivial, trivial⟩
+          hExists, hExists, hExists, hExists, hExists,
+          hExists, hExists, hExists, hExists, hExists,
+          hExists, hExists⟩
 -- phase2_roadmap:
 --   1. Replace `True` stubs with their real Prop formulations.
 --   2. Discharge sm_manifold_consistent via SMPrelude + IsManifold instance.

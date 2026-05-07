@@ -4,7 +4,7 @@
 Source:
   Matthew Headrick, "Lectures on entanglement entropy in field theory and holography"
   arXiv:1907.08126v1
-  Local file: `~/Downloads/1907.08126v1.pdf`
+  Local file: `(private intake)`
 
 Primary bridge module:
   `CATEPTMain/Integration/AdSCFTHeadrick1907Bridge.lean`

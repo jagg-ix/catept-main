@@ -171,8 +171,10 @@ theorem ns_nu_is_hbar_over_two : nsNu = hbar / 2 := by
   have h := ci_entropic_rate_identification
   linarith
 
-/-- The NS viscosity is positive. -/
-theorem ns_nu_pos : 0 < nsNu := nsNu_pos
+/-- The NS viscosity is positive.  `nsNu` is a `{x : ℝ // 0 < x}`
+    subtype in NSC's `Core/Types.lean`, so the inequality is stated
+    on the coerced real value `(nsNu : ℝ)`. -/
+theorem ns_nu_pos : (0 : ℝ) < (nsNu : ℝ) := nsNu_pos
 
 /-- Identification: `ν = ℏ/(2m)` holds for `m = 1` (natural units). -/
 theorem ns_nu_madelung_natural_units :

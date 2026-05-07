@@ -57,7 +57,7 @@ None of these falsification signals appear in the four-domain data.
 
 ## Lean modules that encode this
 
-All under `/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/CATEPTMain/CATEPT/`:
+All under `(private path)`:
 
 | File | Role |
 |------|------|

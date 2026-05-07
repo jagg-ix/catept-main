@@ -93,6 +93,12 @@ def cateptPlanckSlot
     apply mul_nonneg
     · exact mul_nonneg (by norm_num) (le_of_lt Real.pi_pos)
     · exact Real.sqrt_nonneg _
+  -- Substantive: `actionIm n = ħ · 2π√n`, `eptClock n = 2π√n`, so
+  -- `actionIm n / ħ = (ħ · 2π√n) / ħ = 2π√n = eptClock n` via `field_simp`.
+  consistent      := fun n => by
+    show ħ * (2 * Real.pi * Real.sqrt (n : ℝ)) / ħ
+        = 2 * Real.pi * Real.sqrt (n : ℝ)
+    field_simp [ne_of_gt hħ]
 
 -- ── Consistency constraint ────────────────────────────────────────────────────
 
@@ -201,10 +207,40 @@ theorem cateptPlanckSlot_eptClock_tendsto_atTop
   apply Filter.Tendsto.const_mul_atTop (mul_pos two_pos Real.pi_pos)
   exact Real.tendsto_sqrt_atTop.comp tendsto_natCast_atTop_atTop
 
-/-- The FK weight tends to 0 as n → ∞ (classical limit: no quantum corrections).
-    Phase-2: derive from `cateptPlanckSlot_eptClock_tendsto_atTop` + `Real.tendsto_exp_atBot`. -/
-axiom cateptPlanckFKWeight_tendsto_zero (τ : ℝ) (hτ : 0 < τ) :
-    Filter.Tendsto (fun n : ℕ => cateptPlanckFKWeight n τ) Filter.atTop (nhds 0)
+/-- **Proven**: the FK weight tends to `0` as `n → ∞` (classical limit:
+    no quantum corrections).
+
+    The argument: by definition `cateptPlanckFKWeight n τ = exp(-2π√n · τ)`.
+    For `τ > 0`, `2π·τ > 0`, so `2π·τ · √n → +∞` as `n → ∞`, and the
+    composition `exp ∘ neg` of a `Tendsto … atTop` is `Tendsto … (𝓝 0)`. -/
+theorem cateptPlanckFKWeight_tendsto_zero (τ : ℝ) (hτ : 0 < τ) :
+    Filter.Tendsto (fun n : ℕ => cateptPlanckFKWeight n τ) Filter.atTop (nhds 0) := by
+  unfold cateptPlanckFKWeight
+  -- exp(-2π·τ·√n) → 0 ⇔ -2π·τ·√n → -∞ ⇔ 2π·τ·√n → +∞
+  have h2πτ : 0 < 2 * Real.pi * τ :=
+    mul_pos (mul_pos two_pos Real.pi_pos) hτ
+  have h_arg : Filter.Tendsto (fun n : ℕ => 2 * Real.pi * Real.sqrt (n : ℝ) * τ)
+      Filter.atTop Filter.atTop := by
+    -- 2π · √n · τ = (2π·τ) · √n, and √n → ∞
+    have h_sqrt : Filter.Tendsto (fun n : ℕ => Real.sqrt (n : ℝ))
+        Filter.atTop Filter.atTop :=
+      Real.tendsto_sqrt_atTop.comp tendsto_natCast_atTop_atTop
+    -- multiply by 2π then by τ on the right via reorganisation
+    have h_resh : (fun n : ℕ => 2 * Real.pi * Real.sqrt (n : ℝ) * τ)
+        = fun n : ℕ => (2 * Real.pi * τ) * Real.sqrt (n : ℝ) := by
+      funext n; ring
+    rw [h_resh]
+    exact Filter.Tendsto.const_mul_atTop h2πτ h_sqrt
+  -- Negate and apply exp_atBot.  We rewrite -(a) as (-1) * a and use
+  -- the negative-constant multiplier lemma to flip atTop to atBot.
+  have h_neg : Filter.Tendsto (fun n : ℕ => -(2 * Real.pi * Real.sqrt (n : ℝ) * τ))
+      Filter.atTop Filter.atBot := by
+    have h_resh : (fun n : ℕ => -(2 * Real.pi * Real.sqrt (n : ℝ) * τ))
+        = fun n : ℕ => (-1 : ℝ) * (2 * Real.pi * Real.sqrt (n : ℝ) * τ) := by
+      funext n; ring
+    rw [h_resh]
+    exact Filter.Tendsto.const_mul_atTop_of_neg (by linarith : (-1 : ℝ) < 0) h_arg
+  exact Real.tendsto_exp_atBot.comp h_neg
 
 -- ── Connection to planckTime / tauTimeQuantum ─────────────────────────────────
 

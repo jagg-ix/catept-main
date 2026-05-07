@@ -1,20 +1,15 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import CATEPTMain.CATEPT.CATEPT.PhysicalConstantsCommon
 
 noncomputable section
 set_option autoImplicit false
 
 namespace CATEPTMain.CATEPT.CATEPT
 
-/-- Basic constants. -/
-structure PhysicalConstants where
-  hbar : ℝ
-  kB   : ℝ
-  c    : ℝ
-  hbar_pos : 0 < hbar
-  kB_pos   : 0 < kB
-  c_pos    : 0 < c
+-- `PhysicalConstants` is now provided by `PhysicalConstantsCommon` (T101).
 
 /-- Minimal local-region interface for Section XI. -/
 structure LocalRegion where

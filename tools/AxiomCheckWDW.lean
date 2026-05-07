@@ -1,6 +1,0 @@
-import NavierStokesClean.CATEPT.External.WDWProblemOfTimeBridge
-
-#print axioms NavierStokesClean.CATEPT.External.WDWProblemOfTimeBridge.problem_of_time_resolved_of_entropic_proper_time
-#print axioms NavierStokesClean.CATEPT.External.WDWProblemOfTimeBridge.anderson_local_resolution_by_entropic_proper_time
-#print axioms NavierStokesClean.CATEPT.External.WDWProblemOfTimeBridge.wdw_frozen_time_problem_dissolves
-#print axioms NavierStokesClean.CATEPT.External.WDWProblemOfTimeBridge.resolved_regime_summary

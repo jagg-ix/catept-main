@@ -1,4 +1,3 @@
-import CATEPTMain.Integration.TheoryPluginArchitecture
 import QuantumAlgebra.ActionIntegration
 import Mathlib.Data.Complex.Basic
 

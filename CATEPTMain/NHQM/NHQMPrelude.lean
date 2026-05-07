@@ -10,7 +10,7 @@ Formalizes the core definitions from:
   Shen, Lu, Lado, Trif, PRL 133, 086301 (2024)
   "Non-Hermitian Fermi-Dirac Distribution in Persistent Current Transport"
 
-Source: `~/Downloads/NonHermitianFermiDiracDistributionPersistentCurrent-main/`
+Source: `(private intake)`
   - `Ring.ipynb`           : DMRG normal-ring model
   - `SNS.ipynb`            : DMRG SNS-junction model
   - `NonHermitianFermiDiracPersistentCurrent.nb` : Mathematica symbolic derivations
