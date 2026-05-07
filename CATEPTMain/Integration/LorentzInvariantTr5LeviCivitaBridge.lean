@@ -6,7 +6,7 @@ set_option autoImplicit false
 # tr5 / Levi-Civita bridge
 
 Provides the explicit Levi-Civita expansion of `tr5` as a named lemma.
--/-
+-/
 
 namespace CATEPTMain.Integration.LorentzInvariantTr5LeviCivitaBridge
 

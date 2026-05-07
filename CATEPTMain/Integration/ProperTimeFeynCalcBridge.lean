@@ -12,7 +12,7 @@ set_option autoImplicit false
 
 Connects the FEYNCALC Schwinger/Laplace representation of the Euclidean
 propagator to the proper-time kernel used in the CAT/EPT bridges.
--/-
+-/
 
 namespace CATEPTMain.Integration.ProperTimeFeynCalcBridge
 
