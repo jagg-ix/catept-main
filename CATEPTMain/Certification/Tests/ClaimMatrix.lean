@@ -14,29 +14,35 @@ set_option autoImplicit false
 
 namespace CATEPTMain.Certification.Tests.ClaimMatrix
 
-/-! ## Implemented claims -/
+/-! ## Implemented canonical / typed claims -/
+
+#check CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive
+#check CATEPTMain.Certification.RelativityGR.hodgeStarEM_double_components_fixedAntisymmetric4D
+#check CATEPTMain.Certification.RelativityGR.gravitasCanonicalStress_covariantDivergence_zero
+#check CATEPTMain.Certification.RelativityGR.canonical_einstein_residual
+#check CATEPTMain.Certification.RelativityGR.canonical_adm_residual
+#check CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_certificate
+#check CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_certificate
+#check CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
+#check CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_certificate
+
+/-! ## Implemented universal fields -/
 
 #check CATEPTMain.Certification.universalConsistencyCertificate
-
--- GR implemented surfaces
-#check CATEPTMain.Certification.RelativityGR.canonical_gr_tensor
-#check CATEPTMain.Certification.RelativityGR.canonical_gr_curved_maxwell
-#check CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
-#check CATEPTMain.Certification.RelativityGR.gravitasFaraday_hodgeStar_involutive
-#check CATEPTMain.Certification.RelativityGR.canonical_radiation_stress_conserved
-#check CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
+#check CATEPTMain.Certification.universal_curved_maxwell_bridge_certified
+#check CATEPTMain.Certification.universal_vml_maxwell_equilibrium_certified
 
 /-!
-## Future targets, not yet implemented as full general theorems
+## Future general theorems
 
 Do not move these into the implemented section until the named Lean declarations
 exist and are audited:
 
-* full `ElectromagneticTensor`-level `hodgeStarEM` involution;
+* arbitrary full tensor equality `hodgeStarEM g (hodgeStarEM g F) = F`;
 * general curved `covariantDivergenceStressEnergy g T = 0`;
-* general Einstein equation certificate `EinsteinTensor.ofMetric g = κT`;
-* general ADM constraint certificate;
-* Maxwell curve-space / pphi2 reconstruction certificate.
+* arbitrary Einstein equation `EinsteinTensor.ofMetric g = κT`;
+* arbitrary ADM constraints;
+* full Maxwell curve-space / pphi2 reconstruction theorem (beyond the current interface-level certificate).
 -/
 
 end CATEPTMain.Certification.Tests.ClaimMatrix
