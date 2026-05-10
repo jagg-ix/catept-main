@@ -7,6 +7,8 @@ import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
+import CATEPTMain.Certification.RelativityGREinsteinEquation
+import CATEPTMain.Certification.RelativityGRADM
 import CATEPTMain.Certification.UniversalCertificate
 
 /-!
@@ -114,3 +116,12 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── Typed GR residual objects (first-class certified payloads) ───────────────
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_einstein_residual
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_adm_residual
+
+-- ── Typed Einstein-equation certificate (Target 4) ───────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_equation_holds
+
+-- ── Typed ADM-constraint certificate (Target 5) ──────────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_hamiltonian_constraint_holds
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_momentum_constraint_holds

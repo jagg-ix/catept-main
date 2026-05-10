@@ -13,6 +13,8 @@ import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
+import CATEPTMain.Certification.RelativityGREinsteinEquation
+import CATEPTMain.Certification.RelativityGRADM
 import CATEPTMain.Certification.Status
 -- Note: Certification/Audit.lean is NOT imported here to avoid import cycles
 -- (it imports UniversalCertificate which already imports all five sectors).
@@ -36,6 +38,8 @@ Exports the certification sectors and universal consistency certificate:
 | `RelativityGRCovariantDivergence` | Named real covariant-divergence operator on `StressEnergyTensor` with canonical Minkowski/electrovacuum zero-divergence certificate |
 | `RelativityGRUnsafeFixes` | Canonical closure certificate for GR unsafe-claim surfaces (double-Hodge bivector closure, Einstein/ADM residual identities, conservation model closure) |
 | `RelativityGRResiduals` | Typed Einstein/ADM residual objects (`canonical_einstein_residual`, `canonical_adm_residual`) |
+| `RelativityGREinsteinEquation` | Typed Einstein equation certificate (`EinsteinEquationCertificate`, `canonical_electrovac_einstein_certificate`) |
+| `RelativityGRADM` | Typed ADM constraint certificate (`ADMConstraintCertificate`, `canonical_vacuum_adm_certificate`) |
 | `UniversalCertificate` | `CATEPTUniversalConsistencyCertificate`, `universalConsistencyCertificate` (9 sectors) |
 | `Status` | Baseline v1 sentinel record |
 
