@@ -1,4 +1,6 @@
 import CATEPTPluginVMLLandau.IntegrationBridge
+import Aristotle.Landau.main.CoulombConcreteTheorem42
+import Aristotle.Landau.main.Theorem42
 
 /-!
 # VML-Landau Bridge (catept-main shim)
@@ -31,5 +33,17 @@ export CATEPTPluginVMLLandau
    proved_vml_steady_state_nonvacuous
    proved_vml_steady_state_roundtrip
    vml_landau_content_available)
+
+/-- Definitional alignment: the catept-main VML rigidity re-export is exactly
+Aristotle's concrete Coulomb theorem. This gives a direct leverage point to
+the upstream formal source tree (`Aristotle/Landau/main/*`). -/
+theorem proved_vml_steady_state_rigidity_defeq :
+    proved_vml_steady_state_rigidity = VML.CoulombConcreteTheorem42 :=
+  rfl
+
+/-- Definitional alignment for the plugin-content witness surface. -/
+theorem vml_landau_content_available_defeq :
+    vml_landau_content_available = trivial :=
+  rfl
 
 end CATEPTMain.Integration.VMLLandau

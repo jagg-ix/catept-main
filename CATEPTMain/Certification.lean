@@ -12,13 +12,14 @@ import CATEPTMain.Certification.RelativityGRCovariantDivergence
 import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
+import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
 import CATEPTMain.Certification.RelativityGRADM
 import CATEPTMain.Certification.Status
 -- Note: Certification/Audit.lean is NOT imported here to avoid import cycles
--- (it imports UniversalCertificate which already imports all five sectors).
+-- (it imports UniversalCertificate which already imports the certification sectors).
 -- Run `lake build CATEPTMain.Certification.Audit` as a standalone target.
 
 /-!
@@ -39,6 +40,7 @@ Exports the certification sectors and universal consistency certificate:
 | `RelativityGRCovariantDivergence` | Named real covariant-divergence operator on `StressEnergyTensor` with canonical Minkowski/electrovacuum zero-divergence certificate |
 | `RelativityGRCurvedMaxwell` | Curved-Maxwell bridge certificate surface (`canonical_gr_curved_maxwell`) used by the production universal certificate |
 | `RelativityGRVMLMaxwell` | VML Maxwell-equilibrium certificate surface (`VMLMaxwellEquilibriumCertificate`, `canonical_vml_maxwell_equilibrium`) |
+| `RelativityGRMaxwellPphi2` | Maxwell-CurveSpace/pphi2 bridge certificate surface (`MaxwellPphi2Certificate`, `canonical_maxwell_pphi2_certificate`) |
 | `RelativityGRUnsafeFixes` | Canonical closure certificate for GR unsafe-claim surfaces (double-Hodge bivector closure, Einstein/ADM residual identities, conservation model closure) |
 | `RelativityGRResiduals` | Typed Einstein/ADM residual objects (`canonical_einstein_residual`, `canonical_adm_residual`) |
 | `RelativityGREinsteinEquation` | Typed Einstein equation certificate (`EinsteinEquationCertificate`, `canonical_electrovac_einstein_certificate`) |

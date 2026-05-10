@@ -6,6 +6,7 @@ import CATEPTMain.Certification.RelativityGRCovariantDivergence
 import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
+import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -81,9 +82,10 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.gr_tensor_faraday_defined
 #print axioms CATEPTMain.Certification.RelativityGR.gr_tensor_stress_energy_defined
 
--- ── Universal certificate (CERT-UP-007 — 10-sector upgrade) ──────────────────
+-- ── Universal certificate (CERT-UP-007 — 11-sector upgrade) ──────────────────
 #print axioms CATEPTMain.Certification.universalConsistencyCertificate
 #print axioms CATEPTMain.Certification.universal_curved_maxwell_bridge_certified
+#print axioms CATEPTMain.Certification.universal_vml_maxwell_equilibrium_certified
 #print axioms CATEPTMain.Certification.universal_sr_properTime_pos
 #print axioms CATEPTMain.Certification.universal_qm_gr_shared_clock
 #print axioms CATEPTMain.Certification.canonicalCommonClock
@@ -114,6 +116,10 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.vml_steady_state_rigidity_certified
 #print axioms CATEPTMain.Certification.RelativityGR.vml_landau_content_available_certified
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
+
+-- ── GR Maxwell-CurveSpace/pphi2 bridge certificate ───────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_bridge_contract_available
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
