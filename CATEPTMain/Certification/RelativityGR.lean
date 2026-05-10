@@ -22,6 +22,13 @@ from `CATEPTMain.Integration.GravitasBridge`.
 | Tolman factor = 1 (no redshift) | `gr_flat_tolman_trivial` |
 | Canonical flat GR certificate | `canonical_gr_flat` |
 
+## Production dependency note
+
+The curved-Maxwell bridge surface is certified in
+`RelativityGRCurvedMaxwell.lean` and is now carried by
+`CATEPTMain.Certification.universalConsistencyCertificate` as a first-class
+field (`curvedMaxwell : GRCurvedMaxwellBridgeCertificate`).
+
 ## What is NOT yet certified (requires CERT-UP-005)
 
 | Ingredient | Status |

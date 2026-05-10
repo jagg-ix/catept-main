@@ -59,6 +59,16 @@ theorem gravitasEinstein_residual_exact :
         gravitasEMStressEnergy.components (.lit 0) (.var "G_N") := by
   rfl
 
+/-- Family-form Einstein residual identity for vacuum stress-energy data:
+for any cosmological-term expression, the solved field-equation payload matches
+the corresponding Einstein-tensor field-equation expression on Minkowski vacuum. -/
+theorem einstein_residual_zero_for_vacuum_family
+    (Λ : Gravitas.Expr) :
+    (solveEinsteinEquations gravitasZeroStressEnergy Λ).fieldEquations =
+      EinsteinTensor.fieldEquations gravitasMinkowski
+        gravitasZeroStressEnergy.components Λ (.var "G_N") := by
+  rfl
+
 /-- The covariant-divergence operator always returns a vector with one
 component per spacetime dimension in the canonical GR setup. -/
 theorem gravitasZeroStress_divergence_dimension :

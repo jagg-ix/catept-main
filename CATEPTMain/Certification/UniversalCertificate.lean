@@ -5,6 +5,7 @@ import CATEPTMain.Certification.PathIntegral
 import CATEPTMain.Certification.ModularThermal
 import CATEPTMain.Certification.ClassicalMechanics
 import CATEPTMain.Certification.RelativityGR
+import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 
 /-!
 # CATEPTUniversalConsistencyCertificate
@@ -27,6 +28,7 @@ CATEPTUniversalConsistencyCertificate
   bellEntropic   : BellEntropicTimeCertificate       -- CERT-UP-006
   classical      : ClassicalMechanicsCATEPTCertificate  -- CERT-UP-002/003
   relativityGR   : GRCATEPTTensorCertificate        -- CERT-UP-005 Stage A
+  curvedMaxwell  : GRCurvedMaxwellBridgeCertificate -- certified curved-Maxwell bridge
   pathIntegral   : IdentifyGRWithQMPathIntegral
   modularThermal : CATEPTUnificationBundle
   commonClock    : AllUseSameEntropicClock   -- QM+GR+classical+Bell share τ_ent
@@ -49,11 +51,13 @@ CATEPTUniversalConsistencyCertificate
 >    zero damping baseline) — proved via `herglotzPluginSlot` (CERT-UP-002/003).
 > 6. **GR tensor layer (Stage A)**: Faraday tensor and EM stress-energy identification;
 >    flat Minkowski slot consistency — proved (CERT-UP-005 Stage A).
-> 7. **Path integral**: GR↔QM Wick-rotation identification; shared damping
+> 7. **Curved Maxwell bridge**: certified antisymmetry, homogeneous equation
+>    from potential, and Lorenz-gauge wave-equation reduction.
+> 8. **Path integral**: GR↔QM Wick-rotation identification; shared damping
 >    magnitude; `|weight| ≤ 1` — proved.
-> 8. **Modular-thermal**: `S_I = ℏ·τ_ent`, `τ_ent = β·Ω = −log Z`;
+> 9. **Modular-thermal**: `S_I = ℏ·τ_ent`, `τ_ent = β·Ω = −log Z`;
 >    four-pillar (QM/Thermo/EM/GR) unification non-trivially satisfied.
-> 9. **Common clock**: QM, GR, classical, and Bell sectors all share the
+> 10. **Common clock**: QM, GR, classical, and Bell sectors all share the
 >    same entropic-time identity `τ_ent = S_I / ℏ` — proved via the plugin spine.
 >
 > **Partially integrated**: GR Stage-B structural certificate.
@@ -69,7 +73,10 @@ machine-checked bridge theorems and depends only on
 `{propext, Classical.choice, Quot.sound}`.
 
 The `relativityGR` field uses `canonical_gr_tensor` (Stage A — Faraday tensor
-identification, Minkowski slot consistency). The separate Stage-B certificate
+identification, Minkowski slot consistency). The `curvedMaxwell` field uses
+`canonical_gr_curved_maxwell` so curved-space Maxwell constraints are part of
+the production universal certificate (not a standalone delta only).
+The separate Stage-B certificate
 `canonical_gr_einstein` was upgraded on 2026-05-09 to a fully kernel-only
 formulation that captures the structural invariants of the Hodge dual
 operator (metric/potential/permeability preservation, double-application
@@ -164,6 +171,9 @@ structure CATEPTUniversalConsistencyCertificate where
   /-- GR tensor sector: Faraday tensor + EM stress-energy identification
       on Minkowski background; flat slot consistency (CERT-UP-005 Stage A). -/
   relativityGR   : GRCATEPTTensorCertificate
+  /-- Curved Maxwell bridge sector: certified antisymmetry, homogeneous
+      equation from potential, and flat wave reduction in Lorenz gauge. -/
+  curvedMaxwell  : GRCurvedMaxwellBridgeCertificate
   /-- Path-integral sector: GR↔QM Wick-rotation identification with
       shared damping magnitude. -/
   pathIntegral   : IdentifyGRWithQMPathIntegral
@@ -186,6 +196,7 @@ noncomputable def universalConsistencyCertificate : CATEPTUniversalConsistencyCe
   classical      := canonical_classical canonicalOscParams 1
                       canonicalOscHbarPos canonicalOscHγ canonicalOscHk
   relativityGR   := canonical_gr_tensor
+  curvedMaxwell  := canonical_gr_curved_maxwell
   pathIntegral   := IdentifyGRWithQMPathIntegral.exists_trivial.choose
   modularThermal := canonical_thermal_bundle
   commonClock    := canonicalCommonClock
@@ -205,5 +216,11 @@ theorem universal_qm_gr_shared_clock (n : ℕ) :
     cateptConsistencyConstraint gravitasMinkowskiSlot :=
   ⟨universalConsistencyCertificate.commonClock.qm_consistent n,
    universalConsistencyCertificate.commonClock.gr_consistent⟩
+
+/-- The production universal certificate carries the curved-Maxwell bridge
+certificate as a first-class field. -/
+theorem universal_curved_maxwell_bridge_certified :
+    universalConsistencyCertificate.curvedMaxwell = canonical_gr_curved_maxwell := by
+  rfl
 
 end CATEPTMain.Certification

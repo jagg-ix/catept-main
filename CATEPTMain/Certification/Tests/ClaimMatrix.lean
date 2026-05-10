@@ -24,6 +24,7 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #check CATEPTMain.Certification.RelativityGR.gravitasFaraday_hodgeStar_involutive
 #check CATEPTMain.Certification.RelativityGR.canonical_radiation_stress_conserved
+#check CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
 
 /-!
 ## Future targets, not yet implemented as full general theorems
@@ -35,7 +36,6 @@ exist and are audited:
 * general curved `covariantDivergenceStressEnergy g T = 0`;
 * general Einstein equation certificate `EinsteinTensor.ofMetric g = κT`;
 * general ADM constraint certificate;
-* VML Maxwell equilibrium certificate imported into certification;
 * Maxwell curve-space / pphi2 reconstruction certificate.
 -/
 

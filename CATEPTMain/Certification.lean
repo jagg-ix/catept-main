@@ -11,6 +11,7 @@ import CATEPTMain.Certification.RelativityGRHodgeTensor
 import CATEPTMain.Certification.RelativityGRCovariantDivergence
 import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
+import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -36,16 +37,18 @@ Exports the certification sectors and universal consistency certificate:
 | `RelativityGR` | Flat GR, tensor-identification (Stage A), and Stage-B structural Hodge/divergence certificate |
 | `RelativityGRHodgeTensor` | Full `ElectromagneticTensor`-layer Hodge-star API with explicit component action, metadata-level involution, and fixed-antisymmetric-4D component double-star closure |
 | `RelativityGRCovariantDivergence` | Named real covariant-divergence operator on `StressEnergyTensor` with canonical Minkowski/electrovacuum zero-divergence certificate |
+| `RelativityGRCurvedMaxwell` | Curved-Maxwell bridge certificate surface (`canonical_gr_curved_maxwell`) used by the production universal certificate |
+| `RelativityGRVMLMaxwell` | VML Maxwell-equilibrium certificate surface (`VMLMaxwellEquilibriumCertificate`, `canonical_vml_maxwell_equilibrium`) |
 | `RelativityGRUnsafeFixes` | Canonical closure certificate for GR unsafe-claim surfaces (double-Hodge bivector closure, Einstein/ADM residual identities, conservation model closure) |
 | `RelativityGRResiduals` | Typed Einstein/ADM residual objects (`canonical_einstein_residual`, `canonical_adm_residual`) |
 | `RelativityGREinsteinEquation` | Typed Einstein equation certificate (`EinsteinEquationCertificate`, `canonical_electrovac_einstein_certificate`) |
 | `RelativityGRADM` | Typed ADM constraint certificate (`ADMConstraintCertificate`, `canonical_vacuum_adm_certificate`) |
-| `UniversalCertificate` | `CATEPTUniversalConsistencyCertificate`, `universalConsistencyCertificate` (9 sectors) |
+| `UniversalCertificate` | `CATEPTUniversalConsistencyCertificate`, `universalConsistencyCertificate` (includes `curvedMaxwell`) |
 | `Status` | Baseline v1 sentinel record |
 
 ## Kernel-axiom status
 
 All declarations in this namespace depend only on
 `{propext, Classical.choice, Quot.sound}`.
-See `CATEPTMain.Certification.Audit` for the full `#print axioms` audit (50 directives).
+See `CATEPTMain.Certification.Audit` for the full `#print axioms` audit.
 -/
