@@ -83,6 +83,15 @@ theorem canonical_radiation_stress_conserved :
   funext ν
   exact flat_constant_stress_conserved_expr canonicalRadiationStressTensor4 ν
 
+/-- Family-form conservation theorem: every constant-component 4D stress tensor
+in the flat model has identically zero covariant-divergence residual. -/
+theorem flat_constant_stress_conserved_for_all_constant_T :
+    ∀ T : ConstantStressTensor4,
+      flatConstantCovariantDivergenceExpr T = (fun _ => Expr.lit 0) := by
+  intro T
+  funext ν
+  exact flat_constant_stress_conserved_expr T ν
+
 end CATEPTMain.Certification.RelativityGR
 
 end

@@ -98,6 +98,17 @@ theorem gravitasFaraday_hodgeStarEM_involutive :
       gravitasFaradayMinkowski.vacuumPermeability := by
   simpa using hodgeStarEM_involutive gravitasMinkowski gravitasFaradayMinkowski
 
+/-- Family-form specialization: for any electromagnetic tensor payload on the
+Minkowski background, the tensor-level Hodge-star API is involutive on metadata. -/
+theorem hodgeStarEM_involutive_for_minkowski_family
+    (F : ElectromagneticTensor) :
+    (hodgeStarEM gravitasMinkowski (hodgeStarEM gravitasMinkowski F)).metric = F.metric ∧
+    (hodgeStarEM gravitasMinkowski (hodgeStarEM gravitasMinkowski F)).electromagneticPotential =
+      F.electromagneticPotential ∧
+    (hodgeStarEM gravitasMinkowski (hodgeStarEM gravitasMinkowski F)).vacuumPermeability =
+      F.vacuumPermeability :=
+  hodgeStarEM_involutive gravitasMinkowski F
+
 end CATEPTMain.Certification.RelativityGR
 
 end

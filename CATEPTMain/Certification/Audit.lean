@@ -5,6 +5,7 @@ import CATEPTMain.Certification.RelativityGRHodgeTensor
 import CATEPTMain.Certification.RelativityGRCovariantDivergence
 import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
+import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -80,8 +81,9 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.gr_tensor_faraday_defined
 #print axioms CATEPTMain.Certification.RelativityGR.gr_tensor_stress_energy_defined
 
--- ── Universal certificate (CERT-UP-007 — 9-sector upgrade) ───────────────────
+-- ── Universal certificate (CERT-UP-007 — 10-sector upgrade) ──────────────────
 #print axioms CATEPTMain.Certification.universalConsistencyCertificate
+#print axioms CATEPTMain.Certification.universal_curved_maxwell_bridge_certified
 #print axioms CATEPTMain.Certification.universal_sr_properTime_pos
 #print axioms CATEPTMain.Certification.universal_qm_gr_shared_clock
 #print axioms CATEPTMain.Certification.canonicalCommonClock
@@ -93,6 +95,7 @@ or open this file in VS Code with the Lean 4 extension active.
 
 -- ── GR full-tensor Hodge-star API (ElectromagneticTensor layer) ─────────────
 #print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive
+#print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive_for_minkowski_family
 #print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_double_components_fixedAntisymmetric4D
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_hodgeStarEM_involutive
 
@@ -101,16 +104,23 @@ or open this file in VS Code with the Lean 4 extension active.
 
 -- ── GR stress conservation (kernel-transparent constant model) ───────────────
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_radiation_stress_conserved
+#print axioms CATEPTMain.Certification.RelativityGR.flat_constant_stress_conserved_for_all_constant_T
 
 -- ── GR curved-Maxwell bridge certificate (reused NSCATEPT core surface) ─────
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_curved_maxwell
 #print axioms CATEPTMain.Certification.RelativityGR.gr_curved_maxwell_flat_wave_eq
+
+-- ── GR VML-Maxwell equilibrium certificate (plugin-vml-landau bridge) ───────
+#print axioms CATEPTMain.Certification.RelativityGR.vml_steady_state_rigidity_certified
+#print axioms CATEPTMain.Certification.RelativityGR.vml_landau_content_available_certified
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasCanonicalStress_conserved_constant_model
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasEinstein_residual_exact
+#print axioms CATEPTMain.Certification.RelativityGR.einstein_residual_zero_for_vacuum_family
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasCanonicalVacuumADM_hamiltonian_residual_exact
 
 -- ── Typed GR residual objects (first-class certified payloads) ───────────────
