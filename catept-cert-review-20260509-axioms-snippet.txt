@@ -1,0 +1,4 @@
+3647:info: CATEPTMain/Certification/Audit.lean:86:0: 'CATEPTMain.Certification.RelativityGR.gravitasFaraday_hodgeStar_involutive' depends on axioms: [propext, Quot.sound]
+3648:info: CATEPTMain/Certification/Audit.lean:89:0: 'CATEPTMain.Certification.RelativityGR.canonical_radiation_stress_conserved' depends on axioms: [propext,
+3651:info: CATEPTMain/Certification/Audit.lean:92:0: 'CATEPTMain.Certification.RelativityGR.canonical_gr_curved_maxwell' depends on axioms: [propext,
+3654:info: CATEPTMain/Certification/Audit.lean:93:0: 'CATEPTMain.Certification.RelativityGR.gr_curved_maxwell_flat_wave_eq' depends on axioms: [propext,

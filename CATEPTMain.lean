@@ -211,6 +211,10 @@ import CATEPTMain.Integration.NormalizationOpenSystemBridge
 import CATEPTMain.Integration.WickRotationBridge
 import CATEPTMain.Integration.EntropySourceAdmissibilityBridge
 import CATEPTMain.Integration.KrausGKSLContinuousLimitBridge
+-- Physlib Bridges
+import CATEPTMain.Bridges.PhyslibRelativityBridge
+-- Certification namespace
+import CATEPTMain.Certification
 
 /-!
 CATEPTMain root module for clean Lean 4.29 migration work.

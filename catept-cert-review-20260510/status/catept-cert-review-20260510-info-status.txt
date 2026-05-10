@@ -1,0 +1,18 @@
+Review package: catept-cert-review-20260510
+Generated: 2026-05-10T03:14:11Z
+
+hodge: exit 0
+stress: exit 0
+curvedmaxwell: exit 0
+unsafefixes: exit 0
+audit: exit 0
+certification: exit 0
+
+Axiom-audit anchors:
+info: CATEPTMain/Certification/Audit.lean:93:0: 'CATEPTMain.Certification.RelativityGR.canonical_gr_curved_maxwell' depends on axioms: [propext,
+info: CATEPTMain/Certification/Audit.lean:94:0: 'CATEPTMain.Certification.RelativityGR.gr_curved_maxwell_flat_wave_eq' depends on axioms: [propext,
+info: CATEPTMain/Certification/Audit.lean:97:0: 'CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed' depends on axioms: [propext,
+info: CATEPTMain/Certification/Audit.lean:98:0: 'CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector' depends on axioms: [propext, Quot.sound]
+info: CATEPTMain/Certification/Audit.lean:99:0: 'CATEPTMain.Certification.RelativityGR.gravitasCanonicalStress_conserved_constant_model' depends on axioms: [propext,
+info: CATEPTMain/Certification/Audit.lean:100:0: 'CATEPTMain.Certification.RelativityGR.gravitasEinstein_residual_exact' depends on axioms: [propext,
+info: CATEPTMain/Certification/Audit.lean:101:0: 'CATEPTMain.Certification.RelativityGR.gravitasCanonicalVacuumADM_hamiltonian_residual_exact' depends on axioms: [propext,

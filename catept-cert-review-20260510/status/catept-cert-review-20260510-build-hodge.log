@@ -1,0 +1,989 @@
+warning: DimensionalAnalysis: repository '/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/DimensionalAnalysis' has local changes
+warning: MarkovSemigroups: repository '/Users/macbookpro/lab/tau/tau-information-dynamics/catept-main/.lake/packages/MarkovSemigroups' has local changes
+⚠ [4/163] Replayed CATEPTGravitasPort.MetricTensor
+warning: CATEPTGravitasPort/MetricTensor.lean:135:28: unused variable `t`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:135:34: unused variable `φ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:159:6: unused variable `t`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:159:69: unused variable `φ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:182:6: unused variable `v`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:218:6: unused variable `t`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:254:6: unused variable `T`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:254:27: unused variable `X`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:278:6: unused variable `t`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/MetricTensor.lean:278:69: unused variable `φ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [14/163] Replayed CATEPTGravitasPort.WeylTensor
+warning: CATEPTGravitasPort/WeylTensor.lean:88:30: unused variable `gCov`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [26/163] Replayed CATEPTGravitasPort.AngularMomentumTensor
+warning: CATEPTGravitasPort/AngularMomentumTensor.lean:38:5: unused variable `idx1`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/AngularMomentumTensor.lean:38:10: unused variable `idx2`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/AngularMomentumTensor.lean:48:28: unused variable `gInv`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [28/163] Replayed CATEPTGravitasPort.AngularMomentumDensityTensor
+warning: CATEPTGravitasPort/AngularMomentumDensityTensor.lean:48:43: unused variable `gInv`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [30/163] Replayed CATEPTGravitasPort.ADMDecomposition
+warning: CATEPTGravitasPort/ADMDecomposition.lean:116:62: unused variable `φ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [34/163] Replayed CATEPTGravitasPort.ADMStressEnergyDecomposition
+warning: CATEPTGravitasPort/ADMStressEnergyDecomposition.lean:57:6: unused variable `gInv`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/ADMStressEnergyDecomposition.lean:60:6: unused variable `γCov`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/ADMStressEnergyDecomposition.lean:79:6: unused variable `nCov`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [36/163] Replayed CATEPTGravitasPort.DiscreteHypersurfaceDecomposition
+warning: CATEPTGravitasPort/DiscreteHypersurfaceDecomposition.lean:73:5: unused variable `spatialCoords`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTGravitasPort/DiscreteHypersurfaceDecomposition.lean:97:6: unused variable `tIdx`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [40/163] Replayed CATEPTGravitasPort.SolveEinsteinEquations
+warning: CATEPTGravitasPort/SolveEinsteinEquations.lean:78:28: unused variable `gI`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [44/163] Replayed CATEPTGravitasPort.SolveElectrovacuumEinsteinEquations
+warning: CATEPTGravitasPort/SolveElectrovacuumEinsteinEquations.lean:49:6: unused variable `gCov`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [2123/2174] Replayed CATEPTPluginArchitecture.Integration.TheoryPluginArchitecture
+warning: CATEPTPluginArchitecture/Integration/TheoryPluginArchitecture.lean:118:5: unused variable `slot`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [2765/2868] Replayed Aristotle.Landau.main.GaussianHelpers
+warning: Aristotle/Landau/main/GaussianHelpers.lean:103:4: 'simp_all [ div_eq_mul_inv, mul_comm, mul_assoc, mul_left_comm ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:104:4: 'have hnn : (0 : ℝ) ≤ -(π * c₀⁻¹) := by
+  have : c₀⁻¹ < 0 := inv_neg''.mpr hc₀
+  nlinarith [Real.pi_pos]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:103:4: 'simp_all [ div_eq_mul_inv, mul_comm, mul_assoc, mul_left_comm ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:107:4: 'rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast, ← Real.rpow_mul hnn]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:110:2: 'simp_all [ Real.exp_add, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:111:2: 'intro v' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:110:2: 'simp_all [ Real.exp_add, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:112:2: 'rw [← hf_int]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:110:2: 'simp_all [ Real.exp_add, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:113:2: 'unfold equilibriumMaxwellian' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:110:2: 'simp_all [ Real.exp_add, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:115:2: 'have h_eq : 2 * Real.pi * (-1 / (2 * c₀)) = Real.pi / (-c₀) := by field_simp' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:110:2: 'simp_all [ Real.exp_add, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:116:2: 'rw [h_eq]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:110:2: 'simp_all [ Real.exp_add, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:120:2: 'rw [mul_div_assoc, div_self h_rpow_ne, mul_one]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:165:6: 'simp_all [ add_mul, div_eq_mul_inv, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:168:8: 'have h_integrable :
+  MeasureTheory.Integrable (fun v : ℝ => v * Real.exp (c * v ^ 2 + b * v)) MeasureTheory.MeasureSpace.volume :=
+  by
+  have h_gauss :
+    ∀ v : ℝ, |v * Real.exp (c * v ^ 2 + b * v)| ≤ |v| * Real.exp (c * v ^ 2 / 2) * Real.exp (b ^ 2 / (2 * |c|)) :=
+    by
+    intro v
+    simp [abs_mul]
+    rw [mul_assoc, ← Real.exp_add]
+    ring_nf
+    norm_num [abs_of_neg hc_neg]
+    ring_nf
+    norm_num [hc_neg];
+    (exact
+        mul_le_mul_of_nonneg_left
+          (Real.exp_le_exp.mpr <| by nlinarith [sq_nonneg (v * c + b), mul_inv_cancel₀ (ne_of_lt hc_neg)])
+          (abs_nonneg v))
+  have h_integrable :
+    MeasureTheory.Integrable (fun v : ℝ => |v| * Real.exp (c * v ^ 2 / 2)) MeasureTheory.MeasureSpace.volume :=
+    by
+    have h_integrable :
+      MeasureTheory.Integrable (fun v : ℝ => v * Real.exp (c * v ^ 2 / 2)) MeasureTheory.MeasureSpace.volume :=
+      by
+      have := @integrable_rpow_mul_exp_neg_mul_sq
+      convert @this (-c / 2) (by linarith) 1 (by norm_num) using 3
+      · simp [Real.rpow_one]
+      · congr 1; ring
+    convert h_integrable.norm using 2; norm_num [abs_mul, abs_of_nonneg, Real.exp_nonneg]
+  exact
+    MeasureTheory.Integrable.mono' (h_integrable.mul_const _) (Continuous.aestronglyMeasurable (by continuity))
+      (Filter.Eventually.of_forall h_gauss)' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:176:12: 'simp [abs_mul]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:176:12: Try this:
+  [apply] simp only [abs_mul, abs_exp]
+info: Aristotle/Landau/main/GaussianHelpers.lean:177:12: 'rw [mul_assoc, ← Real.exp_add]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:165:6: 'simp_all [ add_mul, div_eq_mul_inv, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:202:8: 'convert h_integrable.mul_const (Real.exp a) using 2' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:165:6: 'simp_all [ add_mul, div_eq_mul_inv, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:204:8: 'have h_gauss_integral :
+  ∫ v : ℝ, Real.exp (a + b * v + c * v ^ 2) = Real.sqrt (Real.pi / (-c)) * Real.exp (a - b ^ 2 / (4 * c)) :=
+  by
+  have h_gauss_integral : ∫ v : ℝ, Real.exp (c * (v - (-b / (2 * c))) ^ 2) = Real.sqrt (Real.pi / (-c)) :=
+    by
+    convert integral_gaussian (-c) using 1 <;> norm_num [hc_neg.le]
+    rw [eq_comm, ← MeasureTheory.integral_sub_right_eq_self]
+  rw [← h_gauss_integral, ← MeasureTheory.integral_mul_const]
+  congr
+  ext v
+  ring_nf
+  rw [← Real.exp_add]
+  norm_num [sq, mul_assoc, hc_neg.ne]
+  ring' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:165:6: 'simp_all [ add_mul, div_eq_mul_inv, MeasureTheory.integral_const_mul ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:220:8: 'exact
+  MeasureTheory.Integrable.const_mul
+    (by
+      exact
+        (by
+          contrapose! h_gauss_integral
+          rw [MeasureTheory.integral_undef h_gauss_integral]
+          exact ne_of_lt (mul_pos (Real.sqrt_pos.mpr (div_pos Real.pi_pos (neg_pos.mpr hc_neg))) (Real.exp_pos _))))
+    _' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:242:8: 'simp [ Finset.prod_ite, Finset.filter_eq', Finset.filter_ne' ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:248:8: 'ext' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:258:6: 'simp_all [ Finset.prod_eq_mul_prod_diff_singleton_of_mem (Finset.mem_univ i) ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:259:6: 'exact
+  Or.inl
+    (by
+      rw [Finset.sdiff_singleton_eq_erase]
+      exact Finset.prod_congr rfl fun x hx => by simp_all)' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:273:8: 'simp [ normSq, dotProduct, Fin.sum_univ_three, ← Real.exp_sum, ← Real.exp_add ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:275:8: 'ext' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:281:4: 'simp_all [ Finset.prod_erase_mul _ _ (Finset.mem_univ i) ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:282:4: 'rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ i)]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:304:6: 'simp_all [ Real.exp_pos ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:304:6: Try this:
+  [apply] simp_all only [norm_eq_abs, abs_exp]
+info: Aristotle/Landau/main/GaussianHelpers.lean:305:6: 'exact
+  Filter.Eventually.of_forall fun x =>
+    mul_nonneg hf_int
+      (by
+        show 0 ≤ VML.normSq x
+        unfold VML.normSq
+        exact Finset.sum_nonneg fun i _ => mul_self_nonneg _)' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:339:10: 'erw [MeasureTheory.Measure.pi_eq]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:340:10: 'intro s hs' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:341:10: 'erw [MeasureTheory.Measure.map_apply]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:343:12: 'erw [show
+    {x : ℝ × (Fin 2 → ℝ) | x.1 ∈ s 0 ∧ x.2 0 ∈ s 1 ∧ x.2 1 ∈ s 2} = (s 0 ×ˢ {x : Fin 2 → ℝ | x 0 ∈ s 1 ∧ x 1 ∈ s 2}) by
+    ext; simp [Set.mem_prod],
+  MeasureTheory.Measure.prod_prod]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:350:12: 'erw [show {x : Fin 2 → ℝ | x 0 ∈ s 1 ∧ x 1 ∈ s 2} = (Set.pi Set.univ fun i : Fin 2 => if i = 0 then s 1 else s 2) by
+    ext; simp [Fin.forall_fin_two]]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:355:12: 'erw [MeasureTheory.Measure.pi_pi]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:357:12: 'exact
+  measurable_pi_iff.mpr fun i => by
+    fin_cases i <;> [exact measurable_fst; exact measurable_pi_iff.mp measurable_snd 0;
+      exact measurable_pi_iff.mp measurable_snd 1]' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:338:10: 'simp [ MeasureTheory.MeasureSpace.volume ]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:338:10: Try this:
+  [apply] simp only [Nat.reduceAdd]
+info: Aristotle/Landau/main/GaussianHelpers.lean:361:12: 'exact MeasurableSet.univ_pi hs' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:373:8: 'simp_all [ Real.exp_add,
+          MeasureTheory.integral_const_mul,
+          MeasureTheory.integral_mul_const ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:376:8: 'by_cases h : ∫ (a : Fin 2 → ℝ), Real.exp (b 1 * a 0) * Real.exp (b 2 * a 1) = 0' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:373:8: 'simp_all [ Real.exp_add,
+          MeasureTheory.integral_const_mul,
+          MeasureTheory.integral_mul_const ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:383:12: 'exact absurd (h.exists) (by norm_num [Real.exp_ne_zero])' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:373:8: 'simp_all [ Real.exp_add,
+          MeasureTheory.integral_const_mul,
+          MeasureTheory.integral_mul_const ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:384:12: 'exact h_integrable' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:373:8: 'simp_all [ Real.exp_add,
+          MeasureTheory.integral_const_mul,
+          MeasureTheory.integral_mul_const ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:385:10: 'convert h_integrable.2.div_const (∫ (a : Fin 2 → ℝ), Real.exp (b 1 * a 0) * Real.exp (b 2 * a 1)) using 1' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:373:8: 'simp_all [ Real.exp_add,
+          MeasureTheory.integral_const_mul,
+          MeasureTheory.integral_mul_const ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:389:10: 'ext v' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:393:4: 'simp_all [ MeasureTheory.integrable_const_iff ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:394:4: 'exact absurd (h_integrable.measure_univ_lt_top) (by norm_num)' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:396:4: 'simp_all [ mul_assoc, mul_comm, mul_left_comm ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:397:4: 'convert absurd (this.lintegral_lt_top) _' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:396:4: 'simp_all [ mul_assoc, mul_comm, mul_left_comm ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:403:4: 'exact
+  le_top.antisymm
+    (h_exp_inf.trans' <| by
+      exact
+        le_trans (by norm_num) <|
+          MeasureTheory.setLIntegral_mono' measurableSet_Ioi fun x hx =>
+            ENNReal.ofReal_le_ofReal <| Real.one_le_exp hx.out.le)' uses '⊢'!
+warning: Aristotle/Landau/main/GaussianHelpers.lean:429:2: 'simp_all [Fin.sum_univ_three, dotProduct]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/GaussianHelpers.lean:430:2: 'fin_cases j' uses '⊢'!
+⚠ [2766/2868] Replayed Aristotle.Landau.main.Section3Helpers
+warning: Aristotle/Landau/main/Section3Helpers.lean:41:65: `fderiv_deriv` has been deprecated: Use `fderiv_apply_one_eq_deriv` instead
+warning: Aristotle/Landau/main/Section3Helpers.lean:41:65: `fderiv_deriv` has been deprecated: Use `fderiv_apply_one_eq_deriv` instead
+warning: Aristotle/Landau/main/Section3Helpers.lean:41:44: 'simp_all [VML.vGrad, fderiv_deriv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:41:44: Try this:
+  [apply] simp_all only [one_div, Pi.smul_apply, smul_eq_mul]
+info: Aristotle/Landau/main/Section3Helpers.lean:44:6: 'rw [fderiv_zero_of_not_differentiableAt]' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:41:44: 'simp_all [VML.vGrad, fderiv_deriv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:41:44: Try this:
+  [apply] simp_all only [one_div, Pi.smul_apply, smul_eq_mul]
+info: Aristotle/Landau/main/Section3Helpers.lean:45:8: 'rw [fderiv_zero_of_not_differentiableAt H]' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:41:44: 'simp_all [VML.vGrad, fderiv_deriv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:41:44: Try this:
+  [apply] simp_all only [one_div, Pi.smul_apply, smul_eq_mul]
+info: Aristotle/Landau/main/Section3Helpers.lean:46:8: 'exact fun h =>
+  H <| by
+    simpa [Real.exp_log (hf_pos _)] using
+      h.exp.congr_of_eventuallyEq (by filter_upwards [] using fun _ => by simp [Real.exp_log (hf_pos _)])' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:106:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+warning: Aristotle/Landau/main/Section3Helpers.lean:88:6: 'simp_all [ ne_of_gt, MeasureTheory.integral_pos_iff_support_of_nonneg_ae ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:88:6: Try this:
+  [apply] simp_all only [Pi.zero_apply, ne_eq]
+info: Aristotle/Landau/main/Section3Helpers.lean:89:6: 'rw [MeasureTheory.integral_eq_zero_iff_of_nonneg_ae]' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:88:6: 'simp_all [ ne_of_gt, MeasureTheory.integral_pos_iff_support_of_nonneg_ae ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:88:6: Try this:
+  [apply] simp_all only [Pi.zero_apply, ne_eq]
+info: Aristotle/Landau/main/Section3Helpers.lean:97:8: 'exact
+  ne_of_gt
+    (lt_of_lt_of_le (by simpa using (Metric.measure_ball_pos _ _ hε.1))
+      (MeasureTheory.measure_mono
+        (show {a : Fin 3 → ℝ | ¬g v a = 0} ⊇ Metric.ball w ε from fun x hx => hε.2 x hx)))' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:88:6: 'simp_all [ ne_of_gt, MeasureTheory.integral_pos_iff_support_of_nonneg_ae ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:88:6: Try this:
+  [apply] simp_all only [Pi.zero_apply, ne_eq]
+info: Aristotle/Landau/main/Section3Helpers.lean:102:8: 'exact Filter.Eventually.of_forall fun x => hnn v x' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:88:6: 'simp_all [ ne_of_gt, MeasureTheory.integral_pos_iff_support_of_nonneg_ae ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:88:6: Try this:
+  [apply] simp_all only [Pi.zero_apply, ne_eq]
+info: Aristotle/Landau/main/Section3Helpers.lean:103:8: 'exact hint_inner v' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:145:2: 'simp [normSq] at h_poly_zero' is a flexible tactic modifying 'h_poly_zero'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:146:2: 'have h_cubic_zero :
+  ∀ t : ℝ, t ^ 3 * (v ⬝ᵥ d_c * (v ⬝ᵥ v)) + t ^ 2 * (∑ i, ∑ j, (v i) * (v j) * (K i j)) + t * (v ⬝ᵥ d_lin) + C = 0 :=
+  by
+  convert h_poly_zero using 2
+  ring_nf
+  simp [Fin.sum_univ_three]
+  ring' uses 'h_poly_zero'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:145:2: 'simp [normSq] at h_poly_zero' is a flexible tactic modifying 'h_poly_zero'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:153:2: 'have h_coeff_zero : v ⬝ᵥ d_c * (v ⬝ᵥ v) = 0 := by
+  linarith [h_cubic_zero (-2), h_cubic_zero (-1), h_cubic_zero 0, h_cubic_zero 1, h_cubic_zero 2]' uses 'h_poly_zero'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:192:6: 'simp_all [Fin.sum_univ_three, dotProduct]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:193:2: 'exact funext fun i => by fin_cases i <;> assumption' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:287:40: 'simp_all [Submodule.mem_span_singleton]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:288:10: 'exact ⟨0, by rcases ht with rfl | rfl <;> simp⟩' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:287:40: 'simp_all [Submodule.mem_span_singleton]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:290:10: 'use l * t' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:6: 'fin_cases i' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:22: 'fin_cases j' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:22: 'fin_cases j' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:22: 'fin_cases j' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:57: 'linarith!' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:57: 'linarith!' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:57: 'linarith!' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:57: 'linarith!' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:57: 'linarith!' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:318:6: 'simp_all [funext_iff, Fin.forall_fin_succ]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:319:57: 'linarith!' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:338:4: 'simp [Fin.sum_univ_three] at h_c_const' is a flexible tactic modifying 'h_c_const'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:339:4: 'replace h_c_const := congr_fun h_c_const i' uses 'h_c_const'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:324:4: 'simp [← h_c_const i 0]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:324:4: Try this:
+  [apply] simp only [Pi.smul_apply, smul_eq_mul, Fin.isValue, mul_eq_mul_right_iff]
+info: Aristotle/Landau/main/Section3Helpers.lean:339:4: 'replace h_c_const := congr_fun h_c_const i' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:324:4: 'simp [← h_c_const i 0]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:324:4: Try this:
+  [apply] simp only [Pi.smul_apply, smul_eq_mul, Fin.isValue, mul_eq_mul_right_iff]
+info: Aristotle/Landau/main/Section3Helpers.lean:339:48: 'fin_cases i' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:324:4: 'simp [← h_c_const i 0]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:324:4: Try this:
+  [apply] simp only [Pi.smul_apply, smul_eq_mul, Fin.isValue, mul_eq_mul_right_iff]
+info: Aristotle/Landau/main/Section3Helpers.lean:340:6: 'exact Classical.or_iff_not_imp_right.2 fun h => mul_left_cancel₀ h <| by linarith' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:324:4: 'simp [← h_c_const i 0]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:324:4: Try this:
+  [apply] simp only [Pi.smul_apply, smul_eq_mul, Fin.isValue, mul_eq_mul_right_iff]
+info: Aristotle/Landau/main/Section3Helpers.lean:341:6: 'exact Classical.or_iff_not_imp_right.2 fun h => mul_left_cancel₀ h <| by linarith' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:324:4: 'simp [← h_c_const i 0]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:324:4: Try this:
+  [apply] simp only [Pi.smul_apply, smul_eq_mul, Fin.isValue, mul_eq_mul_right_iff]
+info: Aristotle/Landau/main/Section3Helpers.lean:342:6: 'exact Classical.or_iff_not_imp_right.2 fun h => mul_left_cancel₀ h <| by linarith' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:532:59: `Algebra.id.smul_eq_mul` has been deprecated: Use `smul_eq_mul` instead
+
+Note: The updated constant has a different type:
+  ∀ {α : Type u_9} [inst : Mul α] (a b : α), a • b = a * b
+instead of
+  ∀ {R : Type u} [inst : CommSemiring R] (x y : R), x • y = x * y
+
+Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.smul_eq_mul` to `smul_eq_mul x`).
+warning: Aristotle/Landau/main/Section3Helpers.lean:489:2: 'simp_all [VML.normSq]
+  -- Evaluate the interval integral explicitly: ∫₀¹ (A + B·t) dt = A + B/2' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:491:2: 'have h_eval :
+  ∫ (t : ℝ) in (0 : ℝ)..1, (b 0 * v 0 + b 1 * v 1 + b 2 * v 2 + c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) =
+    (b 0 * v 0 + b 1 * v 1 + b 2 * v 2) + c₀ * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2) :=
+  by
+  have hA : ∫ (_ : ℝ) in (0 : ℝ)..1, (b 0 * v 0 + b 1 * v 1 + b 2 * v 2) = b 0 * v 0 + b 1 * v 1 + b 2 * v 2 := by
+    rw [intervalIntegral.integral_const]; simp
+  have hB :
+    ∫ t in (0 : ℝ)..1, c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2))) =
+      c₀ * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2) :=
+    by
+    have step1 :
+      (fun t : ℝ => t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2))) = fun t =>
+        (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)) * t :=
+      by ext; ring
+    have step2 : ∫ t in (0 : ℝ)..1, (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)) * t = v 0 * v 0 + v 1 * v 1 + v 2 * v 2 :=
+      by rw [intervalIntegral.integral_const_mul, integral_id]; ring
+    have step3 :
+      (fun t : ℝ => c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) = fun t =>
+        c₀ * ((2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)) * t) :=
+      by ext; ring
+    rw [step3, intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul, integral_id]
+    ring
+  have hii :
+    IntervalIntegrable (fun t : ℝ => c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) MeasureTheory.volume 0 1 :=
+    (continuous_const.mul (continuous_id.mul continuous_const)).intervalIntegrable 0 1
+  have hic : IntervalIntegrable (fun (_ : ℝ) => b 0 * v 0 + b 1 * v 1 + b 2 * v 2) MeasureTheory.volume 0 1 :=
+    intervalIntegrable_const
+  rw [show
+      (fun t : ℝ => b 0 * v 0 + b 1 * v 1 + b 2 * v 2 + c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) = fun t =>
+        (fun _ => b 0 * v 0 + b 1 * v 1 + b 2 * v 2) t +
+          (fun t => c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) t
+      from by ext; simp]
+  rw [intervalIntegral.integral_add hic hii, hA, hB]' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:489:2: 'simp_all [VML.normSq]
+  -- Evaluate the interval integral explicitly: ∫₀¹ (A + B·t) dt = A + B/2' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:524:2: 'have h_congr :
+  ∫ t in (0 : ℝ)..1, (b 0 * v 0 + b 1 * v 1 + b 2 * v 2 + c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) =
+    ∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t :=
+  by
+  apply intervalIntegral.integral_congr
+  intro t _
+  have hd := h_deriv v t
+  simp only [dotProduct, Fin.sum_univ_three, smul_apply, Algebra.id.smul_eq_mul, Pi.smul_apply, Pi.add_apply,
+    smul_eq_mul, Pi.mul_apply, Pi.ofNat_apply, Nat.ofNat_pos] at hd
+  linarith [hd]' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:489:2: 'simp_all [VML.normSq]
+  -- Evaluate the interval integral explicitly: ∫₀¹ (A + B·t) dt = A + B/2' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:538:2: 'have h_deriv_congr :
+  ∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t = ∫ t in (0 : ℝ)..1, (b ⬝ᵥ v + c₀ * (t * (2 * v) ⬝ᵥ v)) :=
+  intervalIntegral.integral_congr (fun t _ => by rw [h_deriv v t])' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:489:2: 'simp_all [VML.normSq]
+  -- Evaluate the interval integral explicitly: ∫₀¹ (A + B·t) dt = A + B/2' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers.lean:541:2: 'have h_chain : b 0 * v 0 + b 1 * v 1 + b 2 * v 2 + c₀ * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2) = h v - h 0 := by
+  calc
+    b 0 * v 0 + b 1 * v 1 + b 2 * v 2 + c₀ * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2) =
+        ∫ t in (0 : ℝ)..1, (b 0 * v 0 + b 1 * v 1 + b 2 * v 2 + c₀ * (t * (2 * (v 0 * v 0 + v 1 * v 1 + v 2 * v 2)))) :=
+      h_eval.symm
+    _ = ∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t := h_congr
+    _ = ∫ t in (0 : ℝ)..1, (b ⬝ᵥ v + c₀ * (t * (2 * v) ⬝ᵥ v)) := h_deriv_congr
+    _ = h v - h 0 := this' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers.lean:513:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+⚠ [2767/2868] Replayed Aristotle.Landau.main.Section3Helpers2
+warning: Aristotle/Landau/main/Section3Helpers2.lean:67:2: 'simp [h_grad]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers2.lean:68:2: 'convert congr_arg (fun x : Fin 3 → ℝ => f w • f v • c₀ • (2 : ℝ) • x) (landauMatrix_mulVec_self Ψ (v - w)) using
+  1' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers2.lean:67:2: 'simp [h_grad]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers2.lean:72:4: 'ext' uses '⊢'!
+warning: Aristotle/Landau/main/Section3Helpers2.lean:25:4: The following tactic starts with 2 goals and ends with 2 goals, 1 of which is not operated on.
+  norm_num [dotProduct, Fin.sum_univ_three]
+Please focus on the current goal, for instance using `·` (typed as "\.").
+
+Note: This linter can be disabled with `set_option linter.style.multiGoal false`
+warning: Aristotle/Landau/main/Section3Helpers2.lean:26:4: The following tactic starts with 2 goals and ends with 2 goals, 1 of which is not operated on.
+  ring_nf
+Please focus on the current goal, for instance using `·` (typed as "\.").
+
+Note: This linter can be disabled with `set_option linter.style.multiGoal false`
+warning: Aristotle/Landau/main/Section3Helpers2.lean:132:4: 'simp [Function.comp] at this' is a flexible tactic modifying 'this'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section3Helpers2.lean:133:4: 'exact this' uses 'this'!
+⚠ [2770/2868] Replayed Aristotle.Landau.main.Section4
+warning: Aristotle/Landau/main/Section4.lean:178:24: 'simp [Matrix.cons_val_zero, Matrix.cons_val_one]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section4.lean:178:24: Try this:
+  [apply] simp only [Fin.zero_eta, Fin.isValue, cons_val_zero, differentiable_const, differentiable_const_add_iff]
+info: Aristotle/Landau/main/Section4.lean:178:77: 'fun_prop' uses '⊢'!
+warning: Aristotle/Landau/main/Section4.lean:178:24: 'simp [Matrix.cons_val_zero, Matrix.cons_val_one]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section4.lean:178:24: Try this:
+  [apply] simp only [Fin.mk_one, Fin.isValue, cons_val_one, cons_val_zero, differentiable_const,
+    differentiable_const_add_iff]
+info: Aristotle/Landau/main/Section4.lean:178:77: 'fun_prop' uses '⊢'!
+warning: Aristotle/Landau/main/Section4.lean:178:24: 'simp [Matrix.cons_val_zero, Matrix.cons_val_one]' is a flexible tactic modifying '⊢'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section4.lean:178:24: Try this:
+  [apply] simp only [Fin.reduceFinMk, Fin.isValue, Matrix.cons_val, differentiable_const, differentiable_const_add_iff]
+info: Aristotle/Landau/main/Section4.lean:178:77: 'fun_prop' uses '⊢'!
+⚠ [2773/2868] Replayed Aristotle.Landau.main.Section7
+warning: Aristotle/Landau/main/Section7.lean:39:2: 'simp_all [div_eq_mul_inv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section7.lean:40:2: 'intro x' uses '⊢'!
+warning: Aristotle/Landau/main/Section7.lean:39:2: 'simp_all [div_eq_mul_inv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section7.lean:41:2: 'rw [show gradX (Real.log ∘ ρ) = _ from funext hGradLogRho]' uses '⊢'!
+warning: Aristotle/Landau/main/Section7.lean:39:2: 'simp_all [div_eq_mul_inv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section7.lean:42:2: 'specialize hDivLinear (-(2 * c₀)) E x' uses '⊢'!
+warning: Aristotle/Landau/main/Section7.lean:39:2: 'simp_all [div_eq_mul_inv]' is a flexible tactic modifying '⊢'. Try 'simp_all?' and use the suggested 'simp_all only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section7.lean:44:2: 'rw [mul_left_comm, mul_inv_cancel₀ _hc₀.ne, mul_one]' uses '⊢'!
+warning: Aristotle/Landau/main/Section7.lean:129:6: 'simp [normSq] at h' is a flexible tactic modifying 'h'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/Section7.lean:131:6: 'rw [this, h]' uses 'h'!
+⚠ [2775/2868] Replayed Aristotle.Landau.main.VMLInputDerive
+warning: Aristotle/Landau/main/VMLInputDerive.lean:150:20: 'simp [zero_mul, mul_zero] at this' is a flexible tactic modifying 'this'. Try 'simp?' and use the suggested 'simp only [...]'. Alternatively, use `suffices` to explicitly state the simplified form.
+
+Note: This linter can be disabled with `set_option linter.flexible false`
+info: Aristotle/Landau/main/VMLInputDerive.lean:151:4: 'exact this' uses 'this'!
+⚠ [2849/2868] Replayed CATEPTMain.Domains.TemporalFramework
+warning: CATEPTMain/Domains/TemporalFramework.lean:108:19: `CATEPTMain.Domains.SuperiorMethodSlot.consistent` has been deprecated: Use `s.toCATEPTSlot.consistent` directly; the field exists in CATEPTPluginSlot since 2026-05-06
+⚠ [2852/2868] Replayed NavierStokesClean.CATEPT.GRTensorKernel
+warning: NavierStokesClean/CATEPT/GRTensorKernel.lean:85:0: automatically included section variable(s) unused in theorem `NavierStokesClean.CATEPT.partialDeriv_eq_zero_of_const`:
+  [Fintype n]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype n] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: NavierStokesClean/CATEPT/GRTensorKernel.lean:169:0: automatically included section variable(s) unused in theorem `NavierStokesClean.CATEPT.metricComponentConst_constantMetric`:
+  [Fintype n]
+  [DecidableEq n]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype n] [DecidableEq n] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [2853/2868] Replayed NavierStokesClean.CATEPT.CATEPTSpaceTime
+warning: NavierStokesClean/CATEPT/CATEPTSpaceTime.lean:350:0: Definition `NavierStokesClean.CATEPT.cateptLocallyFinite` of class type must be marked with `@[reducible]` or `@[implicit_reducible]`
+warning: NavierStokesClean/CATEPT/CATEPTSpaceTime.lean:354:0: Definition `NavierStokesClean.CATEPT.cateptSigmaFinite` of class type must be marked with `@[reducible]` or `@[implicit_reducible]`
+⚠ [2860/2868] Replayed NavierStokesClean.CATEPT.LatticeQCDBridge
+warning: NavierStokesClean/CATEPT/LatticeQCDBridge.lean:392:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [2861/2868] Replayed NavierStokesClean.CATEPT.CurvedSpacetimePathIntegral
+warning: NavierStokesClean/CATEPT/CurvedSpacetimePathIntegral.lean:50:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [2864/2868] Replayed NavierStokesClean.CATEPT.SchwarzschildCurvatureIdentities
+warning: NavierStokesClean/CATEPT/SchwarzschildCurvatureIdentities.lean:116:12: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [2866/2868] Replayed NavierStokesClean.CATEPT.CurvedMaxwellUnified
+warning: NavierStokesClean/CATEPT/CurvedMaxwellUnified.lean:47:0: automatically included section variable(s) unused in theorem `NavierStokesClean.CATEPT.faradayFromPotential_antisymm`:
+  [Fintype n]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype n] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: NavierStokesClean/CATEPT/CurvedMaxwellUnified.lean:96:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8344/8403] Replayed NavierStokesClean.CATEPT.SchrodingerFunctional
+warning: NavierStokesClean/CATEPT/SchrodingerFunctional.lean:141:0: automatically included section variable(s) unused in theorem `NavierStokesClean.CATEPT.SchrodingerCoerciveModel.schrFunctional_coercive_contractivity`:
+  [NormedAddCommGroup Φ]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NormedAddCommGroup Φ] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+⚠ [8405/8600] Replayed NavierStokesClean.CATEPT.KerrMetric
+warning: NavierStokesClean/CATEPT/KerrMetric.lean:164:48: unused variable `hM`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8543/8600] Replayed CATEPTMain.CATEPT.CATEPT.PhysicalConstantsCommon
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:41:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.hbar_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:43:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.c_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:37:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:42:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.kB_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:38:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.hbar'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:39:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.kB'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:40:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants.c'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/PhysicalConstantsCommon.lean:37:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.PhysicalConstants'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [8544/8600] Replayed CATEPTMain.CATEPT.CATEPT.AQFTFoundations
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:16:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalRegion.Carrier'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:15:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalRegion'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:15:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalRegion.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:20:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalAlgebra.Obs'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:19:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalAlgebra.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:19:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.LocalAlgebra'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:23:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ModularData'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:24:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ModularData.K'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:23:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ModularData.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:28:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicActionOfEntropy'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:33:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicTimeField'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:44:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.data_processing_monotone'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:37:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:42:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.no_superluminal_influence'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:37:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:38:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.microcausality'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:40:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicLocalityPrinciple.local_modular_origin'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:53:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicForceDensity'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:59:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.localUnruhTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:66:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicRedshiftedBeta'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:75:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicStressScalar'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:83:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.SatisfiesComplexEinsteinSectionXI'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:88:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.local_real_SR_frame'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:91:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.shared_redshift'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:87:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:87:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:90:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.local_unruh_scale'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:89:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.EntropicEEPPrinciple.local_rindler_imaginary_sector'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:94:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.modularSlopeCriterion'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:106:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.Ljflag'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:112:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.Lj_vanishes_if_flat'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:114:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.Phi_vanishes_if_flat'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:107:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.XiFlag'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:113:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.Xi_vanishes_if_flat'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:99:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.c'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:105:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.HIflag'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:111:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.HI_vanishes_if_flat'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:108:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.PhiFlag'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:102:2: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.ThetaGrad'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:98:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:98:10: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.AdvancedFoundations.mk'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:117:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.FlatSector'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:121:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.UnitaryLimit'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:125:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.ExactLocalityLimit'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:129:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.StandardGaugeLimit'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:133:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.StandardRecovery'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:138:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.flatSector_implies_standardRecovery'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:155:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.HasEffectiveIrreversibility'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:162:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.effectiveIrreversibility_implies_nonflat'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:170:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.flatSector_restores_locality'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:179:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.flatSector_restores_standardGauge'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/AQFTFoundations.lean:188:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.flatSector_restores_unitarity'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [8545/8600] Replayed CATEPTMain.CATEPT.CATEPT.GeometryGauge
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:42:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanLocalTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:47:4: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.flatTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:54:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanTemperature_eq_flat_over_redshift'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:68:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanTemperature_pos'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:80:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.tolmanTemperature_ratio'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:101:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.arrowOfTime_scales_as_localTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:126:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.localUnruhTemperature_eq_hawkingTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+warning: CATEPTMain/CATEPT/CATEPT/GeometryGauge.lean:143:8: The namespace 'CATEPT' is duplicated in the declaration 'CATEPTMain.CATEPT.CATEPT.entropicTime_eq_localInverseTemperature'
+
+Note: This linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [8546/8600] Replayed CATEPTMain.Domains.GR.Domain
+warning: CATEPTMain/Domains/GR/Domain.lean:46:24: `CATEPTMain.Domains.SuperiorMethodSlot.consistent` has been deprecated: Use `s.toCATEPTSlot.consistent` directly; the field exists in CATEPTPluginSlot since 2026-05-06
+warning: CATEPTMain/Domains/GR/Domain.lean:65:26: `CATEPTMain.Domains.SuperiorMethodSlot.consistent` has been deprecated: Use `s.toCATEPTSlot.consistent` directly; the field exists in CATEPTPluginSlot since 2026-05-06
+warning: CATEPTMain/Domains/GR/Domain.lean:89:31: `CATEPTMain.Domains.SuperiorMethodSlot.consistent` has been deprecated: Use `s.toCATEPTSlot.consistent` directly; the field exists in CATEPTPluginSlot since 2026-05-06
+⚠ [8548/8600] Replayed CATEPTMain.Integration.NSCATEPTCoreBridge
+warning: CATEPTMain/Integration/NSCATEPTCoreBridge.lean:356:9: unused variable `s`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/NSCATEPTCoreBridge.lean:377:28: unused variable `hbar`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/NSCATEPTCoreBridge.lean:377:33: unused variable `S_I`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8549/8600] Replayed CATEPTMain.Integration.BohmianQMBridge
+warning: CATEPTMain/Integration/BohmianQMBridge.lean:185:57: unused variable `hh`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/BohmianQMBridge.lean:241:28: unused variable `hh`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/BohmianQMBridge.lean:254:51: unused variable `hh`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8597/8600] Replayed CATEPTMain.Integration.AdSCFTBridge
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:224:62: unused variable `hκ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:224:77: unused variable `hc`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:277:45: unused variable `d`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:277:53: unused variable `E`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:385:7: unused variable `L`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:385:9: unused variable `z_coord`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:385:17: unused variable `cv`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:385:20: unused variable `i`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:385:22: unused variable `j`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: CATEPTMain/Integration/AdSCFTBridge.lean:386:7: unused variable `d`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8598/8600] Replayed CATEPTMain.Integration.GravitasBridge
+warning: CATEPTMain/Integration/GravitasBridge.lean:93:24: `CATEPTMain.Domains.SuperiorMethodSlot.consistent` has been deprecated: Use `s.toCATEPTSlot.consistent` directly; the field exists in CATEPTPluginSlot since 2026-05-06
+warning: CATEPTMain/Integration/GravitasBridge.lean:144:26: `CATEPTMain.Domains.SuperiorMethodSlot.consistent` has been deprecated: Use `s.toCATEPTSlot.consistent` directly; the field exists in CATEPTPluginSlot since 2026-05-06
+warning: CATEPTMain/Integration/GravitasBridge.lean:271:4: This simp argument is unused:
+  CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot
+
+Hint: Omit it from the simp argument list.
+  simp [bohmianEMCATEPTSlot, C̵A̵T̵E̵P̵T̵M̵a̵i̵n̵.̵D̵o̵m̵a̵i̵n̵s̵.̵S̵u̵p̵e̵r̵i̵o̵r̵M̵e̵t̵h̵o̵d̵S̵l̵o̵t̵.̵t̵o̵C̵A̵T̵E̵P̵T̵S̵l̵o̵t̵,̵ ̵bohmianEMSuperiorSlot]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: CATEPTMain/Integration/GravitasBridge.lean:271:56: This simp argument is unused:
+  bohmianEMSuperiorSlot
+
+Hint: Omit it from the simp argument list.
+  simp [bohmianEMCATEPTSlot, C̵A̵T̵E̵P̵T̵M̵a̵i̵n̵.̵D̵o̵m̵a̵i̵n̵s̵.̵S̵u̵p̵e̵r̵i̵o̵r̵M̵e̵t̵h̵o̵d̵S̵l̵o̵t̵.̵t̵o̵C̵A̵T̵E̵P̵T̵S̵l̵o̵t̵,̵ ̵b̵o̵h̵m̵i̵a̵n̵E̵M̵S̵u̵p̵e̵r̵i̵o̵r̵S̵l̵o̵t̵]̵C̲A̲T̲E̲P̲T̲M̲a̲i̲n̲.̲D̲o̲m̲a̲i̲n̲s̲.̲S̲u̲p̲e̲r̲i̲o̲r̲M̲e̲t̲h̲o̲d̲S̲l̲o̲t̲.̲t̲o̲C̲A̲T̲E̲P̲T̲S̲l̲o̲t̲]̲
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: CATEPTMain/Integration/GravitasBridge.lean:287:4: This simp argument is unused:
+  CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot
+
+Hint: Omit it from the simp argument list.
+  simp only [bohmianEMCATEPTSlot, C̵A̵T̵E̵P̵T̵M̵a̵i̵n̵.̵D̵o̵m̵a̵i̵n̵s̵.̵S̵u̵p̵e̵r̵i̵o̵r̵M̵e̵t̵h̵o̵d̵S̵l̵o̵t̵.̵t̵o̵C̵A̵T̵E̵P̵T̵S̵l̵o̵t̵,̵ ̵bohmianEMSuperiorSlot, Fin.sum_univ_four]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: CATEPTMain/Integration/GravitasBridge.lean:287:56: This simp argument is unused:
+  bohmianEMSuperiorSlot
+
+Hint: Omit it from the simp argument list.
+  simp only [bohmianEMCATEPTSlot, CATEPTMain.Domains.SuperiorMethodSlot.toCATEPTSlot,
+  ̲  ̲ ̲ ̲b̵o̵h̵m̵i̵a̵n̵E̵M̵S̵u̵p̵e̵r̵i̵o̵r̵S̵l̵o̵t̵,̵Fin.sum_univ_four]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Build completed successfully (8600 jobs).
