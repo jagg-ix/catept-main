@@ -25,6 +25,9 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_certificate
 #check CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
 #check CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_certificate
+#check CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate
+#check CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate
+#check CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate
 
 /-! ## Implemented universal fields -/
 
@@ -37,6 +40,9 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 
 Do not move these into the implemented section until the named Lean declarations
 exist and are audited:
+
+Constructor-level assumption-indexed generalization is implemented; the items
+below remain the outstanding direct theorem goals.
 
 * arbitrary full tensor equality `hodgeStarEM g (hodgeStarEM g F) = F`;
 * general curved `covariantDivergenceStressEnergy g T = 0`;

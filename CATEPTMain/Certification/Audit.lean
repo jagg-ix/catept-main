@@ -118,6 +118,8 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
 
 -- ── GR Maxwell-CurveSpace/pphi2 bridge certificate ───────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate_contract_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_bridge_contract_available
 
@@ -134,10 +136,14 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_adm_residual
 
 -- ── Typed Einstein-equation certificate (Target 4) ───────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_equation_holds
 
 -- ── Typed ADM-constraint certificate (Target 5) ──────────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_hamiltonian_constraint_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_momentum_constraint_holds
