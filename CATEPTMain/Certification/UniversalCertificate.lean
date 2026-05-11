@@ -64,11 +64,11 @@ CATEPTUniversalConsistencyCertificate
 > 11. **Common clock**: QM, GR, classical, and Bell sectors all share the
 >    same entropic-time identity `τ_ent = S_I / ℏ` — proved via the plugin spine.
 >
-> **Partially integrated**: GR Stage-B structural certificate.
-> `canonical_gr_einstein` is kernel-only and certifies Hodge metadata
-> preservation plus divergence dimensionality. Full algebraic identities
-> `★★F = F`, `∇·T = 0`, Einstein coupling, and ADM constraints remain
-> Phase-2 targets.
+> **GR integration note**: Stage-B now carries direct canonical equation
+> payloads (Einstein and ADM residual identities), and the full direct curved
+> witness interface is provided by
+> `RelativityGRCurvedDirect.CurvedGRDirectCertificate`.
+> Witness-free derivation of arbitrary curved closure remains a Phase-2 target.
 
 ## Kernel-axiom claim
 
@@ -86,13 +86,11 @@ The separate Stage-B certificate
 `canonical_gr_einstein` was upgraded on 2026-05-09 to a fully kernel-only
 formulation that captures the structural invariants of the Hodge dual
 operator (metric/potential/permeability preservation, double-application
-endomorphism on metadata) and the dimensional well-typedness of the
-covariant divergence operator.
+endomorphism on metadata), the dimensional well-typedness of the covariant
+divergence operator, and direct canonical Einstein/ADM residual identities.
 
-The full algebraic identities `★★F = F` and `∇·T = 0` remain Phase-2
-targets pending totalization of `simplify` in `catept-gravitas-port`; they
-are tracked as named `phase2_slot` fields inside
-`GRCATEPTEinsteinCertificate` rather than `sorry`.
+For arbitrary curved data, the witness-carrying direct claim interface is
+provided by `CurvedGRDirectCertificate` and its constructor theorem surface.
 
 Run `CATEPTMain.Certification.Audit` to verify all audited declarations report
 `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.

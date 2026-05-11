@@ -7,6 +7,7 @@ import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
+import CATEPTMain.Certification.RelativityGRCurvedDirect
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -122,6 +123,12 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate_contract_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_pphi2_bridge_contract_available
+
+-- ── GR full direct curved-claim certificate surface ─────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.CurvedGRDirectCertificate
+#print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_full_claim
+#print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_claim
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
