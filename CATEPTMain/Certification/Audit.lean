@@ -100,6 +100,8 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive
 #print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive_for_minkowski_family
 #print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_double_components_fixedAntisymmetric4D
+#print axioms CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive_of_fixedAntisymmetric4D
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasFaradayMinkowski_fixedAntisymmetric4D
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_hodgeStarEM_involutive
 
 -- ── GR real covariant divergence (StressEnergyTensor layer) ─────────────────
@@ -131,8 +133,12 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR full direct curved-claim certificate surface ─────────────────────────
 #print axioms CATEPTMain.Certification.RelativityGR.CurvedGRDirectCertificate
 #print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate
+#print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_full_claim
 #print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_claim
+#print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed

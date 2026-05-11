@@ -35,6 +35,8 @@ open CATEPTMain.Certification.RelativityGR
 #check hodgeStarEM_involutive
 #check hodgeStarEM_involutive_for_minkowski_family
 #check hodgeStarEM_double_components_fixedAntisymmetric4D
+#check hodgeStarEM_involutive_of_fixedAntisymmetric4D
+#check gravitasFaradayMinkowski_fixedAntisymmetric4D
 #check gravitasFaraday_hodgeStarEM_involutive
 
 -- Bivector/canonical Hodge closure
@@ -116,8 +118,12 @@ open CATEPTMain.Certification.RelativityGR
 -- Full direct curved-GR claim surface
 #check CurvedGRDirectCertificate
 #check mk_curved_gr_direct_certificate
+#check mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D
 #check curved_gr_direct_full_claim
 #check mk_curved_gr_direct_certificate_claim
+#check mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
+#check canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
+#check canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
 
 -- Unsafe-claim closure certificate
 #check canonical_gr_unsafe_claims_closed

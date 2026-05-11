@@ -1,5 +1,12 @@
-import CATEPTMain.Certification
+import CATEPTMain.Certification.RelativityGRHodgeTensor
+import CATEPTMain.Certification.RelativityGRCovariantDivergence
+import CATEPTMain.Certification.RelativityGRResiduals
+import CATEPTMain.Certification.RelativityGREinsteinEquation
+import CATEPTMain.Certification.RelativityGRADM
+import CATEPTMain.Certification.RelativityGRVMLMaxwell
+import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRCurvedDirect
+import CATEPTMain.Certification.UniversalCertificate
 
 /-!
 # Claim Matrix
@@ -19,6 +26,8 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 
 #check CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive
 #check CATEPTMain.Certification.RelativityGR.hodgeStarEM_double_components_fixedAntisymmetric4D
+#check CATEPTMain.Certification.RelativityGR.hodgeStarEM_involutive_of_fixedAntisymmetric4D
+#check CATEPTMain.Certification.RelativityGR.gravitasFaradayMinkowski_fixedAntisymmetric4D
 #check CATEPTMain.Certification.RelativityGR.gravitasCanonicalStress_covariantDivergence_zero
 #check CATEPTMain.Certification.RelativityGR.canonical_einstein_residual
 #check CATEPTMain.Certification.RelativityGR.canonical_adm_residual
@@ -31,6 +40,10 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate
 #check CATEPTMain.Certification.RelativityGR.CurvedGRDirectCertificate
 #check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate
+#check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D
+#check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
+#check CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
+#check CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
 #check CATEPTMain.Certification.RelativityGR.curved_gr_direct_full_claim
 
 /-! ## Implemented universal fields -/
