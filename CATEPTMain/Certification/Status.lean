@@ -2,6 +2,7 @@ import CATEPTMain.Certification.ClassicalMechanics
 import CATEPTMain.Certification.RelativityGR
 import CATEPTMain.Certification.RelativityGRHodgeTensor
 import CATEPTMain.Certification.RelativityGRCovariantDivergence
+import CATEPTMain.Certification.RelativityGRCurvedDirect
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.UniversalCertificate
@@ -27,7 +28,8 @@ certifies at baseline v1. It does not add new proofs; it is a build gate.
 | Classical mechanics — Herglotz/contact (CERT-UP-002) | ✔ proved — CERT-UP-003 (EL/Ham) pending |
 | GR flat Minkowski certificate (CERT-UP-004) | ✔ proved |
 | GR tensor identification (CERT-UP-005 Stage A) | ✔ proved — `canonical_gr_tensor` (Faraday + EM stress-energy) |
-| GR Einstein/conservation (CERT-UP-005 Stage B) | ✔ structural certificate — `canonical_gr_einstein` (Hodge metadata + divergence dim, kernel-only); full ★★=id and ∇·T=0 reserved as Phase-2 slots |
+| GR Einstein/conservation (CERT-UP-005 Stage B) | ✔ direct equation payloads in `canonical_gr_einstein` (Einstein residual + ADM residual identities, kernel-only) |
+| GR full direct curved claim surface | ✔ witness-carrying interface — `CurvedGRDirectCertificate`, `mk_curved_gr_direct_certificate`, `curved_gr_direct_full_claim` |
 | GR full `ElectromagneticTensor` Hodge-star API | ✔ proved — explicit tensor-component action, metadata involution, and fixed-antisymmetric-4D component double-star closure (`hodgeStarEM_involutive`, `hodgeStarEM_double_components_fixedAntisymmetric4D`, `gravitasFaraday_hodgeStarEM_involutive`) |
 | GR real covariant-divergence operator | ✔ canonical zero-divergence certified through named operator (`gravitasCanonicalStress_covariantDivergence_zero`) |
 | GR unsafe-claims closure layer | ✔ canonical residual/equational closure surface — `canonical_gr_unsafe_claims_closed` |

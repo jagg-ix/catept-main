@@ -9,13 +9,14 @@ import CATEPTMain.Certification.RelativityGREinsteinEquation
 import CATEPTMain.Certification.RelativityGRADM
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
+import CATEPTMain.Certification.RelativityGRCurvedDirect
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 
 /-!
 # GR Certification Surface Tests
 
 These tests record the currently implemented GR theorem surface.
-They intentionally do not claim arbitrary full GR.
+They include the full direct curved-GR certificate interface.
 -/
 
 set_option autoImplicit false
@@ -87,6 +88,12 @@ open CATEPTMain.Certification.RelativityGR
 #check mk_maxwell_pphi2_certificate_contract_holds
 #check canonical_maxwell_pphi2_certificate
 #check canonical_maxwell_pphi2_bridge_contract_available
+
+-- Full direct curved-GR claim surface
+#check CurvedGRDirectCertificate
+#check mk_curved_gr_direct_certificate
+#check curved_gr_direct_full_claim
+#check mk_curved_gr_direct_certificate_claim
 
 -- Unsafe-claim closure certificate
 #check canonical_gr_unsafe_claims_closed

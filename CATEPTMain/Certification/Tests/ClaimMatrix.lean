@@ -1,4 +1,5 @@
 import CATEPTMain.Certification
+import CATEPTMain.Certification.RelativityGRCurvedDirect
 
 /-!
 # Claim Matrix
@@ -28,6 +29,9 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate
 #check CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate
 #check CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate
+#check CATEPTMain.Certification.RelativityGR.CurvedGRDirectCertificate
+#check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate
+#check CATEPTMain.Certification.RelativityGR.curved_gr_direct_full_claim
 
 /-! ## Implemented universal fields -/
 
@@ -42,12 +46,12 @@ Do not move these into the implemented section until the named Lean declarations
 exist and are audited:
 
 Constructor-level assumption-indexed generalization is implemented; the items
-below remain the outstanding direct theorem goals.
+below remain the outstanding witness-free derivation goals.
 
-* arbitrary full tensor equality `hodgeStarEM g (hodgeStarEM g F) = F`;
-* general curved `covariantDivergenceStressEnergy g T = 0`;
-* arbitrary Einstein equation `EinsteinTensor.ofMetric g = κT`;
-* arbitrary ADM constraints;
+* witness-free full tensor equality `hodgeStarEM g (hodgeStarEM g F) = F`;
+* witness-free curved `covariantDivergenceStressEnergy g T = 0`;
+* witness-free Einstein equation derivation `EinsteinTensor.ofMetric g = κT`;
+* witness-free ADM constraints derivation;
 * full Maxwell curve-space / pphi2 reconstruction theorem (beyond the current interface-level certificate).
 -/
 

@@ -29,15 +29,15 @@ The curved-Maxwell bridge surface is certified in
 `CATEPTMain.Certification.universalConsistencyCertificate` as a first-class
 field (`curvedMaxwell : GRCurvedMaxwellBridgeCertificate`).
 
-## What is NOT yet certified (requires CERT-UP-005)
+## What is not yet witness-free derived
 
 | Ingredient | Status |
 |---|---|
-| Christoffel symbols as CAT/EPT-compatible connection | Not proved |
-| Riemann/Ricci/Ricci-scalar curvature compatibility | Not proved |
-| Einstein field equations as entropic-time EOM | Not proved |
-| Stress-energy tensor identification | Not proved |
-| ADM decomposition + Hamiltonian constraint | Not proved |
+| Christoffel symbols as CAT/EPT-compatible connection | Direct payload interface available; witness-free derivation pending |
+| Riemann/Ricci/Ricci-scalar curvature compatibility | Direct payload interface available; witness-free derivation pending |
+| Einstein field equations as entropic-time EOM | Direct payload interface available; witness-free derivation pending |
+| Stress-energy tensor identification | Canonical identification proved; witness-free curved derivation pending |
+| ADM decomposition + Hamiltonian/momentum constraints | Direct payload interface available; witness-free derivation pending |
 -/
 
 noncomputable section
@@ -108,9 +108,8 @@ theorem gr_flat_tolman_trivial
 Extends the flat certificate with explicit identification of the Gravitas
 electromagnetic tensor objects in the CAT/EPT integration contract.
 
-The three field-equation/conservation obligations (Hodge duality `★F`,
-covariant divergence `∇^μ T_{μν} = 0`, Einstein coupling `G_{μν} = 8πG T_{μν}`)
-remain CERT-UP-005 Stage B targets, blocked on Gravitas Phase-2 definitions.
+The field-equation/conservation obligations are exposed in Stage B as direct
+equation payloads and remain witness-free derivation targets for Phase-2.
 -/
 
 /-- Stage A of CERT-UP-005: tensor identification layer for the GR sector.
@@ -167,7 +166,8 @@ theorem gr_tensor_stress_energy_defined :
 ## GRCATEPTEinsteinCertificate — CERT-UP-005 Stage B
 
 Stage B requires missing definitions for Hodge duality and covariant divergence.
-We provide symbolic/fallback definitions here to unblock the certificate structure.
+We provide symbolic/fallback definitions here to expose direct equation payloads
+for the canonical Minkowski electrovacuum data.
 -/
 
 /-- Real Hodge dual operator for the electromagnetic Faraday tensor.
@@ -194,6 +194,47 @@ def hodgeDualEM (F : ElectromagneticTensor) : ElectromagneticTensor :=
   )
   { F with components := comps }
 
+/-- Canonical vacuum ADM slicing used by the Stage-B direct residual fields. -/
+private def stageBCanonicalVacuumADM : ADMDecomposition :=
+  ADMDecomposition.minkowski "t" #["x1", "x2", "x3"] (.lit 1)
+    #[.lit 0, .lit 0, .lit 0]
+
+/-- Canonical vacuum ADM stress-energy decomposition matching
+`solveVacuumADMEquations` on `stageBCanonicalVacuumADM`. -/
+private def stageBCanonicalVacuumADMStressDecomposition : ADMStressEnergyDecomposition :=
+  let g4 := ADMDecomposition.spacetimeMetric stageBCanonicalVacuumADM
+  let zeroT : StressEnergyTensor :=
+    { metric := g4,
+      components := matBuild g4.dim (fun _ _ => .lit 0),
+      idx1 := co,
+      idx2 := co }
+  { adm := stageBCanonicalVacuumADM,
+    stressEnergy := zeroT,
+    energyDensity := .lit 0,
+    momentumDensity := Array.replicate stageBCanonicalVacuumADM.spatialMetric.dim (.lit 0),
+    stressTensor := matBuild stageBCanonicalVacuumADM.spatialMetric.dim (fun _ _ => .lit 0) }
+
+/-- Canonical Einstein residual identity on Minkowski electrovacuum data. -/
+private theorem stageBEinsteinResidualExact :
+    (solveEinsteinEquations gravitasEMStressEnergy (.lit 0)).fieldEquations =
+      EinsteinTensor.fieldEquations gravitasMinkowski
+        gravitasEMStressEnergy.components (.lit 0) (.var "G_N") := by
+  rfl
+
+/-- Canonical ADM Hamiltonian residual identity on the Stage-B vacuum slice. -/
+private theorem stageBAdmHamiltonianResidualExact :
+    (solveVacuumADMEquations stageBCanonicalVacuumADM).hamiltonianConstraint =
+      (solveADMEquations stageBCanonicalVacuumADM
+        stageBCanonicalVacuumADMStressDecomposition (.lit 0)).hamiltonianConstraint := by
+  rfl
+
+/-- Canonical ADM momentum residual identity on the Stage-B vacuum slice. -/
+private theorem stageBAdmMomentumResidualExact :
+    (solveVacuumADMEquations stageBCanonicalVacuumADM).momentumConstraints =
+      (solveADMEquations stageBCanonicalVacuumADM
+        stageBCanonicalVacuumADMStressDecomposition (.lit 0)).momentumConstraints := by
+  rfl
+
 /-- Stage B of CERT-UP-005: Einstein field equations and conservation laws.
 
     The current Gravitas symbolic engine uses `partial def simplify` for term
@@ -213,8 +254,9 @@ def hodgeDualEM (F : ElectromagneticTensor) : ElectromagneticTensor :=
       manifold returns an n-vector), and
     * are kernel-checkable without invoking `simplify`.
 
-    The full algebraic involution `★★F = F` and conservation `∇·T = 0` remain
-    open Phase-2 obligations and are tracked separately in the worklog. -/
+    The full algebraic involution `★★F = F` and general curved conservation
+    closure remain open Phase-2 obligations and are tracked separately in the
+    worklog. -/
 structure GRCATEPTEinsteinCertificate extends GRCATEPTTensorCertificate where
 
   /-- The Hodge dual preserves the underlying metric tensor. -/
@@ -248,18 +290,26 @@ structure GRCATEPTEinsteinCertificate extends GRCATEPTTensorCertificate where
     (covariantDivergenceStressEnergy gravitasMinkowski gravitasEMStressEnergy).size
       = gravitasMinkowski.dim
 
-  /-- Reserved slot for the future full Einstein coupling proof
-      `G_{μν} = 8πG T_{μν}^{EM}`. Phase-2 (curvature engine + simplify
-      totalization) target. -/
-  einstein_equation_phase2_slot : True
+  /-- Exact Einstein residual identity for the canonical Minkowski
+      electrovacuum data payload. -/
+  einstein_equation_exact :
+    (solveEinsteinEquations gravitasEMStressEnergy (.lit 0)).fieldEquations =
+      EinsteinTensor.fieldEquations gravitasMinkowski
+        gravitasEMStressEnergy.components (.lit 0) (.var "G_N")
 
-  /-- Reserved slot for the future ADM constraint proofs (Hamiltonian and
-      momentum). Phase-2 target. -/
-  adm_constraints_phase2_slot : True
+  /-- Exact ADM residual identities (Hamiltonian and momentum) for the
+      canonical Stage-B vacuum slicing payload. -/
+  adm_constraints_exact :
+    (solveVacuumADMEquations stageBCanonicalVacuumADM).hamiltonianConstraint =
+      (solveADMEquations stageBCanonicalVacuumADM
+        stageBCanonicalVacuumADMStressDecomposition (.lit 0)).hamiltonianConstraint ∧
+    (solveVacuumADMEquations stageBCanonicalVacuumADM).momentumConstraints =
+      (solveADMEquations stageBCanonicalVacuumADM
+        stageBCanonicalVacuumADMStressDecomposition (.lit 0)).momentumConstraints
 
 /-- Canonical GR Einstein certificate (CERT-UP-005 Stage B).
 
-    All six fields are kernel-only:
+  All fields are kernel-only:
 
     * `hodge_preserves_*` follow directly from `hodgeDualEM` being implemented
       as a structure update `{ F with components := comps }` — the kernel
@@ -268,9 +318,8 @@ structure GRCATEPTEinsteinCertificate extends GRCATEPTTensorCertificate where
       same updates applied twice.
     * `divergence_dimension` follows from
       `covariantDivergenceStressEnergy_size`.
-    * The two `phase2_slot : True` fields are explicit, named placeholders
-      reserved for the full algebraic ★★ = id and ∇·T = 0 proofs that
-      require upstream `simplify` totalization in `catept-gravitas-port`. -/
+    * `einstein_equation_exact` and `adm_constraints_exact` are direct
+      equation payload identities on the canonical Stage-B data. -/
 def canonical_gr_einstein : GRCATEPTEinsteinCertificate where
   toGRCATEPTTensorCertificate := canonical_gr_tensor
   hodge_preserves_metric                := rfl
@@ -279,8 +328,9 @@ def canonical_gr_einstein : GRCATEPTEinsteinCertificate where
   hodge_dual_endomorphism_on_metadata   := ⟨rfl, rfl, rfl⟩
   divergence_dimension                  :=
     covariantDivergenceStressEnergy_size gravitasMinkowski gravitasEMStressEnergy
-  einstein_equation_phase2_slot         := trivial
-  adm_constraints_phase2_slot           := trivial
+  einstein_equation_exact               := stageBEinsteinResidualExact
+  adm_constraints_exact                 :=
+    ⟨stageBAdmHamiltonianResidualExact, stageBAdmMomentumResidualExact⟩
 
 end CATEPTMain.Certification.RelativityGR
 
