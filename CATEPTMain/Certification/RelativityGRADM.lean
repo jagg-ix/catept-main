@@ -63,6 +63,63 @@ theorem mk_adm_constraint_certificate_holds
       hHamiltonian hMomentum).momentum_constraint
   ⟩
 
+/-- Indexed ADM-constraint certificate family with the ADM decomposition fixed
+in the type. -/
+structure ADMConstraintCertificateFor (adm : ADMDecomposition) where
+  stressDecomposition : ADMStressEnergyDecomposition
+  sourceTerm : Gravitas.Expr
+  hamiltonian_constraint :
+    (solveVacuumADMEquations adm).hamiltonianConstraint =
+      (solveADMEquations adm stressDecomposition sourceTerm).hamiltonianConstraint
+  momentum_constraint :
+    (solveVacuumADMEquations adm).momentumConstraints =
+      (solveADMEquations adm stressDecomposition sourceTerm).momentumConstraints
+
+/-- Constructor for the indexed ADM-constraint certificate family. -/
+def mk_adm_constraint_certificate_for
+    (adm : ADMDecomposition)
+    (stressDecomposition : ADMStressEnergyDecomposition)
+    (sourceTerm : Gravitas.Expr)
+    (hHamiltonian :
+      (solveVacuumADMEquations adm).hamiltonianConstraint =
+        (solveADMEquations adm stressDecomposition sourceTerm).hamiltonianConstraint)
+    (hMomentum :
+      (solveVacuumADMEquations adm).momentumConstraints =
+        (solveADMEquations adm stressDecomposition sourceTerm).momentumConstraints) :
+    ADMConstraintCertificateFor adm where
+  stressDecomposition := stressDecomposition
+  sourceTerm := sourceTerm
+  hamiltonian_constraint := hHamiltonian
+  momentum_constraint := hMomentum
+
+/-- Any indexed certificate built via `mk_adm_constraint_certificate_for`
+stores the Hamiltonian and momentum proof payloads unchanged. -/
+theorem mk_adm_constraint_certificate_for_holds
+    (adm : ADMDecomposition)
+    (stressDecomposition : ADMStressEnergyDecomposition)
+    (sourceTerm : Gravitas.Expr)
+    (hHamiltonian :
+      (solveVacuumADMEquations adm).hamiltonianConstraint =
+        (solveADMEquations adm stressDecomposition sourceTerm).hamiltonianConstraint)
+    (hMomentum :
+      (solveVacuumADMEquations adm).momentumConstraints =
+        (solveADMEquations adm stressDecomposition sourceTerm).momentumConstraints) :
+    ((solveVacuumADMEquations adm).hamiltonianConstraint =
+      (solveADMEquations adm stressDecomposition sourceTerm).hamiltonianConstraint) ∧
+    ((solveVacuumADMEquations adm).momentumConstraints =
+      (solveADMEquations adm stressDecomposition sourceTerm).momentumConstraints) := by
+  exact ⟨
+    (mk_adm_constraint_certificate_for adm stressDecomposition sourceTerm
+      hHamiltonian hMomentum).hamiltonian_constraint,
+    (mk_adm_constraint_certificate_for adm stressDecomposition sourceTerm
+      hHamiltonian hMomentum).momentum_constraint
+  ⟩
+
+/-- Family predicate for ADM decompositions identified with the canonical
+Minkowski vacuum slicing. -/
+structure IsMinkowskiVacuumADM (adm : ADMDecomposition) : Prop where
+  eq_canonical : adm = gravitasCanonicalVacuumADM
+
 /-- Canonical vacuum ADM constraint certificate on the Minkowski slicing. -/
 def canonical_vacuum_adm_certificate : ADMConstraintCertificate where
   adm := gravitasCanonicalVacuumADM
@@ -86,6 +143,34 @@ theorem canonical_vacuum_adm_momentum_constraint_holds :
       (solveADMEquations gravitasCanonicalVacuumADM
         gravitasCanonicalVacuumADMStressDecomposition (.lit 0)).momentumConstraints :=
   canonical_vacuum_adm_certificate.momentum_constraint
+
+/-- Canonical indexed vacuum ADM certificate. -/
+def canonical_vacuum_adm_certificate_for :
+    ADMConstraintCertificateFor gravitasCanonicalVacuumADM where
+  stressDecomposition := gravitasCanonicalVacuumADMStressDecomposition
+  sourceTerm := .lit 0
+  hamiltonian_constraint := by
+    simpa using gravitasCanonicalVacuumADM_hamiltonian_residual_exact
+  momentum_constraint := by
+    simpa using gravitasCanonicalVacuumADM_momentum_residual_exact
+
+/-- Any ADM decomposition identified with the canonical Minkowski vacuum
+slicing inherits the canonical vacuum ADM residual identities. -/
+theorem minkowski_vacuum_adm_constraints_for_family
+    (adm : ADMDecomposition)
+    (hAdm : IsMinkowskiVacuumADM adm) :
+    (solveVacuumADMEquations adm).hamiltonianConstraint =
+      (solveADMEquations adm gravitasCanonicalVacuumADMStressDecomposition
+        (.lit 0)).hamiltonianConstraint ∧
+    (solveVacuumADMEquations adm).momentumConstraints =
+      (solveADMEquations adm gravitasCanonicalVacuumADMStressDecomposition
+        (.lit 0)).momentumConstraints := by
+  rcases hAdm with ⟨hEq⟩
+  subst hEq
+  exact ⟨
+    canonical_vacuum_adm_certificate_for.hamiltonian_constraint,
+    canonical_vacuum_adm_certificate_for.momentum_constraint
+  ⟩
 
 end CATEPTMain.Certification.RelativityGR
 

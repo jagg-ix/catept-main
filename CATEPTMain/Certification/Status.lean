@@ -29,13 +29,13 @@ certifies at baseline v1. It does not add new proofs; it is a build gate.
 | GR flat Minkowski certificate (CERT-UP-004) | ✔ proved |
 | GR tensor identification (CERT-UP-005 Stage A) | ✔ proved — `canonical_gr_tensor` (Faraday + EM stress-energy) |
 | GR Einstein/conservation (CERT-UP-005 Stage B) | ✔ direct equation payloads in `canonical_gr_einstein` (Einstein residual + ADM residual identities, kernel-only) |
-| GR full direct curved claim surface | ✔ witness-carrying interface — `CurvedGRDirectCertificate`, `mk_curved_gr_direct_certificate`, `curved_gr_direct_full_claim` |
-| GR full `ElectromagneticTensor` Hodge-star API | ✔ proved — explicit tensor-component action, metadata involution, and fixed-antisymmetric-4D component double-star closure (`hodgeStarEM_involutive`, `hodgeStarEM_double_components_fixedAntisymmetric4D`, `gravitasFaraday_hodgeStarEM_involutive`) |
+| GR full direct curved claim surface | ✔ witness-carrying interface with migration path and canonical witness-discharge assembly — `CurvedGRDirectCertificate`, `mk_curved_gr_direct_certificate`, `mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D`, `canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D`, `curved_gr_direct_full_claim` |
+| GR full `ElectromagneticTensor` Hodge-star API | ✔ proved — explicit tensor-component action, metadata involution, fixed-antisymmetric-4D component closure, and fixed-antisymmetric full-tensor involution (`hodgeStarEM_involutive`, `hodgeStarEM_double_components_fixedAntisymmetric4D`, `hodgeStarEM_involutive_of_fixedAntisymmetric4D`, `gravitasFaraday_hodgeStarEM_involutive`) |
 | GR real covariant-divergence operator | ✔ canonical zero-divergence certified through named operator (`gravitasCanonicalStress_covariantDivergence_zero`) |
 | GR unsafe-claims closure layer | ✔ canonical residual/equational closure surface — `canonical_gr_unsafe_claims_closed` |
 | GR typed residual objects | ✔ explicit residual payload objects — `canonical_einstein_residual`, `canonical_adm_residual` |
 | Bell ↔ entropic-time binding (CERT-UP-006) | ✔ symbolic/slot-level certificate — `canonical_bell_entropic` |
-| 9-sector universal certificate (CERT-UP-007) | ✔ `universalConsistencyCertificate` — kernel-only, 50-directive audit |
+| Production universal certificate (CERT-UP-007) | ✔ `universalConsistencyCertificate` with CurvedMaxwell + VML Maxwell fields — kernel-audited; see `Audit.lean` for current `#print axioms` surface |
 
 ## Upgrade series
 
@@ -61,7 +61,7 @@ structure CertificationBaselineV1 where
   relativityGRStubRetired        : True := trivial   -- CERT-UP-004: superseded by grFlatCertified
   grFlatCertified                : True := trivial   -- CERT-UP-004: Minkowski flat cert proved
   bellEntropicTimeCertified      : True := trivial   -- CERT-UP-006: Bell entropic-time slot proved
-  universalCertUpgrade007Done    : True := trivial   -- CERT-UP-007: full 9-sector universal cert
+  universalCertUpgrade007Done    : True := trivial   -- CERT-UP-007: production universal cert (CurvedMaxwell + VML Maxwell fields)
 
 /-- Canonical baseline v1 sentinel (no-arg constructor, all `trivial`). -/
 def certificationBaselineV1 : CertificationBaselineV1 := {}

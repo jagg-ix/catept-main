@@ -54,6 +54,55 @@ theorem vml_maxwell_content_available_wrapped :
     vml_landau_content_available_certified = trivial :=
   canonical_vml_maxwell_equilibrium.content_available_wrapped
 
+/-- Semantic projection from a VML rigidity conclusion bundle:
+electric field vanishes everywhere. -/
+theorem vml_equilibrium_implies_E_zero
+    {X : Type*}
+    {f : X → (Fin 3 → ℝ) → ℝ}
+    {E B : X → Fin 3 → ℝ}
+    {ρ_ion : ℝ}
+    (hRigidity :
+      ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
+      (∀ x v, f x v = VML.equilibriumMaxwellian ρ_ion T_eq v) ∧
+      (∀ x, E x = 0) ∧
+      (∀ x, B x = B₀)) :
+    ∀ x, E x = 0 := by
+  rcases hRigidity with ⟨_, _, _, _, hE, _⟩
+  exact hE
+
+/-- Semantic projection from a VML rigidity conclusion bundle:
+magnetic field is spatially constant. -/
+theorem vml_equilibrium_implies_B_constant
+    {X : Type*}
+    {f : X → (Fin 3 → ℝ) → ℝ}
+    {E B : X → Fin 3 → ℝ}
+    {ρ_ion : ℝ}
+    (hRigidity :
+      ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
+      (∀ x v, f x v = VML.equilibriumMaxwellian ρ_ion T_eq v) ∧
+      (∀ x, E x = 0) ∧
+      (∀ x, B x = B₀)) :
+    ∃ B₀ : Fin 3 → ℝ, ∀ x, B x = B₀ := by
+  rcases hRigidity with ⟨_, B₀, _, _, _, hB⟩
+  exact ⟨B₀, hB⟩
+
+/-- Semantic projection from a VML rigidity conclusion bundle:
+the distribution is a global Maxwellian at positive temperature. -/
+theorem vml_equilibrium_implies_global_maxwellian
+    {X : Type*}
+    {f : X → (Fin 3 → ℝ) → ℝ}
+    {E B : X → Fin 3 → ℝ}
+    {ρ_ion : ℝ}
+    (hRigidity :
+      ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
+      (∀ x v, f x v = VML.equilibriumMaxwellian ρ_ion T_eq v) ∧
+      (∀ x, E x = 0) ∧
+      (∀ x, B x = B₀)) :
+    ∃ T_eq : ℝ, 0 < T_eq ∧
+      (∀ x v, f x v = VML.equilibriumMaxwellian ρ_ion T_eq v) := by
+  rcases hRigidity with ⟨T_eq, _, hT, hF, _, _⟩
+  exact ⟨T_eq, hT, hF⟩
+
 end CATEPTMain.Certification.RelativityGR
 
 end

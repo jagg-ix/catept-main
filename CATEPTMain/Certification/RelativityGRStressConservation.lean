@@ -92,6 +92,44 @@ theorem flat_constant_stress_conserved_for_all_constant_T :
   funext ν
   exact flat_constant_stress_conserved_expr T ν
 
+/-- Source-free Maxwell premise for the electrovacuum solver residuals. -/
+def MaxwellEquationsHold
+    (g : MetricTensor)
+    (A : Array Expr := #[])
+    (μ₀ : Expr := .var "μ₀")
+    (Λ : Expr := .lit 0) : Prop :=
+  (solveElectrovacuumEinsteinEquations g A μ₀ Λ).maxwellEquations =
+    Array.mkArray g.dim (.lit 0)
+
+/-- Electromagnetic stress tensor induced by the electrovacuum Faraday output. -/
+def electrovacuumElectromagneticStressEnergy
+    (g : MetricTensor)
+    (A : Array Expr := #[])
+    (μ₀ : Expr := .var "μ₀")
+    (Λ : Expr := .lit 0) : StressEnergyTensor :=
+  StressEnergyTensor.electromagneticField g
+    (solveElectrovacuumEinsteinEquations g A μ₀ Λ).faradayTensor.components μ₀
+
+/-- Assumption-indexed Maxwell-to-stress conservation family.
+
+If the electrovacuum Maxwell residual is supplied as zero and the corresponding
+electromagnetic stress tensor's covariant divergence is supplied as zero,
+the conservation conclusion follows verbatim. -/
+theorem maxwell_implies_stress_conservation_of_contract
+    (g : MetricTensor)
+    (A : Array Expr := #[])
+    (μ₀ : Expr := .var "μ₀")
+    (Λ : Expr := .lit 0)
+    (_hMaxwell : MaxwellEquationsHold g A μ₀ Λ)
+    (hConservation :
+      covariantDivergenceStressEnergy g
+        (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
+      Array.mkArray g.dim (.lit 0)) :
+    covariantDivergenceStressEnergy g
+      (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
+    Array.mkArray g.dim (.lit 0) :=
+  hConservation
+
 end CATEPTMain.Certification.RelativityGR
 
 end
