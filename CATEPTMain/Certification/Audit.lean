@@ -108,6 +108,7 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR stress conservation (kernel-transparent constant model) ───────────────
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_radiation_stress_conserved
 #print axioms CATEPTMain.Certification.RelativityGR.flat_constant_stress_conserved_for_all_constant_T
+#print axioms CATEPTMain.Certification.RelativityGR.maxwell_implies_stress_conservation_of_contract
 
 -- ── GR curved-Maxwell bridge certificate (reused NSCATEPT core surface) ─────
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_curved_maxwell
@@ -117,6 +118,9 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.vml_steady_state_rigidity_certified
 #print axioms CATEPTMain.Certification.RelativityGR.vml_landau_content_available_certified
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vml_maxwell_equilibrium
+#print axioms CATEPTMain.Certification.RelativityGR.vml_equilibrium_implies_E_zero
+#print axioms CATEPTMain.Certification.RelativityGR.vml_equilibrium_implies_B_constant
+#print axioms CATEPTMain.Certification.RelativityGR.vml_equilibrium_implies_global_maxwellian
 
 -- ── GR Maxwell-CurveSpace/pphi2 bridge certificate ───────────────────────────
 #print axioms CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate
@@ -145,12 +149,20 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── Typed Einstein-equation certificate (Target 4) ───────────────────────────
 #print axioms CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate_holds
+#print axioms CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate_for
+#print axioms CATEPTMain.Certification.RelativityGR.mk_einstein_equation_certificate_for_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_equation_holds
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_certificate_for
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_electrovac_einstein_equation_holds_for
 
 -- ── Typed ADM-constraint certificate (Target 5) ──────────────────────────────
 #print axioms CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate_holds
+#print axioms CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate_for
+#print axioms CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate_for_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_certificate
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_hamiltonian_constraint_holds
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_momentum_constraint_holds
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_vacuum_adm_certificate_for
+#print axioms CATEPTMain.Certification.RelativityGR.minkowski_vacuum_adm_constraints_for_family

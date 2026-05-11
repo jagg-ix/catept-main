@@ -10,6 +10,7 @@ import CATEPTMain.Certification.RelativityGRADM
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRCurvedDirect
+import CATEPTMain.Certification.UniversalCertificate
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 
 /-!
@@ -48,6 +49,9 @@ open CATEPTMain.Certification.RelativityGR
 #check canonical_radiation_stress_conserved
 #check flat_constant_stress_conserved_for_all_constant_T
 #check gravitasCanonicalStress_conserved_constant_model
+#check MaxwellEquationsHold
+#check electrovacuumElectromagneticStressEnergy
+#check maxwell_implies_stress_conservation_of_contract
 
 -- Curved Maxwell bridge surface
 #check canonical_gr_curved_maxwell
@@ -65,22 +69,42 @@ open CATEPTMain.Certification.RelativityGR
 #check EinsteinEquationCertificate
 #check mk_einstein_equation_certificate
 #check mk_einstein_equation_certificate_holds
+#check EinsteinEquationCertificateFor
+#check mk_einstein_equation_certificate_for
+#check mk_einstein_equation_certificate_for_holds
 #check canonical_electrovac_einstein_certificate
 #check canonical_electrovac_einstein_equation_holds
+#check canonical_electrovac_einstein_certificate_for
+#check canonical_electrovac_einstein_equation_holds_for
 
 -- Typed ADM
 #check ADMConstraintCertificate
 #check mk_adm_constraint_certificate
 #check mk_adm_constraint_certificate_holds
+#check ADMConstraintCertificateFor
+#check mk_adm_constraint_certificate_for
+#check mk_adm_constraint_certificate_for_holds
+#check IsMinkowskiVacuumADM
 #check canonical_vacuum_adm_certificate
 #check canonical_vacuum_adm_hamiltonian_constraint_holds
 #check canonical_vacuum_adm_momentum_constraint_holds
+#check canonical_vacuum_adm_certificate_for
+#check minkowski_vacuum_adm_constraints_for_family
 
 -- VML Maxwell equilibrium
 #check VMLMaxwellEquilibriumCertificate
 #check canonical_vml_maxwell_equilibrium
 #check vml_maxwell_rigidity_wrapped
 #check vml_maxwell_content_available_wrapped
+#check vml_equilibrium_implies_E_zero
+#check vml_equilibrium_implies_B_constant
+#check vml_equilibrium_implies_global_maxwellian
+
+-- Universal certificate field checks (production surface)
+#check universalConsistencyCertificate.curvedMaxwell
+#check universalConsistencyCertificate.vmlMaxwell
+#check universal_curved_maxwell_bridge_certified
+#check universal_vml_maxwell_equilibrium_certified
 
 -- Maxwell-CurveSpace/pphi2 bridge
 #check MaxwellPphi2Certificate
