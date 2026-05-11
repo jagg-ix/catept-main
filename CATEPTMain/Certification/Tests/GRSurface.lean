@@ -62,11 +62,15 @@ open CATEPTMain.Certification.RelativityGR
 
 -- Typed Einstein equation
 #check EinsteinEquationCertificate
+#check mk_einstein_equation_certificate
+#check mk_einstein_equation_certificate_holds
 #check canonical_electrovac_einstein_certificate
 #check canonical_electrovac_einstein_equation_holds
 
 -- Typed ADM
 #check ADMConstraintCertificate
+#check mk_adm_constraint_certificate
+#check mk_adm_constraint_certificate_holds
 #check canonical_vacuum_adm_certificate
 #check canonical_vacuum_adm_hamiltonian_constraint_holds
 #check canonical_vacuum_adm_momentum_constraint_holds
@@ -79,6 +83,8 @@ open CATEPTMain.Certification.RelativityGR
 
 -- Maxwell-CurveSpace/pphi2 bridge
 #check MaxwellPphi2Certificate
+#check mk_maxwell_pphi2_certificate
+#check mk_maxwell_pphi2_certificate_contract_holds
 #check canonical_maxwell_pphi2_certificate
 #check canonical_maxwell_pphi2_bridge_contract_available
 
