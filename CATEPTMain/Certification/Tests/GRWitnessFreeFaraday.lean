@@ -79,6 +79,17 @@ example :
       (Gravitas.Expr.lit 0) :=
   canonical_certified_curved_gr_data
 
+-- Modular Hodge closure constructor over `ElectromagneticTensor.ofMetric`
+#check @hodgeClosure_of_faradayOfMetric
+#check canonical_faraday_ofMetric_hodge_involutive_minkowski
+
+example :
+    HasHodgeClosure gravitasMinkowski
+      (Gravitas.ElectromagneticTensor.ofMetric gravitasMinkowski #[]
+        (Gravitas.Expr.var "μ₀")) :=
+  hodgeClosure_of_faradayOfMetric _ _ _
+    canonical_faraday_ofMetric_witness_minkowski
+
 -- WF-GR-005/6: Einstein-electrovacuum solution umbrella
 #check @IsEinsteinElectrovacuumSolution
 #check @einsteinElectrovacuumStress
