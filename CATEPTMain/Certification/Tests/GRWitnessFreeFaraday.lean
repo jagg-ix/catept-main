@@ -3,6 +3,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeFaradayFamily
 import CATEPTMain.Certification.RelativityGRWitnessFreeCurvedDirect
 import CATEPTMain.Certification.RelativityGRWitnessFreeEinstein
 import CATEPTMain.Certification.RelativityGRWitnessFreeADM
+import CATEPTMain.Certification.RelativityGRVMLFamily
 
 noncomputable section
 
@@ -103,5 +104,21 @@ example :
 example :
     ADMConstraintCertificateFor gravitasCanonicalVacuumADM :=
   canonical_adm_certificate_of_data
+
+-- WF-GR-StressId-001: witness-free named-Faraday stress-identification reduction
+#check namedCanonicalElectrovacuumStress
+#check namedCanonicalElectrovacuumStress_eq_gravitasEMStressEnergy
+#check namedCanonical_maxwell_to_stress_conservation_witness_free
+#check @vml_equilibrium_supports_named_canonical_electrovacuum_family_witness_free
+
+example :
+    namedCanonicalElectrovacuumStress = gravitasEMStressEnergy :=
+  namedCanonicalElectrovacuumStress_eq_gravitasEMStressEnergy
+
+example :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      namedCanonicalElectrovacuumStress =
+    Array.mkArray gravitasMinkowski.dim (Gravitas.Expr.lit 0) :=
+  namedCanonical_maxwell_to_stress_conservation_witness_free
 
 end CATEPTMain.Certification.Tests.GRWitnessFreeFaraday
