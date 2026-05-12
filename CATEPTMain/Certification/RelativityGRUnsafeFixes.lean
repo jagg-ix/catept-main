@@ -4,6 +4,9 @@ import CATEPTMain.Certification.RelativityGRStressConservation
 noncomputable section
 
 set_option autoImplicit false
+-- Stage-B / unsafe-fix `rfl` identities exercise kernel reduction of the
+-- now-total `Gravitas.simplify`/`symDiff`; raise rec-depth accordingly.
+set_option maxRecDepth 8192
 
 namespace CATEPTMain.Certification.RelativityGR
 
