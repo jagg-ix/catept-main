@@ -1,4 +1,5 @@
 import CATEPTMain.Certification.RelativityGRWitnessFreeFaraday
+import CATEPTMain.Certification.RelativityGRWitnessFreeFaradayFamily
 
 noncomputable section
 
@@ -80,6 +81,28 @@ structure HasADMClosure
   momentum_residual :
     (solveVacuumADMEquations adm).momentumConstraints =
       (solveADMEquations adm admStress sourceTerm).momentumConstraints
+
+/-! ### Standard closure constructors
+
+Constructors that build a sector closure subpredicate from an upstream
+witness bundle.  These let `IsCertifiedCurvedGRData` consumers discharge each
+sector through a named theoretical condition instead of an inline term. -/
+
+/-- **Hodge closure constructor (Faraday-of-Metric family).**
+
+Whenever the electromagnetic tensor is generated as
+`ElectromagneticTensor.ofMetric g A μ₀` and the Faraday-of-Metric fixed
+witness `h : FaradayOfMetricFixedWitness g A μ₀` certifies the 4D
+antisymmetric block, the `★★` Hodge involution closure
+`HasHodgeClosure g (ElectromagneticTensor.ofMetric g A μ₀)` follows directly
+from `faraday_ofMetric_hodge_involutive`. -/
+def hodgeClosure_of_faradayOfMetric
+    (g : MetricTensor)
+    (A : Array Expr)
+    (μ₀ : Expr)
+    (h : FaradayOfMetricFixedWitness g A μ₀) :
+    HasHodgeClosure g (ElectromagneticTensor.ofMetric g A μ₀) where
+  hodge_involutive := faraday_ofMetric_hodge_involutive g A μ₀ h
 
 /-- Umbrella admissibility predicate bundling all obligations needed to assemble
 a `CurvedGRDirectCertificate` from explicit metric/tensor/ADM/source data.
