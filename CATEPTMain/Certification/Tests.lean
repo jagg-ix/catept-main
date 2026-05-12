@@ -5,6 +5,7 @@ import CATEPTMain.Certification.Tests.ClaimMatrix
 import CATEPTMain.Certification.Tests.ConstructorExamples
 import CATEPTMain.Certification.Tests.UniversalFields
 import CATEPTMain.Certification.Tests.CurvedDirectExamples
+import CATEPTMain.Certification.Tests.GRWitnessFreeFaraday
 import CATEPTMain.Certification.Tests.VMLProjectionExamples
 import CATEPTMain.Certification.Tests.StatusSurface
 import CATEPTMain.Certification.Tests.AxiomGuards
