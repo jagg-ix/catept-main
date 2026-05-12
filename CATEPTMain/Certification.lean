@@ -20,6 +20,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeCurvedDirect
 import CATEPTMain.Certification.RelativityGRWitnessFreeEinstein
 import CATEPTMain.Certification.RelativityGRWitnessFreeADM
 import CATEPTMain.Certification.RelativityGRVMLFamily
+import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -55,6 +56,7 @@ Exports the certification sectors and universal consistency certificate:
 | `RelativityGRWitnessFreeEinstein` | Witness-free Einstein-electrovacuum family (WF-GR-005/6): `IsEinsteinElectrovacuumSolution`, `einstein_certificate_for_solution`, `einstein_electrovacuum_solution_full_claim`, with canonical Minkowski instance `canonical_minkowski_is_einstein_electrovacuum_solution` discharged via `native_decide` |
 | `RelativityGRWitnessFreeADM` | Witness-free ADM-constraint family (WF-GR-007/8): `IsCertifiedADMData`, `adm_certificate_for_data`, `adm_data_full_claim`, with canonical Minkowski vacuum instance `canonical_minkowski_is_certified_adm_data` reusing `gravitasCanonicalVacuumADM_*_residual_exact` |
 | `RelativityGRVMLFamily` | Witness-free VML-Landau flat equilibrium family: `IsVMLElectrovacuumEquilibrium` bundles the rigidity outputs of `proved_vml_steady_state_rigidity` (= `VML.CoulombConcreteTheorem42`); `vml_equilibrium_supports_flat_electrovacuum_family` lifts equilibria into the existing flat Maxwell→stress-conservation route; `vml_equilibrium_supports_named_canonical_electrovacuum_family_witness_free` is the WF-GR-StressId-001 witness-free reduction on the named-Faraday canonical instance |
+| `RelativityGRWitnessFreeStressIdentity` | Flat-electrovacuum admissible family (MT-3): `IsFlatElectrovacuumFamily` bundles the Minkowski/Maxwell/stress-identification witnesses; `flat_electrovacuum_family_stress_conserved` discharges covariant-divergence-zero conservation at the family level. Includes obstruction note: the literal stress identification `electrovacuumElectromagneticStressEnergy gravitasMinkowski A μ₀ Λ = gravitasEMStressEnergy` is *not* a theorem (solver-built vs. named-symbolic Faraday matrices differ) and is left as a field of the bundle |
 | `RelativityGRUnsafeFixes` | Canonical closure certificate for GR unsafe-claim surfaces (double-Hodge bivector closure, Einstein/ADM residual identities, conservation model closure) |
 | `RelativityGRResiduals` | Typed Einstein/ADM residual objects (`canonical_einstein_residual`, `canonical_adm_residual`) |
 | `RelativityGREinsteinEquation` | Typed Einstein equation certificate (`EinsteinEquationCertificate`, `canonical_electrovac_einstein_certificate`) |
