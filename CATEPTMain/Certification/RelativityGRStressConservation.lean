@@ -249,6 +249,58 @@ theorem canonical_electrovacuum_stress_bridge_of_faraday_components
   unfold gravitasEMStressEnergy
   simp [hFaradayCanonical, canonicalNamedFaradayComponents, StressEnergyTensor.named]
 
+/-- **MT-1 as a theorem (conditional, parametric form).**
+
+The literal claim
+
+```
+electrovacuumElectromagneticStressEnergy g A μ₀ Λ = gravitasEMStressEnergy
+```
+
+is **not** unconditionally a theorem (see obstruction note in
+`RelativityGRWitnessFreeStressIdentity`), but it becomes a theorem under the
+three named witnesses identified by the existing canonical bridge:
+
+* `hMetric  : g = gravitasMinkowski` — the background is flat,
+* `hμ₀      : μ₀ = .lit 1`           — the permeability normalizes to the
+  same scalar consumed by `StressEnergyTensor.named "ElectromagneticField"`,
+* `hFaraday : (solveElectrovacuumEinsteinEquations g A μ₀ Λ).faradayTensor.components
+                = canonicalNamedFaradayComponents gravitasMinkowski.dim`
+  — the solver-built Faraday matrix coincides with the named symbolic
+  `Fᵢⱼ` matrix backing `gravitasEMStressEnergy`.
+
+This generalizes `canonical_electrovacuum_stress_bridge_of_faraday_components`
+from the canonical payload `(A = #[], μ₀ = .lit 1, Λ = .lit 0)` to **arbitrary**
+`A` and `Λ`. The leverage comes entirely from existing repo machinery:
+`canonicalNamedFaradayComponents`, the unfold of
+`StressEnergyTensor.named "ElectromagneticField"`, and
+`StressEnergyTensor.electromagneticField`. -/
+theorem electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness
+    (g : MetricTensor) (A : Array Expr) (μ₀ Λ : Expr)
+    (hMetric : g = gravitasMinkowski)
+    (hμ₀ : μ₀ = .lit 1)
+    (hFaraday :
+      (solveElectrovacuumEinsteinEquations g A μ₀ Λ).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim) :
+    electrovacuumElectromagneticStressEnergy g A μ₀ Λ = gravitasEMStressEnergy := by
+  subst hMetric
+  subst hμ₀
+  unfold electrovacuumElectromagneticStressEnergy
+  unfold gravitasEMStressEnergy
+  simp [hFaraday, canonicalNamedFaradayComponents, StressEnergyTensor.named]
+
+/-- Specialization of `electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness`
+to the canonical payload `(A = #[], μ₀ = .lit 1, Λ = .lit 0)`, recovering
+`canonical_electrovacuum_stress_bridge_of_faraday_components`. -/
+theorem electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness_canonical
+    (hFaraday :
+      (solveElectrovacuumEinsteinEquations gravitasMinkowski #[] (.lit 1) (.lit 0)).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim) :
+    electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0) =
+      gravitasEMStressEnergy :=
+  electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness
+    gravitasMinkowski #[] (.lit 1) (.lit 0) rfl rfl hFaraday
+
 /-- Canonical Maxwell-to-stress conservation using a Faraday-component bridge.
 
 This upgrades `canonical_maxwell_implies_stress_conservation_derived` by
