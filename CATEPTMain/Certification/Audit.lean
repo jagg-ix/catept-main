@@ -15,6 +15,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeEinstein
 import CATEPTMain.Certification.RelativityGRWitnessFreeADM
 import CATEPTMain.Certification.RelativityGRVMLFamily
 import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
+import CATEPTMain.Certification.RelativityGRWitnessFreeStressConservation
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -213,6 +214,14 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness_canonical
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_flat_electrovacuum_family
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_flat_electrovacuum_family_stress_conserved
+-- ── MT-2 conditional witness-free Maxwell-to-stress conservation ──────────
+#print axioms CATEPTMain.Certification.RelativityGR.maxwell_implies_stress_conservation_minkowski_witness_free
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_implies_stress_conservation_witness_free
+-- ── MT-6 unconditional witness-free conservation on named-canonical surface
+#print axioms CATEPTMain.Certification.RelativityGR.IsNamedCanonicalElectrovacuumStress
+#print axioms CATEPTMain.Certification.RelativityGR.named_canonical_electrovacuum_stress_conserved
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_namedCanonicalElectrovacuumStress
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_named_canonical_electrovacuum_stress_conserved
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for_holds
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for_source
