@@ -95,26 +95,38 @@ def massDim_from_constants : ConstDim :=
 
 theorem length_dim_derivation_law :
     lengthDim_from_constants = lengthDim := by
-  native_decide
+  simp only [lengthDim_from_constants, lengthDim, dimPow, dimDiv, dimMul, dimInv,
+    GConst, hbarConst, cConst]
+  refine ConstDim.mk.injEq .. |>.mpr ?_
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> norm_num
 
 theorem mass_dim_derivation_law :
     massDim_from_constants = massDim := by
-  native_decide
+  simp only [massDim_from_constants, massDim, dimPow, dimDiv, dimMul, dimInv,
+    GConst, hbarConst, cConst]
+  refine ConstDim.mk.injEq .. |>.mpr ?_
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> norm_num
 
 /-- `E = M c²` in dimension algebra. -/
 theorem energy_dim_from_mass_and_c :
     dimMul massDim (dimPow cConst 2) = energyDim := by
-  native_decide
+  simp only [dimMul, dimPow, massDim, energyDim, cConst]
+  refine ConstDim.mk.injEq .. |>.mpr ?_
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> norm_num
 
 /-- `T = E / k_B` in dimension algebra. -/
 theorem energy_temperature_dimensional_bridge :
     dimDiv energyDim kBConst = temperatureDim := by
-  native_decide
+  simp only [dimDiv, dimMul, dimInv, energyDim, kBConst, temperatureDim]
+  refine ConstDim.mk.injEq .. |>.mpr ?_
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> norm_num
 
 /-- Consistency of Planck-constant dimensional role: `ħ = E * T_time`. -/
 theorem planck_constant_hbar_dimensional_consistency :
     dimMul energyDim timeDim = hbarConst := by
-  native_decide
+  simp only [dimMul, energyDim, timeDim, hbarConst]
+  refine ConstDim.mk.injEq .. |>.mpr ?_
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> norm_num
 
 /-! ## Direct compatibility aliases to CATEPT layers -/
 
