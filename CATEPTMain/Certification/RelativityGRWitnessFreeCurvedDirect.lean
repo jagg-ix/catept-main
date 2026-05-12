@@ -33,8 +33,61 @@ The canonical Minkowski instance discharges the predicate from already-proved
 sector theorems and from the witness-free canonical Faraday module.
 -/
 
+/-! ## Modular curved-GR closure subpredicates
+
+The umbrella `IsCertifiedCurvedGRData` predicate is built out of four
+independent closure subpredicates, one per physical sector.  Each subpredicate
+is a single-field `Prop` structure so that upstream consumers can require
+exactly the obligations they need without dragging in the full bundle. -/
+
+/-- Hodge `★★` involution closure on the electromagnetic tensor object
+relative to the given metric. -/
+structure HasHodgeClosure
+    (metric : MetricTensor)
+    (faraday : ElectromagneticTensor) : Prop where
+  hodge_involutive :
+    hodgeStarEM metric (hodgeStarEM metric faraday) = faraday
+
+/-- Vanishing covariant divergence closure for the stress-energy tensor
+relative to the given metric. -/
+structure HasStressConservation
+    (metric : MetricTensor)
+    (stress : StressEnergyTensor) : Prop where
+  divergence_zero :
+    covariantDivergenceStressEnergy metric stress =
+      Array.mkArray metric.dim (.lit 0)
+
+/-- Einstein field-equation residual closure at the solver output for the
+given metric, stress-energy, and source term. -/
+structure HasEinsteinClosure
+    (metric : MetricTensor)
+    (stress : StressEnergyTensor)
+    (sourceTerm : Gravitas.Expr) : Prop where
+  einstein_residual :
+    (solveEinsteinEquations stress sourceTerm).fieldEquations =
+      EinsteinTensor.fieldEquations metric stress.components sourceTerm
+        (.var "G_N")
+
+/-- ADM Hamiltonian/momentum residual closure at the solver outputs for the
+given ADM decomposition, ADM stress-energy decomposition, and source term. -/
+structure HasADMClosure
+    (adm : ADMDecomposition)
+    (admStress : ADMStressEnergyDecomposition)
+    (sourceTerm : Gravitas.Expr) : Prop where
+  hamiltonian_residual :
+    (solveVacuumADMEquations adm).hamiltonianConstraint =
+      (solveADMEquations adm admStress sourceTerm).hamiltonianConstraint
+  momentum_residual :
+    (solveVacuumADMEquations adm).momentumConstraints =
+      (solveADMEquations adm admStress sourceTerm).momentumConstraints
+
 /-- Umbrella admissibility predicate bundling all obligations needed to assemble
-a `CurvedGRDirectCertificate` from explicit metric/tensor/ADM/source data. -/
+a `CurvedGRDirectCertificate` from explicit metric/tensor/ADM/source data.
+
+This is the modular form: each physical sector is carried by a dedicated
+subpredicate (`HasHodgeClosure`, `HasStressConservation`, `HasEinsteinClosure`,
+`HasADMClosure`), making it possible to introduce sector improvements one at
+a time. -/
 structure IsCertifiedCurvedGRData
     (metric : MetricTensor)
     (faraday : ElectromagneticTensor)
@@ -42,19 +95,127 @@ structure IsCertifiedCurvedGRData
     (adm : ADMDecomposition)
     (admStress : ADMStressEnergyDecomposition)
     (sourceTerm : Gravitas.Expr) : Prop where
-  hodge_involutive :
-    hodgeStarEM metric (hodgeStarEM metric faraday) = faraday
-  stress_divergence_zero :
-    covariantDivergenceStressEnergy metric stress = Array.mkArray metric.dim (.lit 0)
-  einstein_residual :
+  hodgeClosure : HasHodgeClosure metric faraday
+  stressClosure : HasStressConservation metric stress
+  einsteinClosure : HasEinsteinClosure metric stress sourceTerm
+  admClosure : HasADMClosure adm admStress sourceTerm
+
+/-! ### Compatibility projections (legacy flat field names)
+
+The pre-modular form of `IsCertifiedCurvedGRData` exposed five flat fields
+`hodge_involutive`, `stress_divergence_zero`, `einstein_residual`,
+`adm_hamiltonian`, `adm_momentum`.  These projection theorems keep the
+historical names available so downstream proofs do not have to be rewritten
+to thread through the new subbundles. -/
+
+theorem certifiedData_has_hodge
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
+    HasHodgeClosure metric faraday :=
+  h.hodgeClosure
+
+theorem certifiedData_has_stress
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
+    HasStressConservation metric stress :=
+  h.stressClosure
+
+theorem certifiedData_has_einstein
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
+    HasEinsteinClosure metric stress sourceTerm :=
+  h.einsteinClosure
+
+theorem certifiedData_has_adm
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
+    HasADMClosure adm admStress sourceTerm :=
+  h.admClosure
+
+/-- Flat-field projection: Hodge involution. -/
+theorem IsCertifiedCurvedGRData.hodge_involutive
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
+    hodgeStarEM metric (hodgeStarEM metric faraday) = faraday :=
+  h.hodgeClosure.hodge_involutive
+
+/-- Flat-field projection: stress divergence vanishes. -/
+theorem IsCertifiedCurvedGRData.stress_divergence_zero
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
+    covariantDivergenceStressEnergy metric stress =
+      Array.mkArray metric.dim (.lit 0) :=
+  h.stressClosure.divergence_zero
+
+/-- Flat-field projection: Einstein residual identity. -/
+theorem IsCertifiedCurvedGRData.einstein_residual
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
     (solveEinsteinEquations stress sourceTerm).fieldEquations =
-      EinsteinTensor.fieldEquations metric stress.components sourceTerm (.var "G_N")
-  adm_hamiltonian :
+      EinsteinTensor.fieldEquations metric stress.components sourceTerm
+        (.var "G_N") :=
+  h.einsteinClosure.einstein_residual
+
+/-- Flat-field projection: ADM Hamiltonian residual identity. -/
+theorem IsCertifiedCurvedGRData.adm_hamiltonian
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
     (solveVacuumADMEquations adm).hamiltonianConstraint =
-      (solveADMEquations adm admStress sourceTerm).hamiltonianConstraint
-  adm_momentum :
+      (solveADMEquations adm admStress sourceTerm).hamiltonianConstraint :=
+  h.admClosure.hamiltonian_residual
+
+/-- Flat-field projection: ADM momentum residual identity. -/
+theorem IsCertifiedCurvedGRData.adm_momentum
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (h : IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm) :
     (solveVacuumADMEquations adm).momentumConstraints =
-      (solveADMEquations adm admStress sourceTerm).momentumConstraints
+      (solveADMEquations adm admStress sourceTerm).momentumConstraints :=
+  h.admClosure.momentum_residual
 
 /-- Assemble a full `CurvedGRDirectCertificate` from any certified curved-GR
 data bundle. -/
@@ -123,12 +284,14 @@ theorem isCertifiedCurvedGRData_of_fixedAntisymmetric4D
       (solveVacuumADMEquations adm).momentumConstraints =
         (solveADMEquations adm admStress sourceTerm).momentumConstraints) :
     IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm where
-  hodge_involutive :=
-    hodgeStarEM_involutive_of_fixedAntisymmetric4D metric faraday hFixed hHodgeFixed
-  stress_divergence_zero := hDiv
-  einstein_residual := hEinstein
-  adm_hamiltonian := hAdmHam
-  adm_momentum := hAdmMom
+  hodgeClosure :=
+    { hodge_involutive :=
+        hodgeStarEM_involutive_of_fixedAntisymmetric4D metric faraday hFixed hHodgeFixed }
+  stressClosure := { divergence_zero := hDiv }
+  einsteinClosure := { einstein_residual := hEinstein }
+  admClosure :=
+    { hamiltonian_residual := hAdmHam
+      momentum_residual := hAdmMom }
 
 /-- Canonical Minkowski instance of the certified-curved-GR data umbrella:
 all five obligations are discharged from existing canonical sector theorems
@@ -141,11 +304,15 @@ theorem canonical_certified_curved_gr_data :
       gravitasCanonicalVacuumADM
       gravitasCanonicalVacuumADMStressDecomposition
       (.lit 0) where
-  hodge_involutive := canonical_faraday_minkowski_fixed_witness.hodge_fixed
-  stress_divergence_zero := gravitasCanonicalStress_covariantDivergence_zero
-  einstein_residual := canonical_electrovac_einstein_equation_holds
-  adm_hamiltonian := canonical_vacuum_adm_hamiltonian_constraint_holds
-  adm_momentum := canonical_vacuum_adm_momentum_constraint_holds
+  hodgeClosure :=
+    { hodge_involutive := canonical_faraday_minkowski_fixed_witness.hodge_fixed }
+  stressClosure :=
+    { divergence_zero := gravitasCanonicalStress_covariantDivergence_zero }
+  einsteinClosure :=
+    { einstein_residual := canonical_electrovac_einstein_equation_holds }
+  admClosure :=
+    { hamiltonian_residual := canonical_vacuum_adm_hamiltonian_constraint_holds
+      momentum_residual := canonical_vacuum_adm_momentum_constraint_holds }
 
 /-- Canonical witness-free curved-GR direct certificate assembled through the
 umbrella admissibility predicate. -/
