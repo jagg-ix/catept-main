@@ -14,6 +14,12 @@ import CATEPTMain.Certification.RelativityGRCurvedMaxwell
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRCurvedDirect
+import CATEPTMain.Certification.RelativityGRWitnessFreeFaraday
+import CATEPTMain.Certification.RelativityGRWitnessFreeFaradayFamily
+import CATEPTMain.Certification.RelativityGRWitnessFreeCurvedDirect
+import CATEPTMain.Certification.RelativityGRWitnessFreeEinstein
+import CATEPTMain.Certification.RelativityGRWitnessFreeADM
+import CATEPTMain.Certification.RelativityGRVMLFamily
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -43,6 +49,12 @@ Exports the certification sectors and universal consistency certificate:
 | `RelativityGRVMLMaxwell` | VML Maxwell-equilibrium certificate surface (`VMLMaxwellEquilibriumCertificate`, `canonical_vml_maxwell_equilibrium`) |
 | `RelativityGRMaxwellPphi2` | Maxwell-CurveSpace/pphi2 bridge certificate surface (`MaxwellPphi2Certificate`, `canonical_maxwell_pphi2_certificate`) |
 | `RelativityGRCurvedDirect` | Full direct curved-GR claim surface (`CurvedGRDirectCertificate`) with explicit-payload and fixed-antisymmetric-derived constructors, plus canonical derived assembly theorem |
+| `RelativityGRWitnessFreeFaraday` | Witness-free canonical Faraday derivation from Gravitas data (`canonical_faraday_minkowski_fixed_witness`) and witness-free direct curved-GR canonical certificate (`canonical_curved_gr_direct_certificate_witness_free`) |
+| `RelativityGRWitnessFreeFaradayFamily` | Family-level fixed-antisymmetric theorem for arbitrary `ElectromagneticTensor.ofMetric g A μ₀` (`faraday_ofMetric_is_fixedAntisymmetric4D`, `FaradayOfMetricFixedWitness`), with canonical Minkowski instance (`canonical_faraday_ofMetric_witness_minkowski`) discharged via `native_decide` |
+| `RelativityGRWitnessFreeCurvedDirect` | Umbrella admissibility predicate `IsCertifiedCurvedGRData` bundling the five direct curved-GR obligations, with `curved_gr_direct_certificate_of_certified_data`, `certified_curved_gr_data_implies_full_direct_claim`, and the canonical Minkowski instance `canonical_certified_curved_gr_data` |
+| `RelativityGRWitnessFreeEinstein` | Witness-free Einstein-electrovacuum family (WF-GR-005/6): `IsEinsteinElectrovacuumSolution`, `einstein_certificate_for_solution`, `einstein_electrovacuum_solution_full_claim`, with canonical Minkowski instance `canonical_minkowski_is_einstein_electrovacuum_solution` discharged via `native_decide` |
+| `RelativityGRWitnessFreeADM` | Witness-free ADM-constraint family (WF-GR-007/8): `IsCertifiedADMData`, `adm_certificate_for_data`, `adm_data_full_claim`, with canonical Minkowski vacuum instance `canonical_minkowski_is_certified_adm_data` reusing `gravitasCanonicalVacuumADM_*_residual_exact` |
+| `RelativityGRVMLFamily` | Witness-free VML-Landau flat equilibrium family: `IsVMLElectrovacuumEquilibrium` bundles the rigidity outputs of `proved_vml_steady_state_rigidity` (= `VML.CoulombConcreteTheorem42`); `vml_equilibrium_supports_flat_electrovacuum_family` lifts equilibria into the existing flat Maxwell→stress-conservation route |
 | `RelativityGRUnsafeFixes` | Canonical closure certificate for GR unsafe-claim surfaces (double-Hodge bivector closure, Einstein/ADM residual identities, conservation model closure) |
 | `RelativityGRResiduals` | Typed Einstein/ADM residual objects (`canonical_einstein_residual`, `canonical_adm_residual`) |
 | `RelativityGREinsteinEquation` | Typed Einstein equation certificate (`EinsteinEquationCertificate`, `canonical_electrovac_einstein_certificate`) |
