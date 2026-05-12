@@ -72,6 +72,14 @@ structure FaradayOfMetricFixedWitness
     simplify (simplify
         (matGet (ElectromagneticTensor.ofMetric g A μ₀).components 1 3).neg).neg =
       matGet (ElectromagneticTensor.ofMetric g A μ₀).components 1 3
+  /-- Full tensor-level Hodge involution `★★F = F` on the
+  `ElectromagneticTensor.ofMetric` payload. Carried as a field of the witness
+  bundle because the upstream `hodgeStarEM_involutive` lemma only certifies
+  metadata-level closure (metric/potential/permeability); components-level
+  closure requires the concrete Faraday-block structure. -/
+  hodge_fixed :
+    hodgeStarEM g (hodgeStarEM g (ElectromagneticTensor.ofMetric g A μ₀)) =
+      ElectromagneticTensor.ofMetric g A μ₀
 
 /-- Family-level fixed-antisymmetric theorem: any `ElectromagneticTensor.ofMetric`
 witness in 4D yields `FixedAntisymmetric4D` once the symbolic-simplifier-bound
@@ -115,6 +123,34 @@ def canonical_faraday_ofMetric_witness_minkowski :
   diagonal_zero_entries := by native_decide
   antisymmetry_entries := by native_decide
   double_neg_entries := by native_decide
+  hodge_fixed := by native_decide
+
+/-- **MT-4: family-level Hodge involution projection.**
+
+Direct projection theorem in the exact shape requested by MT-4: any
+`FaradayOfMetricFixedWitness g A μ₀` discharges full tensor-level
+Hodge involution `★★F = F` on the corresponding
+`ElectromagneticTensor.ofMetric g A μ₀` payload.
+
+The witness bundle carries this as the `hodge_fixed` field because the
+upstream `hodgeStarEM_involutive` lemma only certifies metadata-level
+closure (metric/potential/permeability); components-level closure requires
+the concrete Faraday-block structure and is therefore part of the witness. -/
+theorem faraday_ofMetric_hodge_involutive
+    (g : MetricTensor) (A : Array Expr) (μ₀ : Expr)
+    (h : FaradayOfMetricFixedWitness g A μ₀) :
+    hodgeStarEM g
+      (hodgeStarEM g (ElectromagneticTensor.ofMetric g A μ₀)) =
+    ElectromagneticTensor.ofMetric g A μ₀ :=
+  h.hodge_fixed
+
+/-- Canonical Minkowski instantiation of `faraday_ofMetric_hodge_involutive`. -/
+theorem canonical_faraday_ofMetric_hodge_involutive_minkowski :
+    hodgeStarEM gravitasMinkowski
+      (hodgeStarEM gravitasMinkowski
+        (ElectromagneticTensor.ofMetric gravitasMinkowski #[] (.var "μ₀"))) =
+    ElectromagneticTensor.ofMetric gravitasMinkowski #[] (.var "μ₀") :=
+  faraday_ofMetric_hodge_involutive _ _ _ canonical_faraday_ofMetric_witness_minkowski
 
 end CATEPTMain.Certification.RelativityGR
 
