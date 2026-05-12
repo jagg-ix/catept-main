@@ -4,6 +4,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeCurvedDirect
 import CATEPTMain.Certification.RelativityGRWitnessFreeEinstein
 import CATEPTMain.Certification.RelativityGRWitnessFreeADM
 import CATEPTMain.Certification.RelativityGRVMLFamily
+import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
 
 noncomputable section
 
@@ -120,5 +121,20 @@ example :
       namedCanonicalElectrovacuumStress =
     Array.mkArray gravitasMinkowski.dim (Gravitas.Expr.lit 0) :=
   namedCanonical_maxwell_to_stress_conservation_witness_free
+
+-- MT-3: flat-electrovacuum admissible family
+#check @IsFlatElectrovacuumFamily
+#check @flat_electrovacuum_family_stress_conserved
+#check @maxwell_implies_stress_conservation_minkowski_via_family
+
+example
+    {g : Gravitas.MetricTensor}
+    {A : Array Gravitas.Expr}
+    {μ₀ Λ : Gravitas.Expr}
+    (h : IsFlatElectrovacuumFamily g A μ₀ Λ) :
+    covariantDivergenceStressEnergy g
+      (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
+    Array.mkArray g.dim (Gravitas.Expr.lit 0) :=
+  flat_electrovacuum_family_stress_conserved h
 
 end CATEPTMain.Certification.Tests.GRWitnessFreeFaraday
