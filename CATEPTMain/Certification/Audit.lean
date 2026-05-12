@@ -169,6 +169,8 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.FaradayOfMetricFixedWitness
 #print axioms CATEPTMain.Certification.RelativityGR.faraday_ofMetric_is_fixedAntisymmetric4D
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_faraday_ofMetric_witness_minkowski
+#print axioms CATEPTMain.Certification.RelativityGR.faraday_ofMetric_hodge_involutive
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_faraday_ofMetric_hodge_involutive_minkowski
 #print axioms CATEPTMain.Certification.RelativityGR.IsCertifiedCurvedGRData
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_certificate_of_certified_data
 #print axioms CATEPTMain.Certification.RelativityGR.certified_curved_gr_data_implies_full_direct_claim

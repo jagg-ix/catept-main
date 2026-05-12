@@ -44,6 +44,20 @@ example :
   faraday_ofMetric_is_fixedAntisymmetric4D _ _ _
     canonical_faraday_ofMetric_witness_minkowski
 
+-- MT-4: family-level Hodge involution projection and canonical instance
+#check @faraday_ofMetric_hodge_involutive
+#check canonical_faraday_ofMetric_hodge_involutive_minkowski
+
+example :
+    hodgeStarEM gravitasMinkowski
+      (hodgeStarEM gravitasMinkowski
+        (Gravitas.ElectromagneticTensor.ofMetric gravitasMinkowski #[]
+          (Gravitas.Expr.var "μ₀"))) =
+      Gravitas.ElectromagneticTensor.ofMetric gravitasMinkowski #[]
+        (Gravitas.Expr.var "μ₀") :=
+  faraday_ofMetric_hodge_involutive _ _ _
+    canonical_faraday_ofMetric_witness_minkowski
+
 -- WF-GR-009/10: certified-curved-GR data umbrella
 #check @IsCertifiedCurvedGRData
 #check @curved_gr_direct_certificate_of_certified_data
