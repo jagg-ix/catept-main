@@ -14,6 +14,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeCurvedDirect
 import CATEPTMain.Certification.RelativityGRWitnessFreeEinstein
 import CATEPTMain.Certification.RelativityGRWitnessFreeADM
 import CATEPTMain.Certification.RelativityGRVMLFamily
+import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -199,6 +200,10 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.namedCanonicalElectrovacuumStress_eq_gravitasEMStressEnergy
 #print axioms CATEPTMain.Certification.RelativityGR.namedCanonical_maxwell_to_stress_conservation_witness_free
 #print axioms CATEPTMain.Certification.RelativityGR.vml_equilibrium_supports_named_canonical_electrovacuum_family_witness_free
+-- ── GR flat-electrovacuum admissible family (MT-3) ─────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.IsFlatElectrovacuumFamily
+#print axioms CATEPTMain.Certification.RelativityGR.flat_electrovacuum_family_stress_conserved
+#print axioms CATEPTMain.Certification.RelativityGR.maxwell_implies_stress_conservation_minkowski_via_family
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for_holds
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for_source
