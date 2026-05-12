@@ -187,6 +187,7 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_stress
 #print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_einstein
 #print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_adm
+#print axioms CATEPTMain.Certification.RelativityGR.hodgeClosure_of_faradayOfMetric
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_certified_data
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_certified_curved_gr_data_full_claim
 #print axioms CATEPTMain.Certification.RelativityGR.IsEinsteinElectrovacuumSolution
