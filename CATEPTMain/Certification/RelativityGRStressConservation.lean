@@ -83,6 +83,18 @@ theorem canonical_radiation_stress_conserved :
   funext ν
   exact flat_constant_stress_conserved_expr canonicalRadiationStressTensor4 ν
 
+/-- Non-vacuous closure theorem for the flat constant-component model:
+the explicit canonical radiation tensor is both conserved and nonzero. -/
+theorem canonical_radiation_stress_nonzero_and_conserved :
+    canonicalRadiationStressTensor4.entry ⟨0, by decide⟩ ⟨0, by decide⟩ ≠ 0 /\
+    flatConstantCovariantDivergenceExpr canonicalRadiationStressTensor4 =
+      (fun _ => Expr.lit 0) := by
+  refine ⟨?_, canonical_radiation_stress_conserved⟩
+  intro hZero
+  have h30 : (3 : Rat) = 0 :=
+    canonical_radiation_stress_nonzero.symm.trans hZero
+  exact (by decide : (3 : Rat) ≠ 0) h30
+
 /-- Family-form conservation theorem: every constant-component 4D stress tensor
 in the flat model has identically zero covariant-divergence residual. -/
 theorem flat_constant_stress_conserved_for_all_constant_T :
@@ -129,6 +141,147 @@ theorem maxwell_implies_stress_conservation_of_contract
       (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
     Array.mkArray g.dim (.lit 0) :=
   hConservation
+
+/-- Constrained-family derived Maxwell-to-stress conservation.
+
+In the current symbolic stack, this theorem upgrades the contract-style API by
+deriving the conservation conclusion from the Maxwell premise plus a
+Minkowski-family bridge witness that identifies the induced electrovacuum
+stress tensor with the canonical `gravitasEMStressEnergy`. -/
+theorem maxwell_implies_stress_conservation_derived
+    (g : MetricTensor)
+    (A : Array Expr := #[])
+    (μ₀ : Expr := .var "μ₀")
+    (Λ : Expr := .lit 0)
+    (hMinkowski : g = gravitasMinkowski)
+    (hStressFromMaxwell :
+      MaxwellEquationsHold g A μ₀ Λ →
+        electrovacuumElectromagneticStressEnergy g A μ₀ Λ =
+          gravitasEMStressEnergy)
+    (hMaxwell : MaxwellEquationsHold g A μ₀ Λ) :
+    covariantDivergenceStressEnergy g
+      (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
+    Array.mkArray g.dim (.lit 0) := by
+  subst hMinkowski
+  apply maxwell_implies_stress_conservation_of_contract
+    (g := gravitasMinkowski)
+    (A := A)
+    (μ₀ := μ₀)
+    (Λ := Λ)
+    hMaxwell
+  have hStress :
+      electrovacuumElectromagneticStressEnergy gravitasMinkowski A μ₀ Λ =
+        gravitasEMStressEnergy :=
+    hStressFromMaxwell hMaxwell
+  simpa [hStress] using
+    (gravitasCanonicalStress_covariantDivergence_zero :
+      covariantDivergenceStressEnergy gravitasMinkowski gravitasEMStressEnergy =
+        Array.mkArray gravitasMinkowski.dim (.lit 0))
+
+/-- Minkowski-specialized derived Maxwell-to-stress conservation.
+
+This is the first constrained-family tightening of
+`maxwell_implies_stress_conservation_derived`: the metric is fixed to
+Minkowski and the bridge witness is a direct stress identification (not a
+function from Maxwell hypotheses). -/
+theorem maxwell_implies_stress_conservation_minkowski
+    (A : Array Expr := #[])
+    (μ₀ : Expr := .var "μ₀")
+    (Λ : Expr := .lit 0)
+    (hStress :
+      electrovacuumElectromagneticStressEnergy gravitasMinkowski A μ₀ Λ =
+        gravitasEMStressEnergy)
+    (hMaxwell : MaxwellEquationsHold gravitasMinkowski A μ₀ Λ) :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      (electrovacuumElectromagneticStressEnergy gravitasMinkowski A μ₀ Λ) =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) := by
+  exact
+    maxwell_implies_stress_conservation_derived
+      (g := gravitasMinkowski)
+      (A := A)
+      (μ₀ := μ₀)
+      (Λ := Λ)
+      (hMinkowski := rfl)
+      (hStressFromMaxwell := by
+        intro _
+        exact hStress)
+      hMaxwell
+
+/-- Named canonical-instance specialization of the Minkowski-family theorem.
+
+This keeps the Maxwell premise explicit while reducing the bridge payload to a
+single concrete stress-identification witness for
+`A = #[]`, `μ₀ = 1`, `Λ = 0`. -/
+theorem canonical_maxwell_implies_stress_conservation_derived
+    (hStress :
+      electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0) =
+        gravitasEMStressEnergy)
+    (hMaxwell : MaxwellEquationsHold gravitasMinkowski #[] (.lit 1) (.lit 0)) :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      (electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0)) =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) :=
+  maxwell_implies_stress_conservation_minkowski
+    (A := #[])
+    (μ₀ := .lit 1)
+    (Λ := .lit 0)
+    hStress
+    hMaxwell
+
+/-- Canonical symbolic Faraday-component matrix used by
+`StressEnergyTensor.named "ElectromagneticField"`. -/
+def canonicalNamedFaradayComponents (n : Nat) : Mat :=
+  matBuild n (fun i j => Expr.var s!"F{i}{j}")
+
+/-- Canonical stress bridge from a Faraday-component witness.
+
+If the electrovacuum solver Faraday components match the canonical symbolic
+`Fᵢⱼ` matrix used by `StressEnergyTensor.named "ElectromagneticField"`, then
+the induced electrovacuum stress tensor agrees with `gravitasEMStressEnergy`. -/
+theorem canonical_electrovacuum_stress_bridge_of_faraday_components
+    (hFaradayCanonical :
+      (solveElectrovacuumEinsteinEquations gravitasMinkowski #[] (.lit 1) (.lit 0)).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim) :
+    electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0) =
+      gravitasEMStressEnergy := by
+  unfold electrovacuumElectromagneticStressEnergy
+  unfold gravitasEMStressEnergy
+  simp [hFaradayCanonical, canonicalNamedFaradayComponents, StressEnergyTensor.named]
+
+/-- Canonical Maxwell-to-stress conservation using a Faraday-component bridge.
+
+This upgrades `canonical_maxwell_implies_stress_conservation_derived` by
+deriving the stress-identification premise from a more primitive Faraday
+component witness. -/
+theorem canonical_maxwell_implies_stress_conservation_of_faraday_components
+    (hFaradayCanonical :
+      (solveElectrovacuumEinsteinEquations gravitasMinkowski #[] (.lit 1) (.lit 0)).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim)
+    (hMaxwell : MaxwellEquationsHold gravitasMinkowski #[] (.lit 1) (.lit 0)) :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      (electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0)) =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) :=
+  canonical_maxwell_implies_stress_conservation_derived
+    (canonical_electrovacuum_stress_bridge_of_faraday_components hFaradayCanonical)
+    hMaxwell
+
+/-- Constrained canonical family combining source-free Maxwell closure and the
+Faraday-component identification used by the named electromagnetic stress model. -/
+def canonicalMinkowskiFaradayStressFamily : Prop :=
+  MaxwellEquationsHold gravitasMinkowski #[] (.lit 1) (.lit 0) ∧
+  (solveElectrovacuumEinsteinEquations gravitasMinkowski #[] (.lit 1) (.lit 0)).faradayTensor.components =
+    canonicalNamedFaradayComponents gravitasMinkowski.dim
+
+/-- Single-hypothesis constrained-family Maxwell-to-stress conservation theorem. -/
+theorem canonical_minkowski_faraday_family_implies_stress_conservation
+    (hFamily : canonicalMinkowskiFaradayStressFamily) :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      (electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0)) =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) := by
+  rcases hFamily with ⟨hMaxwell, hFaradayCanonical⟩
+  exact
+    canonical_maxwell_implies_stress_conservation_of_faraday_components
+      hFaradayCanonical
+      hMaxwell
 
 end CATEPTMain.Certification.RelativityGR
 

@@ -146,6 +146,25 @@ theorem hodgeStarEM_double_components_fixedAntisymmetric4D
   let _ := h
   exact Bivector4.hodgeStar_involutive (Bivector4.ofElectromagneticTensor F)
 
+/-- Parameterized closure profile for fixed-antisymmetric 4D families.
+
+This bundles both certified layers under one family hypothesis:
+metadata-level involution on full tensors and component-level (bivector)
+double-star closure. -/
+theorem hodgeStarEM_fixedAntisymmetric4D_closure_profile
+    (g : MetricTensor) (F : ElectromagneticTensor)
+    (h : FixedAntisymmetric4D F) :
+    ((hodgeStarEM g (hodgeStarEM g F)).metric = F.metric ∧
+      (hodgeStarEM g (hodgeStarEM g F)).electromagneticPotential =
+        F.electromagneticPotential ∧
+      (hodgeStarEM g (hodgeStarEM g F)).vacuumPermeability =
+        F.vacuumPermeability) ∧
+    (Bivector4.hodgeStar
+      (Bivector4.hodgeStar (Bivector4.ofElectromagneticTensor F)) =
+        Bivector4.ofElectromagneticTensor F) := by
+  refine ⟨hodgeStarEM_involutive g F, ?_⟩
+  exact hodgeStarEM_double_components_fixedAntisymmetric4D g F h
+
 set_option maxHeartbeats 1000000
 /--
 Full tensor-level `★★F = F` for fixed antisymmetric 4D electromagnetic tensors.

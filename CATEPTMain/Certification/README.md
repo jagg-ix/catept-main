@@ -28,6 +28,31 @@ The production barrel is `CATEPTMain.Certification`.
   - `CurvedGRDirectCertificate`,
   - `mk_curved_gr_direct_certificate`,
   - `curved_gr_direct_full_claim`.
+- Direct witness-reduction projections are now available from full curved
+  certificates into typed indexed families:
+  - `curved_gr_direct_to_adm_certificate_for` (unconditional projection),
+  - `curved_gr_direct_to_einstein_certificate_for_source` (unconditional
+    source-aware projection),
+  - `curved_gr_direct_to_einstein_certificate_for` (source-fixed projection
+    under `sourceTerm = 0` normalization).
+- VML semantic projections are certified both as individual projections and as
+  a bundled theorem:
+  - `vml_equilibrium_implies_E_zero`,
+  - `vml_equilibrium_implies_B_constant`,
+  - `vml_equilibrium_implies_global_maxwellian`,
+  - `vml_equilibrium_projection_bundle`.
+- Maxwell-to-stress conservation is available as a staged family surface:
+  - `maxwell_implies_stress_conservation_of_contract`,
+  - `maxwell_implies_stress_conservation_derived`,
+  - `canonical_minkowski_faraday_family_implies_stress_conservation`.
+- Parameterized certificate families are available at indexed type level with
+  canonical family-lifts:
+  - Einstein: `EinsteinEquationCertificateFor`,
+    `EinsteinEquationCertificateForSource`,
+    `canonical_electrovac_einstein_certificate_for_family`,
+    `canonical_electrovac_einstein_certificate_for_source_family`.
+  - ADM: `ADMConstraintCertificateFor`,
+    `canonical_vacuum_adm_certificate_for_family`.
 - Production universal certificate includes both CurvedMaxwell and VML Maxwell fields:
   - `universalConsistencyCertificate.curvedMaxwell`,
   - `universalConsistencyCertificate.vmlMaxwell`.
@@ -46,8 +71,8 @@ The following are explicit future targets, not production overclaims:
 - Witness-free curved derivations for Einstein/ADM closure families.
 - Stronger Hodge-star closure at full tensor equality level under robust
   antisymmetry hypotheses.
-- Maxwell-to-stress-conservation theorem families tied to explicit Maxwell
-  premise records.
+- Witness-free Maxwell-to-stress closure derived from Maxwell residuals without
+  Faraday/stress bridge premises.
 - Deeper semantic projections for imported theorem bundles where upstream
   decomposition allows stronger direct projections.
 

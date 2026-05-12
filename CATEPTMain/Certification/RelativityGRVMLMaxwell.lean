@@ -103,6 +103,28 @@ theorem vml_equilibrium_implies_global_maxwellian
   rcases hRigidity with ⟨T_eq, _, hT, hF, _, _⟩
   exact ⟨T_eq, hT, hF⟩
 
+/-- Bundled semantic projection for VML rigidity conclusions:
+simultaneous electric-field vanishing, magnetic constancy, and global
+Maxwellian structure at positive temperature. -/
+theorem vml_equilibrium_projection_bundle
+    {X : Type*}
+    {f : X → (Fin 3 → ℝ) → ℝ}
+    {E B : X → Fin 3 → ℝ}
+    {ρ_ion : ℝ}
+    (hRigidity :
+      ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
+      (∀ x v, f x v = VML.equilibriumMaxwellian ρ_ion T_eq v) ∧
+      (∀ x, E x = 0) ∧
+      (∀ x, B x = B₀)) :
+    (∀ x, E x = 0) ∧
+    (∃ B₀ : Fin 3 → ℝ, ∀ x, B x = B₀) ∧
+    (∃ T_eq : ℝ, 0 < T_eq ∧
+      (∀ x v, f x v = VML.equilibriumMaxwellian ρ_ion T_eq v)) := by
+  exact
+    ⟨vml_equilibrium_implies_E_zero hRigidity,
+      vml_equilibrium_implies_B_constant hRigidity,
+      vml_equilibrium_implies_global_maxwellian hRigidity⟩
+
 end CATEPTMain.Certification.RelativityGR
 
 end

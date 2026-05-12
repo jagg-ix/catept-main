@@ -134,6 +134,63 @@ theorem curved_gr_direct_full_claim
    cert.adm_hamiltonian_direct,
    cert.adm_momentum_direct⟩
 
+/-- Projection: any direct curved-GR witness yields an indexed ADM certificate
+for its ADM/stress/source payload. -/
+def curved_gr_direct_to_adm_certificate_for
+    (cert : CurvedGRDirectCertificate) :
+    ADMConstraintCertificateFor cert.adm where
+  stressDecomposition := cert.admStress
+  sourceTerm := cert.sourceTerm
+  hamiltonian_constraint := cert.adm_hamiltonian_direct
+  momentum_constraint := cert.adm_momentum_direct
+
+/-- Projection theorem for the ADM certificate obtained from a direct curved
+GR witness. -/
+theorem curved_gr_direct_to_adm_certificate_for_holds
+    (cert : CurvedGRDirectCertificate) :
+    ((solveVacuumADMEquations cert.adm).hamiltonianConstraint =
+      (solveADMEquations cert.adm cert.admStress cert.sourceTerm).hamiltonianConstraint) ∧
+    ((solveVacuumADMEquations cert.adm).momentumConstraints =
+      (solveADMEquations cert.adm cert.admStress cert.sourceTerm).momentumConstraints) := by
+  exact ⟨cert.adm_hamiltonian_direct, cert.adm_momentum_direct⟩
+
+/-- Projection: any direct curved-GR witness yields a source-aware indexed
+Einstein certificate for its metric/stress/source payload. -/
+def curved_gr_direct_to_einstein_certificate_for_source
+    (cert : CurvedGRDirectCertificate) :
+    EinsteinEquationCertificateForSource cert.metric cert.stress where
+  kappa := cert.kappa
+  sourceTerm := cert.sourceTerm
+  equation_holds := cert.einstein_equation_direct
+
+/-- Projection theorem for the source-aware Einstein certificate obtained from
+a direct curved-GR witness. -/
+theorem curved_gr_direct_to_einstein_certificate_for_source_holds
+    (cert : CurvedGRDirectCertificate) :
+    (solveEinsteinEquations cert.stress cert.sourceTerm).fieldEquations =
+      EinsteinTensor.fieldEquations cert.metric cert.stress.components cert.sourceTerm (.var "G_N") :=
+  (curved_gr_direct_to_einstein_certificate_for_source cert).equation_holds
+
+/-- Projection: a direct curved-GR witness with zero source normalization
+yields an indexed Einstein certificate for its metric/stress payload. -/
+def curved_gr_direct_to_einstein_certificate_for
+    (cert : CurvedGRDirectCertificate)
+    (hSourceZero : cert.sourceTerm = .lit 0) :
+    EinsteinEquationCertificateFor cert.metric cert.stress :=
+  mk_einstein_equation_certificate_for
+    cert.metric cert.stress cert.kappa cert.sourceTerm
+    (by
+      simpa [hSourceZero] using cert.einstein_equation_direct)
+
+/-- Projection theorem for the Einstein certificate obtained from a direct
+curved-GR witness under zero-source normalization. -/
+theorem curved_gr_direct_to_einstein_certificate_for_holds
+    (cert : CurvedGRDirectCertificate)
+    (hSourceZero : cert.sourceTerm = .lit 0) :
+    (solveEinsteinEquations cert.stress cert.sourceTerm).fieldEquations =
+      EinsteinTensor.fieldEquations cert.metric cert.stress.components (.lit 0) (.var "G_N") :=
+  (curved_gr_direct_to_einstein_certificate_for cert hSourceZero).equation_holds
+
 /-- Constructor soundness: any certificate built by
 `mk_curved_gr_direct_certificate` satisfies the full direct claim bundle. -/
 theorem mk_curved_gr_direct_certificate_claim

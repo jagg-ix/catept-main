@@ -154,6 +154,34 @@ def canonical_vacuum_adm_certificate_for :
   momentum_constraint := by
     simpa using gravitasCanonicalVacuumADM_momentum_residual_exact
 
+/-- Family-lifted canonical indexed ADM certificate:
+any ADM decomposition identified with the canonical Minkowski vacuum slicing
+inherits the canonical indexed certificate payload. -/
+def canonical_vacuum_adm_certificate_for_family
+    (adm : ADMDecomposition)
+    (hAdm : IsMinkowskiVacuumADM adm) :
+    ADMConstraintCertificateFor adm := by
+  rcases hAdm with ⟨hEq⟩
+  subst hEq
+  exact canonical_vacuum_adm_certificate_for
+
+/-- Projection theorem for the family-lifted canonical indexed ADM certificate. -/
+theorem canonical_vacuum_adm_certificate_for_family_holds
+    (adm : ADMDecomposition)
+    (hAdm : IsMinkowskiVacuumADM adm) :
+    ((solveVacuumADMEquations adm).hamiltonianConstraint =
+      (solveADMEquations adm gravitasCanonicalVacuumADMStressDecomposition
+        (.lit 0)).hamiltonianConstraint) ∧
+    ((solveVacuumADMEquations adm).momentumConstraints =
+      (solveADMEquations adm gravitasCanonicalVacuumADMStressDecomposition
+        (.lit 0)).momentumConstraints) := by
+  rcases hAdm with ⟨hEq⟩
+  subst hEq
+  exact ⟨
+    canonical_vacuum_adm_certificate_for.hamiltonian_constraint,
+    canonical_vacuum_adm_certificate_for.momentum_constraint
+  ⟩
+
 /-- Any ADM decomposition identified with the canonical Minkowski vacuum
 slicing inherits the canonical vacuum ADM residual identities. -/
 theorem minkowski_vacuum_adm_constraints_for_family

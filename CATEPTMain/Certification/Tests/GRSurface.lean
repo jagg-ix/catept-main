@@ -36,6 +36,7 @@ open CATEPTMain.Certification.RelativityGR
 #check hodgeStarEM_involutive_for_minkowski_family
 #check hodgeStarEM_double_components_fixedAntisymmetric4D
 #check hodgeStarEM_involutive_of_fixedAntisymmetric4D
+#check hodgeStarEM_fixedAntisymmetric4D_closure_profile
 #check gravitasFaradayMinkowski_fixedAntisymmetric4D
 #check gravitasFaraday_hodgeStarEM_involutive
 
@@ -49,11 +50,20 @@ open CATEPTMain.Certification.RelativityGR
 
 -- Stress conservation currently certified for flat/constant canonical models
 #check canonical_radiation_stress_conserved
+#check canonical_radiation_stress_nonzero_and_conserved
 #check flat_constant_stress_conserved_for_all_constant_T
 #check gravitasCanonicalStress_conserved_constant_model
 #check MaxwellEquationsHold
 #check electrovacuumElectromagneticStressEnergy
 #check maxwell_implies_stress_conservation_of_contract
+#check maxwell_implies_stress_conservation_derived
+#check maxwell_implies_stress_conservation_minkowski
+#check canonical_maxwell_implies_stress_conservation_derived
+#check canonicalNamedFaradayComponents
+#check canonical_electrovacuum_stress_bridge_of_faraday_components
+#check canonical_maxwell_implies_stress_conservation_of_faraday_components
+#check canonicalMinkowskiFaradayStressFamily
+#check canonical_minkowski_faraday_family_implies_stress_conservation
 
 -- Curved Maxwell bridge surface
 #check canonical_gr_curved_maxwell
@@ -74,10 +84,19 @@ open CATEPTMain.Certification.RelativityGR
 #check EinsteinEquationCertificateFor
 #check mk_einstein_equation_certificate_for
 #check mk_einstein_equation_certificate_for_holds
+#check EinsteinEquationCertificateForSource
+#check mk_einstein_equation_certificate_for_source
+#check mk_einstein_equation_certificate_for_source_holds
 #check canonical_electrovac_einstein_certificate
 #check canonical_electrovac_einstein_equation_holds
 #check canonical_electrovac_einstein_certificate_for
 #check canonical_electrovac_einstein_equation_holds_for
+#check canonical_electrovac_einstein_certificate_for_source
+#check canonical_electrovac_einstein_equation_holds_for_source
+#check canonical_electrovac_einstein_certificate_for_family
+#check canonical_electrovac_einstein_equation_holds_for_family
+#check canonical_electrovac_einstein_certificate_for_source_family
+#check canonical_electrovac_einstein_equation_holds_for_source_family
 
 -- Typed ADM
 #check ADMConstraintCertificate
@@ -91,6 +110,8 @@ open CATEPTMain.Certification.RelativityGR
 #check canonical_vacuum_adm_hamiltonian_constraint_holds
 #check canonical_vacuum_adm_momentum_constraint_holds
 #check canonical_vacuum_adm_certificate_for
+#check canonical_vacuum_adm_certificate_for_family
+#check canonical_vacuum_adm_certificate_for_family_holds
 #check minkowski_vacuum_adm_constraints_for_family
 
 -- VML Maxwell equilibrium
@@ -101,6 +122,7 @@ open CATEPTMain.Certification.RelativityGR
 #check vml_equilibrium_implies_E_zero
 #check vml_equilibrium_implies_B_constant
 #check vml_equilibrium_implies_global_maxwellian
+#check vml_equilibrium_projection_bundle
 
 -- Universal certificate field checks (production surface)
 #check universalConsistencyCertificate.curvedMaxwell
@@ -124,6 +146,12 @@ open CATEPTMain.Certification.RelativityGR
 #check mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
 #check canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
 #check canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
+#check curved_gr_direct_to_adm_certificate_for
+#check curved_gr_direct_to_adm_certificate_for_holds
+#check curved_gr_direct_to_einstein_certificate_for_source
+#check curved_gr_direct_to_einstein_certificate_for_source_holds
+#check curved_gr_direct_to_einstein_certificate_for
+#check curved_gr_direct_to_einstein_certificate_for_holds
 
 -- Unsafe-claim closure certificate
 #check canonical_gr_unsafe_claims_closed

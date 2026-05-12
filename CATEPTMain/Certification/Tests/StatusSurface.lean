@@ -1,0 +1,16 @@
+import CATEPTMain.Certification.Status
+import CATEPTMain.Certification.RelativityGRMaxwellPphi2
+
+set_option autoImplicit false
+
+namespace CATEPTMain.Certification.Tests.StatusSurface
+
+open CATEPTMain.Certification
+
+#check certificationBaselineV1
+#check universalConsistencyCertificate
+#check RelativityGR.CurvedGRDirectCertificate
+#check RelativityGR.canonical_maxwell_pphi2_certificate
+#check RelativityGR.canonical_vml_maxwell_equilibrium
+
+end CATEPTMain.Certification.Tests.StatusSurface
