@@ -4,6 +4,10 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeFaraday
 noncomputable section
 
 set_option autoImplicit false
+-- Kernel reduction of the canonical Maxwell residual exercises the full
+-- `Gravitas.simplifyN`/`symDiffN` engine (now total `def`s post-upstream
+-- totalization), which needs a higher rec-depth budget than the default.
+set_option maxRecDepth 8192
 
 namespace CATEPTMain.Certification.RelativityGR
 
@@ -19,29 +23,22 @@ This module factors the two obligations required by
 so that the assembled-solution theorem no longer carries raw `native_decide`
 tactic invocations in its proof term.
 
-The two obligations have different definitional behaviour:
+Both obligations are now established by kernel `rfl` and therefore carry
+**only** the standard Lean axiom trio `[propext, Classical.choice, Quot.sound]`:
 
 * `canonical_einstein_field_equations_reduce`: the LHS `solveEinsteinEquations
-  …` reduces definitionally to `EinsteinTensor.fieldEquations …`, so this
-  lemma is provable by `rfl` and contributes **no** axioms beyond the standard
-  `{propext, Classical.choice, Quot.sound}` surface.  In particular, it does
-  **not** depend on `Lean.ofReduceBool`.
-* `canonical_maxwell_residual_array_zero`: the LHS expands to a symbolic
-  Gravitas `simplify`-chain that does not unfold under kernel reduction
-  because the upstream Gravitas helpers `Gravitas.simplify` and
-  `Gravitas.symDiff` are declared as `partial def`
-  (`CATEPTGravitasPort/Basic.lean:71` / `:157`).  Lean 4's kernel never
-  unfolds `partial def`s, so a `rfl`-based symbolic decomposition is
-  impossible without making those upstream functions total.  Replacing
-  `native_decide` with `decide` is therefore not viable either.  We retain
-  `native_decide` in this single, isolated named lemma; the
-  `Lean.ofReduceBool` axiom dependency is thereby **encapsulated** in one
-  place and flows only into this lemma, not into the umbrella admissibility
-  predicate's proof term.  A spec-named alias
-  `canonical_maxwell_residual_array_zero_symbolic` plus per-component
-  projections `maxwellResidual_component_{0,1,2,3}_zero` are exported for
-  symbolic transparency at the call site — all derived from the base
-  lemma by `rfl`/`rw`, introducing no new `native_decide` islands.
+  …` reduces definitionally to `EinsteinTensor.fieldEquations …`.
+* `canonical_maxwell_residual_array_zero`: the LHS reduces under kernel
+  computation thanks to the upstream totalization of `Gravitas.simplify` and
+  `Gravitas.symDiff` (`CATEPTGravitasPort/Basic.lean`).  Both are now total
+  `def`s built atop kernel-reducible fuel-bounded engines
+  `simplifyN` / `symDiffN`, replacing the previous `partial def`s that
+  forced `native_decide`.  This file sets `maxRecDepth 8192` to accommodate
+  the increased kernel reduction depth.
+
+  A spec-named alias `canonical_maxwell_residual_array_zero_symbolic` plus
+  per-component projections `maxwellResidual_component_{0,1,2,3}_zero` are
+  exported for symbolic transparency at the call site.
 -/
 
 /-- **MT-5 (1/2)**: the canonical Minkowski Einstein-residual identity at
@@ -68,25 +65,22 @@ theorem canonical_einstein_field_equations_reduce :
 
 /-- **MT-5 (2/2)**: the canonical Minkowski Maxwell-residual array vanishes.
 
-This identity is **not** definitionally true under kernel reduction.  The
-upstream Gravitas helpers used to assemble the residual expressions —
-`Gravitas.simplify` (`CATEPTGravitasPort/Basic.lean:71`) and
-`Gravitas.symDiff` (`CATEPTGravitasPort/Basic.lean:157`) — are declared as
-`partial def`.  Lean 4's kernel never unfolds `partial def`s, so neither
-`rfl` nor `decide` can reduce the LHS to `Array.replicate 4 (.lit 0)`
-symbolically.  A fully symbolic decomposition into per-component lemmas
-proved by `rfl` would therefore require an upstream change in the Gravitas
-port to make `simplify` / `symDiff` total — which is out of scope here.
+Following the upstream totalization of `Gravitas.simplify` and
+`Gravitas.symDiff` (originally `partial def` at `CATEPTGravitasPort/Basic.lean:71`
+and `:157`; now total `def`s built atop kernel-reducible fuel-bounded
+engines `simplifyN` / `symDiffN`), this identity is established directly
+by kernel `rfl` — no `native_decide`, no `Lean.ofReduceBool` axiom.  The
+file-level `set_option maxRecDepth 8192` (above) accommodates the deeper
+reduction depth required when both `simplify` and `symDiff` unfold fully
+in the kernel.
 
-We therefore retain `native_decide`, isolated in this single named lemma
-so that the umbrella admissibility predicate's proof term references only
-this lemma (not raw `native_decide`).  The `Lean.ofReduceBool` axiom
-dependency is thereby encapsulated in one well-defined named obligation. -/
+The axiom dependency reduces to the standard Lean trio
+`[propext, Classical.choice, Quot.sound]`. -/
 theorem canonical_maxwell_residual_array_zero :
     (solveElectrovacuumEinsteinEquations gravitasMinkowski #[]
         (.var "μ₀") (.lit 0)).maxwellEquations =
       Array.replicate gravitasMinkowski.dim (.lit 0) := by
-  native_decide
+  rfl
 
 /-! ### Symbolic alias and per-component projections
 

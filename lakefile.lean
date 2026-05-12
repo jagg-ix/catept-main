@@ -149,7 +149,7 @@ require «catept-domain-analysis» from git
 -- via `import CATEPTGravitasPort.X` (no `export` clause needed — bare
 -- namespaces propagate transparently). **Private** per maintainer policy.
 require «catept-gravitas-port» from git
-  "https://github.com/jagg-ix/catept-gravitas-port.git" @ "cb0e7dbd3e99f67f1ce73d7406661f97ea39cb66"
+  "https://github.com/jagg-ix/catept-gravitas-port.git" @ "b236e1067d416fadea9f380965ede01018c5f624"
 
 -- catept-core: namespace-preserving home for the CAT/EPT publication-bridge core.
 -- T60 step 2 — extracts CATEPTMain.Core.Assumptions and
