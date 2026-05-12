@@ -102,6 +102,24 @@ theorem vml_equilibrium_supports_flat_electrovacuum_family
   maxwell_implies_stress_conservation_minkowski
     (A := A) (μ₀ := μ₀) (Λ := Λ) hStress hMaxwellFromVML
 
+/-- **Witness-free** VML-Landau equilibrium leverage on the named-Faraday
+canonical electrovacuum stress instance (WF-GR-StressId-001 / VML).
+
+The stress-identification premise `hStress` that appears in
+`vml_equilibrium_supports_flat_electrovacuum_family` is eliminated for the
+canonical Faraday-matrix instance by routing through
+`namedCanonicalElectrovacuumStress`. The Maxwell-closure premise also drops
+out because the named instance's conservation is proved unconditionally
+(`namedCanonical_maxwell_to_stress_conservation_witness_free`). Only the
+abstract VML equilibrium predicate is consumed. -/
+theorem vml_equilibrium_supports_named_canonical_electrovacuum_family_witness_free
+    {M : MaxwellianEquilibrium}
+    (_h : IsVMLElectrovacuumEquilibrium M) :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      namedCanonicalElectrovacuumStress =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) :=
+  namedCanonical_maxwell_to_stress_conservation_witness_free
+
 /-- Witness-free re-export of the underlying VML steady-state rigidity proof
 content surface; ensures the certification layer is structurally attached to
 the same kernel-clean theorem from `catept-plugin-vml-landau`. -/

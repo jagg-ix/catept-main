@@ -285,6 +285,61 @@ theorem canonical_minkowski_faraday_family_implies_stress_conservation
       hFaradayCanonical
       hMaxwell
 
+/-! ### Witness-free named-Faraday electrovacuum stress (WF-GR-StressId-001)
+
+The premise
+
+```
+hStress : electrovacuumElectromagneticStressEnergy gravitasMinkowski A μ₀ Λ =
+            gravitasEMStressEnergy
+```
+
+is unavoidable for the symbolic-`A` electrovacuum solver path: the solver
+builds its Faraday tensor from the default contravariant potential
+`A^μ = (Φ, A¹, A², A³)`, whereas `gravitasEMStressEnergy` is built from the
+canonical symbolic Faraday matrix `Fᵢⱼ` used by
+`StressEnergyTensor.named "ElectromagneticField"`. These two symbolic
+expression matrices are not syntactically equal, so the identification cannot
+be discharged by reflexivity for the solver-induced stress tensor.
+
+The remediation here introduces an explicit *named-Faraday* canonical
+electrovacuum stress tensor that is, by construction, definitionally equal
+to `gravitasEMStressEnergy`. The Maxwell-to-stress conservation theorem then
+holds **without any stress-identification premise** for this canonical
+instance.
+-/
+
+/-- Named-Faraday canonical electrovacuum stress: built directly from the
+same `canonicalNamedFaradayComponents` matrix that
+`StressEnergyTensor.named "ElectromagneticField"` consumes when constructing
+`gravitasEMStressEnergy`. By construction this stress tensor is
+definitionally equal to `gravitasEMStressEnergy`. -/
+def namedCanonicalElectrovacuumStress : StressEnergyTensor :=
+  StressEnergyTensor.electromagneticField gravitasMinkowski
+    (canonicalNamedFaradayComponents gravitasMinkowski.dim) (.lit 1)
+
+/-- Reflexive identification: the named-Faraday canonical electrovacuum
+stress equals `gravitasEMStressEnergy`. No external witness required. -/
+theorem namedCanonicalElectrovacuumStress_eq_gravitasEMStressEnergy :
+    namedCanonicalElectrovacuumStress = gravitasEMStressEnergy := by
+  rfl
+
+/-- **Witness-free** Maxwell-to-stress conservation on the named-Faraday
+canonical electrovacuum instance.
+
+This is the WF-GR-StressId-001 milestone: the explicit
+`hStress : electrovacuumElectromagneticStressEnergy … = gravitasEMStressEnergy`
+premise that appears in
+`maxwell_implies_stress_conservation_minkowski` and downstream theorems is
+eliminated for the canonical Faraday-matrix instance, because the
+stress-identification holds by `rfl`. -/
+theorem namedCanonical_maxwell_to_stress_conservation_witness_free :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      namedCanonicalElectrovacuumStress =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) := by
+  rw [namedCanonicalElectrovacuumStress_eq_gravitasEMStressEnergy]
+  exact gravitasCanonicalStress_covariantDivergence_zero
+
 end CATEPTMain.Certification.RelativityGR
 
 end

@@ -194,6 +194,11 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_trivial_vml_electrovacuum_equilibrium
 #print axioms CATEPTMain.Certification.RelativityGR.vml_equilibrium_supports_flat_electrovacuum_family
 #print axioms CATEPTMain.Certification.RelativityGR.vml_electrovacuum_equilibrium_content_available
+-- ── GR witness-free stress-identification (WF-GR-StressId-001) ──────────────
+#print axioms CATEPTMain.Certification.RelativityGR.namedCanonicalElectrovacuumStress
+#print axioms CATEPTMain.Certification.RelativityGR.namedCanonicalElectrovacuumStress_eq_gravitasEMStressEnergy
+#print axioms CATEPTMain.Certification.RelativityGR.namedCanonical_maxwell_to_stress_conservation_witness_free
+#print axioms CATEPTMain.Certification.RelativityGR.vml_equilibrium_supports_named_canonical_electrovacuum_family_witness_free
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for_holds
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for_source
