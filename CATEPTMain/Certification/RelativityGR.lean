@@ -1,6 +1,10 @@
 import CATEPTMain.Integration.GravitasBridge
 import CATEPTMain.Certification.RelativityGRCovariantDivergence
 
+-- The Stage-B `rfl` identities below exercise kernel reduction through the
+-- now-total `Gravitas.simplify` / `symDiff`; bump rec-depth accordingly.
+set_option maxRecDepth 8192
+
 /-!
 # Certification: General Relativity — Flat (Minkowski) Certificate
 
