@@ -196,6 +196,11 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.einstein_electrovacuum_solution_full_claim
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_einstein_field_equations_reduce
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_residual_array_zero
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_maxwell_residual_array_zero_symbolic
+#print axioms CATEPTMain.Certification.RelativityGR.maxwellResidual_component_0_zero
+#print axioms CATEPTMain.Certification.RelativityGR.maxwellResidual_component_1_zero
+#print axioms CATEPTMain.Certification.RelativityGR.maxwellResidual_component_2_zero
+#print axioms CATEPTMain.Certification.RelativityGR.maxwellResidual_component_3_zero
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_minkowski_is_einstein_electrovacuum_solution
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_einstein_certificate_of_electrovacuum_solution
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_einstein_electrovacuum_solution_full_claim
