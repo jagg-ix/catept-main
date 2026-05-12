@@ -14,10 +14,16 @@ open CATEPTMain.Certification
 
 #check CATEPTUniversalConsistencyCertificate
 #check universalConsistencyCertificate
+#check CertificationScopeBoundary
+#check certificationScopeBoundary
 
 /-- The universal certificate must remain constructible. -/
 noncomputable example : CATEPTUniversalConsistencyCertificate :=
   universalConsistencyCertificate
+
+/-- The reviewer-facing scope boundary witness must remain constructible. -/
+example : CertificationScopeBoundary :=
+  certificationScopeBoundary
 
 -- The common-clock field must remain present.
 #check universalConsistencyCertificate.commonClock

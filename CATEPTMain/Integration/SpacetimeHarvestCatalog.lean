@@ -81,9 +81,10 @@ def step3 : HarvestEntry where
   prNumber := 20
   sourceRef := "FiniteMinkowski + CATEPTSpacetimeModel (canonical spine)"
   summary :=
-    "Vacuum-tier adapter from FiniteMinkowski.CATEPTST into the " ++
+    "Finite-Minkowski adapter from CATEPTST into the " ++
     "canonical CATEPTSpacetimeModel: lorentzMetric := minkowskiNorm2 (y-x), " ++
-    "ept ≡ 0; finiteMinkowski_satisfies_ept_axioms via " ++
+    "primary ept := |x0| plus legacy vacuum variant; " ++
+    "finiteMinkowski_satisfies_ept_axioms via " ++
     "catept_satisfies_ept_axioms."
 
 /-- Step 4 — `Integration/MISNoFTLBridge.lean` (this PR). -/

@@ -9,6 +9,7 @@ open CATEPTMain.Certification
 
 #check certificationBaselineV1
 #check universalConsistencyCertificate
+#check certificationScopeBoundary
 #check RelativityGR.CurvedGRDirectCertificate
 #check RelativityGR.canonical_maxwell_pphi2_certificate
 #check RelativityGR.canonical_vml_maxwell_equilibrium

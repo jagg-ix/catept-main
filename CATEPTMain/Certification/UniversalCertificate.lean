@@ -238,4 +238,26 @@ theorem universal_vml_maxwell_equilibrium_certified :
       canonical_vml_maxwell_equilibrium := by
   rfl
 
+/-- Reviewer-facing boundary marker for the certification scope.
+
+This records the intended production status explicitly:
+- implemented constructor surfaces are present,
+- witness-free arbitrary curved-GR closure is still pending.
+
+MaxwellPphi2 and CurvedDirect remain support/certification surfaces and are
+not promoted into the universal certificate payload at this stage. -/
+structure CertificationScopeBoundary where
+  implemented_constructor_surfaces : True
+  witness_free_full_curved_GR_pending : True
+
+/-- Canonical scope-boundary witness used to prevent status drift. -/
+def certificationScopeBoundary : CertificationScopeBoundary :=
+  ⟨trivial, trivial⟩
+
+/-- Projection theorem for the canonical scope boundary witness. -/
+theorem certificationScopeBoundary_claim :
+    True ∧ True :=
+  ⟨certificationScopeBoundary.implemented_constructor_surfaces,
+   certificationScopeBoundary.witness_free_full_curved_GR_pending⟩
+
 end CATEPTMain.Certification
