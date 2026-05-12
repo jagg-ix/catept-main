@@ -1,5 +1,6 @@
 import CATEPTMain.Certification.RelativityGREinsteinEquation
 import CATEPTMain.Certification.RelativityGRWitnessFreeFaraday
+import CATEPTMain.Certification.RelativityGREinsteinSymbolicLemmas
 
 noncomputable section
 
@@ -88,13 +89,23 @@ theorem einstein_electrovacuum_solution_full_claim
   refine ⟨?_, h.maxwell_residual_zero⟩
   exact h.einstein_residual
 
-/-- Canonical Minkowski Einstein-electrovacuum solution instance, discharged
-from concrete Gravitas data via `native_decide`. -/
+/-- Canonical Minkowski Einstein-electrovacuum solution instance.
+
+**MT-5**: the two structure obligations are now discharged by named
+symbolic lemmas (`canonical_einstein_field_equations_reduce` and
+`canonical_maxwell_residual_array_zero` in
+`RelativityGREinsteinSymbolicLemmas`) rather than raw `native_decide` tactic
+invocations.  The Einstein-residual obligation is closed by `rfl` (kernel
+reduction); the Maxwell-residual obligation retains `native_decide` inside
+its named lemma because the symbolic Gravitas `simplify`-chain does not
+unfold under kernel reduction.  The `Lean.ofReduceBool` axiom dependency
+is thereby encapsulated in `canonical_maxwell_residual_array_zero` and no
+longer appears as an unnamed obligation of this theorem's proof term. -/
 theorem canonical_minkowski_is_einstein_electrovacuum_solution :
     IsEinsteinElectrovacuumSolution
       gravitasMinkowski #[] (.var "μ₀") (.lit 0) (.lit 0) where
-  einstein_residual := by native_decide
-  maxwell_residual_zero := by native_decide
+  einstein_residual := canonical_einstein_field_equations_reduce
+  maxwell_residual_zero := canonical_maxwell_residual_array_zero
 
 /-- Canonical source-aware Einstein-equation certificate assembled from the
 canonical Minkowski Einstein-electrovacuum solution. -/
