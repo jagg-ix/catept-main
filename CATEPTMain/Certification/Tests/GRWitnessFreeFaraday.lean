@@ -137,4 +137,21 @@ example
     Array.mkArray g.dim (Gravitas.Expr.lit 0) :=
   flat_electrovacuum_family_stress_conserved h
 
+-- MT-1 conditional theorem + canonical family constructor
+#check @electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness
+#check @electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness_canonical
+#check @canonical_flat_electrovacuum_family
+#check @canonical_flat_electrovacuum_family_stress_conserved
+
+example
+    (hMaxwell :
+      MaxwellEquationsHold gravitasMinkowski #[] (Gravitas.Expr.lit 1) (Gravitas.Expr.lit 0))
+    (hFaraday :
+      (Gravitas.solveElectrovacuumEinsteinEquations gravitasMinkowski #[]
+          (Gravitas.Expr.lit 1) (Gravitas.Expr.lit 0)).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim) :
+    IsFlatElectrovacuumFamily gravitasMinkowski #[]
+        (Gravitas.Expr.lit 1) (Gravitas.Expr.lit 0) :=
+  canonical_flat_electrovacuum_family hMaxwell hFaraday
+
 end CATEPTMain.Certification.Tests.GRWitnessFreeFaraday
