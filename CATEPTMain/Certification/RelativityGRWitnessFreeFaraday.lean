@@ -3,6 +3,7 @@ import CATEPTMain.Certification.RelativityGRCurvedDirect
 noncomputable section
 
 set_option autoImplicit false
+set_option maxRecDepth 8192
 
 namespace CATEPTMain.Certification.RelativityGR
 
@@ -14,20 +15,19 @@ deriving instance DecidableEq for MetricTensor
 deriving instance DecidableEq for ElectromagneticTensor
 
 /-- Canonical fixed-antisymmetric witness for the Gravitas Minkowski Faraday
-tensor, discharged directly from concrete Gravitas data. -/
+tensor, discharged directly from concrete Gravitas data.
+
+Following the upstream totalization of `Gravitas.simplify` / `Gravitas.symDiff`
+in `catept-gravitas-port` v0.2.0, every field equality reduces to `rfl` at the
+kernel level. This eliminates the six `native_decide` invocations (and their
+`Lean.ofReduceBool` axiom dependency) from the canonical Faraday witness. -/
 def canonical_faraday_minkowski_fixed_witness : FaradayMinkowskiFixedWitness where
-  components_size_four := by
-    native_decide
-  canonical_4x4 := by
-    native_decide
-  diagonal_zero_entries := by
-    native_decide
-  antisymmetry_entries := by
-    native_decide
-  double_neg_entries := by
-    native_decide
-  hodge_fixed := by
-    native_decide
+  components_size_four := rfl
+  canonical_4x4 := rfl
+  diagonal_zero_entries := ⟨rfl, rfl, rfl, rfl⟩
+  antisymmetry_entries := ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+  double_neg_entries := ⟨rfl, rfl⟩
+  hodge_fixed := rfl
 
 /-- Soundness projection: the canonical witness yields the fixed-antisymmetric
 4D profile consumed by the derived curved-GR constructor. -/
