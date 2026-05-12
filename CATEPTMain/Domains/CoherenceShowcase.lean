@@ -1537,15 +1537,16 @@ end CATEPTMain.Temporal
 
 -- Integration/CATEPTSTAdapter — spacetime-harvest step 3.  Bridges
 -- CATEPTMain.Geometry.FiniteMinkowski.CATEPTST into the canonical
--- CATEPTMain.Integration.CATEPTSpacetimeModel via a vacuum-tier instance
--- (lorentzMetric := minkowskiNorm2 (y-x), ept ≡ 0).  After this the
+-- CATEPTMain.Integration.CATEPTSpacetimeModel via a finite-Minkowski
+-- reference instance (lorentzMetric := minkowskiNorm2 (y-x),
+-- ept := |x₀|) plus an explicit legacy vacuum variant.  After this the
 -- harvested geometry is end-to-end usable: pure-geometry → adapter →
 -- canonical-spine theorems.  Three kernel-only corollaries:
 --   * finiteMinkowski_lorentzMetric_eq_minkowskiNorm2  (definitional)
---   * finiteMinkowski_ept_eq_zero                       (vacuum tier)
+--   * finiteMinkowski_ept_eq_abs_time                   (primary adapter)
 --   * finiteMinkowski_satisfies_ept_axioms              (HEADLINE)
 #print axioms CATEPTMain.Integration.CATEPTSTAdapter.finiteMinkowski_lorentzMetric_eq_minkowskiNorm2
-#print axioms CATEPTMain.Integration.CATEPTSTAdapter.finiteMinkowski_ept_eq_zero
+#print axioms CATEPTMain.Integration.CATEPTSTAdapter.finiteMinkowski_ept_eq_abs_time
 #print axioms CATEPTMain.Integration.CATEPTSTAdapter.finiteMinkowski_satisfies_ept_axioms
 
 -- Integration/MISNoFTLBridge — spacetime-harvest step 4.  NS-specific

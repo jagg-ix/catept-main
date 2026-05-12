@@ -124,23 +124,30 @@ def electrovacuumElectromagneticStressEnergy
 
 /-- Assumption-indexed Maxwell-to-stress conservation family.
 
-If the electrovacuum Maxwell residual is supplied as zero and the corresponding
-electromagnetic stress tensor's covariant divergence is supplied as zero,
-the conservation conclusion follows verbatim. -/
+If Maxwell closure is available, the electrovacuum stress tensor can be
+identified with a reference stress model, and that reference model is
+conserved, then the electrovacuum stress tensor is conserved. -/
 theorem maxwell_implies_stress_conservation_of_contract
     (g : MetricTensor)
     (A : Array Expr := #[])
     (μ₀ : Expr := .var "μ₀")
     (Λ : Expr := .lit 0)
-    (_hMaxwell : MaxwellEquationsHold g A μ₀ Λ)
-    (hConservation :
-      covariantDivergenceStressEnergy g
-        (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
+    (hMaxwell : MaxwellEquationsHold g A μ₀ Λ)
+    (hStressFromMaxwell :
+      MaxwellEquationsHold g A μ₀ Λ →
+        electrovacuumElectromagneticStressEnergy g A μ₀ Λ =
+          gravitasEMStressEnergy)
+    (hCanonicalStressConserved :
+      covariantDivergenceStressEnergy g gravitasEMStressEnergy =
       Array.mkArray g.dim (.lit 0)) :
     covariantDivergenceStressEnergy g
       (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
-    Array.mkArray g.dim (.lit 0) :=
-  hConservation
+    Array.mkArray g.dim (.lit 0) := by
+  have hStress :
+      electrovacuumElectromagneticStressEnergy g A μ₀ Λ =
+        gravitasEMStressEnergy :=
+    hStressFromMaxwell hMaxwell
+  simpa [hStress] using hCanonicalStressConserved
 
 /-- Constrained-family derived Maxwell-to-stress conservation.
 
@@ -163,20 +170,15 @@ theorem maxwell_implies_stress_conservation_derived
       (electrovacuumElectromagneticStressEnergy g A μ₀ Λ) =
     Array.mkArray g.dim (.lit 0) := by
   subst hMinkowski
-  apply maxwell_implies_stress_conservation_of_contract
-    (g := gravitasMinkowski)
-    (A := A)
-    (μ₀ := μ₀)
-    (Λ := Λ)
-    hMaxwell
-  have hStress :
-      electrovacuumElectromagneticStressEnergy gravitasMinkowski A μ₀ Λ =
-        gravitasEMStressEnergy :=
-    hStressFromMaxwell hMaxwell
-  simpa [hStress] using
-    (gravitasCanonicalStress_covariantDivergence_zero :
-      covariantDivergenceStressEnergy gravitasMinkowski gravitasEMStressEnergy =
-        Array.mkArray gravitasMinkowski.dim (.lit 0))
+  exact
+    maxwell_implies_stress_conservation_of_contract
+      (g := gravitasMinkowski)
+      (A := A)
+      (μ₀ := μ₀)
+      (Λ := Λ)
+      hMaxwell
+      hStressFromMaxwell
+      gravitasCanonicalStress_covariantDivergence_zero
 
 /-- Minkowski-specialized derived Maxwell-to-stress conservation.
 

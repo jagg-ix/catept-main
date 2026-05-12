@@ -260,46 +260,66 @@ theorem mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
       metric faraday stress adm admStress sourceTerm kappa
       hFixed hHodgeFixed hDiv hEinstein hAdmHam hAdmMom)
 
+/-- Reusable witness bundle for the canonical Minkowski Faraday fixed-
+antisymmetric profile used by the direct curved-GR constructor surface. -/
+structure FaradayMinkowskiFixedWitness where
+  components_size_four : gravitasFaradayMinkowski.components.size = 4
+  canonical_4x4 :
+    gravitasFaradayMinkowski.components =
+      matBuild 4 (fun i j => matGet gravitasFaradayMinkowski.components i j)
+  diagonal_zero_entries :
+    matGet gravitasFaradayMinkowski.components 0 0 = .lit 0 ∧
+    matGet gravitasFaradayMinkowski.components 1 1 = .lit 0 ∧
+    matGet gravitasFaradayMinkowski.components 2 2 = .lit 0 ∧
+    matGet gravitasFaradayMinkowski.components 3 3 = .lit 0
+  antisymmetry_entries :
+    matGet gravitasFaradayMinkowski.components 1 0 =
+      simplify (.neg (matGet gravitasFaradayMinkowski.components 0 1)) ∧
+    matGet gravitasFaradayMinkowski.components 2 0 =
+      simplify (.neg (matGet gravitasFaradayMinkowski.components 0 2)) ∧
+    matGet gravitasFaradayMinkowski.components 3 0 =
+      simplify (.neg (matGet gravitasFaradayMinkowski.components 0 3)) ∧
+    matGet gravitasFaradayMinkowski.components 2 1 =
+      simplify (.neg (matGet gravitasFaradayMinkowski.components 1 2)) ∧
+    matGet gravitasFaradayMinkowski.components 3 1 =
+      simplify (.neg (matGet gravitasFaradayMinkowski.components 1 3)) ∧
+    matGet gravitasFaradayMinkowski.components 3 2 =
+      simplify (.neg (matGet gravitasFaradayMinkowski.components 2 3))
+  double_neg_entries :
+    simplify (simplify (matGet gravitasFaradayMinkowski.components 0 2).neg).neg =
+      matGet gravitasFaradayMinkowski.components 0 2 ∧
+    simplify (simplify (matGet gravitasFaradayMinkowski.components 1 3).neg).neg =
+      matGet gravitasFaradayMinkowski.components 1 3
+  hodge_fixed :
+    hodgeStarEM gravitasMinkowski
+      (hodgeStarEM gravitasMinkowski gravitasFaradayMinkowski) =
+      gravitasFaradayMinkowski
+
+/-- Convert the bundled canonical Faraday witness into the fixed-antisymmetric
+4D profile required by the derived curved-GR constructor. -/
+theorem gravitasFaradayMinkowski_fixedAntisymmetric4D_of_witness
+    (w : FaradayMinkowskiFixedWitness) :
+    FixedAntisymmetric4D gravitasFaradayMinkowski := by
+  rcases w.diagonal_zero_entries with
+    ⟨h00_zero, h11_zero, h22_zero, h33_zero⟩
+  rcases w.antisymmetry_entries with
+    ⟨h10_neg_c01, h20_neg_c02, h30_neg_c03,
+      h21_neg_c12, h31_neg_c13, h32_neg_c23⟩
+  rcases w.double_neg_entries with ⟨h02_double_neg, h13_double_neg⟩
+  exact
+    gravitasFaradayMinkowski_fixedAntisymmetric4D
+      w.components_size_four
+      w.canonical_4x4
+      h00_zero h11_zero h22_zero h33_zero
+      h10_neg_c01 h20_neg_c02 h30_neg_c03
+      h21_neg_c12 h31_neg_c13 h32_neg_c23
+      h02_double_neg h13_double_neg
+
 /-- Canonical curved-GR direct certificate assembled through the derived
 fixed-antisymmetric constructor, reusing the canonical divergence/Einstein/ADM
 certified obligations. -/
 def canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
-    (hComponents_size_four : gravitasFaradayMinkowski.components.size = 4)
-    (hComponents_canonical_4x4 :
-      gravitasFaradayMinkowski.components =
-        matBuild 4 (fun i j => matGet gravitasFaradayMinkowski.components i j))
-    (h00_zero : matGet gravitasFaradayMinkowski.components 0 0 = .lit 0)
-    (h11_zero : matGet gravitasFaradayMinkowski.components 1 1 = .lit 0)
-    (h22_zero : matGet gravitasFaradayMinkowski.components 2 2 = .lit 0)
-    (h33_zero : matGet gravitasFaradayMinkowski.components 3 3 = .lit 0)
-    (h10_neg_c01 :
-      matGet gravitasFaradayMinkowski.components 1 0 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 0 1)))
-    (h20_neg_c02 :
-      matGet gravitasFaradayMinkowski.components 2 0 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 0 2)))
-    (h30_neg_c03 :
-      matGet gravitasFaradayMinkowski.components 3 0 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 0 3)))
-    (h21_neg_c12 :
-      matGet gravitasFaradayMinkowski.components 2 1 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 1 2)))
-    (h31_neg_c13 :
-      matGet gravitasFaradayMinkowski.components 3 1 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 1 3)))
-    (h32_neg_c23 :
-      matGet gravitasFaradayMinkowski.components 3 2 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 2 3)))
-    (h02_double_neg :
-      simplify (simplify (matGet gravitasFaradayMinkowski.components 0 2).neg).neg =
-        matGet gravitasFaradayMinkowski.components 0 2)
-    (h13_double_neg :
-      simplify (simplify (matGet gravitasFaradayMinkowski.components 1 3).neg).neg =
-        matGet gravitasFaradayMinkowski.components 1 3)
-    (hHodgeFixed :
-      hodgeStarEM gravitasMinkowski
-        (hodgeStarEM gravitasMinkowski gravitasFaradayMinkowski) =
-        gravitasFaradayMinkowski)
+    (w : FaradayMinkowskiFixedWitness)
     : CurvedGRDirectCertificate :=
   mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D
     gravitasMinkowski
@@ -309,12 +329,8 @@ def canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
     gravitasCanonicalVacuumADMStressDecomposition
     (.lit 0)
     canonical_electrovac_einstein_certificate.kappa
-    (gravitasFaradayMinkowski_fixedAntisymmetric4D
-      hComponents_size_four hComponents_canonical_4x4
-      h00_zero h11_zero h22_zero h33_zero
-      h10_neg_c01 h20_neg_c02 h30_neg_c03
-      h21_neg_c12 h31_neg_c13 h32_neg_c23 h02_double_neg h13_double_neg)
-    hHodgeFixed
+    (gravitasFaradayMinkowski_fixedAntisymmetric4D_of_witness w)
+    w.hodge_fixed
     gravitasCanonicalStress_covariantDivergence_zero
     canonical_electrovac_einstein_equation_holds
     canonical_vacuum_adm_hamiltonian_constraint_holds
@@ -323,42 +339,7 @@ def canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
 /-- Concrete full-claim specialization for the canonical curved-GR payload,
 with Hodge involution discharged through the fixed-antisymmetric theorem. -/
 theorem canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
-    (hComponents_size_four : gravitasFaradayMinkowski.components.size = 4)
-    (hComponents_canonical_4x4 :
-      gravitasFaradayMinkowski.components =
-        matBuild 4 (fun i j => matGet gravitasFaradayMinkowski.components i j))
-    (h00_zero : matGet gravitasFaradayMinkowski.components 0 0 = .lit 0)
-    (h11_zero : matGet gravitasFaradayMinkowski.components 1 1 = .lit 0)
-    (h22_zero : matGet gravitasFaradayMinkowski.components 2 2 = .lit 0)
-    (h33_zero : matGet gravitasFaradayMinkowski.components 3 3 = .lit 0)
-    (h10_neg_c01 :
-      matGet gravitasFaradayMinkowski.components 1 0 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 0 1)))
-    (h20_neg_c02 :
-      matGet gravitasFaradayMinkowski.components 2 0 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 0 2)))
-    (h30_neg_c03 :
-      matGet gravitasFaradayMinkowski.components 3 0 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 0 3)))
-    (h21_neg_c12 :
-      matGet gravitasFaradayMinkowski.components 2 1 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 1 2)))
-    (h31_neg_c13 :
-      matGet gravitasFaradayMinkowski.components 3 1 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 1 3)))
-    (h32_neg_c23 :
-      matGet gravitasFaradayMinkowski.components 3 2 =
-        simplify (.neg (matGet gravitasFaradayMinkowski.components 2 3)))
-    (h02_double_neg :
-      simplify (simplify (matGet gravitasFaradayMinkowski.components 0 2).neg).neg =
-        matGet gravitasFaradayMinkowski.components 0 2)
-    (h13_double_neg :
-      simplify (simplify (matGet gravitasFaradayMinkowski.components 1 3).neg).neg =
-        matGet gravitasFaradayMinkowski.components 1 3)
-    (hHodgeFixed :
-      hodgeStarEM gravitasMinkowski
-        (hodgeStarEM gravitasMinkowski gravitasFaradayMinkowski) =
-        gravitasFaradayMinkowski)
+    (w : FaradayMinkowskiFixedWitness)
   :
     hodgeStarEM gravitasMinkowski
       (hodgeStarEM gravitasMinkowski gravitasFaradayMinkowski) =
@@ -377,11 +358,7 @@ theorem canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
   simpa using
     curved_gr_direct_full_claim
       (canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
-        hComponents_size_four hComponents_canonical_4x4
-        h00_zero h11_zero h22_zero h33_zero
-        h10_neg_c01 h20_neg_c02 h30_neg_c03
-        h21_neg_c12 h31_neg_c13 h32_neg_c23 h02_double_neg h13_double_neg
-        hHodgeFixed)
+        w)
 
 end CATEPTMain.Certification.RelativityGR
 

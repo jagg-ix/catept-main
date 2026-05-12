@@ -90,6 +90,9 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.universal_sr_properTime_pos
 #print axioms CATEPTMain.Certification.universal_qm_gr_shared_clock
 #print axioms CATEPTMain.Certification.canonicalCommonClock
+#print axioms CATEPTMain.Certification.CertificationScopeBoundary
+#print axioms CATEPTMain.Certification.certificationScopeBoundary
+#print axioms CATEPTMain.Certification.certificationScopeBoundary_claim
 -- ── GR Einstein certificate (CERT-UP-005 Stage B — structural, kernel-only) ───
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_einstein
 
@@ -148,6 +151,8 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_full_claim
 #print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_claim
 #print axioms CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
+#print axioms CATEPTMain.Certification.RelativityGR.FaradayMinkowskiFixedWitness
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasFaradayMinkowski_fixedAntisymmetric4D_of_witness
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for

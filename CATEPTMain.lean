@@ -129,6 +129,7 @@ import CATEPTMain.Integration.TheoryPluginHerglotzETH
 import CATEPTMain.Integration.ThermodynamicsLeanBridge
 import CATEPTMain.Integration.UnifiedTheoryBellBridge
 import CATEPTMain.Integration.BornRuleUnificationBridge
+import CATEPTMain.Integration.PauliExclusionDSFBridge
 import CATEPTMain.Integration.VMLSteadyStateBridge
 import CATEPTMain.Integration.ConditionalEinsteinBridge
 import CATEPTMain.Integration.DiscreteHolographyBridge
