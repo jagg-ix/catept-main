@@ -65,6 +65,7 @@ full-amplitude double-copy are Phase-2 targets.  Zero sorry.
 -/
 
 set_option autoImplicit false
+set_option maxRecDepth 8192
 
 open CATEPTMain.Integration
 open CATEPTMain.Integration.VMLCATEPTBridge
@@ -482,7 +483,7 @@ def gravitasEinsteinSol : EinsteinSolution :=
 /-- The GR contracted Bianchi array has size 4 (one entry per spacetime index). -/
 theorem gravitasEinsteinSol_bianchi_size :
     gravitasEinsteinSol.bianchiIdentity.size = 4 := by
-  native_decide
+  rfl
 
 /-- The second Bianchi dimension matches the first: both index the same 4D spacetime. -/
 theorem gravitas_first_second_bianchi_same_dim :
