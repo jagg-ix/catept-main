@@ -3,6 +3,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeFaraday
 noncomputable section
 
 set_option autoImplicit false
+set_option maxRecDepth 8192
 
 namespace CATEPTMain.Certification.RelativityGR
 
@@ -117,13 +118,13 @@ shape so that `ElectromagneticTensor.ofMetric gravitasMinkowski #[] (.var "μ₀
 reduces to the same value as `gravitasFaradayMinkowski`. -/
 def canonical_faraday_ofMetric_witness_minkowski :
     FaradayOfMetricFixedWitness gravitasMinkowski #[] (.var "μ₀") where
-  dim_eq_four := by native_decide
-  components_size_four := by native_decide
-  canonical_4x4 := by native_decide
-  diagonal_zero_entries := by native_decide
-  antisymmetry_entries := by native_decide
-  double_neg_entries := by native_decide
-  hodge_fixed := by native_decide
+  dim_eq_four := rfl
+  components_size_four := rfl
+  canonical_4x4 := rfl
+  diagonal_zero_entries := ⟨rfl, rfl, rfl, rfl⟩
+  antisymmetry_entries := ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+  double_neg_entries := ⟨rfl, rfl⟩
+  hodge_fixed := rfl
 
 /-- **MT-4: family-level Hodge involution projection.**
 
