@@ -204,6 +204,11 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.IsFlatElectrovacuumFamily
 #print axioms CATEPTMain.Certification.RelativityGR.flat_electrovacuum_family_stress_conserved
 #print axioms CATEPTMain.Certification.RelativityGR.maxwell_implies_stress_conservation_minkowski_via_family
+-- ── MT-1 conditional theorem + canonical family constructor ────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness
+#print axioms CATEPTMain.Certification.RelativityGR.electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness_canonical
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_flat_electrovacuum_family
+#print axioms CATEPTMain.Certification.RelativityGR.canonical_flat_electrovacuum_family_stress_conserved
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_adm_certificate_for_holds
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for_source

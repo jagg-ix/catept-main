@@ -112,6 +112,45 @@ theorem maxwell_implies_stress_conservation_minkowski_via_family
     Array.mkArray g.dim (.lit 0) :=
   flat_electrovacuum_family_stress_conserved h
 
+/-! ### Canonical instance constructor (MT-1 leverage)
+
+The literal MT-1 equality is not unconditionally a theorem, but
+`electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness`
+(in `RelativityGRStressConservation`) makes it a theorem under the three
+named upstream witnesses. We package that conditional theorem into a
+canonical-instance constructor for `IsFlatElectrovacuumFamily`. -/
+
+/-- Canonical flat electrovacuum family constructor (MT-3 instance). Given
+the Maxwell-closure and Faraday-components witnesses, produces an
+`IsFlatElectrovacuumFamily` instance at the canonical payload
+`(g = gravitasMinkowski, A = #[], μ₀ = .lit 1, Λ = .lit 0)`. The
+`stress_identifies` field is discharged via
+`electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness`. -/
+def canonical_flat_electrovacuum_family
+    (hMaxwell : MaxwellEquationsHold gravitasMinkowski #[] (.lit 1) (.lit 0))
+    (hFaraday :
+      (solveElectrovacuumEinsteinEquations gravitasMinkowski #[] (.lit 1) (.lit 0)).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim) :
+    IsFlatElectrovacuumFamily gravitasMinkowski #[] (.lit 1) (.lit 0) where
+  metric_is_minkowski := rfl
+  maxwell_holds       := hMaxwell
+  stress_identifies   :=
+    electrovacuumStress_eq_gravitasEMStressEnergy_of_faraday_witness_canonical
+      hFaraday
+
+/-- Family-level conservation conclusion at the canonical payload, derived
+from the constructor and `flat_electrovacuum_family_stress_conserved`. -/
+theorem canonical_flat_electrovacuum_family_stress_conserved
+    (hMaxwell : MaxwellEquationsHold gravitasMinkowski #[] (.lit 1) (.lit 0))
+    (hFaraday :
+      (solveElectrovacuumEinsteinEquations gravitasMinkowski #[] (.lit 1) (.lit 0)).faradayTensor.components =
+        canonicalNamedFaradayComponents gravitasMinkowski.dim) :
+    covariantDivergenceStressEnergy gravitasMinkowski
+      (electrovacuumElectromagneticStressEnergy gravitasMinkowski #[] (.lit 1) (.lit 0)) =
+    Array.mkArray gravitasMinkowski.dim (.lit 0) :=
+  flat_electrovacuum_family_stress_conserved
+    (canonical_flat_electrovacuum_family hMaxwell hFaraday)
+
 end CATEPTMain.Certification.RelativityGR
 
 end
