@@ -178,6 +178,15 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.certified_curved_gr_data_implies_full_direct_claim
 #print axioms CATEPTMain.Certification.RelativityGR.isCertifiedCurvedGRData_of_fixedAntisymmetric4D
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_certified_curved_gr_data
+-- ── Modular curved-GR closure subpredicates ──
+#print axioms CATEPTMain.Certification.RelativityGR.HasHodgeClosure
+#print axioms CATEPTMain.Certification.RelativityGR.HasStressConservation
+#print axioms CATEPTMain.Certification.RelativityGR.HasEinsteinClosure
+#print axioms CATEPTMain.Certification.RelativityGR.HasADMClosure
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_hodge
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_stress
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_einstein
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedData_has_adm
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_certified_data
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_certified_curved_gr_data_full_claim
 #print axioms CATEPTMain.Certification.RelativityGR.IsEinsteinElectrovacuumSolution
