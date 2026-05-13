@@ -372,6 +372,75 @@ def certifiedCurvedGRData_of_bianchi_stress
   einsteinClosure := hEinstein
   admClosure := hADM
 
+/-! ## BIANCHI-008 — curved-metric admissibility family scaffolding
+
+The BIANCHI-005 admissibility contract `HasContractedBianchi g` is a
+predicate on a single metric.  Real curved families (Schwarzschild, FRW,
+Kerr, …) supply a metric-generator together with a per-instance witness
+that the contracted Bianchi residual vanishes for every member.
+
+`BianchiAdmissibleMetricFamily` is the family-style scaffolding that
+upstream curved-metric commits will discharge.  It is **not** an axiom
+about arbitrary curved metrics: it is a typed contract that any future
+curved family must satisfy to land into the Bianchi route.
+
+The single Minkowski instance below shows the scaffolding terminates;
+non-trivial families (e.g. Schwarzschild parameterized by mass `M`) plug
+in by supplying their own generator and per-`a` discharge. -/
+
+/-- **BIANCHI-008.** Family-style admissibility scaffolding for the
+contracted Bianchi identity over a parameterized metric generator.
+
+`a : α` is the family index (e.g. mass for Schwarzschild, scale factor
+for FRW); `generator a` is the metric tensor at parameter `a`; the
+field requires the BIANCHI-005 admissibility contract for every
+member of the family. -/
+structure BianchiAdmissibleMetricFamily
+    {α : Type _} (generator : α → MetricTensor) : Prop where
+  /-- Every member of the family satisfies the contracted-Bianchi
+      admissibility contract. -/
+  admissible : ∀ a, HasContractedBianchi (generator a)
+
+/-- Family member ⇒ admissibility contract: project a family-style
+witness down to a single-metric admissibility contract.
+
+This is the canonical entry point for downstream consumers: a curved
+family commit supplies `BianchiAdmissibleMetricFamily generator`, and
+each call site obtains `HasContractedBianchi (generator a)` for its
+specific parameter value. -/
+def hasContractedBianchi_of_family
+    {α : Type _} {generator : α → MetricTensor}
+    (h : BianchiAdmissibleMetricFamily generator) (a : α) :
+    HasContractedBianchi (generator a) :=
+  h.admissible a
+
+/-- Family member ⇒ stress conservation: compose the family projection
+with `hasStressConservation_of_hasContractedBianchi` (BIANCHI-007). -/
+def hasStressConservation_of_family
+    {α : Type _} {generator : α → MetricTensor}
+    {T : α → StressEnergyTensor} {κ : Gravitas.Expr}
+    (hFam : BianchiAdmissibleMetricFamily generator)
+    (hEFE : ∀ a, EinsteinEquationHolds (generator a) (T a) κ)
+    (hκ : κ ≠ Gravitas.Expr.lit 0)
+    (a : α) :
+    HasStressConservation (generator a) (T a) :=
+  hasStressConservation_of_hasContractedBianchi
+    (hasContractedBianchi_of_family hFam a) (hEFE a) hκ
+
+/-- Canonical singleton-Minkowski family generator: `Unit → MetricTensor`
+sending the only `Unit` value to `gravitasMinkowski`.  Demonstrates that
+the BIANCHI-008 scaffolding instantiates non-trivially on the canonical
+Gravitas background.  Non-trivial curved families (Schwarzschild
+parameterized by mass `M : ℝ`, FRW parameterized by scale factor
+`a : ℝ`, …) plug in by supplying their own generator. -/
+def gravitasMinkowskiFamily : Unit → MetricTensor :=
+  fun _ => gravitasMinkowski
+
+/-- The canonical singleton-Minkowski family is Bianchi-admissible. -/
+def gravitasMinkowskiFamily_bianchiAdmissible :
+    BianchiAdmissibleMetricFamily gravitasMinkowskiFamily where
+  admissible := fun _ => gravitasMinkowski_hasContractedBianchi
+
 end CATEPTMain.Certification.RelativityGR
 
 end

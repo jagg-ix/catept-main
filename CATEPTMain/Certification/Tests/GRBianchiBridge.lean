@@ -129,6 +129,27 @@ example
     IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm :=
   certifiedCurvedGRData_of_bianchi_stress hHodge hStress hEinstein hADM
 
+/-! ## BIANCHI-008 — curved-metric admissibility family scaffolding -/
+
+#check BianchiAdmissibleMetricFamily
+#check hasContractedBianchi_of_family
+#check hasStressConservation_of_family
+#check gravitasMinkowskiFamily
+#check gravitasMinkowskiFamily_bianchiAdmissible
+
+example : BianchiAdmissibleMetricFamily gravitasMinkowskiFamily :=
+  gravitasMinkowskiFamily_bianchiAdmissible
+
+example
+    {α : Type} {generator : α → MetricTensor}
+    (h : BianchiAdmissibleMetricFamily generator) (a : α) :
+    HasContractedBianchi (generator a) :=
+  hasContractedBianchi_of_family h a
+
+example (u : Unit) :
+    HasContractedBianchi (gravitasMinkowskiFamily u) :=
+  hasContractedBianchi_of_family gravitasMinkowskiFamily_bianchiAdmissible u
+
 end CATEPTMain.Certification.Tests.GRBianchiBridge
 
 end
