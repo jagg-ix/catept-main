@@ -30,6 +30,8 @@ abbrev bianchiHasStressConsCtor := @hasStressConservation_of_bianchi_einstein
 abbrev bianchiMinkHasStressCons := gravitasMinkowski_hasStressConservation_via_bianchi
 abbrev bianchiCertOfHas := @contractedBianchiCertificate_of_hasContractedBianchi
 abbrev bianchiCurvedGRDataCtor := @certifiedCurvedGRData_of_bianchi_stress
+abbrev bianchiHasCBToStress := @hasStressConservation_of_hasContractedBianchi
+abbrev bianchiMinkHasCBToStress := gravitasMinkowski_hasStressConservation_via_hasContractedBianchi
 
 end GuardAlias
 
@@ -106,6 +108,18 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.bianchiCurvedGRDataCtor
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiHasCBToStress' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiHasCBToStress
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiMinkHasCBToStress' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiMinkHasCBToStress
 
 end
 
