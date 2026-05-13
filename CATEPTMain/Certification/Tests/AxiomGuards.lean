@@ -9,6 +9,8 @@ import CATEPTMain.Certification.RelativityGRSmoothConnection
 import CATEPTMain.Certification.RelativityGRSmoothTensorField
 import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
 import CATEPTMain.Certification.RelativityGRSmoothBianchi
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
+import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
 
 set_option autoImplicit false
 
@@ -68,6 +70,13 @@ abbrev lc004LeviCivitaDivergence := @leviCivitaDivergence
 abbrev lc004LeviCivitaDivergenceEinsteinTensor := @leviCivitaDivergenceEinsteinTensor
 abbrev lc005SmoothSecondBianchiIdentity := @SmoothSecondBianchiIdentity
 abbrev lc005smooth_second_bianchi_of_leviCivita := @smooth_second_bianchi_of_leviCivita
+abbrev lc006zeroSmoothTensorField := @zeroSmoothTensorField
+abbrev lc006smooth_contracted_bianchi := @smooth_contracted_bianchi
+abbrev lc007coordinateArrayOfSmoothTensor := @coordinateArrayOfSmoothTensor
+abbrev lc007GravitasRepresentsSmoothMetric := @GravitasRepresentsSmoothMetric
+abbrev lc007SymbolicEinsteinDivergenceRepresentsSmooth := @SymbolicEinsteinDivergenceRepresentsSmooth
+abbrev lc007gravitasMinkowski_represents_smoothMinkowski := gravitasMinkowski_represents_smoothMinkowski
+abbrev lc007symbolic_contracted_bianchi_of_smooth := @symbolic_contracted_bianchi_of_smooth
 
 end GuardAlias
 
@@ -310,6 +319,41 @@ end GuardAlias
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc005smooth_second_bianchi_of_leviCivita' does not depend on any axioms -/
 #guard_msgs in
 #print axioms GuardAlias.lc005smooth_second_bianchi_of_leviCivita
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006zeroSmoothTensorField' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc006zeroSmoothTensorField
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006smooth_contracted_bianchi' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc006smooth_contracted_bianchi
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007coordinateArrayOfSmoothTensor' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc007coordinateArrayOfSmoothTensor
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007GravitasRepresentsSmoothMetric' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc007GravitasRepresentsSmoothMetric
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007SymbolicEinsteinDivergenceRepresentsSmooth' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc007SymbolicEinsteinDivergenceRepresentsSmooth
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007gravitasMinkowski_represents_smoothMinkowski' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc007gravitasMinkowski_represents_smoothMinkowski
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007symbolic_contracted_bianchi_of_smooth' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc007symbolic_contracted_bianchi_of_smooth
 
 end
 
