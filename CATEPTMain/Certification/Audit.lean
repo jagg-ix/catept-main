@@ -18,6 +18,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
 import CATEPTMain.Certification.RelativityGRWitnessFreeStressConservation
 import CATEPTMain.Certification.RelativityGRWitnessFreeFamilyCertificate
 import CATEPTMain.Certification.RelativityGRBianchiBridge
+import CATEPTMain.Certification.RelativityGRBianchiFRW
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -304,9 +305,13 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.LiteralEinsteinEquationHolds
 #print axioms CATEPTMain.Certification.RelativityGR.divergence_compat_of_literal_einstein_equation
 
--- ── GR Bianchi bridge (BIANCHI-011 — literal `G = κ T` + (κ ≠ 0) ⇒ stress conservation) ──
-#print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_literal_einstein_equation
-#print axioms CATEPTMain.Certification.RelativityGR.divergence_stress_zero_of_literal_einstein_equation
+-- ── GR Bianchi bridge (BIANCHI-012 — nontrivial curved family: FRW) ──
+#print axioms CATEPTMain.Certification.RelativityGR.FRWParameter
+#print axioms CATEPTMain.Certification.RelativityGR.frwMetricFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwStressFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwMetricFamily_bianchiAdmissible
+#print axioms CATEPTMain.Certification.RelativityGR.frwStressFamily_einsteinEquationHolds
+#print axioms CATEPTMain.Certification.RelativityGR.frwHasStressConservation
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed

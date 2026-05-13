@@ -1,6 +1,7 @@
 import CATEPTMain.Certification.Status
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRBianchiBridge
+import CATEPTMain.Certification.RelativityGRBianchiFRW
 
 set_option autoImplicit false
 
@@ -38,7 +39,11 @@ open CATEPTMain.Certification
 #check RelativityGR.gravitasMinkowski_secondBianchiIdentity
 #check RelativityGR.LiteralEinsteinEquationHolds
 #check RelativityGR.divergence_compat_of_literal_einstein_equation
-#check RelativityGR.hasStressConservation_of_literal_einstein_equation
-#check RelativityGR.divergence_stress_zero_of_literal_einstein_equation
+#check RelativityGR.FRWParameter
+#check RelativityGR.frwMetricFamily
+#check RelativityGR.frwStressFamily
+#check RelativityGR.frwMetricFamily_bianchiAdmissible
+#check RelativityGR.frwStressFamily_einsteinEquationHolds
+#check RelativityGR.frwHasStressConservation
 
 end CATEPTMain.Certification.Tests.StatusSurface

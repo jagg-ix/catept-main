@@ -3,6 +3,7 @@ import CATEPTMain.Certification.RelativityGRStressConservation
 import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRCurvedDirect
 import CATEPTMain.Certification.RelativityGRBianchiBridge
+import CATEPTMain.Certification.RelativityGRBianchiFRW
 
 set_option autoImplicit false
 
@@ -41,8 +42,11 @@ abbrev bianchiSecondHasCB := @hasContractedBianchi_of_secondBianchi
 abbrev bianchiMinkSecond := gravitasMinkowski_secondBianchiIdentity
 abbrev bianchiLiteralEFE := @LiteralEinsteinEquationHolds
 abbrev bianchiLiteralEFEDemote := @divergence_compat_of_literal_einstein_equation
-abbrev bianchiLiteralStressConservation := @hasStressConservation_of_literal_einstein_equation
-abbrev bianchiLiteralStressDivergenceZero := @divergence_stress_zero_of_literal_einstein_equation
+abbrev bianchiFRWMetricFamily := @frwMetricFamily
+abbrev bianchiFRWStressFamily := @frwStressFamily
+abbrev bianchiFRWAdmissible := @frwMetricFamily_bianchiAdmissible
+abbrev bianchiFRWEFE := @frwStressFamily_einsteinEquationHolds
+abbrev bianchiFRWStressCons := @frwHasStressConservation
 
 end GuardAlias
 
@@ -186,17 +190,35 @@ end GuardAlias
 #guard_msgs in
 #print axioms GuardAlias.bianchiLiteralEFEDemote
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiLiteralStressConservation' depends on axioms: [propext,
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWMetricFamily' depends on axioms: [propext,
  Classical.choice,
  Quot.sound] -/
 #guard_msgs in
-#print axioms GuardAlias.bianchiLiteralStressConservation
+#print axioms GuardAlias.bianchiFRWMetricFamily
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiLiteralStressDivergenceZero' depends on axioms: [propext,
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWStressFamily' depends on axioms: [propext,
  Classical.choice,
  Quot.sound] -/
 #guard_msgs in
-#print axioms GuardAlias.bianchiLiteralStressDivergenceZero
+#print axioms GuardAlias.bianchiFRWStressFamily
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWAdmissible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFRWAdmissible
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWEFE' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFRWEFE
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWStressCons' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFRWStressCons
 
 end
 
