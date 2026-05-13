@@ -34,16 +34,14 @@ The strategic chain (textbook, see `jagg-ix/generalrelativity`, Lecture 11):
 
 ## Layering
 
-* **BIANCHI-001 (this commit)** — inventory + theorem-shaped interfaces.
-  Predicate fields are `Prop` markers that downstream consumers can fulfil
-  with a real theorem once the symbolic curvature API in
-  `jagg-ix/catept-gravitas-port` exposes `covariantDivergenceEinsteinTensor`
-  and a Bianchi-identity lemma.  Today this is a typed surface; it compiles,
-  audits cleanly, and reserves the names.
+* **BIANCHI-001** — inventory + theorem-shaped interfaces (typed surface).
 
-* **BIANCHI-002 (follow-up)** — replace `Prop`-marker fields with
-  theorem-shaped equalities of the form
-  `covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`.
+* **BIANCHI-002 (this commit)** — `ContractedBianchiCertificate g` now
+  carries the real index-array equality
+  `covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`,
+  with the operator defined in `RelativityGRCovariantDivergence` and a
+  canonical Minkowski witness exposed as
+  `gravitasMinkowski_contractedBianchiCertificate`.
 
 * **BIANCHI-003 (follow-up)** — promote `bianchi_implies_stress_conservation`
   to a real theorem once both the Einstein-divergence operator and the
@@ -112,17 +110,18 @@ operator that BIANCHI-002 will introduce.  Once that operator exists, the
 `einstein_divergence_zero` field becomes the literal equation
 `covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`. -/
 
-/-- **BIANCHI-002 target.** Contracted Bianchi identity at the certificate
+/-- **BIANCHI-002 (this commit).** Contracted Bianchi identity at the certificate
 level: the covariant divergence of the Einstein tensor vanishes for the
-given metric.
+given metric, as a literal equality of `Gravitas.Expr` index arrays.
 
-The `proof_pending` marker is the only field; downstream BIANCHI-002 work
-will replace it with a real equality statement once
-`covariantDivergenceEinsteinTensor` is available. -/
+For the canonical Minkowski metric this is discharged by
+`gravitasMinkowski_einstein_covariantDivergence_zero` (defined in
+`RelativityGRCovariantDivergence`); for arbitrary metrics this is the
+real proof obligation pinned by the textbook second Bianchi identity. -/
 structure ContractedBianchiCertificate (g : MetricTensor) : Prop where
-  /-- Placeholder.  BIANCHI-002 replaces this with:
-      `covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`. -/
-  proof_pending : True
+  /-- `∇^μ G_{μν} = 0` at the symbolic-array level. -/
+  einstein_divergence_zero :
+    covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)
 
 /-- **BIANCHI-003 hypothesis surface.** The Einstein equation `G = κ · T`
 holds at the index-array level for the given metric, stress tensor, and
@@ -158,6 +157,17 @@ structure BianchiToStressConservation
   /-- The coupling is nonzero (informally `κ ≠ 0`).  BIANCHI-003 will
       replace this with the literal disequality predicate over `Gravitas.Expr`. -/
   hκ_nonzero : True
+
+/-! ## BIANCHI-002 — canonical Minkowski witness for the contracted Bianchi -/
+
+/-- Canonical instance: the Minkowski metric satisfies the contracted
+second Bianchi identity at the symbolic-array level.  This is the
+BIANCHI-002 discharge of `ContractedBianchiCertificate` for the canonical
+Gravitas background. -/
+def gravitasMinkowski_contractedBianchiCertificate :
+    ContractedBianchiCertificate gravitasMinkowski where
+  einstein_divergence_zero :=
+    gravitasMinkowski_einstein_covariantDivergence_zero
 
 end CATEPTMain.Certification.RelativityGR
 

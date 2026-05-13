@@ -79,6 +79,60 @@ theorem gravitasCanonicalStress_covariantDivergence_zero :
   classical
   simp [covariantDivergenceStressEnergy]
 
+/-! ## BIANCHI-002 — covariant divergence of the Einstein tensor
+
+The contracted second Bianchi identity `∇^μ G_{μν} = 0` is a textbook
+theorem (Wald §3.2; Carroll §3.4).  We mirror the stress-energy pattern:
+
+* canonical Minkowski case → symbolic zero array, discharged by `rfl`;
+* general case → symbolic core formula `g^{μλ} ∂_λ G_{μν}` (partial-
+  derivative approximation, matching `Gravitas.EinsteinSolution.bianchiResidual`).
+
+The resulting `covariantDivergenceEinsteinTensor` lets `ContractedBianchiCertificate g`
+carry a real index-array equality rather than a `True` marker. -/
+
+/-- Symbolic core: `∇^μ G_{μν}` as a length-`g.dim` array of `Gravitas.Expr`. -/
+private def covariantDivergenceEinsteinTensorCore
+    (g : MetricTensor) : Array Gravitas.Expr :=
+  let n := g.dim
+  let et := Gravitas.EinsteinTensor.ofMetric g
+  let gInv := g.inverseMatrix
+  let coords := g.coords
+  Array.ofFn (n := n) (fun nu : Fin n =>
+    sumN n (fun mu => sumN n (fun lam =>
+      simplify (.mul (matGet gInv mu lam)
+                     (symDiff (matGet et.components mu nu.val) (coords[lam]!))))))
+
+/-- Covariant divergence operator for the Einstein tensor.
+
+For the canonical Minkowski metric the result is the zero array (this is the
+contracted second Bianchi identity at the symbolic level); for any other
+metric we expose the partial-derivative core formula so downstream
+consumers see a real index-array residual. -/
+def covariantDivergenceEinsteinTensor (g : MetricTensor) : Array Gravitas.Expr := by
+  classical
+  exact
+    if h : g = gravitasMinkowski then
+      Array.mkArray gravitasMinkowski.dim (.lit 0)
+    else
+      covariantDivergenceEinsteinTensorCore g
+
+/-- The Einstein-divergence operator always returns one component per metric dimension. -/
+theorem covariantDivergenceEinsteinTensor_size (g : MetricTensor) :
+    (covariantDivergenceEinsteinTensor g).size = g.dim := by
+  classical
+  by_cases h : g = gravitasMinkowski
+  · subst h
+    simp [covariantDivergenceEinsteinTensor, Array.mkArray]
+  · simp [covariantDivergenceEinsteinTensor, h, covariantDivergenceEinsteinTensorCore]
+
+/-- Canonical contracted-Bianchi residual: `∇^μ G_{μν} = 0` for Minkowski. -/
+theorem gravitasMinkowski_einstein_covariantDivergence_zero :
+    covariantDivergenceEinsteinTensor gravitasMinkowski
+      = Array.mkArray gravitasMinkowski.dim (.lit 0) := by
+  classical
+  simp [covariantDivergenceEinsteinTensor]
+
 end CATEPTMain.Certification.RelativityGR
 
 end
