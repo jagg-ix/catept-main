@@ -263,6 +263,77 @@ def gravitasMinkowski_hasStressConservation_via_bianchi :
     (gravitasMinkowski_einsteinEquationHolds (Gravitas.Expr.var "κ"))
     (by intro h; cases h)
 
+/-! ## BIANCHI-005 — general (non-Minkowski) contracted-Bianchi admissibility
+
+`ContractedBianchiCertificate g` is the symbolic-array equality
+`∇^μ G_{μν} = 0` for a single metric `g`.  The canonical Minkowski witness
+discharges it for `gravitasMinkowski`, but for arbitrary metrics this is
+a real proof obligation — pinned by the textbook second Bianchi identity
+under Levi-Civita compatibility.
+
+`HasContractedBianchi g` provides a **named contract** for any future
+curved-metric family that supplies the symbolic-array residual.  It is
+intentionally not redundant with `ContractedBianchiCertificate`: it gives
+a reusable entry point for non-Minkowski families without claiming
+arbitrary metrics satisfy it. -/
+
+/-- **BIANCHI-005.** Named admissibility contract for the contracted
+second Bianchi identity at a general metric.  Carries the same
+symbolic-array residual as `ContractedBianchiCertificate` but lives at
+the **admissibility/contract** layer rather than the certificate layer:
+downstream curved families discharge this and consume the resulting
+`ContractedBianchiCertificate` via `contractedBianchiCertificate_of_hasContractedBianchi`. -/
+structure HasContractedBianchi (g : MetricTensor) : Prop where
+  /-- `∇^μ G_{μν} = 0` at the symbolic-array level for the metric `g`. -/
+  contracted_bianchi :
+    covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)
+
+/-- Constructor: an admissibility hypothesis upgrades to a
+`ContractedBianchiCertificate` term. -/
+def contractedBianchiCertificate_of_hasContractedBianchi
+    {g : MetricTensor} (h : HasContractedBianchi g) :
+    ContractedBianchiCertificate g where
+  einstein_divergence_zero := h.contracted_bianchi
+
+/-- Canonical Minkowski instance of the BIANCHI-005 admissibility contract. -/
+def gravitasMinkowski_hasContractedBianchi :
+    HasContractedBianchi gravitasMinkowski where
+  contracted_bianchi := gravitasMinkowski_einstein_covariantDivergence_zero
+
+/-! ## BIANCHI-006 — Bianchi route into `IsCertifiedCurvedGRData`
+
+The modular `IsCertifiedCurvedGRData` umbrella in
+`RelativityGRWitnessFreeCurvedDirect` is built from four sector closures
+(`HasHodgeClosure`, `HasStressConservation`, `HasEinsteinClosure`,
+`HasADMClosure`).  The constructor below establishes the **Bianchi route**
+as a first-class alternative to the Maxwell route by accepting any
+`HasStressConservation g T` term (typically produced by
+`hasStressConservation_of_bianchi_einstein`) and packaging the four
+closures into the umbrella. -/
+
+/-- **BIANCHI-006.** Build `IsCertifiedCurvedGRData` from a Bianchi-derived
+stress-conservation closure plus the three remaining sector closures.
+
+The Bianchi route is supplied by `hStress`; the typical caller obtains
+this from `hasStressConservation_of_bianchi_einstein` or from
+`gravitasMinkowski_hasStressConservation_via_bianchi`. -/
+def certifiedCurvedGRData_of_bianchi_stress
+    {metric : MetricTensor}
+    {faraday : ElectromagneticTensor}
+    {stress : StressEnergyTensor}
+    {adm : ADMDecomposition}
+    {admStress : ADMStressEnergyDecomposition}
+    {sourceTerm : Gravitas.Expr}
+    (hHodge : HasHodgeClosure metric faraday)
+    (hStress : HasStressConservation metric stress)
+    (hEinstein : HasEinsteinClosure metric stress sourceTerm)
+    (hADM : HasADMClosure adm admStress sourceTerm) :
+    IsCertifiedCurvedGRData metric faraday stress adm admStress sourceTerm where
+  hodgeClosure := hHodge
+  stressClosure := hStress
+  einsteinClosure := hEinstein
+  admClosure := hADM
+
 end CATEPTMain.Certification.RelativityGR
 
 end
