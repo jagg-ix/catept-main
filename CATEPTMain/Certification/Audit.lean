@@ -21,6 +21,9 @@ import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
 import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
 import CATEPTMain.Certification.RelativityGRSmoothConnection
+import CATEPTMain.Certification.RelativityGRSmoothTensorField
+import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
+import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -336,6 +339,18 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.IsTorsionFree
 #print axioms CATEPTMain.Certification.RelativityGR.IsMetricCompatible
 #print axioms CATEPTMain.Certification.RelativityGR.IsLeviCivitaConnection
+
+-- ── GR Levi-Civita ladder (LC-003 — smooth tensor fields & Einstein tensor field) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothTensorField
+#print axioms CATEPTMain.Certification.RelativityGR.smoothEinsteinTensor
+
+-- ── GR Levi-Civita ladder (LC-004 — Levi-Civita divergence operator) ──
+#print axioms CATEPTMain.Certification.RelativityGR.leviCivitaDivergence
+#print axioms CATEPTMain.Certification.RelativityGR.leviCivitaDivergenceEinsteinTensor
+
+-- ── GR Levi-Civita ladder (LC-005 — smooth second Bianchi identity) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothSecondBianchiIdentity
+#print axioms CATEPTMain.Certification.RelativityGR.smooth_second_bianchi_of_leviCivita
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed

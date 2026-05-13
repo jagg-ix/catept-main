@@ -6,6 +6,9 @@ import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
 import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
 import CATEPTMain.Certification.RelativityGRSmoothConnection
+import CATEPTMain.Certification.RelativityGRSmoothTensorField
+import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
+import CATEPTMain.Certification.RelativityGRSmoothBianchi
 
 set_option autoImplicit false
 
@@ -58,6 +61,13 @@ abbrev lc002SmoothConnection := @SmoothConnection
 abbrev lc002IsTorsionFree := @IsTorsionFree
 abbrev lc002IsMetricCompatible := @IsMetricCompatible
 abbrev lc002IsLeviCivitaConnection := @IsLeviCivitaConnection
+abbrev lc003SmoothTensorField := @SmoothTensorField
+abbrev lc003SmoothEinsteinTensor := @SmoothEinsteinTensor
+abbrev lc003smoothEinsteinTensor := @smoothEinsteinTensor
+abbrev lc004LeviCivitaDivergence := @leviCivitaDivergence
+abbrev lc004LeviCivitaDivergenceEinsteinTensor := @leviCivitaDivergenceEinsteinTensor
+abbrev lc005SmoothSecondBianchiIdentity := @SmoothSecondBianchiIdentity
+abbrev lc005smooth_second_bianchi_of_leviCivita := @smooth_second_bianchi_of_leviCivita
 
 end GuardAlias
 
@@ -272,6 +282,34 @@ end GuardAlias
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc002IsLeviCivitaConnection' does not depend on any axioms -/
 #guard_msgs in
 #print axioms GuardAlias.lc002IsLeviCivitaConnection
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc003SmoothTensorField' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc003SmoothTensorField
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc003SmoothEinsteinTensor' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc003SmoothEinsteinTensor
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc003smoothEinsteinTensor' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc003smoothEinsteinTensor
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc004LeviCivitaDivergence' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc004LeviCivitaDivergence
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc004LeviCivitaDivergenceEinsteinTensor' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc004LeviCivitaDivergenceEinsteinTensor
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc005SmoothSecondBianchiIdentity' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc005SmoothSecondBianchiIdentity
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc005smooth_second_bianchi_of_leviCivita' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc005smooth_second_bianchi_of_leviCivita
 
 end
 

@@ -4,6 +4,9 @@ import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
 import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
 import CATEPTMain.Certification.RelativityGRSmoothConnection
+import CATEPTMain.Certification.RelativityGRSmoothTensorField
+import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
+import CATEPTMain.Certification.RelativityGRSmoothBianchi
 
 set_option autoImplicit false
 
@@ -56,5 +59,12 @@ open CATEPTMain.Certification
 #check RelativityGR.IsTorsionFree
 #check RelativityGR.IsMetricCompatible
 #check RelativityGR.IsLeviCivitaConnection
+#check RelativityGR.SmoothTensorField
+#check RelativityGR.SmoothEinsteinTensor
+#check RelativityGR.smoothEinsteinTensor
+#check RelativityGR.leviCivitaDivergence
+#check RelativityGR.leviCivitaDivergenceEinsteinTensor
+#check RelativityGR.SmoothSecondBianchiIdentity
+#check RelativityGR.smooth_second_bianchi_of_leviCivita
 
 end CATEPTMain.Certification.Tests.StatusSurface
