@@ -11,6 +11,7 @@ import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
 import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
 
 set_option autoImplicit false
 
@@ -77,6 +78,7 @@ abbrev lc007GravitasRepresentsSmoothMetric := @GravitasRepresentsSmoothMetric
 abbrev lc007SymbolicEinsteinDivergenceRepresentsSmooth := @SymbolicEinsteinDivergenceRepresentsSmooth
 abbrev lc007gravitasMinkowski_represents_smoothMinkowski := gravitasMinkowski_represents_smoothMinkowski
 abbrev lc007symbolic_contracted_bianchi_of_smooth := @symbolic_contracted_bianchi_of_smooth
+abbrev lc008contractedBianchiCertificate_of_smooth_leviCivita := @contractedBianchiCertificate_of_smooth_leviCivita
 
 end GuardAlias
 
@@ -354,6 +356,12 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc007symbolic_contracted_bianchi_of_smooth
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc008contractedBianchiCertificate_of_smooth_leviCivita' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc008contractedBianchiCertificate_of_smooth_leviCivita
 
 end
 

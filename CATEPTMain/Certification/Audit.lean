@@ -26,6 +26,7 @@ import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
 import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -364,6 +365,9 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.SymbolicEinsteinDivergenceRepresentsSmooth
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_represents_smoothMinkowski
 #print axioms CATEPTMain.Certification.RelativityGR.symbolic_contracted_bianchi_of_smooth
+
+-- ── GR Levi-Civita ladder (LC-008 — symbolic ContractedBianchiCertificate from smooth) ──
+#print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed

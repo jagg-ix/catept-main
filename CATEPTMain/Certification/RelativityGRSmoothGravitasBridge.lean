@@ -122,6 +122,11 @@ structure SymbolicEinsteinDivergenceRepresentsSmooth
     covariantDivergenceEinsteinTensor gSym =
       coordinateArrayOfSmoothTensor
         (leviCivitaDivergenceEinsteinTensor connection hLC)
+  /-- Chart dimensions agree between the symbolic Gravitas metric and the
+  smooth manifold.  Carried as a named equation so downstream
+  `ContractedBianchiCertificate` extraction (LC-008) is a straight
+  rewrite. -/
+  dim_match : X.dim = gSym.dim
 
 /-- The canonical Gravitas Minkowski metric represents the smooth
 Minkowski spacetime of LC-001. -/

@@ -9,6 +9,7 @@ import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
 import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
 
 set_option autoImplicit false
 
@@ -75,5 +76,6 @@ open CATEPTMain.Certification
 #check RelativityGR.SymbolicEinsteinDivergenceRepresentsSmooth
 #check RelativityGR.gravitasMinkowski_represents_smoothMinkowski
 #check RelativityGR.symbolic_contracted_bianchi_of_smooth
+#check RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
 
 end CATEPTMain.Certification.Tests.StatusSurface
