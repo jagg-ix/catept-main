@@ -1,5 +1,6 @@
 import CATEPTMain.Certification.Status
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
+import CATEPTMain.Certification.RelativityGRBianchiBridge
 
 set_option autoImplicit false
 
@@ -13,5 +14,21 @@ open CATEPTMain.Certification
 #check RelativityGR.CurvedGRDirectCertificate
 #check RelativityGR.canonical_maxwell_pphi2_certificate
 #check RelativityGR.canonical_vml_maxwell_equilibrium
+
+/-! ### Bianchi-route headline status surface (BIANCHI-001..008) -/
+
+#check RelativityGR.BianchiBridgeSurface
+#check RelativityGR.ContractedBianchiCertificate
+#check RelativityGR.EinsteinEquationHolds
+#check RelativityGR.BianchiToStressConservation
+#check RelativityGR.HasContractedBianchi
+#check RelativityGR.stress_conservation_of_contracted_bianchi_and_einstein
+#check RelativityGR.hasStressConservation_of_bianchi_einstein
+#check RelativityGR.hasStressConservation_of_hasContractedBianchi
+#check RelativityGR.certifiedCurvedGRData_of_bianchi_stress
+#check RelativityGR.BianchiAdmissibleMetricFamily
+#check RelativityGR.gravitasMinkowski_contractedBianchiCertificate
+#check RelativityGR.gravitasMinkowski_hasStressConservation_via_bianchi
+#check RelativityGR.gravitasMinkowskiFamily_bianchiAdmissible
 
 end CATEPTMain.Certification.Tests.StatusSurface
