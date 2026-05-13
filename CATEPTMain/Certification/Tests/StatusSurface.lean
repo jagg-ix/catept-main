@@ -45,5 +45,8 @@ open CATEPTMain.Certification
 #check RelativityGR.frwMetricFamily_bianchiAdmissible
 #check RelativityGR.frwStressFamily_einsteinEquationHolds
 #check RelativityGR.frwHasStressConservation
+#check RelativityGR.FRWCertifiedParameter
+#check RelativityGR.frwCertifiedCurvedGRData
+#check RelativityGR.frwCurvedGRDirectCertificate
 
 end CATEPTMain.Certification.Tests.StatusSurface

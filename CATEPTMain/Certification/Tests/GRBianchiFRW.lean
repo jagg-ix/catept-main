@@ -53,6 +53,39 @@ example
     HasStressConservation (frwMetricFamily p) (frwStressFamily p) :=
   frwHasStressConservation hκ p
 
+/-! ## BIANCHI-013 — FRW end-to-end into `IsCertifiedCurvedGRData` /
+`CurvedGRDirectCertificate` -/
+
+#check FRWCertifiedParameter
+#check frwFaradayFamily
+#check frwADMFamily
+#check frwADMStressFamily
+#check frwSourceTerm
+#check frwHodgeClosure
+#check frwEinsteinClosure
+#check frwADMClosure
+#check frwCertifiedCurvedGRData
+#check curved_gr_direct_certificate_of_certified_data
+#check frwCurvedGRDirectCertificate
+
+example (p : FRWCertifiedParameter) :
+    IsCertifiedCurvedGRData
+      (frwMetricFamily p.base)
+      (frwFaradayFamily p)
+      (frwStressFamily p.base)
+      (frwADMFamily p)
+      (frwADMStressFamily p)
+      (frwSourceTerm p) :=
+  frwCertifiedCurvedGRData p
+
+example (p : FRWCertifiedParameter) : CurvedGRDirectCertificate :=
+  curved_gr_direct_certificate_of_certified_data
+    p.kappa
+    (frwCertifiedCurvedGRData p)
+
+example (p : FRWCertifiedParameter) : CurvedGRDirectCertificate :=
+  frwCurvedGRDirectCertificate p
+
 end CATEPTMain.Certification.Tests.GRBianchiFRW
 
 end

@@ -154,6 +154,147 @@ def frwHasStressConservation
     hκ
     p
 
+/-! ## BIANCHI-013 — FRW family end-to-end into `IsCertifiedCurvedGRData`
+
+`certifiedCurvedGRData_of_bianchi_stress` (BIANCHI-006) consumes four
+sector closures (`HasHodgeClosure`, `HasStressConservation`,
+`HasEinsteinClosure`, `HasADMClosure`) and produces the umbrella
+admissibility predicate `IsCertifiedCurvedGRData`, which by
+`curved_gr_direct_certificate_of_certified_data` assembles a full
+`CurvedGRDirectCertificate`.
+
+This section discharges that end-to-end route for a **non-Minkowski**
+family: the FRW family of BIANCHI-012.  The stress-conservation closure
+is supplied by the Bianchi route
+(`frwHasStressConservation`); the three remaining sector closures
+(Hodge `★★`, Einstein-residual identity, ADM-residual identities) are
+carried as named per-instance witnesses on a dedicated parameter type
+`FRWCertifiedParameter`, exactly mirroring the BIANCHI-008 docstring
+contract for curved families.
+
+Together with the `(Gravitas.Expr.var "κ") ≠ Gravitas.Expr.lit 0`
+non-degeneracy hypothesis (also carried as a parameter field), each
+member of the FRW certified-parameter family produces a fully-assembled
+`CurvedGRDirectCertificate`. -/
+
+/-- **BIANCHI-013.** FRW certified-data parameter.
+
+Extends `FRWParameter` (BIANCHI-012) with the Maxwell/ADM payload and
+the per-instance witnesses for the three remaining curved-GR sector
+closures.  The stress-conservation closure is *not* a field here: it is
+derived through the Bianchi route from the base `FRWParameter`. -/
+structure FRWCertifiedParameter : Type where
+  /-- Underlying FRW family parameter (carries the metric generator
+      data, the stress tensor, and the Bianchi/EFE witnesses). -/
+  base : FRWParameter
+  /-- Electromagnetic tensor on this FRW background.  Carried as a
+      family field so that downstream consumers can choose physically
+      meaningful electromagnetic configurations (e.g. vacuum). -/
+  faraday : ElectromagneticTensor
+  /-- ADM decomposition of the FRW background. -/
+  adm : ADMDecomposition
+  /-- ADM stress-energy decomposition matching the FRW stress tensor. -/
+  admStress : ADMStressEnergyDecomposition
+  /-- Einstein-equation source term (typically `.lit 0` for vacuum, the
+      symbolic cosmological constant for ΛCDM, etc.). -/
+  sourceTerm : Gravitas.Expr
+  /-- Real-valued coupling `κ` consumed by
+      `curved_gr_direct_certificate_of_certified_data`.  Independent of
+      the symbolic `Expr` coupling that the Bianchi route uses. -/
+  kappa : ℝ
+  /-- Non-degeneracy of the symbolic Bianchi-route coupling.  Required
+      by `frwHasStressConservation` to produce the
+      `HasStressConservation` closure for this family member. -/
+  bianchi_kappa_nonzero :
+    (Gravitas.Expr.var "κ") ≠ Gravitas.Expr.lit 0
+  /-- Hodge `★★`-involution closure on the chosen Faraday tensor
+      relative to the FRW metric. -/
+  hodge_witness :
+    HasHodgeClosure
+      (Gravitas.MetricTensor.flrw
+        base.scaleParam base.curvParam base.coords co co)
+      faraday
+  /-- Einstein-residual closure at the solver output for the FRW
+      metric, the chosen stress tensor, and the chosen source term. -/
+  einstein_witness :
+    HasEinsteinClosure
+      (Gravitas.MetricTensor.flrw
+        base.scaleParam base.curvParam base.coords co co)
+      base.stress sourceTerm
+  /-- ADM Hamiltonian/momentum residual closure at the solver outputs. -/
+  adm_witness :
+    HasADMClosure adm admStress sourceTerm
+
+/-- **BIANCHI-013.** FRW Faraday-family generator: projects out the
+chosen electromagnetic tensor on each certified FRW parameter. -/
+def frwFaradayFamily (p : FRWCertifiedParameter) : ElectromagneticTensor :=
+  p.faraday
+
+/-- **BIANCHI-013.** FRW ADM-decomposition family generator. -/
+def frwADMFamily (p : FRWCertifiedParameter) : ADMDecomposition :=
+  p.adm
+
+/-- **BIANCHI-013.** FRW ADM stress-energy-decomposition family generator. -/
+def frwADMStressFamily (p : FRWCertifiedParameter) :
+    ADMStressEnergyDecomposition :=
+  p.admStress
+
+/-- **BIANCHI-013.** FRW source-term family generator. -/
+def frwSourceTerm (p : FRWCertifiedParameter) : Gravitas.Expr :=
+  p.sourceTerm
+
+/-- **BIANCHI-013.** Per-parameter projection: Hodge `★★`-involution
+closure for each certified FRW parameter. -/
+def frwHodgeClosure (p : FRWCertifiedParameter) :
+    HasHodgeClosure (frwMetricFamily p.base) (frwFaradayFamily p) :=
+  p.hodge_witness
+
+/-- **BIANCHI-013.** Per-parameter projection: Einstein-residual
+closure for each certified FRW parameter. -/
+def frwEinsteinClosure (p : FRWCertifiedParameter) :
+    HasEinsteinClosure
+      (frwMetricFamily p.base) (frwStressFamily p.base) (frwSourceTerm p) :=
+  p.einstein_witness
+
+/-- **BIANCHI-013.** Per-parameter projection: ADM-residual closure
+for each certified FRW parameter. -/
+def frwADMClosure (p : FRWCertifiedParameter) :
+    HasADMClosure (frwADMFamily p) (frwADMStressFamily p) (frwSourceTerm p) :=
+  p.adm_witness
+
+/-- **BIANCHI-013.** End-to-end `IsCertifiedCurvedGRData` discharge for
+the FRW family.
+
+Composes:
+* the Bianchi route to `HasStressConservation` via
+  `frwHasStressConservation`, taking `p.bianchi_kappa_nonzero`;
+* the three remaining sector closures projected out of
+  `FRWCertifiedParameter`;
+
+through `certifiedCurvedGRData_of_bianchi_stress` (BIANCHI-006). -/
+def frwCertifiedCurvedGRData (p : FRWCertifiedParameter) :
+    IsCertifiedCurvedGRData
+      (frwMetricFamily p.base)
+      (frwFaradayFamily p)
+      (frwStressFamily p.base)
+      (frwADMFamily p)
+      (frwADMStressFamily p)
+      (frwSourceTerm p) :=
+  certifiedCurvedGRData_of_bianchi_stress
+    (frwHodgeClosure p)
+    (frwHasStressConservation p.bianchi_kappa_nonzero p.base)
+    (frwEinsteinClosure p)
+    (frwADMClosure p)
+
+/-- **BIANCHI-013.** End-to-end `CurvedGRDirectCertificate` for the
+FRW family: the first non-Minkowski family that produces the full
+direct curved-GR certificate via the Bianchi route. -/
+def frwCurvedGRDirectCertificate (p : FRWCertifiedParameter) :
+    CurvedGRDirectCertificate :=
+  curved_gr_direct_certificate_of_certified_data
+    p.kappa
+    (frwCertifiedCurvedGRData p)
+
 end CATEPTMain.Certification.RelativityGR
 
 end

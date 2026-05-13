@@ -47,6 +47,9 @@ abbrev bianchiFRWStressFamily := @frwStressFamily
 abbrev bianchiFRWAdmissible := @frwMetricFamily_bianchiAdmissible
 abbrev bianchiFRWEFE := @frwStressFamily_einsteinEquationHolds
 abbrev bianchiFRWStressCons := @frwHasStressConservation
+abbrev bianchiFRWCertifiedParameter := @FRWCertifiedParameter
+abbrev bianchiFRWCertifiedData := @frwCertifiedCurvedGRData
+abbrev bianchiFRWCurvedDirect := @frwCurvedGRDirectCertificate
 
 end GuardAlias
 
@@ -219,6 +222,24 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.bianchiFRWStressCons
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWCertifiedParameter' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFRWCertifiedParameter
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWCertifiedData' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFRWCertifiedData
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFRWCurvedDirect' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFRWCurvedDirect
 
 end
 

@@ -313,6 +313,18 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.frwStressFamily_einsteinEquationHolds
 #print axioms CATEPTMain.Certification.RelativityGR.frwHasStressConservation
 
+-- ── GR Bianchi bridge (BIANCHI-013 — FRW end-to-end into IsCertifiedCurvedGRData / CurvedGRDirectCertificate) ──
+#print axioms CATEPTMain.Certification.RelativityGR.FRWCertifiedParameter
+#print axioms CATEPTMain.Certification.RelativityGR.frwFaradayFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwADMFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwADMStressFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwSourceTerm
+#print axioms CATEPTMain.Certification.RelativityGR.frwHodgeClosure
+#print axioms CATEPTMain.Certification.RelativityGR.frwEinsteinClosure
+#print axioms CATEPTMain.Certification.RelativityGR.frwADMClosure
+#print axioms CATEPTMain.Certification.RelativityGR.frwCertifiedCurvedGRData
+#print axioms CATEPTMain.Certification.RelativityGR.frwCurvedGRDirectCertificate
+
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector
