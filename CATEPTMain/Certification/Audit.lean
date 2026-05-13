@@ -19,6 +19,7 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeStressConservation
 import CATEPTMain.Certification.RelativityGRWitnessFreeFamilyCertificate
 import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
+import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -324,6 +325,10 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.frwADMClosure
 #print axioms CATEPTMain.Certification.RelativityGR.frwCertifiedCurvedGRData
 #print axioms CATEPTMain.Certification.RelativityGR.frwCurvedGRDirectCertificate
+
+-- ── GR Levi-Civita ladder (LC-001 — smooth pseudo-Riemannian semantic layer) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothPseudoRiemannianManifold
+#print axioms CATEPTMain.Certification.RelativityGR.smoothMinkowskiSpacetime
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed

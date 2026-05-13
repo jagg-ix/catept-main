@@ -4,6 +4,7 @@ import CATEPTMain.Certification.RelativityGRVMLMaxwell
 import CATEPTMain.Certification.RelativityGRCurvedDirect
 import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
+import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
 
 set_option autoImplicit false
 
@@ -50,6 +51,8 @@ abbrev bianchiFRWStressCons := @frwHasStressConservation
 abbrev bianchiFRWCertifiedParameter := @FRWCertifiedParameter
 abbrev bianchiFRWCertifiedData := @frwCertifiedCurvedGRData
 abbrev bianchiFRWCurvedDirect := @frwCurvedGRDirectCertificate
+abbrev lc001SmoothPRManifold := @SmoothPseudoRiemannianManifold
+abbrev lc001SmoothMinkowski := smoothMinkowskiSpacetime
 
 end GuardAlias
 
@@ -240,6 +243,14 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.bianchiFRWCurvedDirect
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc001SmoothPRManifold' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc001SmoothPRManifold
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc001SmoothMinkowski' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc001SmoothMinkowski
 
 end
 
