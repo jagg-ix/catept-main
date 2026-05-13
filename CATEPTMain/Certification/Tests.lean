@@ -10,3 +10,4 @@ import CATEPTMain.Certification.Tests.VMLProjectionExamples
 import CATEPTMain.Certification.Tests.StatusSurface
 import CATEPTMain.Certification.Tests.AxiomGuards
 import CATEPTMain.Certification.Tests.GRBianchiBridge
+import CATEPTMain.Certification.Tests.GRBianchiCurvatureIdentity

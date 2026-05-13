@@ -30,5 +30,11 @@ open CATEPTMain.Certification
 #check RelativityGR.gravitasMinkowski_contractedBianchiCertificate
 #check RelativityGR.gravitasMinkowski_hasStressConservation_via_bianchi
 #check RelativityGR.gravitasMinkowskiFamily_bianchiAdmissible
+#check RelativityGR.SecondBianchiIdentity
+#check RelativityGR.ContractedBianchiFromSecondBianchi
+#check RelativityGR.contractedBianchiCertificate_of_secondBianchi
+#check RelativityGR.contractedBianchiFromSecondBianchi
+#check RelativityGR.hasContractedBianchi_of_secondBianchi
+#check RelativityGR.gravitasMinkowski_secondBianchiIdentity
 
 end CATEPTMain.Certification.Tests.StatusSurface
