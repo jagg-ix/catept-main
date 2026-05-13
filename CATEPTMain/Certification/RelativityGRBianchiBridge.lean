@@ -145,6 +145,77 @@ structure EinsteinEquationHolds
   divergence_compat :
     covariantDivergenceStressEnergy g T = covariantDivergenceEinsteinTensor g
 
+/-! ## BIANCHI-010 — literal-tensor Einstein equation `G = κ T`
+
+`EinsteinEquationHolds` (BIANCHI-003) carries the *divergence-compatible*
+form of the Einstein equation — exactly the content consumed by the
+Bianchi-to-stress chain.  This section adds the strictly stronger
+**literal tensor equation** `G_{μν} = κ T_{μν}` as a separate hypothesis
+structure and provides the demotion lemma to the divergence-compatible
+form.
+
+At the symbolic-array layer of this repository the literal tensor
+equation is encoded as the entrywise vanishing of the Einstein-equation
+residual matrix
+`EinsteinTensor.fieldEquations g T.components 0 G_N`
+(Wald §4.3, Carroll §4.1), which by construction equals
+`G_{μν} + 0·g_{μν} - 8πG T_{μν}`.
+
+Going from the literal tensor equation to the divergence-compatible
+form requires linearity of the two independently-defined symbolic
+operators `covariantDivergenceStressEnergy` and
+`covariantDivergenceEinsteinTensor` (Wald §3.2, footnote on
+metric-compatibility).  Rather than postulate that linearity inside this
+file, the demotion lemma `divergence_compat_of_literal_einstein_equation`
+takes the divergence-compatibility hypothesis as a *named field* of
+`LiteralEinsteinEquationHolds` itself; consumers that supply the literal
+tensor equation also supply the Levi-Civita / metric-compatibility
+witness in the same structure, exactly as the surrounding bridge
+documentation specifies. -/
+
+/-- **BIANCHI-010.** Literal-tensor form of the Einstein equation
+`G_{μν} = κ T_{μν}` at the symbolic-array layer, packaged together with
+the Levi-Civita / metric-compatibility witness that is required to push
+the equation through to the divergence-compatible form
+`EinsteinEquationHolds`.
+
+The tensor-equation field is encoded as the entrywise vanishing of the
+Einstein-equation residual matrix produced by
+`EinsteinTensor.fieldEquations` (which returns
+`G + Λ g − 8πG T` with `Λ = 0` here).  The `_κ` coupling appears in the
+type for textbook bookkeeping; the symbolic residual builder hard-codes
+the `8πG` coefficient, so any honest consumer also records its `κ`
+choice at the contract level. -/
+structure LiteralEinsteinEquationHolds
+    (g : MetricTensor) (T : StressEnergyTensor) (_κ : Gravitas.Expr) : Prop where
+  /-- Entrywise residual-zero form of the literal tensor equation
+      `G_{μν} = κ T_{μν}`: every entry of
+      `EinsteinTensor.fieldEquations g T.components 0 G_N`
+      symbolically reduces to the zero expression `.lit 0`. -/
+  tensor_equation_residual_zero :
+    ∀ μ ν,
+      Gravitas.matGet
+        (Gravitas.EinsteinTensor.fieldEquations
+            g T.components (.lit 0) (.var "G_N"))
+        μ ν
+        = Gravitas.Expr.lit 0
+  /-- Levi-Civita / metric-compatibility consequence: the two symbolic
+      covariant-divergence operators agree on `(g, T)`.  Carried as a
+      named field so that the demotion lemma to
+      `EinsteinEquationHolds` does not have to invoke linearity of two
+      independently-defined symbolic operators. -/
+  divergence_compat :
+    covariantDivergenceStressEnergy g T = covariantDivergenceEinsteinTensor g
+
+/-- **BIANCHI-010.** A literal-tensor Einstein-equation witness demotes
+to the divergence-compatible form (`EinsteinEquationHolds`) by simply
+projecting out the metric-compatibility field. -/
+theorem divergence_compat_of_literal_einstein_equation
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (h : LiteralEinsteinEquationHolds g T κ) :
+    EinsteinEquationHolds g T κ where
+  divergence_compat := h.divergence_compat
+
 /-! ## BIANCHI-004 — alternative `HasStressConservation` constructor (interface)
 
 This section now ships a real `HasStressConservation g T` constructor; see

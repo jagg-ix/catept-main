@@ -39,6 +39,8 @@ abbrev bianchiSecondCertCtor := @contractedBianchiCertificate_of_secondBianchi
 abbrev bianchiSecondImplication := @contractedBianchiFromSecondBianchi
 abbrev bianchiSecondHasCB := @hasContractedBianchi_of_secondBianchi
 abbrev bianchiMinkSecond := gravitasMinkowski_secondBianchiIdentity
+abbrev bianchiLiteralEFE := @LiteralEinsteinEquationHolds
+abbrev bianchiLiteralEFEDemote := @divergence_compat_of_literal_einstein_equation
 
 end GuardAlias
 
@@ -169,6 +171,18 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.bianchiMinkSecond
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiLiteralEFE' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiLiteralEFE
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiLiteralEFEDemote' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiLiteralEFEDemote
 
 end
 

@@ -36,5 +36,7 @@ open CATEPTMain.Certification
 #check RelativityGR.contractedBianchiFromSecondBianchi
 #check RelativityGR.hasContractedBianchi_of_secondBianchi
 #check RelativityGR.gravitasMinkowski_secondBianchiIdentity
+#check RelativityGR.LiteralEinsteinEquationHolds
+#check RelativityGR.divergence_compat_of_literal_einstein_equation
 
 end CATEPTMain.Certification.Tests.StatusSurface

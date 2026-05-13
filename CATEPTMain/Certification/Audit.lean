@@ -300,6 +300,10 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.hasContractedBianchi_of_secondBianchi
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_secondBianchiIdentity
 
+-- ── GR Bianchi bridge (BIANCHI-010 — literal-tensor Einstein equation `G = κ T`) ──
+#print axioms CATEPTMain.Certification.RelativityGR.LiteralEinsteinEquationHolds
+#print axioms CATEPTMain.Certification.RelativityGR.divergence_compat_of_literal_einstein_equation
+
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector
