@@ -265,6 +265,16 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_einstein_covariantDivergence_zero
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_contractedBianchiCertificate
 
+-- ── GR Bianchi bridge (BIANCHI-003 — Bianchi + EFE ⇒ stress conservation) ─
+#print axioms CATEPTMain.Certification.RelativityGR.stress_conservation_of_contracted_bianchi_and_einstein
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_einsteinEquationHolds
+
+-- ── GR Bianchi bridge (BIANCHI-004 — HasStressConservation constructor) ────
+#print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_bianchi_einstein
+#print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_bianchiToStressConservation
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_bianchiToStressConservation
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_hasStressConservation_via_bianchi
+
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector
