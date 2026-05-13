@@ -299,6 +299,52 @@ def hasStressConservation_of_bianchiToStressConservation
     HasStressConservation g T :=
   hasStressConservation_of_bianchi_einstein h.hBianchi h.hEFE h.hκ_nonzero
 
+/-! ## BIANCHI-011 — literal Einstein equation + (κ ≠ 0) ⇒ stress conservation
+
+Compose BIANCHI-010 (`LiteralEinsteinEquationHolds`, the literal-tensor
+form of `G = κ T`) with BIANCHI-002/003/004 (contracted Bianchi identity
+and the `BianchiToStressConservation` aggregate) to produce a
+`HasStressConservation g T` witness from the textbook triple
+
+  `(∇^μ G_{μν} = 0)  ∧  (G_{μν} = κ T_{μν})  ∧  (κ ≠ 0)  ⟹  ∇^μ T_{μν} = 0`.
+
+Honest-scope note (also recorded on
+`stress_conservation_of_contracted_bianchi_and_einstein`): the symbolic
+chain at this layer is driven by
+`LiteralEinsteinEquationHolds.divergence_compat`, which already carries
+the Levi-Civita / metric-compatibility consequence.  The (κ ≠ 0)
+hypothesis is here *consumed* — it is wired through the
+`BianchiToStressConservation.hκ_nonzero` field of the aggregate produced
+inside the proof, which is precisely the slot the textbook chain uses to
+"cancel κ".  No `_hκ` placeholder remains. -/
+
+/-- **BIANCHI-011.** Stress conservation from the literal Einstein
+equation `G = κ T` together with the contracted Bianchi identity and
+`κ ≠ 0`.  The (κ ≠ 0) hypothesis is consumed via the
+`BianchiToStressConservation` aggregate's `hκ_nonzero` field. -/
+def hasStressConservation_of_literal_einstein_equation
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (hBianchi : ContractedBianchiCertificate g)
+    (hEFE : LiteralEinsteinEquationHolds g T κ)
+    (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    HasStressConservation g T :=
+  hasStressConservation_of_bianchiToStressConservation
+    { hBianchi   := hBianchi
+      hEFE       := divergence_compat_of_literal_einstein_equation hEFE
+      hκ_nonzero := hκ }
+
+/-- **BIANCHI-011.** Equation-shape statement of the BIANCHI-011 chain:
+`(∇^μ G_{μν} = 0) ∧ (G = κ T literal) ∧ (κ ≠ 0) ⇒ ∇^μ T_{μν} = 0`. -/
+theorem divergence_stress_zero_of_literal_einstein_equation
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (hBianchi : ContractedBianchiCertificate g)
+    (hEFE : LiteralEinsteinEquationHolds g T κ)
+    (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    covariantDivergenceStressEnergy g T =
+      Array.mkArray g.dim (Gravitas.Expr.lit 0) :=
+  (hasStressConservation_of_literal_einstein_equation
+      hBianchi hEFE hκ).divergence_zero
+
 /-! ## BIANCHI-003 / BIANCHI-004 — canonical Minkowski witnesses -/
 
 /-- Canonical instance: the Einstein equation holds (in its

@@ -38,5 +38,7 @@ open CATEPTMain.Certification
 #check RelativityGR.gravitasMinkowski_secondBianchiIdentity
 #check RelativityGR.LiteralEinsteinEquationHolds
 #check RelativityGR.divergence_compat_of_literal_einstein_equation
+#check RelativityGR.hasStressConservation_of_literal_einstein_equation
+#check RelativityGR.divergence_stress_zero_of_literal_einstein_equation
 
 end CATEPTMain.Certification.Tests.StatusSurface
