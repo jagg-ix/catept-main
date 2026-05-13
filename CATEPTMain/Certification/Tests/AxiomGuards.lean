@@ -5,6 +5,7 @@ import CATEPTMain.Certification.RelativityGRCurvedDirect
 import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
 import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
+import CATEPTMain.Certification.RelativityGRSmoothConnection
 
 set_option autoImplicit false
 
@@ -53,6 +54,10 @@ abbrev bianchiFRWCertifiedData := @frwCertifiedCurvedGRData
 abbrev bianchiFRWCurvedDirect := @frwCurvedGRDirectCertificate
 abbrev lc001SmoothPRManifold := @SmoothPseudoRiemannianManifold
 abbrev lc001SmoothMinkowski := smoothMinkowskiSpacetime
+abbrev lc002SmoothConnection := @SmoothConnection
+abbrev lc002IsTorsionFree := @IsTorsionFree
+abbrev lc002IsMetricCompatible := @IsMetricCompatible
+abbrev lc002IsLeviCivitaConnection := @IsLeviCivitaConnection
 
 end GuardAlias
 
@@ -251,6 +256,22 @@ end GuardAlias
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc001SmoothMinkowski' does not depend on any axioms -/
 #guard_msgs in
 #print axioms GuardAlias.lc001SmoothMinkowski
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc002SmoothConnection' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc002SmoothConnection
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc002IsTorsionFree' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc002IsTorsionFree
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc002IsMetricCompatible' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc002IsMetricCompatible
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc002IsLeviCivitaConnection' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lc002IsLeviCivitaConnection
 
 end
 

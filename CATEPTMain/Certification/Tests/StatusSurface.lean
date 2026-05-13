@@ -3,6 +3,7 @@ import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRBianchiFRW
 import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
+import CATEPTMain.Certification.RelativityGRSmoothConnection
 
 set_option autoImplicit false
 
@@ -51,5 +52,9 @@ open CATEPTMain.Certification
 #check RelativityGR.frwCurvedGRDirectCertificate
 #check RelativityGR.SmoothPseudoRiemannianManifold
 #check RelativityGR.smoothMinkowskiSpacetime
+#check RelativityGR.SmoothConnection
+#check RelativityGR.IsTorsionFree
+#check RelativityGR.IsMetricCompatible
+#check RelativityGR.IsLeviCivitaConnection
 
 end CATEPTMain.Certification.Tests.StatusSurface
