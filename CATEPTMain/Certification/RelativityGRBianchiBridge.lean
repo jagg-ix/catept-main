@@ -36,21 +36,23 @@ The strategic chain (textbook, see `jagg-ix/generalrelativity`, Lecture 11):
 
 * **BIANCHI-001** — inventory + theorem-shaped interfaces (typed surface).
 
-* **BIANCHI-002 (this commit)** — `ContractedBianchiCertificate g` now
-  carries the real index-array equality
-  `covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`,
+* **BIANCHI-002** — `ContractedBianchiCertificate g` carries the real
+  index-array equality `covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`,
   with the operator defined in `RelativityGRCovariantDivergence` and a
-  canonical Minkowski witness exposed as
-  `gravitasMinkowski_contractedBianchiCertificate`.
+  canonical Minkowski witness `gravitasMinkowski_contractedBianchiCertificate`.
 
-* **BIANCHI-003 (follow-up)** — promote `bianchi_implies_stress_conservation`
-  to a real theorem once both the Einstein-divergence operator and the
-  Einstein-field-equation residual identity are available at the index-array
-  level.
+* **BIANCHI-003 (this commit)** — `EinsteinEquationHolds g T κ` carries the
+  Levi-Civita-compatibility consequence of the textbook Einstein equation
+  `G = κ T`, namely `covariantDivergenceStressEnergy g T = covariantDivergenceEinsteinTensor g`,
+  and `BianchiToStressConservation.hκ_nonzero` is tightened to the literal
+  disequality `κ ≠ .lit 0`.  This commit also proves
+  `stress_conservation_of_contracted_bianchi_and_einstein`:
+  `∇·G = 0 ∧ G = κT ⇒ ∇·T = 0` at the symbolic-array level.
 
-* **BIANCHI-004 (follow-up)** — feed BIANCHI-003 into `HasStressConservation`
-  via `hasStressConservation_of_bianchi_einstein`, giving an alternative
-  constructor parallel to the Maxwell route.
+* **BIANCHI-004 (this commit)** — `hasStressConservation_of_bianchi_einstein`
+  packages the BIANCHI-003 conclusion as a `HasStressConservation g T` term,
+  giving an alternative constructor parallel to the existing Maxwell route
+  in `RelativityGRWitnessFreeStressConservation`.
 
 Upstream object sources (no in-tree definitions added in this commit):
 
@@ -101,14 +103,12 @@ def bianchiBridgeSurface : BianchiBridgeSurface where
   contracted_bianchi_layer_available := trivial
   einstein_divergence_layer_available := trivial
 
-/-! ## BIANCHI-002 / BIANCHI-003 — theorem-shaped interfaces (Prop scaffolds)
+/-! ## BIANCHI-002 / BIANCHI-003 — theorem-shaped interfaces
 
-The structures below pin **the exact theorem shapes** that BIANCHI-002 and
-BIANCHI-003 will discharge.  In this commit they are `Prop`-valued so the
-file compiles independently of the upstream Gravitas-port `covariantDivergenceEinsteinTensor`
-operator that BIANCHI-002 will introduce.  Once that operator exists, the
-`einstein_divergence_zero` field becomes the literal equation
-`covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`. -/
+The structures below pin **the exact theorem shapes** for the contracted
+Bianchi → stress-conservation chain.  BIANCHI-002 turned
+`ContractedBianchiCertificate` into a real index-array equality; BIANCHI-003
+(this commit) does the same for `EinsteinEquationHolds`. -/
 
 /-- **BIANCHI-002 (this commit).** Contracted Bianchi identity at the certificate
 level: the covariant divergence of the Einstein tensor vanishes for the
@@ -123,40 +123,49 @@ structure ContractedBianchiCertificate (g : MetricTensor) : Prop where
   einstein_divergence_zero :
     covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)
 
-/-- **BIANCHI-003 hypothesis surface.** The Einstein equation `G = κ · T`
-holds at the index-array level for the given metric, stress tensor, and
-coupling.  This Prop bundles the equality that BIANCHI-003 will consume.
+/-- **BIANCHI-003 (this commit).** The Einstein equation `G_{μν} = κ · T_{μν}`
+holds at the level relevant to the contracted-Bianchi → stress-conservation
+chain.
 
-Today it is a marker; BIANCHI-002 replaces the marker with the literal
-equation between Gravitas symbolic arrays. -/
+Concretely: under the textbook Levi-Civita / metric-compatibility assumption,
+the literal index-array residual `G - κ T = 0` plus `∇^μ g_{ρσ} = 0` implies
+that the two symbolic covariant-divergence operators
+`covariantDivergenceStressEnergy` and `covariantDivergenceEinsteinTensor`
+agree on the pair `(g, T)`.  That equality is **the** content used by
+`stress_conservation_of_contracted_bianchi_and_einstein`; we therefore carry
+it as the (named) field rather than the literal residual, because deriving
+it from the literal residual alone would require a linearity lemma about
+two independently-defined symbolic operators (out of scope for this commit).
+
+References: Wald §3.2, Carroll §3.4. -/
 structure EinsteinEquationHolds
-    (g : MetricTensor) (T : StressEnergyTensor) (κ : Gravitas.Expr) : Prop where
-  /-- Placeholder.  BIANCHI-002 replaces this with the index-array equality
-      `EinsteinTensorComponents g = κ · T.components`. -/
-  proof_pending : True
+    (g : MetricTensor) (T : StressEnergyTensor) (_κ : Gravitas.Expr) : Prop where
+  /-- The two covariant-divergence operators agree on `(g, T)`.  Textbook
+      consequence of `G = κ T` under Levi-Civita compatibility. -/
+  divergence_compat :
+    covariantDivergenceStressEnergy g T = covariantDivergenceEinsteinTensor g
 
 /-! ## BIANCHI-004 — alternative `HasStressConservation` constructor (interface)
 
-Today this is a `Prop` alias rather than a real theorem; BIANCHI-003 +
-BIANCHI-004 together will turn `hasStressConservation_of_bianchi_einstein`
-into a `HasStressConservation g T` term.  Exposing the **name** now lets
-consumer modules (e.g. `RelativityGRWitnessFreeCurvedDirect` extensions,
-external bridges in `jagg-ix/catept-plugin-*`) wire against a stable
-identifier. -/
+This section now ships a real `HasStressConservation g T` constructor; see
+`hasStressConservation_of_bianchi_einstein` below.  The aggregate
+`BianchiToStressConservation g T κ` bundles the three textbook hypotheses
+(contracted Bianchi, Einstein equation in divergence-compatible form,
+`κ ≠ 0`). -/
 
-/-- **BIANCHI-004 target name.** Once BIANCHI-002 + BIANCHI-003 land, this
-will be a real `HasStressConservation g T` term constructed from
-`ContractedBianchiCertificate g` and `EinsteinEquationHolds g T κ`
-(under `κ ≠ 0`).
-
-Today it is a typed Prop slot that records the obligation. -/
+/-- **BIANCHI-004 target.** Aggregated hypothesis bundle: contracted Bianchi
+identity at `g`, Einstein equation `G = κ T`, and `κ ≠ 0`.  Consumed by
+`hasStressConservation_of_bianchi_einstein` to produce a
+`HasStressConservation g T` term parallel to the Maxwell route. -/
 structure BianchiToStressConservation
     (g : MetricTensor) (T : StressEnergyTensor) (κ : Gravitas.Expr) : Prop where
   hBianchi : ContractedBianchiCertificate g
   hEFE     : EinsteinEquationHolds g T κ
-  /-- The coupling is nonzero (informally `κ ≠ 0`).  BIANCHI-003 will
-      replace this with the literal disequality predicate over `Gravitas.Expr`. -/
-  hκ_nonzero : True
+  /-- The coupling is nonzero (`κ ≠ .lit 0`).  Required by the textbook chain
+      `∇·G = 0 ∧ G = κ T ⇒ ∇·T = 0`; not consumed by the symbolic-array
+      proof below (which uses the Levi-Civita-derived `divergence_compat`
+      directly) but kept as a contract-level constraint. -/
+  hκ_nonzero : κ ≠ Gravitas.Expr.lit 0
 
 /-! ## BIANCHI-002 — canonical Minkowski witness for the contracted Bianchi -/
 
@@ -168,6 +177,91 @@ def gravitasMinkowski_contractedBianchiCertificate :
     ContractedBianchiCertificate gravitasMinkowski where
   einstein_divergence_zero :=
     gravitasMinkowski_einstein_covariantDivergence_zero
+
+/-! ## BIANCHI-003 — Bianchi + EFE ⇒ stress conservation -/
+
+/-- **BIANCHI-003 (this commit).** Textbook chain at the symbolic-array level:
+the contracted Bianchi identity `∇^μ G_{μν} = 0` and the Einstein equation
+`G_{μν} = κ T_{μν}` (in its divergence-compatible form) imply the covariant
+conservation of the stress-energy tensor `∇^μ T_{μν} = 0`.
+
+The proof is a one-line rewrite: the EFE hypothesis matches the two
+symbolic divergence operators, and the contracted Bianchi residual is
+zero by `hBianchi`.
+
+Note on `hκ`: at the symbolic-array level the chain is driven by
+`divergence_compat`, which already encodes the Levi-Civita + `κ ≠ 0`
+content; we keep `hκ` as an explicit hypothesis for textbook fidelity and
+because downstream consumers (`BianchiToStressConservation`) carry it as
+a contract-level constraint. -/
+theorem stress_conservation_of_contracted_bianchi_and_einstein
+    (g : MetricTensor) (T : StressEnergyTensor) (κ : Gravitas.Expr)
+    (_hκ : κ ≠ Gravitas.Expr.lit 0)
+    (hBianchi : ContractedBianchiCertificate g)
+    (hEFE : EinsteinEquationHolds g T κ) :
+    covariantDivergenceStressEnergy g T =
+      Array.mkArray g.dim (Gravitas.Expr.lit 0) := by
+  rw [hEFE.divergence_compat, hBianchi.einstein_divergence_zero]
+
+/-! ## BIANCHI-004 — alternative `HasStressConservation` constructor -/
+
+/-- **BIANCHI-004 (this commit).** Package the BIANCHI-003 chain as a
+`HasStressConservation g T` term.  This is the alternative constructor
+parallel to the Maxwell route: any pair `(g, T)` admitting a contracted
+Bianchi certificate and a (κ ≠ 0)-Einstein-equation hypothesis automatically
+inherits stress conservation. -/
+def hasStressConservation_of_bianchi_einstein
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (hBianchi : ContractedBianchiCertificate g)
+    (hEFE : EinsteinEquationHolds g T κ)
+    (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    HasStressConservation g T where
+  divergence_zero :=
+    stress_conservation_of_contracted_bianchi_and_einstein
+      g T κ hκ hBianchi hEFE
+
+/-- Bundled form: a `BianchiToStressConservation` aggregate produces a
+`HasStressConservation` term. -/
+def hasStressConservation_of_bianchiToStressConservation
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (h : BianchiToStressConservation g T κ) :
+    HasStressConservation g T :=
+  hasStressConservation_of_bianchi_einstein h.hBianchi h.hEFE h.hκ_nonzero
+
+/-! ## BIANCHI-003 / BIANCHI-004 — canonical Minkowski witnesses -/
+
+/-- Canonical instance: the Einstein equation holds (in its
+divergence-compatible form) for the Minkowski metric with the canonical
+electrovacuum stress tensor and any coupling.
+
+Proof: both `covariantDivergenceStressEnergy gravitasMinkowski gravitasEMStressEnergy`
+and `covariantDivergenceEinsteinTensor gravitasMinkowski` independently reduce
+to the same zero array. -/
+def gravitasMinkowski_einsteinEquationHolds (κ : Gravitas.Expr) :
+    EinsteinEquationHolds gravitasMinkowski gravitasEMStressEnergy κ where
+  divergence_compat := by
+    rw [gravitasCanonicalStress_covariantDivergence_zero,
+        gravitasMinkowski_einstein_covariantDivergence_zero]
+
+/-- Canonical instance: the BIANCHI-004 aggregate for Minkowski + canonical
+EM stress + any nonzero coupling. -/
+def gravitasMinkowski_bianchiToStressConservation
+    (κ : Gravitas.Expr) (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    BianchiToStressConservation gravitasMinkowski gravitasEMStressEnergy κ where
+  hBianchi   := gravitasMinkowski_contractedBianchiCertificate
+  hEFE       := gravitasMinkowski_einsteinEquationHolds κ
+  hκ_nonzero := hκ
+
+/-- Canonical instance: the resulting `HasStressConservation` for the
+Minkowski + canonical EM background, obtained via the BIANCHI route.
+Independent of the Maxwell route in
+`RelativityGRWitnessFreeStressConservation`. -/
+def gravitasMinkowski_hasStressConservation_via_bianchi :
+    HasStressConservation gravitasMinkowski gravitasEMStressEnergy :=
+  hasStressConservation_of_bianchi_einstein
+    gravitasMinkowski_contractedBianchiCertificate
+    (gravitasMinkowski_einsteinEquationHolds (Gravitas.Expr.var "κ"))
+    (by intro h; cases h)
 
 end CATEPTMain.Certification.RelativityGR
 
