@@ -93,6 +93,24 @@ example
     ContractedBianchiCertificate g :=
   contractedBianchiCertificate_of_hasContractedBianchi h
 
+/-! ## BIANCHI-007 — admissibility-layer `HasStressConservation` composition -/
+
+#check hasStressConservation_of_hasContractedBianchi
+#check gravitasMinkowski_hasStressConservation_via_hasContractedBianchi
+
+example
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (hCB : HasContractedBianchi g)
+    (hEFE : EinsteinEquationHolds g T κ)
+    (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    HasStressConservation g T :=
+  hasStressConservation_of_hasContractedBianchi hCB hEFE hκ
+
+example
+    (κ : Gravitas.Expr) (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    HasStressConservation gravitasMinkowski gravitasEMStressEnergy :=
+  gravitasMinkowski_hasStressConservation_via_hasContractedBianchi κ hκ
+
 /-! ## BIANCHI-006 — Bianchi route into `IsCertifiedCurvedGRData` -/
 
 #check certifiedCurvedGRData_of_bianchi_stress

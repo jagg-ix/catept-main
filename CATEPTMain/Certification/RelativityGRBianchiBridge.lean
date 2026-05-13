@@ -300,6 +300,44 @@ def gravitasMinkowski_hasContractedBianchi :
     HasContractedBianchi gravitasMinkowski where
   contracted_bianchi := gravitasMinkowski_einstein_covariantDivergence_zero
 
+/-! ## BIANCHI-007 — admissibility-layer `HasStressConservation` composition
+
+`hasStressConservation_of_bianchi_einstein` (BIANCHI-004) takes a
+`ContractedBianchiCertificate g`.  For curved metrics the natural
+upstream hypothesis is the admissibility-layer `HasContractedBianchi g`
+(BIANCHI-005).  The constructor below composes the admissibility upgrade
+with the BIANCHI-003 theorem so that downstream curved families can land
+a `HasStressConservation g T` term directly from the admissibility
+contract, the Einstein-equation hypothesis, and `κ ≠ 0`. -/
+
+/-- **BIANCHI-007.** Admissibility-layer version of
+`hasStressConservation_of_bianchi_einstein`: given the contracted-Bianchi
+admissibility contract `HasContractedBianchi g`, the Einstein-equation
+hypothesis `EinsteinEquationHolds g T κ`, and `κ ≠ 0`, produce a
+`HasStressConservation g T` term.
+
+Composition of `contractedBianchiCertificate_of_hasContractedBianchi`
+(BIANCHI-005) with `hasStressConservation_of_bianchi_einstein`
+(BIANCHI-004). -/
+def hasStressConservation_of_hasContractedBianchi
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (hCB : HasContractedBianchi g)
+    (hEFE : EinsteinEquationHolds g T κ)
+    (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    HasStressConservation g T :=
+  hasStressConservation_of_bianchi_einstein
+    (contractedBianchiCertificate_of_hasContractedBianchi hCB) hEFE hκ
+
+/-- Canonical Minkowski instance: BIANCHI-007 applied to the canonical
+Minkowski background and any nonzero coupling. -/
+def gravitasMinkowski_hasStressConservation_via_hasContractedBianchi
+    (κ : Gravitas.Expr) (hκ : κ ≠ Gravitas.Expr.lit 0) :
+    HasStressConservation gravitasMinkowski gravitasEMStressEnergy :=
+  hasStressConservation_of_hasContractedBianchi
+    gravitasMinkowski_hasContractedBianchi
+    (gravitasMinkowski_einsteinEquationHolds κ)
+    hκ
+
 /-! ## BIANCHI-006 — Bianchi route into `IsCertifiedCurvedGRData`
 
 The modular `IsCertifiedCurvedGRData` umbrella in
