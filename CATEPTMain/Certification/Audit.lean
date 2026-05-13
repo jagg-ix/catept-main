@@ -283,6 +283,10 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR Bianchi bridge (BIANCHI-006 — Bianchi route into IsCertifiedCurvedGRData) ──
 #print axioms CATEPTMain.Certification.RelativityGR.certifiedCurvedGRData_of_bianchi_stress
 
+-- ── GR Bianchi bridge (BIANCHI-007 — admissibility ⇒ HasStressConservation) ──
+#print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_hasContractedBianchi
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_hasStressConservation_via_hasContractedBianchi
+
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector
