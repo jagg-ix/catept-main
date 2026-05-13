@@ -32,6 +32,9 @@ abbrev bianchiCertOfHas := @contractedBianchiCertificate_of_hasContractedBianchi
 abbrev bianchiCurvedGRDataCtor := @certifiedCurvedGRData_of_bianchi_stress
 abbrev bianchiHasCBToStress := @hasStressConservation_of_hasContractedBianchi
 abbrev bianchiMinkHasCBToStress := gravitasMinkowski_hasStressConservation_via_hasContractedBianchi
+abbrev bianchiFamilyAdmissible := @gravitasMinkowskiFamily_bianchiAdmissible
+abbrev bianchiFamilyProject := @hasContractedBianchi_of_family
+abbrev bianchiFamilyStress := @hasStressConservation_of_family
 
 end GuardAlias
 
@@ -120,6 +123,24 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.bianchiMinkHasCBToStress
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFamilyAdmissible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFamilyAdmissible
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFamilyProject' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFamilyProject
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiFamilyStress' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiFamilyStress
 
 end
 
