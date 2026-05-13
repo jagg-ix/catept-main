@@ -27,6 +27,9 @@ import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
+import CATEPTMain.Certification.RelativityGRSmoothStressConservation
+import CATEPTMain.Certification.RelativityGRSmoothFRW
+import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -368,6 +371,19 @@ or open this file in VS Code with the Lean 4 extension active.
 
 -- ── GR Levi-Civita ladder (LC-008 — symbolic ContractedBianchiCertificate from smooth) ──
 #print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
+
+-- ── GR Levi-Civita ladder (LC-009 — smooth Levi-Civita ⇒ HasStressConservation) ──
+#print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_smooth_leviCivita_einstein
+
+-- ── GR Levi-Civita ladder (LC-010 — smooth FRW family) ──
+#print axioms CATEPTMain.Certification.RelativityGR.smoothFRWFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwLeviCivitaConnection
+#print axioms CATEPTMain.Certification.RelativityGR.frwConnection_isLeviCivita
+#print axioms CATEPTMain.Certification.RelativityGR.frw_bianchiAdmissible
+
+-- ── GR Levi-Civita ladder (LC-011 — smooth Levi-Civita ⇒ CurvedGRDirectCertificate) ──
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedCurvedGRData_of_smooth_leviCivita
+#print axioms CATEPTMain.Certification.RelativityGR.curvedGRDirectCertificate_of_smooth_leviCivita
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed

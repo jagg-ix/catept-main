@@ -10,6 +10,9 @@ import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
+import CATEPTMain.Certification.RelativityGRSmoothStressConservation
+import CATEPTMain.Certification.RelativityGRSmoothFRW
+import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
 
 set_option autoImplicit false
 
@@ -77,5 +80,12 @@ open CATEPTMain.Certification
 #check RelativityGR.gravitasMinkowski_represents_smoothMinkowski
 #check RelativityGR.symbolic_contracted_bianchi_of_smooth
 #check RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
+#check RelativityGR.hasStressConservation_of_smooth_leviCivita_einstein
+#check RelativityGR.smoothFRWFamily
+#check RelativityGR.frwLeviCivitaConnection
+#check RelativityGR.frwConnection_isLeviCivita
+#check RelativityGR.frw_bianchiAdmissible
+#check RelativityGR.certifiedCurvedGRData_of_smooth_leviCivita
+#check RelativityGR.curvedGRDirectCertificate_of_smooth_leviCivita
 
 end CATEPTMain.Certification.Tests.StatusSurface

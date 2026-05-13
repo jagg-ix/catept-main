@@ -12,6 +12,9 @@ import CATEPTMain.Certification.RelativityGRSmoothBianchi
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
 import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
+import CATEPTMain.Certification.RelativityGRSmoothStressConservation
+import CATEPTMain.Certification.RelativityGRSmoothFRW
+import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
 
 set_option autoImplicit false
 
@@ -79,6 +82,13 @@ abbrev lc007SymbolicEinsteinDivergenceRepresentsSmooth := @SymbolicEinsteinDiver
 abbrev lc007gravitasMinkowski_represents_smoothMinkowski := gravitasMinkowski_represents_smoothMinkowski
 abbrev lc007symbolic_contracted_bianchi_of_smooth := @symbolic_contracted_bianchi_of_smooth
 abbrev lc008contractedBianchiCertificate_of_smooth_leviCivita := @contractedBianchiCertificate_of_smooth_leviCivita
+abbrev lc009hasStressConservation_of_smooth_leviCivita_einstein := @hasStressConservation_of_smooth_leviCivita_einstein
+abbrev lc010smoothFRWFamily := @smoothFRWFamily
+abbrev lc010frwLeviCivitaConnection := @frwLeviCivitaConnection
+abbrev lc010frwConnection_isLeviCivita := @frwConnection_isLeviCivita
+abbrev lc010frw_bianchiAdmissible := frw_bianchiAdmissible
+abbrev lc011certifiedCurvedGRData_of_smooth_leviCivita := @certifiedCurvedGRData_of_smooth_leviCivita
+abbrev lc011curvedGRDirectCertificate_of_smooth_leviCivita := @curvedGRDirectCertificate_of_smooth_leviCivita
 
 end GuardAlias
 
@@ -362,6 +372,48 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc008contractedBianchiCertificate_of_smooth_leviCivita
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc009hasStressConservation_of_smooth_leviCivita_einstein' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc009hasStressConservation_of_smooth_leviCivita_einstein
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010smoothFRWFamily' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc010smoothFRWFamily
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010frwLeviCivitaConnection' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc010frwLeviCivitaConnection
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010frwConnection_isLeviCivita' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc010frwConnection_isLeviCivita
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010frw_bianchiAdmissible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc010frw_bianchiAdmissible
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc011certifiedCurvedGRData_of_smooth_leviCivita' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc011certifiedCurvedGRData_of_smooth_leviCivita
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc011curvedGRDirectCertificate_of_smooth_leviCivita' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc011curvedGRDirectCertificate_of_smooth_leviCivita
 
 end
 
