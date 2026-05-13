@@ -150,6 +150,24 @@ example (u : Unit) :
     HasContractedBianchi (gravitasMinkowskiFamily u) :=
   hasContractedBianchi_of_family gravitasMinkowskiFamily_bianchiAdmissible u
 
+/-! ## BIANCHI-009 — second Bianchi identity ⇒ contracted Bianchi certificate -/
+
+#check SecondBianchiIdentity
+#check ContractedBianchiFromSecondBianchi
+#check contractedBianchiCertificate_of_secondBianchi
+#check contractedBianchiFromSecondBianchi
+#check hasContractedBianchi_of_secondBianchi
+#check gravitasMinkowski_secondBianchiIdentity
+
+example
+    {g : MetricTensor}
+    (h : SecondBianchiIdentity g) :
+    ContractedBianchiCertificate g :=
+  contractedBianchiCertificate_of_secondBianchi h
+
+example : SecondBianchiIdentity gravitasMinkowski :=
+  gravitasMinkowski_secondBianchiIdentity
+
 end CATEPTMain.Certification.Tests.GRBianchiBridge
 
 end

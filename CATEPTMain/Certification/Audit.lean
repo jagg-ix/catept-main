@@ -293,6 +293,13 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_family
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowskiFamily_bianchiAdmissible
 
+-- ── GR Bianchi bridge (BIANCHI-009 — second Bianchi identity ⇒ contracted Bianchi) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SecondBianchiIdentity
+#print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiCertificate_of_secondBianchi
+#print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiFromSecondBianchi
+#print axioms CATEPTMain.Certification.RelativityGR.hasContractedBianchi_of_secondBianchi
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_secondBianchiIdentity
+
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector

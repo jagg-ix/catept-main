@@ -35,6 +35,10 @@ abbrev bianchiMinkHasCBToStress := gravitasMinkowski_hasStressConservation_via_h
 abbrev bianchiFamilyAdmissible := @gravitasMinkowskiFamily_bianchiAdmissible
 abbrev bianchiFamilyProject := @hasContractedBianchi_of_family
 abbrev bianchiFamilyStress := @hasStressConservation_of_family
+abbrev bianchiSecondCertCtor := @contractedBianchiCertificate_of_secondBianchi
+abbrev bianchiSecondImplication := @contractedBianchiFromSecondBianchi
+abbrev bianchiSecondHasCB := @hasContractedBianchi_of_secondBianchi
+abbrev bianchiMinkSecond := gravitasMinkowski_secondBianchiIdentity
 
 end GuardAlias
 
@@ -141,6 +145,30 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.bianchiFamilyStress
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiSecondCertCtor' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiSecondCertCtor
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiSecondImplication' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiSecondImplication
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiSecondHasCB' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiSecondHasCB
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.bianchiMinkSecond' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.bianchiMinkSecond
 
 end
 

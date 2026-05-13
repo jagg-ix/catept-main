@@ -441,6 +441,82 @@ def gravitasMinkowskiFamily_bianchiAdmissible :
     BianchiAdmissibleMetricFamily gravitasMinkowskiFamily where
   admissible := fun _ => gravitasMinkowski_hasContractedBianchi
 
+/-! ## BIANCHI-009 — second Bianchi identity ⇒ contracted Bianchi certificate
+
+The differential-geometric second Bianchi identity
+`∇_[a R_{bc]de} = 0` on a (pseudo-)Riemannian manifold, after a double
+contraction with the inverse metric and the Ricci tensor, yields the
+contracted Bianchi identity `∇^μ G_{μν} = 0` for the Einstein tensor
+`G_{μν} := R_{μν} − ½ R g_{μν}` (Wald, *General Relativity* §3.2;
+Carroll, *Spacetime and Geometry* §3.4).
+
+The symbolic-array layer in this repository represents only the
+consequence of that double contraction — namely the vanishing of
+`covariantDivergenceEinsteinTensor g`.  The structure `SecondBianchiIdentity`
+records the named hypothesis that the consequence holds for the metric
+`g`; future commits that compute the actual Riemann-symmetry tensor on
+a curved family will discharge this hypothesis by an honest symbolic
+derivation.  The lemma
+`contractedBianchiCertificate_of_secondBianchi` packages that
+discharge as a constructor, completing the route
+
+    SecondBianchiIdentity g  ⇒  ContractedBianchiCertificate g.
+
+`ContractedBianchiFromSecondBianchi` is the universally-quantified
+Prop-level statement of that implication and is established by the
+constructor; it is exposed as a headline lemma for downstream consumers
+that want to refer to the implication by name rather than apply the
+constructor pointwise. -/
+
+/-- **BIANCHI-009.** Named hypothesis for the second Bianchi identity at a
+metric `g`, expressed at the symbolic-array layer of this repository as
+the vanishing of `covariantDivergenceEinsteinTensor g`.  The field name
+`second_bianchi_einstein_divergence_zero` documents that the recorded
+consequence is the double-contracted statement
+`∇^μ G_{μν} = 0` that follows from the differential second Bianchi
+identity by tracing with the inverse metric and the Ricci tensor (Wald
+§3.2; Carroll §3.4). -/
+structure SecondBianchiIdentity (g : MetricTensor) : Prop where
+  /-- Double-contracted consequence of the second Bianchi identity: the
+      symbolic covariant divergence of the Einstein tensor vanishes. -/
+  second_bianchi_einstein_divergence_zero :
+    covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)
+
+/-- Constructor: a second-Bianchi witness yields the contracted-Bianchi
+certificate (BIANCHI-002). -/
+def contractedBianchiCertificate_of_secondBianchi
+    {g : MetricTensor} (h : SecondBianchiIdentity g) :
+    ContractedBianchiCertificate g where
+  einstein_divergence_zero := h.second_bianchi_einstein_divergence_zero
+
+/-- The headline implication
+`SecondBianchiIdentity g ⇒ ContractedBianchiCertificate g`, packaged
+as a universally-quantified `Prop`.  Discharged by the constructor
+`contractedBianchiCertificate_of_secondBianchi`. -/
+def ContractedBianchiFromSecondBianchi : Prop :=
+  ∀ {g : MetricTensor}, SecondBianchiIdentity g → ContractedBianchiCertificate g
+
+/-- The headline implication holds. -/
+theorem contractedBianchiFromSecondBianchi :
+    ContractedBianchiFromSecondBianchi :=
+  fun h => contractedBianchiCertificate_of_secondBianchi h
+
+/-- The contracted-Bianchi admissibility contract (BIANCHI-005) also
+follows from a second-Bianchi witness. -/
+def hasContractedBianchi_of_secondBianchi
+    {g : MetricTensor} (h : SecondBianchiIdentity g) :
+    HasContractedBianchi g where
+  contracted_bianchi := h.second_bianchi_einstein_divergence_zero
+
+/-- Canonical Minkowski witness for the second Bianchi identity at the
+symbolic-array layer: the covariant divergence of the Einstein tensor
+already vanishes on the canonical Minkowski background by
+`gravitasMinkowski_einstein_covariantDivergence_zero`. -/
+def gravitasMinkowski_secondBianchiIdentity :
+    SecondBianchiIdentity gravitasMinkowski where
+  second_bianchi_einstein_divergence_zero :=
+    gravitasMinkowski_einstein_covariantDivergence_zero
+
 end CATEPTMain.Certification.RelativityGR
 
 end
