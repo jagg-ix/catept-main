@@ -17,6 +17,7 @@ import CATEPTMain.Certification.RelativityGRVMLFamily
 import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
 import CATEPTMain.Certification.RelativityGRWitnessFreeStressConservation
 import CATEPTMain.Certification.RelativityGRWitnessFreeFamilyCertificate
+import CATEPTMain.Certification.RelativityGRBianchiBridge
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -250,6 +251,13 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for_source_holds
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for
 #print axioms CATEPTMain.Certification.RelativityGR.curved_gr_direct_to_einstein_certificate_for_holds
+
+-- ── GR Bianchi bridge (BIANCHI-001 inventory layer) ────────────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.BianchiBridgeSurface
+#print axioms CATEPTMain.Certification.RelativityGR.bianchiBridgeSurface
+#print axioms CATEPTMain.Certification.RelativityGR.ContractedBianchiCertificate
+#print axioms CATEPTMain.Certification.RelativityGR.EinsteinEquationHolds
+#print axioms CATEPTMain.Certification.RelativityGR.BianchiToStressConservation
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
