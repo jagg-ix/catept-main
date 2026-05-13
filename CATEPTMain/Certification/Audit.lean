@@ -275,6 +275,14 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_bianchiToStressConservation
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_hasStressConservation_via_bianchi
 
+-- ── GR Bianchi bridge (BIANCHI-005 — general non-Minkowski admissibility) ──
+#print axioms CATEPTMain.Certification.RelativityGR.HasContractedBianchi
+#print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiCertificate_of_hasContractedBianchi
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_hasContractedBianchi
+
+-- ── GR Bianchi bridge (BIANCHI-006 — Bianchi route into IsCertifiedCurvedGRData) ──
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedCurvedGRData_of_bianchi_stress
+
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasFaraday_double_hodge_bivector
