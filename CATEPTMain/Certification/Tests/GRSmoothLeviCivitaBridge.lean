@@ -10,6 +10,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiBianchi
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiContractedCertificate
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
 
 noncomputable section
 
@@ -108,6 +109,10 @@ example :
     covariantDivergenceStressEnergy gravitasMinkowski gravitasEMStressEnergy =
       Array.mkArray gravitasMinkowski.dim (.lit 0) :=
   gravitasMinkowski_hasStressConservation_from_smooth.divergence_zero
+
+-- Target M — Minkowski CurvedDirect certificate from the smooth route (PR6).
+#check gravitasMinkowski_certifiedCurvedGRData_from_smooth
+#check gravitasMinkowski_curvedGRDirectCertificate_from_smooth
 
 end CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 
