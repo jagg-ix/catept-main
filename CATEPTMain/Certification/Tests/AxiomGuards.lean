@@ -27,6 +27,7 @@ import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
 import CATEPTMain.Certification.RelativityGRFRWMatterModel
 import CATEPTMain.Certification.RelativityGRFRWPerfectFluidContinuity
 import CATEPTMain.Certification.RelativityGRSmoothFRWCurvedDirect
+import CATEPTMain.Certification.RelativityGRFRWCurvedDirectFromModels
 import CATEPTMain.Certification.RelativityGRFRWChartSymbolicContract
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 
@@ -131,6 +132,8 @@ abbrev frwContinuityEquation := @FRWContinuityEquation
 abbrev frwMatterModelOfPerfectFluidContinuity := @frwMatterModel_of_perfectFluidContinuity
 abbrev frwSmoothCurvedDataOfRaw := @frwCertifiedCurvedGRData_from_smooth_of_raw
 abbrev frwSmoothCurvedDirectOfRaw := @frwCurvedGRDirectCertificate_from_smooth_of_raw
+abbrev frwCertifiedCurvedGRDataFromModels := @frwCertifiedCurvedGRData_from_models
+abbrev frwCurvedGRDirectCertificateFromModels := @frwCurvedGRDirectCertificate_from_models
 abbrev frwChartCompatible := @FRWChartCompatible
 abbrev frwSymbolicDivergenceSimplifies := @FRWSymbolicDivergenceSimplifies
 abbrev frwSmoothRepresentsOfRawNamed := @smoothFRW_represents_gravitasFRW_of_raw_named
@@ -624,6 +627,18 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwSmoothCurvedDirectOfRaw
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwCertifiedCurvedGRDataFromModels' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwCertifiedCurvedGRDataFromModels
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwCurvedGRDirectCertificateFromModels' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwCurvedGRDirectCertificateFromModels
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwChartCompatible' depends on axioms: [propext,
  Classical.choice,
