@@ -13,3 +13,4 @@ import CATEPTMain.Certification.Tests.GRBianchiBridge
 import CATEPTMain.Certification.Tests.GRBianchiCurvatureIdentity
 import CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 import CATEPTMain.Certification.Tests.GRFRWDerivedTargets
+import CATEPTMain.Certification.Tests.GRSmoothFRWDerivedBianchi
