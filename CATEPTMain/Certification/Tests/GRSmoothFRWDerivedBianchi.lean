@@ -18,6 +18,7 @@ open CATEPTMain.Certification.RelativityGR
 #check frwLeviCivitaConnectionRaw
 #check frwConnectionRaw_isLeviCivita
 #check SmoothFRWRepresentsGravitasFRW
+#check @smoothFRW_represents_gravitasFRW_of_raw
 #check frw_hasContractedBianchi_from_smooth
 #check frwDerivedBianchiTarget_from_smooth
 
