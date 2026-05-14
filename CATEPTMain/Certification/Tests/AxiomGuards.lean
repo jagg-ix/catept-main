@@ -77,6 +77,8 @@ abbrev lc005SmoothSecondBianchiIdentity := @SmoothSecondBianchiIdentity
 abbrev lc005smooth_second_bianchi_of_leviCivita := @smooth_second_bianchi_of_leviCivita
 abbrev lc006zeroSmoothTensorField := @zeroSmoothTensorField
 abbrev lc006smooth_contracted_bianchi := @smooth_contracted_bianchi
+abbrev lc006smoothEinsteinTensor_minkowski_components_zero := @smoothEinsteinTensor_minkowski_components_zero
+abbrev lc006leviCivitaDivergenceEinsteinTensor_minkowski_components_zero := @leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
 abbrev lc007coordinateArrayOfSmoothTensor := @coordinateArrayOfSmoothTensor
 abbrev lc007GravitasRepresentsSmoothMetric := @GravitasRepresentsSmoothMetric
 abbrev lc007SymbolicEinsteinDivergenceRepresentsSmooth := @SymbolicEinsteinDivergenceRepresentsSmooth
@@ -314,15 +316,18 @@ end GuardAlias
 #guard_msgs in
 #print axioms GuardAlias.lc003SmoothEinsteinTensor
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc003smoothEinsteinTensor' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc003smoothEinsteinTensor' depends on axioms: [propext,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc003smoothEinsteinTensor
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc004LeviCivitaDivergence' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc004LeviCivitaDivergence' depends on axioms: [propext,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc004LeviCivitaDivergence
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc004LeviCivitaDivergenceEinsteinTensor' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc004LeviCivitaDivergenceEinsteinTensor' depends on axioms: [propext,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc004LeviCivitaDivergenceEinsteinTensor
 
@@ -334,16 +339,27 @@ end GuardAlias
 #guard_msgs in
 #print axioms GuardAlias.lc005smooth_second_bianchi_of_leviCivita
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006zeroSmoothTensorField' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006zeroSmoothTensorField' depends on axioms: [propext,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc006zeroSmoothTensorField
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006smooth_contracted_bianchi' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006smooth_contracted_bianchi' depends on axioms: [propext,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc006smooth_contracted_bianchi
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007coordinateArrayOfSmoothTensor' depends on axioms: [propext,
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006smoothEinsteinTensor_minkowski_components_zero' depends on axioms: [propext,
  Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc006smoothEinsteinTensor_minkowski_components_zero
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc006leviCivitaDivergenceEinsteinTensor_minkowski_components_zero' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.lc006leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc007coordinateArrayOfSmoothTensor' does not depend on any axioms -/
 #guard_msgs in
 #print axioms GuardAlias.lc007coordinateArrayOfSmoothTensor
 
@@ -417,7 +433,8 @@ end GuardAlias
 #guard_msgs in
 #print axioms GuardAlias.lc011curvedGRDirectCertificate_of_smooth_leviCivita
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lcBridgeCertifiedSmoothContractedBianchi' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lcBridgeCertifiedSmoothContractedBianchi' depends on axioms: [propext,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lcBridgeCertifiedSmoothContractedBianchi
 

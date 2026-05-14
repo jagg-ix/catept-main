@@ -362,6 +362,8 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR Levi-Civita ladder (LC-006 — smooth contracted Bianchi `∇^a G_{ab} = 0`) ──
 #print axioms CATEPTMain.Certification.RelativityGR.zeroSmoothTensorField
 #print axioms CATEPTMain.Certification.RelativityGR.smooth_contracted_bianchi
+#print axioms CATEPTMain.Certification.RelativityGR.smoothEinsteinTensor_minkowski_components_zero
+#print axioms CATEPTMain.Certification.RelativityGR.leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
 
 -- ── GR Levi-Civita ladder (LC-007 — smooth↔Gravitas bridge) ──
 #print axioms CATEPTMain.Certification.RelativityGR.coordinateArrayOfSmoothTensor

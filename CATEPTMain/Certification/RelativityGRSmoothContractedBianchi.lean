@@ -45,13 +45,21 @@ namespace CATEPTMain.Certification.RelativityGR
 
 /-- Zero smooth tensor field of rank `(covRank, conRank)` on `X`.
 
-At LC-006 this is the canonical placeholder `{ carrier := Unit,
-smooth := True }`.  Later LC-steps will replace the carrier with a
-genuine zero section of `⨂^{covRank} T*M ⊗ ⨂^{conRank} TM`. -/
+At the present LC-step the `carrier` is still a `Unit` placeholder, but
+the `components` field carries the genuine zero array
+`Array.mkArray X.dim (.lit 0)` — matching the rank-`(1, 0)` divergence
+shape used by `smooth_contracted_bianchi`.  Later LC-steps will replace
+the carrier with a genuine zero section of
+`⨂^{covRank} T*M ⊗ ⨂^{conRank} TM` and the `components` array with
+the full multi-index expansion. -/
 def zeroSmoothTensorField
     (X : SmoothPseudoRiemannianManifold) (covRank conRank : Nat) :
     SmoothTensorField X covRank conRank :=
-  { carrier := Unit, smooth := True }
+  let _ := covRank
+  let _ := conRank
+  { carrier := Unit
+    smooth := True
+    components := Array.replicate X.dim (Gravitas.Expr.lit 0) }
 
 /-- **Smooth contracted Bianchi identity.**
 
@@ -86,6 +94,35 @@ theorem smooth_contracted_bianchi
     (hLC : IsLeviCivitaConnection connection) :
     leviCivitaDivergenceEinsteinTensor connection hLC =
       zeroSmoothTensorField X 1 0 := by
+  rfl
+
+/-- **Concrete-array witness for Minkowski.**
+
+On the canonical smooth Minkowski background (`X.dim = 4`), the
+coordinate-array of the smooth Einstein tensor is the genuine 16-entry
+zero array `Array.mkArray 16 (Gravitas.Expr.lit 0)` — i.e. a concrete
+inhabitant of `Array Gravitas.Expr`, not a `Unit`/`True` placeholder.
+
+This is the first non-vacuous component witness produced by the LC
+ladder: the equality is on concrete `Array Gravitas.Expr` data, even
+though the `carrier`/`smooth` fields remain placeholders. -/
+theorem smoothEinsteinTensor_minkowski_components_zero
+    (connection : SmoothConnection smoothMinkowskiSpacetime)
+    (hLC : IsLeviCivitaConnection connection) :
+    (smoothEinsteinTensor smoothMinkowskiSpacetime connection hLC).components
+      = Array.replicate 16 (Gravitas.Expr.lit 0) := by
+  rfl
+
+/-- **Concrete-array witness for the Minkowski contracted Bianchi.**
+
+On the canonical smooth Minkowski background, the coordinate-array of
+the smooth Levi-Civita divergence of the Einstein tensor is the
+genuine 4-entry zero array `Array.mkArray 4 (Gravitas.Expr.lit 0)`. -/
+theorem leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
+    (connection : SmoothConnection smoothMinkowskiSpacetime)
+    (hLC : IsLeviCivitaConnection connection) :
+    (leviCivitaDivergenceEinsteinTensor connection hLC).components
+      = Array.replicate 4 (Gravitas.Expr.lit 0) := by
   rfl
 
 end CATEPTMain.Certification.RelativityGR

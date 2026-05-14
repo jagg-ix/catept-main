@@ -53,6 +53,24 @@ example
       zeroSmoothTensorField X 1 0 :=
   certified_smooth_contracted_bianchi connection hLC
 
+-- Target H — Non-vacuous Minkowski concrete-array witnesses.
+#check smoothEinsteinTensor_minkowski_components_zero
+#check leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
+
+example
+    (connection : SmoothConnection smoothMinkowskiSpacetime)
+    (hLC : IsLeviCivitaConnection connection) :
+    (smoothEinsteinTensor smoothMinkowskiSpacetime connection hLC).components
+      = Array.replicate 16 (Gravitas.Expr.lit 0) :=
+  smoothEinsteinTensor_minkowski_components_zero connection hLC
+
+example
+    (connection : SmoothConnection smoothMinkowskiSpacetime)
+    (hLC : IsLeviCivitaConnection connection) :
+    (leviCivitaDivergenceEinsteinTensor connection hLC).components
+      = Array.replicate 4 (Gravitas.Expr.lit 0) :=
+  leviCivitaDivergenceEinsteinTensor_minkowski_components_zero connection hLC
+
 end CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 
 end
