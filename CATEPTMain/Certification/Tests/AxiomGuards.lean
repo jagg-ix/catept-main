@@ -26,6 +26,7 @@ import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
 import CATEPTMain.Certification.RelativityGRFRWMatterModel
 import CATEPTMain.Certification.RelativityGRSmoothFRWCurvedDirect
+import CATEPTMain.Certification.RelativityGRFRWChartSymbolicContract
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 
 set_option autoImplicit false
@@ -126,6 +127,9 @@ abbrev frwEFEFromRaw := @frw_einsteinEquationHolds_from_raw
 abbrev frwDerivedEFETargetFromMatter := @frwDerivedEFETarget_from_matter
 abbrev frwSmoothCurvedDataOfRaw := @frwCertifiedCurvedGRData_from_smooth_of_raw
 abbrev frwSmoothCurvedDirectOfRaw := @frwCurvedGRDirectCertificate_from_smooth_of_raw
+abbrev frwChartCompatible := @FRWChartCompatible
+abbrev frwSymbolicDivergenceSimplifies := @FRWSymbolicDivergenceSimplifies
+abbrev frwSmoothRepresentsOfRawNamed := @smoothFRW_represents_gravitasFRW_of_raw_named
 abbrev edlLiteralTensorEquation := @LiteralEinsteinTensorEquation
 abbrev edlCovariantDivergenceLinear := @CovariantDivergenceLinear
 abbrev edlCouplingCovariantlyConstant := @CouplingCovariantlyConstant
@@ -598,6 +602,24 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwSmoothCurvedDirectOfRaw
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwChartCompatible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwChartCompatible
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSymbolicDivergenceSimplifies' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSymbolicDivergenceSimplifies
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothRepresentsOfRawNamed' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSmoothRepresentsOfRawNamed
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlLiteralTensorEquation' depends on axioms: [propext,
  Classical.choice,
