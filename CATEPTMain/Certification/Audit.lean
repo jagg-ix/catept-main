@@ -33,6 +33,8 @@ import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
 import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiBianchi
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiContractedCertificate
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -388,8 +390,16 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR Levi-Civita ladder (LC-008 — symbolic ContractedBianchiCertificate from smooth) ──
 #print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
 
+-- ── GR Levi-Civita ladder (LC-008 specialization — Minkowski ContractedBianchiCertificate from smooth) ──
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_symbolicRepresents_smooth
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_contractedBianchiCertificate_from_smooth
+
 -- ── GR Levi-Civita ladder (LC-009 — smooth Levi-Civita ⇒ HasStressConservation) ──
 #print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_smooth_leviCivita_einstein
+
+-- ── GR Levi-Civita ladder (LC-009 specialization — Minkowski HasStressConservation from smooth) ──
+#print axioms CATEPTMain.Certification.RelativityGR.kappa_var_ne_zero_lit
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_hasStressConservation_from_smooth
 
 -- ── GR Levi-Civita ladder (LC-010 — smooth FRW family) ──
 #print axioms CATEPTMain.Certification.RelativityGR.smoothFRWFamily
