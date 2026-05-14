@@ -23,6 +23,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
 import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
+import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 
 set_option autoImplicit false
 
@@ -114,6 +115,10 @@ abbrev frwDerivedParameter_of_targets := @frwParameter_of_derived_targets
 abbrev frwSmoothDerivedBianchiRepr := @SmoothFRWRepresentsGravitasFRW
 abbrev frwSmoothDerivedBianchi := @frw_hasContractedBianchi_from_smooth
 abbrev frwSmoothDerivedBianchiTarget := @frwDerivedBianchiTarget_from_smooth
+abbrev edlLiteralTensorEquation := @LiteralEinsteinTensorEquation
+abbrev edlCovariantDivergenceLinear := @CovariantDivergenceLinear
+abbrev edlCouplingCovariantlyConstant := @CouplingCovariantlyConstant
+abbrev edlDivergenceCompatOfLiteral := @divergence_compat_of_literal_tensor_equation
 abbrev lc010smoothFRWFamily := @smoothFRWFamily
 abbrev lc010frwLeviCivitaConnection := @frwLeviCivitaConnection
 abbrev lc010frwConnection_isLeviCivita := @frwConnection_isLeviCivita
@@ -540,6 +545,26 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwSmoothDerivedBianchiTarget
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlLiteralTensorEquation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.edlLiteralTensorEquation
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlCovariantDivergenceLinear' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.edlCovariantDivergenceLinear
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlCouplingCovariantlyConstant' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.edlCouplingCovariantlyConstant
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlDivergenceCompatOfLiteral' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.edlDivergenceCompatOfLiteral
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010smoothFRWFamily' depends on axioms: [propext,
  Classical.choice,
