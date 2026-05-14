@@ -11,6 +11,9 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
 import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
+import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
+import CATEPTMain.Certification.RelativityGRFRWMatterModel
+import CATEPTMain.Certification.RelativityGRSmoothFRWCurvedDirect
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 import CATEPTMain.Certification.UniversalCertificate
 
@@ -59,6 +62,13 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.gravitasMinkowski_curvedGRDirectCertificate_from_smooth
 #check CATEPTMain.Certification.RelativityGR.FRWRawParameter
 #check CATEPTMain.Certification.RelativityGR.frw_hasContractedBianchi_from_smooth
+#check CATEPTMain.Certification.RelativityGR.frw_hasStressConservation_from_smooth_of_raw
+#check CATEPTMain.Certification.RelativityGR.frwDerivedEFETarget_from_smooth_of_raw
+#check CATEPTMain.Certification.RelativityGR.FRWMatterModel
+#check CATEPTMain.Certification.RelativityGR.frw_einsteinEquationHolds_from_raw
+#check CATEPTMain.Certification.RelativityGR.frwDerivedEFETarget_from_matter
+#check CATEPTMain.Certification.RelativityGR.frwCertifiedCurvedGRData_from_smooth_of_raw
+#check CATEPTMain.Certification.RelativityGR.frwCurvedGRDirectCertificate_from_smooth_of_raw
 #check CATEPTMain.Certification.RelativityGR.LiteralEinsteinTensorEquation
 #check CATEPTMain.Certification.RelativityGR.divergence_compat_of_literal_tensor_equation
 
@@ -69,35 +79,29 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.universal_vml_maxwell_equilibrium_certified
 
 /-!
-## Future general theorems
+## Pending
 
 Do not move these into the implemented section until the named Lean declarations
 exist and are audited:
 
-Constructor-level assumption-indexed generalization is implemented; the items
-below remain the outstanding witness-free derivation goals.
-
-* witness-free full tensor equality `hodgeStarEM g (hodgeStarEM g F) = F`;
-* witness-free curved `covariantDivergenceStressEnergy g T = 0` for arbitrary
-  smooth `(g, T)` (the canonical smooth Minkowski case is now done via
-  `gravitasMinkowski_hasStressConservation_from_smooth`);
-* witness-free Einstein equation derivation `EinsteinTensor.ofMetric g = κT`;
-* witness-free ADM constraints derivation;
-* full Maxwell curve-space / pphi2 reconstruction theorem (beyond the current
-  interface-level certificate);
-* full non-placeholder smooth manifold / tensor-field implementation
-  (`SmoothTensorField` carries coordinate `components` but smoothness/carrier
-  are still placeholder);
-* full second-Bianchi ⇒ contracted-Bianchi derivation from Riemann curvature
-  symmetries for arbitrary metrics (canonical Minkowski is done as a named
-  surface via `smoothMinkowski_contracted_bianchi_nonvacuous` but still routes
-  through generic LC-006);
-* derive `SmoothFRWRepresentsGravitasFRW p` from `FRWRawParameter` data,
-  removing the explicit representation-witness assumption in
-  `frw_hasContractedBianchi_from_smooth`;
-* close `LiteralEinsteinTensorEquation.divergence_compat_witness` by replacing
-  it with a derivation from `residual_zero` + `CovariantDivergenceLinear` +
-  `CouplingCovariantlyConstant`.
+* derive `SmoothFRWRepresentsGravitasFRW p` automatically from
+  `FRWRawParameter` data, removing the explicit representation-witness
+  hypothesis in `frw_hasContractedBianchi_from_smooth` and
+  `frw_hasStressConservation_from_smooth_of_raw`;
+* derive `FRWMatterModel p` from perfect-fluid continuity equations,
+  removing the explicit divergence-compat hypothesis in
+  `frw_einsteinEquationHolds_from_raw`;
+* derive FRW Hodge / Einstein / ADM closures automatically, removing the
+  explicit `hHodge`, `hEinstein`, `hADM` hypotheses in
+  `frwCertifiedCurvedGRData_from_smooth_of_raw` and
+  `frwCurvedGRDirectCertificate_from_smooth_of_raw`;
+* remove `divergence_compat_witness` from `LiteralEinsteinTensorEquation`
+  (the bridge field is gone from the structure; only stale doc-comment
+  mentions remain to be scrubbed);
+* prove full second-Bianchi ⇒ contracted-Bianchi from Riemann symmetries
+  for arbitrary metrics (canonical Minkowski is done as a named surface
+  via `smoothMinkowski_contracted_bianchi_nonvacuous` but still routes
+  through generic LC-006).
 -/
 
 end CATEPTMain.Certification.Tests.ClaimMatrix
