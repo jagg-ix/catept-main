@@ -24,6 +24,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
 import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
+import CATEPTMain.Certification.RelativityGRFRWMatterModel
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 
 set_option autoImplicit false
@@ -119,6 +120,9 @@ abbrev frwSmoothDerivedBianchiTarget := @frwDerivedBianchiTarget_from_smooth
 abbrev frwSmoothRepresentsOfRaw := @smoothFRW_represents_gravitasFRW_of_raw
 abbrev frwSmoothDerivedStress := @frw_hasStressConservation_from_smooth_of_raw
 abbrev frwSmoothDerivedEFETarget := @frwDerivedEFETarget_from_smooth_of_raw
+abbrev frwMatterModel := @FRWMatterModel
+abbrev frwEFEFromRaw := @frw_einsteinEquationHolds_from_raw
+abbrev frwDerivedEFETargetFromMatter := @frwDerivedEFETarget_from_matter
 abbrev edlLiteralTensorEquation := @LiteralEinsteinTensorEquation
 abbrev edlCovariantDivergenceLinear := @CovariantDivergenceLinear
 abbrev edlCouplingCovariantlyConstant := @CouplingCovariantlyConstant
@@ -561,6 +565,24 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwSmoothDerivedEFETarget
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwMatterModel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwMatterModel
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwEFEFromRaw' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwEFEFromRaw
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwDerivedEFETargetFromMatter' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwDerivedEFETargetFromMatter
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlLiteralTensorEquation' depends on axioms: [propext,
  Classical.choice,
