@@ -12,3 +12,4 @@ import CATEPTMain.Certification.Tests.AxiomGuards
 import CATEPTMain.Certification.Tests.GRBianchiBridge
 import CATEPTMain.Certification.Tests.GRBianchiCurvatureIdentity
 import CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
+import CATEPTMain.Certification.Tests.GRFRWDerivedTargets
