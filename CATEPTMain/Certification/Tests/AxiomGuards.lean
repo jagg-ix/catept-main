@@ -22,6 +22,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiContractedCertificate
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
 import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
+import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
 
 set_option autoImplicit false
 
@@ -110,6 +111,9 @@ abbrev frwDerivedfrwRawMetricFamily := @frwRawMetricFamily
 abbrev frwDerivedBianchiTarget := @FRWDerivedBianchiTarget
 abbrev frwDerivedEFETarget := @FRWDerivedEFETarget
 abbrev frwDerivedParameter_of_targets := @frwParameter_of_derived_targets
+abbrev frwSmoothDerivedBianchiRepr := @SmoothFRWRepresentsGravitasFRW
+abbrev frwSmoothDerivedBianchi := @frw_hasContractedBianchi_from_smooth
+abbrev frwSmoothDerivedBianchiTarget := @frwDerivedBianchiTarget_from_smooth
 abbrev lc010smoothFRWFamily := @smoothFRWFamily
 abbrev lc010frwLeviCivitaConnection := @frwLeviCivitaConnection
 abbrev lc010frwConnection_isLeviCivita := @frwConnection_isLeviCivita
@@ -518,6 +522,24 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwDerivedParameter_of_targets
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothDerivedBianchiRepr' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSmoothDerivedBianchiRepr
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothDerivedBianchi' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSmoothDerivedBianchi
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothDerivedBianchiTarget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSmoothDerivedBianchiTarget
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010smoothFRWFamily' depends on axioms: [propext,
  Classical.choice,
