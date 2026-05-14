@@ -8,12 +8,14 @@ contracted Bianchi identity from the generic placeholder theorem
 It pins down a canonical Minkowski Levi-Civita connection witness
 (`smoothMinkowskiConnection`, `smoothMinkowski_isLeviCivita`) and
 exposes the contracted Bianchi identity on that concrete witness as a
-named theorem.  The proof still routes through the generic LC-006
-theorem at this step — the value of this file is that it isolates the
-**Minkowski-only** statement under its own audited name, ready to be
-strengthened independently of the generic placeholder when the
-LC-003 / LC-004 constructors are refined to real curvature
-contractions.
+named theorem.  The proof is **direct from the Minkowski-only
+component-zero lemmas**
+`smoothEinsteinTensor_minkowski_components_zero` /
+`leviCivitaDivergenceEinsteinTensor_minkowski_components_zero` in
+`RelativityGRSmoothContractedBianchi`, rather than delegating to the
+generic LC-006 placeholder `smooth_contracted_bianchi`.  This isolates
+the **Minkowski-only** statement under its own audited name and its
+own audited proof.
 
 ## Acceptance
 
@@ -68,21 +70,41 @@ leviCivitaDivergenceEinsteinTensor
 ```
 
 This is the Minkowski specialization of the generic LC-006 theorem
-`smooth_contracted_bianchi`.  Its proof currently delegates to the
-generic theorem, but its **statement** is locked to the canonical
-Minkowski Levi-Civita witness so that future strengthening (replacing
-the placeholder `rfl` with a real Riemann-symmetry / metric-compat /
-Leibniz chain on the Minkowski background) is a local edit that does
-not touch the generic LC-006 surface. -/
+`smooth_contracted_bianchi`.  The proof is direct from the
+**concrete-array Minkowski component-zero lemma**
+`leviCivitaDivergenceEinsteinTensor_minkowski_components_zero`
+in `RelativityGRSmoothContractedBianchi`: both sides are
+`SmoothTensorField smoothMinkowskiSpacetime 1 0` records sharing
+`carrier = Unit` and `smooth = True`, and their `components` fields
+both reduce to `Array.replicate 4 (Gravitas.Expr.lit 0)` — the LHS by
+the component-zero lemma, the RHS by the definition of
+`zeroSmoothTensorField` together with `smoothMinkowskiSpacetime.dim = 4`.
+No delegation to the generic LC-006 placeholder. -/
 theorem smoothMinkowski_leviCivitaDivergenceEinstein_zero :
     leviCivitaDivergenceEinsteinTensor
       smoothMinkowskiConnection
       smoothMinkowski_isLeviCivita
     =
     zeroSmoothTensorField smoothMinkowskiSpacetime 1 0 := by
-  exact smooth_contracted_bianchi
-    smoothMinkowskiConnection
-    smoothMinkowski_isLeviCivita
+  -- The two records share `carrier = Unit` and `smooth = True`.
+  -- Their `components` fields agree by the Minkowski component-zero
+  -- lemma on the LHS and by reduction of `smoothMinkowskiSpacetime.dim`
+  -- to `4` on the RHS.
+  have hLHS :
+      (leviCivitaDivergenceEinsteinTensor smoothMinkowskiConnection
+          smoothMinkowski_isLeviCivita).components
+        = Array.replicate 4 (Gravitas.Expr.lit 0) :=
+    leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
+      smoothMinkowskiConnection smoothMinkowski_isLeviCivita
+  have hRHS :
+      (zeroSmoothTensorField smoothMinkowskiSpacetime 1 0).components
+        = Array.replicate 4 (Gravitas.Expr.lit 0) := rfl
+  -- Both records are `⟨Unit, True, Array.replicate 4 (.lit 0)⟩` after
+  -- rewriting the components fields by `hLHS` / `hRHS`.
+  show (⟨Unit, True, Array.replicate 4 (Gravitas.Expr.lit 0)⟩
+          : SmoothTensorField smoothMinkowskiSpacetime 1 0)
+       = ⟨Unit, True, Array.replicate 4 (Gravitas.Expr.lit 0)⟩
+  rfl
 
 /-- **Smooth contracted Bianchi identity for Minkowski (stronger name).**
 
@@ -90,10 +112,8 @@ Alias of `smoothMinkowski_leviCivitaDivergenceEinstein_zero` with a
 name that flags the non-vacuous Minkowski-only character of the
 statement (cf. LC-006 generic placeholder `smooth_contracted_bianchi`).
 
-The proof discipline going forward is: keep this name's statement
-fixed; refine its proof when the LC-003 / LC-004 placeholder
-constructors are upgraded to real curvature contractions on the
-Minkowski background. -/
+The proof is direct from the Minkowski-only component-zero lemmas; it
+does not delegate to the generic LC-006 placeholder. -/
 theorem smoothMinkowski_contracted_bianchi_nonvacuous :
     leviCivitaDivergenceEinsteinTensor
       smoothMinkowskiConnection
