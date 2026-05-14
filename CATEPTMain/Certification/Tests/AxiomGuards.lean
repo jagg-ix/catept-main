@@ -15,6 +15,7 @@ import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
 import CATEPTMain.Certification.RelativityGRSmoothStressConservation
 import CATEPTMain.Certification.RelativityGRSmoothFRW
 import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
+import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 
 set_option autoImplicit false
 
@@ -89,6 +90,7 @@ abbrev lc010frwConnection_isLeviCivita := @frwConnection_isLeviCivita
 abbrev lc010frw_bianchiAdmissible := frw_bianchiAdmissible
 abbrev lc011certifiedCurvedGRData_of_smooth_leviCivita := @certifiedCurvedGRData_of_smooth_leviCivita
 abbrev lc011curvedGRDirectCertificate_of_smooth_leviCivita := @curvedGRDirectCertificate_of_smooth_leviCivita
+abbrev lcBridgeCertifiedSmoothContractedBianchi := @certified_smooth_contracted_bianchi
 
 end GuardAlias
 
@@ -414,6 +416,10 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc011curvedGRDirectCertificate_of_smooth_leviCivita
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lcBridgeCertifiedSmoothContractedBianchi' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.lcBridgeCertifiedSmoothContractedBianchi
 
 end
 

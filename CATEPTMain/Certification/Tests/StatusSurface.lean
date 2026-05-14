@@ -13,6 +13,7 @@ import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
 import CATEPTMain.Certification.RelativityGRSmoothStressConservation
 import CATEPTMain.Certification.RelativityGRSmoothFRW
 import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
+import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 
 set_option autoImplicit false
 
@@ -87,5 +88,6 @@ open CATEPTMain.Certification
 #check RelativityGR.frw_bianchiAdmissible
 #check RelativityGR.certifiedCurvedGRData_of_smooth_leviCivita
 #check RelativityGR.curvedGRDirectCertificate_of_smooth_leviCivita
+#check RelativityGR.certified_smooth_contracted_bianchi
 
 end CATEPTMain.Certification.Tests.StatusSurface

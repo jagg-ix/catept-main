@@ -30,6 +30,7 @@ import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
 import CATEPTMain.Certification.RelativityGRSmoothStressConservation
 import CATEPTMain.Certification.RelativityGRSmoothFRW
 import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
+import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -384,6 +385,9 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR Levi-Civita ladder (LC-011 — smooth Levi-Civita ⇒ CurvedGRDirectCertificate) ──
 #print axioms CATEPTMain.Certification.RelativityGR.certifiedCurvedGRData_of_smooth_leviCivita
 #print axioms CATEPTMain.Certification.RelativityGR.curvedGRDirectCertificate_of_smooth_leviCivita
+
+-- ── GR Levi-Civita ladder (umbrella bridge — Target C alias) ────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.certified_smooth_contracted_bianchi
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
