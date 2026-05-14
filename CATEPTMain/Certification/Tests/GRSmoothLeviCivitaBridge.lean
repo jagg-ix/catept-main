@@ -8,6 +8,8 @@ Tests for the umbrella bridge module.
 import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiBianchi
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiContractedCertificate
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 
 noncomputable section
 
@@ -16,6 +18,7 @@ set_option autoImplicit false
 namespace CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 
 open CATEPTMain.Certification.RelativityGR
+open CATEPTMain.Integration.GravitasBridge
 open Gravitas
 
 -- Target A — Inventory: all canonical names elaborate.
@@ -89,6 +92,22 @@ example :
 #check coordinateArrayOfSmoothMinkowskiEinsteinDivergence_zero
 #check gravitasMinkowski_symbolic_divergence_matches_smooth
 #check gravitasMinkowski_symbolicEinsteinDivergenceRepresentsSmooth
+
+-- Target K — Minkowski ContractedBianchiCertificate from the smooth route (PR4).
+#check gravitasMinkowski_symbolicRepresents_smooth
+#check gravitasMinkowski_contractedBianchiCertificate_from_smooth
+
+example : ContractedBianchiCertificate gravitasMinkowski :=
+  gravitasMinkowski_contractedBianchiCertificate_from_smooth
+
+-- Target L — Minkowski HasStressConservation from the smooth route (PR5).
+#check kappa_var_ne_zero_lit
+#check gravitasMinkowski_hasStressConservation_from_smooth
+
+example :
+    covariantDivergenceStressEnergy gravitasMinkowski gravitasEMStressEnergy =
+      Array.mkArray gravitasMinkowski.dim (.lit 0) :=
+  gravitasMinkowski_hasStressConservation_from_smooth.divergence_zero
 
 end CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 
