@@ -31,6 +31,8 @@ import CATEPTMain.Certification.RelativityGRSmoothStressConservation
 import CATEPTMain.Certification.RelativityGRSmoothFRW
 import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
 import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiBianchi
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -364,6 +366,17 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.smooth_contracted_bianchi
 #print axioms CATEPTMain.Certification.RelativityGR.smoothEinsteinTensor_minkowski_components_zero
 #print axioms CATEPTMain.Certification.RelativityGR.leviCivitaDivergenceEinsteinTensor_minkowski_components_zero
+
+-- ── GR Levi-Civita ladder (LC-006 specialization — smooth Minkowski Bianchi) ──
+#print axioms CATEPTMain.Certification.RelativityGR.smoothMinkowskiConnection
+#print axioms CATEPTMain.Certification.RelativityGR.smoothMinkowski_isLeviCivita
+#print axioms CATEPTMain.Certification.RelativityGR.smoothMinkowski_leviCivitaDivergenceEinstein_zero
+#print axioms CATEPTMain.Certification.RelativityGR.smoothMinkowski_contracted_bianchi_nonvacuous
+
+-- ── GR Levi-Civita ladder (LC-007 specialization — smooth Minkowski coordinate bridge) ──
+#print axioms CATEPTMain.Certification.RelativityGR.coordinateArrayOfSmoothMinkowskiEinsteinDivergence_zero
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_symbolic_divergence_matches_smooth
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_symbolicEinsteinDivergenceRepresentsSmooth
 
 -- ── GR Levi-Civita ladder (LC-007 — smooth↔Gravitas bridge) ──
 #print axioms CATEPTMain.Certification.RelativityGR.coordinateArrayOfSmoothTensor
