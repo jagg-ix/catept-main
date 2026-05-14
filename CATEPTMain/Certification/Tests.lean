@@ -14,4 +14,5 @@ import CATEPTMain.Certification.Tests.GRBianchiCurvatureIdentity
 import CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 import CATEPTMain.Certification.Tests.GRFRWDerivedTargets
 import CATEPTMain.Certification.Tests.GRSmoothFRWDerivedBianchi
+import CATEPTMain.Certification.Tests.GRSmoothFRWDerivedStress
 import CATEPTMain.Certification.Tests.GREinsteinDivergenceLinearity
