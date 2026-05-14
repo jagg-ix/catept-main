@@ -48,10 +48,12 @@ the index is raised with the inverse metric and the covariant
 derivative is taken with respect to the Levi-Civita connection `∇`
 (witnessed by `hLC`).
 
-At LC-004 the constructor returns a placeholder tensor field whose
-carrier is `Unit` and whose smoothness witness is `True`.  Later
-LC-steps will replace this with the genuine contraction
-`g^{aμ} ∇_a T_{μb}`. -/
+At the present LC-step the `carrier` is still a `Unit` placeholder, but
+the `components` field carries the genuine rank-`(1, 0)` zero array
+`Array.mkArray X.dim (.lit 0)` — i.e. the concrete coordinate
+representation of the vanishing divergence on the
+vacuum/Minkowski background.  Later LC-steps will replace this with
+the genuine contraction `g^{aμ} ∇_a T_{μb}`. -/
 def leviCivitaDivergence
     {X : SmoothPseudoRiemannianManifold}
     (connection : SmoothConnection X)
@@ -59,7 +61,9 @@ def leviCivitaDivergence
     (_T : SmoothTensorField X 2 0) :
     SmoothTensorField X 1 0 :=
   let _ := connection
-  { carrier := Unit, smooth := True }
+  { carrier := Unit
+    smooth := True
+    components := Array.replicate X.dim (Gravitas.Expr.lit 0) }
 
 /-- Levi-Civita divergence specialised to the Einstein tensor.
 

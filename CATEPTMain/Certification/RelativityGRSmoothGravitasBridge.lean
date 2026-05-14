@@ -59,17 +59,19 @@ open CATEPTMain.Integration.GravitasBridge
 /-- Coordinate array of a smooth tensor field, viewed against the
 ambient chart on `X`.
 
-At LC-007 this is the placeholder `Array.mkArray X.dim (.lit 0)`,
-matching the shape of `covariantDivergenceEinsteinTensor` on a
-canonical Minkowski background.  Later LC-steps will replace this with
-the genuine chart-component evaluation of `T` against the chosen
-atlas. -/
+This is the genuine extraction of the `components` field carried by
+`SmoothTensorField`: the array is the function of `T` returned by its
+own `components` projection.  Concrete witnesses on Minkowski live in
+`RelativityGRSmoothContractedBianchi`:
+`smoothEinsteinTensor_minkowski_components_zero` (16 zeros) and
+`leviCivitaDivergenceEinsteinTensor_minkowski_components_zero`
+(4 zeros). -/
 def coordinateArrayOfSmoothTensor
     {X : SmoothPseudoRiemannianManifold}
     {covRank conRank : Nat}
-    (_T : SmoothTensorField X covRank conRank) :
+    (T : SmoothTensorField X covRank conRank) :
     Array Gravitas.Expr :=
-  Array.mkArray X.dim (.lit 0)
+  T.components
 
 /-- The symbolic Gravitas metric `gSym` is a coordinate representation
 of the smooth metric on `X`.
