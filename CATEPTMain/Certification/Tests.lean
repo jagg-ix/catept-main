@@ -16,4 +16,5 @@ import CATEPTMain.Certification.Tests.GRFRWDerivedTargets
 import CATEPTMain.Certification.Tests.GRSmoothFRWDerivedBianchi
 import CATEPTMain.Certification.Tests.GRSmoothFRWDerivedStress
 import CATEPTMain.Certification.Tests.GRFRWMatterModel
+import CATEPTMain.Certification.Tests.GRSmoothFRWCurvedDirect
 import CATEPTMain.Certification.Tests.GREinsteinDivergenceLinearity
