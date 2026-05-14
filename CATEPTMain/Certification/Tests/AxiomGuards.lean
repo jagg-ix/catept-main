@@ -25,6 +25,7 @@ import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
 import CATEPTMain.Certification.RelativityGRFRWMatterModel
+import CATEPTMain.Certification.RelativityGRFRWPerfectFluidContinuity
 import CATEPTMain.Certification.RelativityGRSmoothFRWCurvedDirect
 import CATEPTMain.Certification.RelativityGRFRWChartSymbolicContract
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
@@ -125,6 +126,9 @@ abbrev frwSmoothDerivedEFETarget := @frwDerivedEFETarget_from_smooth_of_raw
 abbrev frwMatterModel := @FRWMatterModel
 abbrev frwEFEFromRaw := @frw_einsteinEquationHolds_from_raw
 abbrev frwDerivedEFETargetFromMatter := @frwDerivedEFETarget_from_matter
+abbrev frwPerfectFluidStress := @FRWPerfectFluidStress
+abbrev frwContinuityEquation := @FRWContinuityEquation
+abbrev frwMatterModelOfPerfectFluidContinuity := @frwMatterModel_of_perfectFluidContinuity
 abbrev frwSmoothCurvedDataOfRaw := @frwCertifiedCurvedGRData_from_smooth_of_raw
 abbrev frwSmoothCurvedDirectOfRaw := @frwCurvedGRDirectCertificate_from_smooth_of_raw
 abbrev frwChartCompatible := @FRWChartCompatible
@@ -590,6 +594,24 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwDerivedEFETargetFromMatter
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwPerfectFluidStress' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwPerfectFluidStress
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwContinuityEquation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwContinuityEquation
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwMatterModelOfPerfectFluidContinuity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwMatterModelOfPerfectFluidContinuity
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothCurvedDataOfRaw' depends on axioms: [propext,
  Classical.choice,
