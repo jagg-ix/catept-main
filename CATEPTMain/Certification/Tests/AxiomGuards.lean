@@ -21,6 +21,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiContractedCertificate
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
+import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 
 set_option autoImplicit false
 
@@ -104,6 +105,11 @@ abbrev lc009kappa_var_ne_zero_lit := kappa_var_ne_zero_lit
 abbrev lc009Minkowskistress_from_smooth := gravitasMinkowski_hasStressConservation_from_smooth
 abbrev lc011MinkowskicertifiedCurvedGRData_from_smooth := gravitasMinkowski_certifiedCurvedGRData_from_smooth
 abbrev lc011MinkowskicurvedGRDirectCertificate_from_smooth := gravitasMinkowski_curvedGRDirectCertificate_from_smooth
+abbrev frwDerivedFRWRawParameter := @FRWRawParameter
+abbrev frwDerivedfrwRawMetricFamily := @frwRawMetricFamily
+abbrev frwDerivedBianchiTarget := @FRWDerivedBianchiTarget
+abbrev frwDerivedEFETarget := @FRWDerivedEFETarget
+abbrev frwDerivedParameter_of_targets := @frwParameter_of_derived_targets
 abbrev lc010smoothFRWFamily := @smoothFRWFamily
 abbrev lc010frwLeviCivitaConnection := @frwLeviCivitaConnection
 abbrev lc010frwConnection_isLeviCivita := @frwConnection_isLeviCivita
@@ -484,6 +490,34 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.lc011MinkowskicurvedGRDirectCertificate_from_smooth
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwDerivedFRWRawParameter' does not depend on any axioms -/
+#guard_msgs in
+#print axioms GuardAlias.frwDerivedFRWRawParameter
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwDerivedfrwRawMetricFamily' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwDerivedfrwRawMetricFamily
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwDerivedBianchiTarget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwDerivedBianchiTarget
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwDerivedEFETarget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwDerivedEFETarget
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwDerivedParameter_of_targets' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwDerivedParameter_of_targets
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.lc010smoothFRWFamily' depends on axioms: [propext,
  Classical.choice,

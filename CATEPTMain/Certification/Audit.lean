@@ -36,6 +36,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiContractedCertificate
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
+import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -405,6 +406,13 @@ or open this file in VS Code with the Lean 4 extension active.
 -- ── GR Levi-Civita ladder (LC-011 specialization — Minkowski CurvedDirect from smooth) ──
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_certifiedCurvedGRData_from_smooth
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_curvedGRDirectCertificate_from_smooth
+
+-- ── GR FRW derived-witness target shell (BIANCHI-012-derived) ──
+#print axioms CATEPTMain.Certification.RelativityGR.FRWRawParameter
+#print axioms CATEPTMain.Certification.RelativityGR.frwRawMetricFamily
+#print axioms CATEPTMain.Certification.RelativityGR.FRWDerivedBianchiTarget
+#print axioms CATEPTMain.Certification.RelativityGR.FRWDerivedEFETarget
+#print axioms CATEPTMain.Certification.RelativityGR.frwParameter_of_derived_targets
 
 -- ── GR Levi-Civita ladder (LC-010 — smooth FRW family) ──
 #print axioms CATEPTMain.Certification.RelativityGR.smoothFRWFamily
