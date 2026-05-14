@@ -23,6 +23,7 @@ import CATEPTMain.Certification.RelativityGRSmoothMinkowskiStress
 import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCurvedDirect
 import CATEPTMain.Certification.RelativityGRFRWDerivedTargets
 import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedBianchi
+import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 
 set_option autoImplicit false
@@ -116,6 +117,8 @@ abbrev frwSmoothDerivedBianchiRepr := @SmoothFRWRepresentsGravitasFRW
 abbrev frwSmoothDerivedBianchi := @frw_hasContractedBianchi_from_smooth
 abbrev frwSmoothDerivedBianchiTarget := @frwDerivedBianchiTarget_from_smooth
 abbrev frwSmoothRepresentsOfRaw := @smoothFRW_represents_gravitasFRW_of_raw
+abbrev frwSmoothDerivedStress := @frw_hasStressConservation_from_smooth_of_raw
+abbrev frwSmoothDerivedEFETarget := @frwDerivedEFETarget_from_smooth_of_raw
 abbrev edlLiteralTensorEquation := @LiteralEinsteinTensorEquation
 abbrev edlCovariantDivergenceLinear := @CovariantDivergenceLinear
 abbrev edlCouplingCovariantlyConstant := @CouplingCovariantlyConstant
@@ -546,6 +549,18 @@ end GuardAlias
  Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.frwSmoothDerivedBianchiTarget
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothDerivedStress' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSmoothDerivedStress
+
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.frwSmoothDerivedEFETarget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms GuardAlias.frwSmoothDerivedEFETarget
 
 /-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlLiteralTensorEquation' depends on axioms: [propext,
  Classical.choice,
