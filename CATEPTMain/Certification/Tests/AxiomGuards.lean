@@ -115,6 +115,7 @@ abbrev frwDerivedParameter_of_targets := @frwParameter_of_derived_targets
 abbrev frwSmoothDerivedBianchiRepr := @SmoothFRWRepresentsGravitasFRW
 abbrev frwSmoothDerivedBianchi := @frw_hasContractedBianchi_from_smooth
 abbrev frwSmoothDerivedBianchiTarget := @frwDerivedBianchiTarget_from_smooth
+abbrev frwSmoothRepresentsOfRaw := @smoothFRW_represents_gravitasFRW_of_raw
 abbrev edlLiteralTensorEquation := @LiteralEinsteinTensorEquation
 abbrev edlCovariantDivergenceLinear := @CovariantDivergenceLinear
 abbrev edlCouplingCovariantlyConstant := @CouplingCovariantlyConstant
