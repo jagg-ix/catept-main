@@ -6,6 +6,8 @@ Tests for the umbrella bridge module.
 -/
 
 import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiBianchi
+import CATEPTMain.Certification.RelativityGRSmoothMinkowskiCoordinateBridge
 
 noncomputable section
 
@@ -70,6 +72,23 @@ example
     (leviCivitaDivergenceEinsteinTensor connection hLC).components
       = Array.replicate 4 (Gravitas.Expr.lit 0) :=
   leviCivitaDivergenceEinsteinTensor_minkowski_components_zero connection hLC
+
+-- Target I — Minkowski-specialized contracted Bianchi (PR1).
+#check smoothMinkowski_leviCivitaDivergenceEinstein_zero
+#check smoothMinkowski_contracted_bianchi_nonvacuous
+
+example :
+    leviCivitaDivergenceEinsteinTensor
+      smoothMinkowskiConnection
+      smoothMinkowski_isLeviCivita
+    =
+    zeroSmoothTensorField smoothMinkowskiSpacetime 1 0 :=
+  smoothMinkowski_contracted_bianchi_nonvacuous
+
+-- Target J — Minkowski-specialized coordinate-array bridge (PR3).
+#check coordinateArrayOfSmoothMinkowskiEinsteinDivergence_zero
+#check gravitasMinkowski_symbolic_divergence_matches_smooth
+#check gravitasMinkowski_symbolicEinsteinDivergenceRepresentsSmooth
 
 end CATEPTMain.Certification.Tests.GRSmoothLeviCivitaBridge
 
