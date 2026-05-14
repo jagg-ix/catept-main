@@ -1,6 +1,19 @@
 import CATEPTMain.Certification.Status
 import CATEPTMain.Certification.RelativityGRMaxwellPphi2
 import CATEPTMain.Certification.RelativityGRBianchiBridge
+import CATEPTMain.Certification.RelativityGRBianchiFRW
+import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
+import CATEPTMain.Certification.RelativityGRSmoothConnection
+import CATEPTMain.Certification.RelativityGRSmoothTensorField
+import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
+import CATEPTMain.Certification.RelativityGRSmoothBianchi
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
+import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
+import CATEPTMain.Certification.RelativityGRSmoothStressConservation
+import CATEPTMain.Certification.RelativityGRSmoothFRW
+import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
+import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 
 set_option autoImplicit false
 
@@ -36,5 +49,45 @@ open CATEPTMain.Certification
 #check RelativityGR.contractedBianchiFromSecondBianchi
 #check RelativityGR.hasContractedBianchi_of_secondBianchi
 #check RelativityGR.gravitasMinkowski_secondBianchiIdentity
+#check RelativityGR.LiteralEinsteinEquationHolds
+#check RelativityGR.divergence_compat_of_literal_einstein_equation
+#check RelativityGR.FRWParameter
+#check RelativityGR.frwMetricFamily
+#check RelativityGR.frwStressFamily
+#check RelativityGR.frwMetricFamily_bianchiAdmissible
+#check RelativityGR.frwStressFamily_einsteinEquationHolds
+#check RelativityGR.frwHasStressConservation
+#check RelativityGR.FRWCertifiedParameter
+#check RelativityGR.frwCertifiedCurvedGRData
+#check RelativityGR.frwCurvedGRDirectCertificate
+#check RelativityGR.SmoothPseudoRiemannianManifold
+#check RelativityGR.smoothMinkowskiSpacetime
+#check RelativityGR.SmoothConnection
+#check RelativityGR.IsTorsionFree
+#check RelativityGR.IsMetricCompatible
+#check RelativityGR.IsLeviCivitaConnection
+#check RelativityGR.SmoothTensorField
+#check RelativityGR.SmoothEinsteinTensor
+#check RelativityGR.smoothEinsteinTensor
+#check RelativityGR.leviCivitaDivergence
+#check RelativityGR.leviCivitaDivergenceEinsteinTensor
+#check RelativityGR.SmoothSecondBianchiIdentity
+#check RelativityGR.smooth_second_bianchi_of_leviCivita
+#check RelativityGR.zeroSmoothTensorField
+#check RelativityGR.smooth_contracted_bianchi
+#check RelativityGR.coordinateArrayOfSmoothTensor
+#check RelativityGR.GravitasRepresentsSmoothMetric
+#check RelativityGR.SymbolicEinsteinDivergenceRepresentsSmooth
+#check RelativityGR.gravitasMinkowski_represents_smoothMinkowski
+#check RelativityGR.symbolic_contracted_bianchi_of_smooth
+#check RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
+#check RelativityGR.hasStressConservation_of_smooth_leviCivita_einstein
+#check RelativityGR.smoothFRWFamily
+#check RelativityGR.frwLeviCivitaConnection
+#check RelativityGR.frwConnection_isLeviCivita
+#check RelativityGR.frw_bianchiAdmissible
+#check RelativityGR.certifiedCurvedGRData_of_smooth_leviCivita
+#check RelativityGR.curvedGRDirectCertificate_of_smooth_leviCivita
+#check RelativityGR.certified_smooth_contracted_bianchi
 
 end CATEPTMain.Certification.Tests.StatusSurface

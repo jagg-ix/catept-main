@@ -133,6 +133,59 @@ theorem gravitasMinkowski_einstein_covariantDivergence_zero :
   classical
   simp [covariantDivergenceEinsteinTensor]
 
+/-! ## BIANCHI-014 — DEFERRED: Levi-Civita upgrade of `covariantDivergenceEinsteinTensor`
+
+**Status (catept-cert-review 20260513):** open gap recorded by upstream as
+"Missing 6 — Actual covariant divergence operator is still symbolic-core /
+partial-connection level".
+
+**What we currently have.**
+`covariantDivergenceEinsteinTensor g` (above) reduces to the literal zero
+array on `gravitasMinkowski` and otherwise returns the symbolic core
+`covariantDivergenceEinsteinTensorCore g`, which mirrors
+`Gravitas.EinsteinSolution.bianchiResidual` — i.e. a partial-derivative
+expression `g^{μλ} ∂_λ G_{μν}`, **not** the full Levi-Civita covariant
+derivative `∇^μ G_{μν}` acting on smooth tensor fields.  This is enough for
+the Bianchi-route certification surface (BIANCHI-006/007/008/012/013) because
+every concrete family ships its own `HasContractedBianchi` witness as an
+`Array.mkArray g.dim (.lit 0)` equality at the symbolic level, but it is
+strictly weaker than the smooth-geometry theorem.
+
+**What is missing.**
+A separate Gravitas/geometry-bridge layer would need to provide, at minimum:
+
+  * a predicate `IsLeviCivitaConnection (g : MetricTensor) : Prop` characterising
+    the unique torsion-free metric-compatible connection of `g`;
+  * a smooth-tensor covariant divergence operator
+    `leviCivitaDivergenceEinsteinTensor (g : MetricTensor) : Array Gravitas.Expr`
+    built from genuine `Mathlib.Geometry.Manifold` / Riemannian-geometry
+    primitives rather than coordinate partials;
+  * the compatibility theorem
+    `covariantDivergenceEinsteinTensor_eq_leviCivita_divergence
+      (g : MetricTensor) (hLC : IsLeviCivitaConnection g) :
+      covariantDivergenceEinsteinTensor g = leviCivitaDivergenceEinsteinTensor g`;
+  * and the smooth-geometric contracted second Bianchi identity
+    `contracted_bianchi_leviCivita
+      (g : MetricTensor) (hLC : IsLeviCivitaConnection g) :
+      covariantDivergenceEinsteinTensor g = Array.mkArray g.dim (.lit 0)`.
+
+**Why this is deferred.**
+None of the smooth-pseudo-Riemannian machinery above currently exists in
+`catept-gravitas-port` v0.2.0; the relevant Mathlib pieces
+(`Mathlib.Geometry.Manifold.VectorBundle.*`, Levi-Civita connection,
+covariant derivative on `(M, g)`) are not yet imported into this project.
+Adding a Prop placeholder `IsLeviCivitaConnection := fun _ => True` and a
+vacuous compatibility theorem would dishonestly inflate the certification
+surface, so we instead record the gap here and leave the upgrade to a future
+geometry bridge (target file:
+`catept-gravitas-port/CATEPTGravitasPort/Geometry/LeviCivita.lean`).
+
+**Tracking.** REPLYID 20260513-BIANCHI-COVERAGE-MISSING-TARGETS — Missing 6.
+Acceptance criteria for closing this gap: the four statements above shipped
+as actual theorems (no axioms, no `sorry`), audit-pure under
+`[propext, Classical.choice, Quot.sound]`, with at least one non-Minkowski
+family discharging `IsLeviCivitaConnection`. -/
+
 end CATEPTMain.Certification.RelativityGR
 
 end

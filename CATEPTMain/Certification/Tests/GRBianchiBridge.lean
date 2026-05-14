@@ -168,6 +168,30 @@ example
 example : SecondBianchiIdentity gravitasMinkowski :=
   gravitasMinkowski_secondBianchiIdentity
 
+/-! ## BIANCHI-010 — literal-tensor Einstein equation `G = κ T` -/
+
+#check LiteralEinsteinEquationHolds
+#check divergence_compat_of_literal_einstein_equation
+
+example
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (h : LiteralEinsteinEquationHolds g T κ) :
+    EinsteinEquationHolds g T κ :=
+  divergence_compat_of_literal_einstein_equation h
+
+/-! ## BIANCHI-011 — literal `G = κ T` + (κ ≠ 0) ⇒ stress conservation -/
+
+#check hasStressConservation_of_literal_einstein_equation
+#check divergence_stress_zero_of_literal_einstein_equation
+
+example
+    {g : MetricTensor} {T : StressEnergyTensor} {κ : Gravitas.Expr}
+    (hB : ContractedBianchiCertificate g)
+    (hEFE : LiteralEinsteinEquationHolds g T κ)
+    (hκ : κ ≠ .lit 0) :
+    HasStressConservation g T :=
+  hasStressConservation_of_literal_einstein_equation hB hEFE hκ
+
 end CATEPTMain.Certification.Tests.GRBianchiBridge
 
 end
