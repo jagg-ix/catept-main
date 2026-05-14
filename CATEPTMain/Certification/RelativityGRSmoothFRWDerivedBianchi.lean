@@ -152,6 +152,40 @@ def frwDerivedBianchiTarget_from_smooth
     FRWDerivedBianchiTarget p where
   derived := frw_hasContractedBianchi_from_smooth p hRep
 
+/-- **Constrained derivation of `SmoothFRWRepresentsGravitasFRW p`.**
+
+Packages a symbolic-side Einstein-divergence-zero hypothesis (and the
+trivial dim-equality between the raw-shell smooth carrier and the
+symbolic FLRW metric) into a full `SmoothFRWRepresentsGravitasFRW p`
+witness.  The four chart/metric/inverse/Christoffel components of
+`GravitasRepresentsSmoothMetric` are still `True`-placeholders at this
+LC-step, exactly as in the canonical Minkowski instance
+`gravitasMinkowski_represents_smoothMinkowski`; the genuine content
+lives in the `representation` field, which is the LC-007 array equation
+that the LC-008 constructor consumes.
+
+The `hDiv` hypothesis is exactly what an FRW symbolic Christoffel /
+Ricci / divergence stack would discharge.  Until that stack lands, the
+hypothesis names the remaining algebraic gap explicitly and makes the
+FRW smooth-route derivation usable with any caller-supplied symbolic
+zero-divergence proof. -/
+def smoothFRW_represents_gravitasFRW_of_raw
+    (p : FRWRawParameter)
+    (hDiv :
+      covariantDivergenceEinsteinTensor (frwRawMetricFamily p) =
+        Array.replicate (smoothFRWFamilyRaw p).dim
+          (Gravitas.Expr.lit 0))
+    (hDim : (smoothFRWFamilyRaw p).dim = (frwRawMetricFamily p).dim) :
+    SmoothFRWRepresentsGravitasFRW p where
+  smooth_family_matches_symbolic :=
+    { chart_compatible := True
+      metric_components_match := True
+      inverse_components_match := True
+      christoffel_components_match := True }
+  divergence_represents :=
+    { representation := hDiv
+      dim_match := hDim }
+
 end CATEPTMain.Certification.RelativityGR
 
 end
