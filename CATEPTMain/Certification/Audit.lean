@@ -18,6 +18,19 @@ import CATEPTMain.Certification.RelativityGRWitnessFreeStressIdentity
 import CATEPTMain.Certification.RelativityGRWitnessFreeStressConservation
 import CATEPTMain.Certification.RelativityGRWitnessFreeFamilyCertificate
 import CATEPTMain.Certification.RelativityGRBianchiBridge
+import CATEPTMain.Certification.RelativityGRBianchiFRW
+import CATEPTMain.Certification.RelativityGRSmoothPseudoRiemannian
+import CATEPTMain.Certification.RelativityGRSmoothConnection
+import CATEPTMain.Certification.RelativityGRSmoothTensorField
+import CATEPTMain.Certification.RelativityGRLeviCivitaDivergence
+import CATEPTMain.Certification.RelativityGRSmoothBianchi
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchi
+import CATEPTMain.Certification.RelativityGRSmoothGravitasBridge
+import CATEPTMain.Certification.RelativityGRSmoothContractedBianchiCertificate
+import CATEPTMain.Certification.RelativityGRSmoothStressConservation
+import CATEPTMain.Certification.RelativityGRSmoothFRW
+import CATEPTMain.Certification.RelativityGRSmoothCurvedDirect
+import CATEPTMain.Certification.RelativityGRSmoothLeviCivitaBridge
 import CATEPTMain.Certification.RelativityGRUnsafeFixes
 import CATEPTMain.Certification.RelativityGRResiduals
 import CATEPTMain.Certification.RelativityGREinsteinEquation
@@ -299,6 +312,82 @@ or open this file in VS Code with the Lean 4 extension active.
 #print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiFromSecondBianchi
 #print axioms CATEPTMain.Certification.RelativityGR.hasContractedBianchi_of_secondBianchi
 #print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_secondBianchiIdentity
+
+-- ── GR Bianchi bridge (BIANCHI-010 — literal-tensor Einstein equation `G = κ T`) ──
+#print axioms CATEPTMain.Certification.RelativityGR.LiteralEinsteinEquationHolds
+#print axioms CATEPTMain.Certification.RelativityGR.divergence_compat_of_literal_einstein_equation
+
+-- ── GR Bianchi bridge (BIANCHI-012 — nontrivial curved family: FRW) ──
+#print axioms CATEPTMain.Certification.RelativityGR.FRWParameter
+#print axioms CATEPTMain.Certification.RelativityGR.frwMetricFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwStressFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwMetricFamily_bianchiAdmissible
+#print axioms CATEPTMain.Certification.RelativityGR.frwStressFamily_einsteinEquationHolds
+#print axioms CATEPTMain.Certification.RelativityGR.frwHasStressConservation
+
+-- ── GR Bianchi bridge (BIANCHI-013 — FRW end-to-end into IsCertifiedCurvedGRData / CurvedGRDirectCertificate) ──
+#print axioms CATEPTMain.Certification.RelativityGR.FRWCertifiedParameter
+#print axioms CATEPTMain.Certification.RelativityGR.frwFaradayFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwADMFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwADMStressFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwSourceTerm
+#print axioms CATEPTMain.Certification.RelativityGR.frwHodgeClosure
+#print axioms CATEPTMain.Certification.RelativityGR.frwEinsteinClosure
+#print axioms CATEPTMain.Certification.RelativityGR.frwADMClosure
+#print axioms CATEPTMain.Certification.RelativityGR.frwCertifiedCurvedGRData
+#print axioms CATEPTMain.Certification.RelativityGR.frwCurvedGRDirectCertificate
+
+-- ── GR Levi-Civita ladder (LC-001 — smooth pseudo-Riemannian semantic layer) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothPseudoRiemannianManifold
+#print axioms CATEPTMain.Certification.RelativityGR.smoothMinkowskiSpacetime
+
+-- ── GR Levi-Civita ladder (LC-002 — smooth connection & Levi-Civita predicate) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothConnection
+#print axioms CATEPTMain.Certification.RelativityGR.IsTorsionFree
+#print axioms CATEPTMain.Certification.RelativityGR.IsMetricCompatible
+#print axioms CATEPTMain.Certification.RelativityGR.IsLeviCivitaConnection
+
+-- ── GR Levi-Civita ladder (LC-003 — smooth tensor fields & Einstein tensor field) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothTensorField
+#print axioms CATEPTMain.Certification.RelativityGR.smoothEinsteinTensor
+
+-- ── GR Levi-Civita ladder (LC-004 — Levi-Civita divergence operator) ──
+#print axioms CATEPTMain.Certification.RelativityGR.leviCivitaDivergence
+#print axioms CATEPTMain.Certification.RelativityGR.leviCivitaDivergenceEinsteinTensor
+
+-- ── GR Levi-Civita ladder (LC-005 — smooth second Bianchi identity) ──
+#print axioms CATEPTMain.Certification.RelativityGR.SmoothSecondBianchiIdentity
+#print axioms CATEPTMain.Certification.RelativityGR.smooth_second_bianchi_of_leviCivita
+
+-- ── GR Levi-Civita ladder (LC-006 — smooth contracted Bianchi `∇^a G_{ab} = 0`) ──
+#print axioms CATEPTMain.Certification.RelativityGR.zeroSmoothTensorField
+#print axioms CATEPTMain.Certification.RelativityGR.smooth_contracted_bianchi
+
+-- ── GR Levi-Civita ladder (LC-007 — smooth↔Gravitas bridge) ──
+#print axioms CATEPTMain.Certification.RelativityGR.coordinateArrayOfSmoothTensor
+#print axioms CATEPTMain.Certification.RelativityGR.GravitasRepresentsSmoothMetric
+#print axioms CATEPTMain.Certification.RelativityGR.SymbolicEinsteinDivergenceRepresentsSmooth
+#print axioms CATEPTMain.Certification.RelativityGR.gravitasMinkowski_represents_smoothMinkowski
+#print axioms CATEPTMain.Certification.RelativityGR.symbolic_contracted_bianchi_of_smooth
+
+-- ── GR Levi-Civita ladder (LC-008 — symbolic ContractedBianchiCertificate from smooth) ──
+#print axioms CATEPTMain.Certification.RelativityGR.contractedBianchiCertificate_of_smooth_leviCivita
+
+-- ── GR Levi-Civita ladder (LC-009 — smooth Levi-Civita ⇒ HasStressConservation) ──
+#print axioms CATEPTMain.Certification.RelativityGR.hasStressConservation_of_smooth_leviCivita_einstein
+
+-- ── GR Levi-Civita ladder (LC-010 — smooth FRW family) ──
+#print axioms CATEPTMain.Certification.RelativityGR.smoothFRWFamily
+#print axioms CATEPTMain.Certification.RelativityGR.frwLeviCivitaConnection
+#print axioms CATEPTMain.Certification.RelativityGR.frwConnection_isLeviCivita
+#print axioms CATEPTMain.Certification.RelativityGR.frw_bianchiAdmissible
+
+-- ── GR Levi-Civita ladder (LC-011 — smooth Levi-Civita ⇒ CurvedGRDirectCertificate) ──
+#print axioms CATEPTMain.Certification.RelativityGR.certifiedCurvedGRData_of_smooth_leviCivita
+#print axioms CATEPTMain.Certification.RelativityGR.curvedGRDirectCertificate_of_smooth_leviCivita
+
+-- ── GR Levi-Civita ladder (umbrella bridge — Target C alias) ────────────────
+#print axioms CATEPTMain.Certification.RelativityGR.certified_smooth_contracted_bianchi
 
 -- ── GR unsafe-claims closure certificate (canonical residual-identity layer) ─
 #print axioms CATEPTMain.Certification.RelativityGR.canonical_gr_unsafe_claims_closed
