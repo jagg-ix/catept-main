@@ -553,7 +553,9 @@ end GuardAlias
 #guard_msgs in
 #print axioms GuardAlias.edlLiteralTensorEquation
 
-/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlCovariantDivergenceLinear' does not depend on any axioms -/
+/-- info: 'CATEPTMain.Certification.Tests.AxiomGuards.GuardAlias.edlCovariantDivergenceLinear' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
 #guard_msgs in
 #print axioms GuardAlias.edlCovariantDivergenceLinear
 
