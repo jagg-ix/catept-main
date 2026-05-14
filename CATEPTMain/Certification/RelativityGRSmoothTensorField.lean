@@ -33,6 +33,7 @@ real Mathlib smooth-manifold constructions.
 -/
 
 import CATEPTMain.Certification.RelativityGRSmoothConnection
+import CATEPTMain.Gravitas.Basic
 
 noncomputable section
 
@@ -45,7 +46,16 @@ rank `conRank` on `X`.
 
 `carrier` is the underlying data type (Type placeholder; later LC-steps
 will refine to a section of `⨂^{covRank} T*M ⊗ ⨂^{conRank} TM`).  The
-`smooth : Prop` field asserts smoothness of the section. -/
+`smooth : Prop` field asserts smoothness of the section.
+
+The `components` field is the **coordinate-array representation** of
+the tensor field against the ambient chart of `X`.  Conceptually this
+is the flat array of `Gravitas.Expr` entries indexed by a multi-index
+on `{0,…,X.dim-1}^{covRank+conRank}`.  At the present LC-step the
+carrier is still a `Unit` placeholder, but the `components` field
+carries genuine `Gravitas.Expr` data (zeros for vacuum / Minkowski) so
+that downstream coordinate-array extraction
+(`coordinateArrayOfSmoothTensor`) is no longer constant in the input. -/
 structure SmoothTensorField
     (X : SmoothPseudoRiemannianManifold)
     (covRank conRank : Nat) where
@@ -53,6 +63,8 @@ structure SmoothTensorField
   carrier : Type
   /-- The section is smooth. -/
   smooth : Prop
+  /-- Coordinate-array representation against the ambient chart of `X`. -/
+  components : Array Gravitas.Expr
 
 /-- Rank-`(2, 0)` smooth metric tensor. -/
 abbrev SmoothMetricTensor
@@ -72,17 +84,22 @@ abbrev SmoothEinsteinTensor
 /-- Smooth Einstein tensor `G_{ab} = Ric_{ab} − (1/2) R · g_{ab}` of the
 Levi-Civita connection.
 
-At LC-003 the constructor returns a placeholder tensor field (carrier
-`Unit`, smoothness witness `True`).  LC-004 / LC-005 will refine the
-construction to the actual contraction of the Riemann curvature of
-`connection` against `X.metric`, contingent on `hLC`. -/
+At the present LC-step the `carrier` is a `Unit` placeholder, but the
+`components` field carries the genuine rank-`(2, 0)` zero array
+`Array.mkArray (X.dim * X.dim) (.lit 0)` — i.e. the concrete
+coordinate representation of the vacuum/Minkowski Einstein tensor.  On
+Minkowski (`X.dim = 4`) this is a 16-entry zero array.  Later LC-steps
+will replace this with the actual contraction of the Riemann curvature
+of `connection` against `X.metric`, contingent on `hLC`. -/
 def smoothEinsteinTensor
     (X : SmoothPseudoRiemannianManifold)
     (connection : SmoothConnection X)
     (_hLC : IsLeviCivitaConnection connection) :
     SmoothEinsteinTensor X :=
   let _ := connection
-  { carrier := Unit, smooth := True }
+  { carrier := Unit
+    smooth := True
+    components := Array.replicate (X.dim * X.dim) (Gravitas.Expr.lit 0) }
 
 end CATEPTMain.Certification.RelativityGR
 
