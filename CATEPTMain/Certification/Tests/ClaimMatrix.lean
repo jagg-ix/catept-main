@@ -15,6 +15,7 @@ import CATEPTMain.Certification.RelativityGRSmoothFRWDerivedStress
 import CATEPTMain.Certification.RelativityGRFRWMatterModel
 import CATEPTMain.Certification.RelativityGRSmoothFRWCurvedDirect
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
+import CATEPTMain.Certification.RelativityGRFRWSectorClosureContracts
 import CATEPTMain.Certification.UniversalCertificate
 
 /-!
@@ -48,12 +49,6 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.mk_adm_constraint_certificate
 #check CATEPTMain.Certification.RelativityGR.mk_maxwell_pphi2_certificate
 #check CATEPTMain.Certification.RelativityGR.CurvedGRDirectCertificate
-#check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate
-#check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D
-#check CATEPTMain.Certification.RelativityGR.mk_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
-#check CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D
-#check CATEPTMain.Certification.RelativityGR.canonical_curved_gr_direct_certificate_of_fixedAntisymmetric4D_claim
-#check CATEPTMain.Certification.RelativityGR.curved_gr_direct_full_claim
 
 /-! ## Implemented smooth Minkowski / FRW / Einstein-divergence claims -/
 
@@ -71,6 +66,15 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.frwCurvedGRDirectCertificate_from_smooth_of_raw
 #check CATEPTMain.Certification.RelativityGR.LiteralEinsteinTensorEquation
 #check CATEPTMain.Certification.RelativityGR.divergence_compat_of_literal_tensor_equation
+
+/-! ## Implemented FRW sector closure contracts + discharge targets (this PR) -/
+
+#check CATEPTMain.Certification.RelativityGR.FRWHodgeClosure
+#check CATEPTMain.Certification.RelativityGR.FRWEinsteinClosure
+#check CATEPTMain.Certification.RelativityGR.FRWADMClosure
+#check CATEPTMain.Certification.RelativityGR.hasHodgeClosure_of_frw
+#check CATEPTMain.Certification.RelativityGR.hasEinsteinClosure_of_frw
+#check CATEPTMain.Certification.RelativityGR.hasADMClosure_of_frw
 
 /-! ## Implemented universal fields -/
 
