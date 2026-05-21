@@ -16,6 +16,9 @@ import CATEPTMain.Certification.RelativityGRFRWMatterModel
 import CATEPTMain.Certification.RelativityGRSmoothFRWCurvedDirect
 import CATEPTMain.Certification.RelativityGREinsteinDivergenceLinearity
 import CATEPTMain.Certification.RelativityGRFRWSectorClosureContracts
+import CATEPTMain.Certification.RelativityGRFRWChartSymbolicContract
+import CATEPTMain.Certification.RelativityGRFRWPerfectFluidContinuity
+import CATEPTMain.Certification.RelativityGRFRWCurvedDirectFromModels
 import CATEPTMain.Certification.UniversalCertificate
 
 /-!
@@ -67,7 +70,23 @@ namespace CATEPTMain.Certification.Tests.ClaimMatrix
 #check CATEPTMain.Certification.RelativityGR.LiteralEinsteinTensorEquation
 #check CATEPTMain.Certification.RelativityGR.divergence_compat_of_literal_tensor_equation
 
-/-! ## Implemented FRW sector closure contracts + discharge targets (this PR) -/
+/-! ## Implemented FRW named-contract surface (PRs #160, #162, #164) -/
+
+-- Chart compatibility + symbolic divergence simplification (PR #160).
+#check CATEPTMain.Certification.RelativityGR.FRWChartCompatible
+#check CATEPTMain.Certification.RelativityGR.FRWSymbolicDivergenceSimplifies
+#check CATEPTMain.Certification.RelativityGR.smoothFRW_represents_gravitasFRW_of_raw_named
+
+-- Perfect-fluid + continuity contracts and the matter-model constructor (PR #162).
+#check CATEPTMain.Certification.RelativityGR.FRWPerfectFluidStress
+#check CATEPTMain.Certification.RelativityGR.FRWContinuityEquation
+#check CATEPTMain.Certification.RelativityGR.frwMatterModel_of_perfectFluidContinuity
+
+-- CurvedGRDirect certificate from the four named FLRW contracts (PR #164).
+#check CATEPTMain.Certification.RelativityGR.frwCertifiedCurvedGRData_from_models
+#check CATEPTMain.Certification.RelativityGR.frwCurvedGRDirectCertificate_from_models
+
+/-! ## Implemented FRW sector closure contracts (PR #166) -/
 
 #check CATEPTMain.Certification.RelativityGR.FRWHodgeClosure
 #check CATEPTMain.Certification.RelativityGR.FRWEinsteinClosure
